@@ -531,6 +531,22 @@ class SettingActionManager {
         }
     }
 
+    private class ExitSignalManager {
+        private var exitSignal = false
+        private val exitSignalMutex = Mutex()
+        suspend fun setExit(){
+            exitSignalMutex.withLock {
+                exitSignal = true
+            }
+        }
+
+        suspend fun get(): Boolean {
+            return exitSignalMutex.withLock {
+                exitSignal
+            }
+        }
+    }
+
 
     private class SettingActionExecutor(
         private val fragmentRef: WeakReference<Fragment>,
@@ -544,7 +560,7 @@ class SettingActionManager {
 //        mutableMapOf<String, MutableMap<String, Bitmap?>>()
         private val privateLoopKeyVarNameValueStrMap = PrivateLoopKeyVarNameValueStrMap()
         private val loopKeyToAsyncDeferredVarNameValueStrMap = LoopKeyToAsyncDeferredVarNameValueStrMap()
-        private var exitSignal = false
+        private var exitSignalManager = ExitSignalManager()
         private val escapeRunPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
         private val runAsyncPrefix = SettingActionKeyManager.VarPrefix.RUN_ASYNC.prefix
         private val asyncPrefix = SettingActionKeyManager.VarPrefix.ASYNC.prefix
@@ -767,7 +783,7 @@ class SettingActionManager {
             if(isErr) return
             keyToSubKeyConList.forEach { keyToSubKeyConSrc ->
                 if (
-                    exitSignal
+                    exitSignalManager.get()
                 ) return
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sMap.txt").absolutePath,
@@ -831,6 +847,7 @@ class SettingActionManager {
                                 privateLoopKeyVarNameValueStrMap,
                                 loopKeyToVarNameValueStrMap,
                                 importedVarNameToValueStrMap,
+                                exitSignalManager,
                                 keyToSubKeyCon,
                                 originImportPath,
                                 keyToSubKeyConWhere
@@ -1091,6 +1108,7 @@ class SettingActionManager {
                                         privateLoopKeyVarNameValueStrMap,
                                         loopKeyToVarNameValueStrMap,
                                         importedVarNameToValueStrMap,
+                                        exitSignalManager,
                                         settingVarName,
                                         topAcSVarName,
                                         keyToSubKeyConWhere,
@@ -1193,6 +1211,7 @@ class SettingActionManager {
                             privateLoopKeyVarNameValueStrMap,
                             loopKeyToVarNameValueStrMap,
                             importedVarNameToValueStrMap,
+                            exitSignalManager,
                             settingVarName,
                             topAcSVarName,
                             keyToSubKeyConWhere,
@@ -1202,7 +1221,7 @@ class SettingActionManager {
                             if (
                                 exitSignalClass == SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                             ) {
-                                exitSignal = true
+                                exitSignalManager.setExit()
                                 return
                             }
                             val varNameToValueStr = varNameToStrValueAndExitSignal.first
@@ -1265,6 +1284,7 @@ class SettingActionManager {
                             privateLoopKeyVarNameValueStrMap,
                             loopKeyToVarNameValueStrMap,
                             importedVarNameToValueStrMap,
+                            exitSignalManager,
                             valueStrBeforeReplace,
                             keyToSubKeyConWhere,
                         )?.let {
@@ -1372,7 +1392,7 @@ class SettingActionManager {
 //                            )
                             when(breakSignalClass){
                                 SettingActionKeyManager.BreakSignal.EXIT_SIGNAL -> {
-                                    exitSignal = true
+                                    exitSignalManager.setExit()
                                     return
                                 }
                                 SettingActionKeyManager.BreakSignal.RETURN_SIGNAL -> {
@@ -3333,6 +3353,7 @@ class SettingActionManager {
                 privateLoopKeyVarNameValueStrMapClass: PrivateLoopKeyVarNameValueStrMap,
                 loopKeyToVarNameValueStrMapClass: LoopKeyToVarNameValueStrMap,
                 importedVarNameToValueStrMap: Map<String, String?>?,
+                exitSignalManager: ExitSignalManager,
                 keyToSubKeyCon: Pair<String, String>?,
                 originImportPath: String?,
                 keyToSubKeyConWhere: String,
@@ -3482,18 +3503,10 @@ class SettingActionManager {
                 val isImportToErrType = when(judgeTargetStr.isEmpty()) {
                     true -> true to null
                     else -> {
-//                            (privateLoopKeyVarNameValueStrMapClass
-//                                .getAsyncVarNameToValueStr(curMapLoopKey)?.toMap()
-//                                ?: emptyMap()) +
-//                                    (loopKeyToVarNameValueStrMapClass
-//                                        .getAsyncVarNameToValueStr(curMapLoopKey)?.toMap()
-//                                        ?: emptyMap()) +
-//                                    (importedVarNameToValueStrMap ?: emptyMap())
                         SettingIfManager.handle(
                             sIfKeyName,
                             judgeTargetStr,
                             argsPairList,
-//                            varNameToValueStrMap,
                         )
                     }
                 }
@@ -3514,6 +3527,7 @@ class SettingActionManager {
                         errType.errMessage,
                         keyToSubKeyConWhere
                     )
+                    exitSignalManager.setExit()
                     return blankReturnValueStr
                 }
                 val isImport = isImportToErrType.first ?: false
@@ -3731,6 +3745,7 @@ class SettingActionManager {
                 privateLoopKeyVarNameValueStrMapClass: PrivateLoopKeyVarNameValueStrMap,
                 loopKeyToVarNameValueStrMapClass: LoopKeyToVarNameValueStrMap,
                 importedVarNameToValueStrMap: Map<String, String?>?,
+                exitSignalManager: ExitSignalManager,
                 settingVarName: String,
                 renewalVarName: String?,
                 keyToSubKeyConWhere: String,
@@ -4108,6 +4123,7 @@ class SettingActionManager {
                                 }
                                 itPronounValueStrToBreakSignal = null
                                 isNext = false
+                                exitSignalManager.setExit()
                                 return@forEach
                             }
                             val isNextBool = isNextToErrType.first ?: false
@@ -4156,6 +4172,7 @@ class SettingActionManager {
                 privateLoopKeyVarNameValueStrMapClass: PrivateLoopKeyVarNameValueStrMap,
                 loopKeyToVarNameValueStrMapClass: LoopKeyToVarNameValueStrMap,
                 importedVarNameToValueStrMap: Map<String, String?>?,
+                exitSignalManager: ExitSignalManager,
                 valueStrBeforeReplace: String,
                 keyToSubKeyConWhere: String,
             ): Pair<
@@ -4275,6 +4292,7 @@ class SettingActionManager {
                                     )
                                 }
                                 isNext = false
+                                exitSignalManager.setExit()
                                 return null to SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                             }
                             val isReturnBool = isReturnToErrType.first ?: false

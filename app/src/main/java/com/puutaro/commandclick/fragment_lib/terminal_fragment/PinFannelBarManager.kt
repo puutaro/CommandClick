@@ -155,8 +155,8 @@ object PinFannelBarManager {
                     ).map {
                         "${it.key}=${it.value}"
                     }.joinToString(JsFannelInfo.fannelInfoMapSeparator.toString()),
-                    "/storage/emulated/0/Documents/cmdclick/AppDir/default/settingAcTestDir/settings/editListConfig.js"
-//                    imageAcTest
+                    "/storage/emulated/0/Documents/cmdclick/AppDir/default/imageAcTestDir/settings/editListConfig.js"
+//                    imageAcTestDir
 //                    textToSpeech2Dir
 //                    settingAcTestDir
                 )

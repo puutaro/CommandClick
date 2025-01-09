@@ -564,6 +564,22 @@ class ImageActionManager {
         }
     }
 
+    private class ExitSignalManager {
+        private var exitSignal = false
+        private val exitSignalMutex = Mutex()
+        suspend fun setExit(){
+            exitSignalMutex.withLock {
+                exitSignal = true
+            }
+        }
+
+        suspend fun get(): Boolean {
+            return exitSignalMutex.withLock {
+                exitSignal
+            }
+        }
+    }
+
 
     private class ImageActionExecutor(
         private val fragmentRef: WeakReference<Fragment>,
@@ -577,7 +593,7 @@ class ImageActionManager {
 //        mutableMapOf<String, MutableMap<String, Bitmap?>>()
         private val privateLoopKeyVarNameBitmapMap = PrivateLoopKeyVarNameBitmapMap()
         private val loopKeyToAsyncDeferredVarNameBitmapMap = LoopKeyToAsyncDeferredVarNameBitmapMap()
-        private var exitSignal = false
+        private var exitSignalManager = ExitSignalManager()
         private val escapeRunPrefix = ImageActionKeyManager.VarPrefix.RUN.prefix
         private val runAsyncPrefix = ImageActionKeyManager.VarPrefix.RUN_ASYNC.prefix
         private val asyncPrefix = ImageActionKeyManager.VarPrefix.ASYNC.prefix
@@ -791,7 +807,7 @@ class ImageActionManager {
             if(isErr) return
             keyToSubKeyConList.forEach { keyToSubKeyConSrc ->
                 if (
-                    exitSignal
+                    exitSignalManager.get()
                 ) return
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sMap.txt").absolutePath,
@@ -852,6 +868,7 @@ class ImageActionManager {
                                 setReplaceVariableMapSrc,
                                 curMapLoopKey,
                                 loopKeyToAsyncDeferredVarNameBitmapMap,
+                                exitSignalManager,
                                 keyToSubKeyCon,
                                 originImportPath,
                                 keyToSubKeyConWhere
@@ -1100,6 +1117,7 @@ class ImageActionManager {
                                         privateLoopKeyVarNameBitmapMap,
                                         loopKeyToVarNameBitmapMap,
                                         importedVarNameToBitmapMap,
+                                        exitSignalManager,
                                         settingVarName,
                                         topAcIVarName,
                                         keyToSubKeyConWhere,
@@ -1221,6 +1239,7 @@ class ImageActionManager {
                             privateLoopKeyVarNameBitmapMap,
                             loopKeyToVarNameBitmapMap,
                             importedVarNameToBitmapMap,
+                            exitSignalManager,
                             settingVarName,
                             topAcIVarName,
                             keyToSubKeyConWhere,
@@ -1230,7 +1249,7 @@ class ImageActionManager {
                             if (
                                 exitSignalClass == ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                             ) {
-                                exitSignal = true
+                                exitSignalManager.setExit()
                                 return
                             }
                             val varNameToBitmap = varNameToBitmapAndExitSignal.first
@@ -1350,6 +1369,7 @@ class ImageActionManager {
                         }
                         ImageReturnExecutor().exec(
                             fragment,
+                            exitSignalManager,
                             mainSubKeyPairList,
                             returnBitmap,
                             keyToSubKeyConWhere
@@ -1473,7 +1493,7 @@ class ImageActionManager {
 //                            )
                             when(breakSignalClass){
                                 ImageActionKeyManager.BreakSignal.EXIT_SIGNAL -> {
-                                    exitSignal = true
+                                    exitSignalManager.setExit()
                                     return
                                 }
                                 ImageActionKeyManager.BreakSignal.RETURN_SIGNAL -> {
@@ -3401,6 +3421,7 @@ class ImageActionManager {
                 setReplaceVariableMap: Map<String, String>?,
                 curMapLoopKey: String,
                 loopKeyToAsyncDeferredVarNameBitmapMap: LoopKeyToAsyncDeferredVarNameBitmapMap?,
+                exitSignalManager: ExitSignalManager,
                 keyToSubKeyCon: Pair<String, String>?,
                 originImportPath: String?,
                 keyToSubKeyConWhere: String,
@@ -3542,6 +3563,7 @@ class ImageActionManager {
                         errType.errMessage,
                         keyToSubKeyConWhere
                     )
+                    exitSignalManager.setExit()
                     return blankReturnValue
                 }
                 val isImport = isImportToErrType.first ?: false
@@ -3752,6 +3774,7 @@ class ImageActionManager {
                 privateLoopKeyVarNameBitmapMapClass: PrivateLoopKeyVarNameBitmapMap,
                 loopKeyToVarNameBitmapMapClass: LoopKeyToVarNameBitmapMap,
                 importedVarNameToBitmapMap: Map<String, Bitmap?>?,
+                exitSignalManager: ExitSignalManager,
                 settingVarName: String,
                 renewalVarName: String?,
                 keyToSubKeyConWhere: String,
@@ -4061,7 +4084,8 @@ class ImageActionManager {
                                         keyToSubKeyConWhere
                                     )
                                 }
-                                return@forEach
+                                exitSignalManager.setExit()
+                                return Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                             }
                             val isImport = isImportToErrType.first ?: false
                             isNext = isImport
@@ -4105,6 +4129,7 @@ class ImageActionManager {
 
         suspend fun exec(
             fragment: Fragment,
+            exitSignalManager: ExitSignalManager,
             mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
             returnBitmap: Bitmap?,
             keyToSubKeyConWhere: String,
@@ -4195,6 +4220,7 @@ class ImageActionManager {
                                 )
                             }
                             isNext = false
+                            exitSignalManager.setExit()
                             return null to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                         }
                         val isReturnBool = isReturnToErrType.first ?: false
