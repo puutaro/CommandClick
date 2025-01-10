@@ -180,7 +180,6 @@ object SettingActionKeyManager {
     }
 
     object KeyToSubKeyMapListMaker {
-
         private const val keySeparator = '|'
         private val settingActionsKeyPlusList =
             SettingActionKeyManager.SettingActionsKey.entries.map {
@@ -221,31 +220,6 @@ object SettingActionKeyManager {
                 val subKeyAfterStr = it.second
                 mainKey to subKeyAfterStr
             }
-        }
-    }
-
-    object PairListTool {
-
-        fun getValue(
-            pairList: List<Pair<String, Map<String, String>>>?,
-            key: String
-        ): Map<String, String>? {
-            return getPair(
-                pairList,
-                key
-            )
-        }
-
-        fun getPair(
-            pairList: List<Pair<String, Map<String, String>>>?,
-            key: String
-        ): Map<String, String>? {
-            if(
-                pairList.isNullOrEmpty()
-            ) return null
-            return pairList.firstOrNull {
-                it.first == key
-            }?.second
         }
     }
 }

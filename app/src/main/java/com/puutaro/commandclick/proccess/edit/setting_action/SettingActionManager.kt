@@ -29,10 +29,10 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolFo
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
 import com.puutaro.commandclick.util.str.BackslashTool
-import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -42,8 +42,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
-import java.util.concurrent.locks.ReentrantReadWriteLock
-import kotlin.concurrent.withLock
 
 class SettingActionManager {
     companion object {
@@ -712,7 +710,7 @@ class SettingActionManager {
                             settingVarKey,
                             subKeyCon,
                         )
-                        val settingVarName = SettingActionKeyManager.PairListTool.getValue(
+                        val settingVarName = StrToMapListTool.getValue(
                             mainSubKeyPairList,
                             settingVarKey
                         )?.get(settingVarKey)
@@ -898,7 +896,7 @@ class SettingActionManager {
                             settingReturnKey,
                             subKeyCon,
                         )
-                        val valueStrBeforeReplace = SettingActionKeyManager.PairListTool.getValue(
+                        val valueStrBeforeReplace = StrToMapListTool.getValue(
                             mainSubKeyPairList,
                             settingReturnKey
                         )?.get(settingReturnKey)

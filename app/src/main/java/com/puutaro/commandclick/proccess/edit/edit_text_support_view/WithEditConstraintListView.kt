@@ -185,7 +185,7 @@ object WithEditConstraintListView{
         }
 
         withContext(Dispatchers.IO) {
-            ImageActionManager.Companion.BeforeActionImportMapManager.init()
+            ImageActionManager.init()
             FileSystems.removeAndCreateDir(
                 UsePath.cmdclickDefaultIDebugAppDirPath
             )
@@ -217,7 +217,7 @@ object WithEditConstraintListView{
             }
         }
         withContext(Dispatchers.IO) {
-            ImageActionManager.Companion.BeforeActionImportMapManager.init()
+            ImageActionManager.init()
         }
         return
 //        val imageAcTestDirPath = File(UsePath.cmdclickDefaultAppDirPath, "imageAc").absolutePath
@@ -238,7 +238,7 @@ object WithEditConstraintListView{
 //            )
 //        }
         withContext(Dispatchers.IO) {
-            ImageActionManager.Companion.BeforeActionImportMapManager.init()
+            ImageActionManager.init()
         }
         val setReplaceVariableMap = withContext(Dispatchers.IO) {
             (setReplaceVariableMapSrc ?: emptyMap())
