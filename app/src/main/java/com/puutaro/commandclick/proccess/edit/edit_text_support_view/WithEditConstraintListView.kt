@@ -142,7 +142,7 @@ object WithEditConstraintListView{
         }
         withContext(Dispatchers.IO) {
 //            SettingActionManager.Companion.GlobalExitManager.init()
-            SettingActionManager.Companion.BeforeActionImportMapManager.init()
+            SettingActionManager.init()
 //            FileSystems.removeAndCreateDir(
 //                UsePath.cmdclickDefaultSDebugAppDirPath
 //            )
@@ -165,7 +165,9 @@ object WithEditConstraintListView{
                         busyboxExecutor,
                         settingActionAsyncCoroutine,
                         null,
+
                         //listOf("testTopVar"),
+                        null,
                         it,
                         keyToSubKeyConWhere,
                     )
@@ -173,7 +175,7 @@ object WithEditConstraintListView{
             }
         }
         withContext(Dispatchers.IO) {
-            SettingActionManager.Companion.BeforeActionImportMapManager.init()
+            SettingActionManager.init()
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultSDebugAppDirPath, "sglobalVarNameToValueMap.txt").absolutePath,
 //                listOf(
@@ -239,8 +241,7 @@ object WithEditConstraintListView{
             ImageActionManager.Companion.BeforeActionImportMapManager.init()
         }
         val setReplaceVariableMap = withContext(Dispatchers.IO) {
-            (setReplaceVariableMapSrc ?: emptyMap()) +
-                    globalVarNameToValueMap
+            (setReplaceVariableMapSrc ?: emptyMap())
         }
         val editListConfigMap = withContext(Dispatchers.IO) {
             editListConfigMapSrc?.map {
@@ -420,7 +421,7 @@ object WithEditConstraintListView{
 //                editListRecyclerView.scrollToPosition(0)
 //            }
             withContext(Dispatchers.IO){
-                SettingActionManager.Companion.BeforeActionImportMapManager.init()
+                SettingActionManager.init()
             }
             CoroutineScope(Dispatchers.Main).launch{
                 withContext(Dispatchers.IO) {
@@ -834,6 +835,7 @@ object WithEditConstraintListView{
                     globalVarNameToValueMap?.map{
                         it.key
                     },
+                    globalVarNameToValueMap,
                     innerFrameKeyPairsConSrc,
                     "frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
                     editConstraintListAdapterArg = editConstraintListAdapter
@@ -937,6 +939,7 @@ object WithEditConstraintListView{
                                     ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap).map{
                                         it.key
                                     },
+                                    globalVarNameToValueMap,
                                     frameVarNameValueMap,
                                     mapListElInfoForExecContents,
                                     contentsKeyPairsListConSrc,

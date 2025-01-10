@@ -77,6 +77,9 @@ object SettingIfManager {
                 ){
                 return null to argErr
             }
+            if(matchList.size == 1){
+                return matchList.first() to null
+            }
             val concatConditionKey =
                 IfArgs.CONCAT_CONDITION.str
             val concatConditionSTr = argNameToSubKeyMapPairList.toMap().get(
@@ -118,7 +121,7 @@ object SettingIfManager {
             return matchResult to null
         }
 
-        fun makeMatchListToErr(
+        private fun makeMatchListToErr(
             ifKeyName: String,
             judgeTargetStr: String,
             argsPairList: List<Pair<String, String>>,
@@ -159,12 +162,9 @@ object SettingIfManager {
                 }
                 val subKeyMap = argNameToSubKeyMap.second
                 when(ifArgs) {
-                    IfArgs.CONCAT_CONDITION -> {
-                        true
-                    }
-                    IfArgs.MATCH_TYPE -> {
-                        true
-                    }
+                    IfArgs.CONCAT_CONDITION,
+                    IfArgs.MATCH_TYPE
+                        -> null
                     IfArgs.REGEX -> {
                         val regexStr = subKeyMap.get(regexArgKey).toString()
                         val regex = try {
@@ -224,6 +224,10 @@ object SettingIfManager {
                         matchResult
                     }
                 }
+            }.filter {
+                it != null
+            }.map {
+                it ?: true
             }
             return matchList to null
         }

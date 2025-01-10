@@ -1435,7 +1435,8 @@ object EditComponent {
                         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
                         editConstraintListAdapter: EditConstraintListAdapter?,
                         topLevelVarStrKeyNameList: List<String>?,
-                        verticalVarNameValueMap: Map<String, String>,
+                        topVarNameToValueStrMap: Map<String, String?>?,
+                        frameVarNameValueMap: Map<String, String>,
                         keyToSubKeyConWhere: String,
                         linearFrameKeyPairsListConSrc: String?,
                         srcTitle: String,
@@ -1465,10 +1466,12 @@ object EditComponent {
                                         busyboxExecutor,
                                         settingActionAsyncCoroutine,
                                         topLevelVarStrKeyNameList,
-                                        CmdClickMap.replace(
-                                                linearFrameKeyPairsListConSrcWithReplace,
-                                                verticalVarNameValueMap,
-                                        ),
+                                        (topVarNameToValueStrMap ?: emptyMap()) + frameVarNameValueMap,
+                                        linearFrameKeyPairsListConSrcWithReplace,
+//                                        CmdClickMap.replace(
+//                                                linearFrameKeyPairsListConSrcWithReplace,
+//                                                frameVarNameValueMap,
+//                                        )
                                         keyToSubKeyConWhere,
                                         editConstraintListAdapterArg = editConstraintListAdapter
                                 ).let updateVarNameToValueMap@ {

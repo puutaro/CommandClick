@@ -502,6 +502,7 @@ class EditConstraintListAdapter(
                         globalVarNameToValueMap?.map{
                             it.key
                         },
+                        globalVarNameToValueMap,
                         innerFrameKeyPairsConSrc,
                         totalMapListElInfo,
                         editConstraintListAdapterArg = this@EditConstraintListAdapter
@@ -678,6 +679,7 @@ class EditConstraintListAdapter(
                                         ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap).map{
                                             it.key
                                         },
+                                        globalVarNameToValueMap,
                                         frameVarNameValueMap,
                                         "contentsTagSrc: ${contentsTagSrc}, ${totalMapListElInfo}",
                                         contentsKeyPairsListConSrc,

@@ -27,13 +27,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import java.io.File
 import java.lang.ref.WeakReference
 import java.time.LocalDateTime
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.withLock
 
 class ImageActionManager {
     companion object {
@@ -43,11 +44,11 @@ class ImageActionManager {
 
         object BeforeActionImportMapManager {
             private val beforeActionImportMap = mutableMapOf<String, String>()
-            private val mutex = Mutex()
+            private val mutex = ReentrantReadWriteLock()
             suspend fun get(
                 importPath: String
             ): String? {
-                mutex.withLock {
+                mutex.readLock().withLock {
                     return beforeActionImportMap.get(importPath)
                 }
             }
@@ -55,14 +56,14 @@ class ImageActionManager {
                 importPath: String,
                 importCon: String
             ) {
-                mutex.withLock {
+                mutex.writeLock().withLock {
                     beforeActionImportMap.put(importPath, importCon)
                 }
             }
 
             suspend fun init() {
 //                ErrLogger.AlreadyErr.init()
-                mutex.withLock {
+                mutex.writeLock().withLock {
                     beforeActionImportMap.clear()
                 }
             }
@@ -106,18 +107,18 @@ class ImageActionManager {
 
             object LogDatetime {
                 private var beforeOutputTime = LocalDateTime.parse("2020-02-15T21:30:50")
-                private val mutex = Mutex()
+                private val mutex = ReentrantReadWriteLock()
 
                 suspend fun update(
                     datetime: LocalDateTime
                 ) {
-                    mutex.withLock {
+                    mutex.writeLock().withLock {
                         beforeOutputTime = datetime
                     }
                 }
 
                 suspend fun get(): LocalDateTime {
-                    mutex.withLock {
+                    mutex.readLock().withLock {
                         return beforeOutputTime
                     }
                 }
@@ -378,7 +379,7 @@ class ImageActionManager {
                             >
                     >
                 >()
-        private val asyncLoopKeyToVarNameBitmapMapMutex = Mutex()
+        private val asyncLoopKeyToVarNameBitmapMapMutex = ReentrantReadWriteLock()
         suspend fun getAsyncVarNameToBitmapAndExitSignal(loopKey: String):  MutableMap <
                 String,
                 Deferred<
@@ -388,7 +389,7 @@ class ImageActionManager {
                                 >?
                         >
                 >? {
-            return asyncLoopKeyToVarNameBitmapMapMutex.withLock {
+            return asyncLoopKeyToVarNameBitmapMapMutex.readLock().withLock {
                 loopKeyToAsyncDeferredVarNameBitmapMap.get(
                     loopKey
                 )
@@ -405,7 +406,7 @@ class ImageActionManager {
                             >?
                     >
         ){
-            asyncLoopKeyToVarNameBitmapMapMutex.withLock {
+            asyncLoopKeyToVarNameBitmapMapMutex.writeLock().withLock {
                 loopKeyToAsyncDeferredVarNameBitmapMap.get(
                     loopKey
                 ).let { curPrivateMapLoopKeyVarNameValueMap ->
@@ -434,7 +435,7 @@ class ImageActionManager {
             loopKey: String,
             varName: String,
         ) {
-            asyncLoopKeyToVarNameBitmapMapMutex.withLock {
+            asyncLoopKeyToVarNameBitmapMapMutex.writeLock().withLock {
                 loopKeyToAsyncDeferredVarNameBitmapMap.get(
                     loopKey
                 )?.remove(varName)
@@ -442,7 +443,7 @@ class ImageActionManager {
         }
 
         suspend fun clearAsyncVarNameToBitmapAndExitSignal(loopKey: String) {
-            asyncLoopKeyToVarNameBitmapMapMutex.withLock {
+            asyncLoopKeyToVarNameBitmapMapMutex.writeLock().withLock {
                 loopKeyToAsyncDeferredVarNameBitmapMap.remove(
                     loopKey
                 )
@@ -453,11 +454,11 @@ class ImageActionManager {
     private class PrivateLoopKeyVarNameBitmapMap {
         private val privateLoopKeyVarNameBitmapMap =
             mutableMapOf<String, MutableMap<String, Bitmap?>>()
-        private val privateLoopKeyVarNameBitmapMapMutex = Mutex()
+        private val privateLoopKeyVarNameBitmapMapMutex = ReentrantReadWriteLock()
         suspend fun getAsyncVarNameToBitmap(
             loopKey: String
         ): MutableMap<String, Bitmap?>? {
-            return privateLoopKeyVarNameBitmapMapMutex.withLock {
+            return privateLoopKeyVarNameBitmapMapMutex.readLock().withLock {
                 privateLoopKeyVarNameBitmapMap.get(
                     loopKey
                 )
@@ -469,7 +470,7 @@ class ImageActionManager {
             varName: String,
             bitmap: Bitmap?,
         ){
-            privateLoopKeyVarNameBitmapMapMutex.withLock {
+            privateLoopKeyVarNameBitmapMapMutex.writeLock().withLock {
                 privateLoopKeyVarNameBitmapMap.get(
                     loopKey
                 ).let { curPrivateVarNameValueMap ->
@@ -491,7 +492,7 @@ class ImageActionManager {
         suspend fun initPrivateLoopKeyVarNameBitmapMapMutex(
             loopKey: String
         ) {
-            return privateLoopKeyVarNameBitmapMapMutex.withLock {
+            return privateLoopKeyVarNameBitmapMapMutex.writeLock().withLock {
                 privateLoopKeyVarNameBitmapMap.get(
                     loopKey
                 )?.clear()
@@ -499,7 +500,7 @@ class ImageActionManager {
         }
 
         suspend fun clearPrivateLoopKeyVarNameBitmapMapMutex(loopKey: String){
-            privateLoopKeyVarNameBitmapMapMutex.withLock {
+            privateLoopKeyVarNameBitmapMapMutex.writeLock().withLock {
                 privateLoopKeyVarNameBitmapMap.remove(
                     loopKey
                 )
@@ -510,11 +511,11 @@ class ImageActionManager {
     private class LoopKeyToVarNameBitmapMap {
         private val loopKeyToVarNameBitmapMap =
             mutableMapOf<String, MutableMap<String, Bitmap?>>()
-        private val loopKeyToVarNameBitmapMapMutex = Mutex()
+        private val loopKeyToVarNameBitmapMapMutex = ReentrantReadWriteLock()
         suspend fun getAsyncVarNameToBitmap(
             loopKey: String
         ): MutableMap<String, Bitmap?>? {
-            return loopKeyToVarNameBitmapMapMutex.withLock {
+            return loopKeyToVarNameBitmapMapMutex.readLock().withLock {
                 loopKeyToVarNameBitmapMap.get(
                     loopKey
                 )
@@ -526,7 +527,7 @@ class ImageActionManager {
             varName: String,
             bitmap: Bitmap?,
         ){
-            loopKeyToVarNameBitmapMapMutex.withLock {
+            loopKeyToVarNameBitmapMapMutex.writeLock().withLock {
                 loopKeyToVarNameBitmapMap.get(
                     loopKey
                 ).let { curVarNameBitmapMap ->
@@ -548,7 +549,7 @@ class ImageActionManager {
         suspend fun initPrivateLoopKeyVarNameBitmapMapMutex(
             loopKey: String
         ) {
-            return loopKeyToVarNameBitmapMapMutex.withLock {
+            return loopKeyToVarNameBitmapMapMutex.writeLock().withLock{
                 loopKeyToVarNameBitmapMap.get(
                     loopKey
                 )?.clear()
@@ -556,7 +557,7 @@ class ImageActionManager {
         }
 
         suspend fun clearPrivateLoopKeyVarNameBitmapMapMutex(loopKey: String){
-            loopKeyToVarNameBitmapMapMutex.withLock {
+            loopKeyToVarNameBitmapMapMutex.writeLock().withLock {
                 loopKeyToVarNameBitmapMap.remove(
                     loopKey
                 )
@@ -565,18 +566,19 @@ class ImageActionManager {
     }
 
     private class ExitSignalManager {
-        private var exitSignal = false
-        private val exitSignalMutex = Mutex()
+        private var exitSignal = AtomicBoolean(false)
+//        private val exitSignalMutex = Mutex()
         suspend fun setExit(){
-            exitSignalMutex.withLock {
-                exitSignal = true
-            }
+//            exitSignalMutex.withLock {
+                exitSignal = AtomicBoolean(true)
+//            }
         }
 
         suspend fun get(): Boolean {
-            return exitSignalMutex.withLock {
-                exitSignal
-            }
+            return exitSignal.get()
+//            exitSignalMutex.withLock {
+//                exitSignal
+//            }
         }
     }
 
@@ -633,7 +635,7 @@ class ImageActionManager {
             editConstraintListAdapterArg: EditConstraintListAdapter?,
             keyToSubKeyConList: List<Pair<String, String>>?,
             curMapLoopKey: String,
-            originImportPath: String?,
+            originImportPathList: List<String>?,
             keyToSubKeyConWhere: String,
             topAcIVarName: String?,
             importedVarNameToBitmapMap: Map<String, Bitmap?>?,
@@ -870,7 +872,7 @@ class ImageActionManager {
                                 loopKeyToAsyncDeferredVarNameBitmapMap,
                                 exitSignalManager,
                                 keyToSubKeyCon,
-                                originImportPath,
+                                originImportPathList,
                                 keyToSubKeyConWhere
                             )
                         val importPath =
@@ -919,16 +921,6 @@ class ImageActionManager {
                                                 curImportedVarNameToBitmapMap,
                                                 null,
                                                 )
-//                                            (importedVarNameToBitmapMap ?: emptyMap()) +
-//                                            (topVarNameToVarNameBitmapMap ?: emptyMap()) +
-//                                                    (privateLoopKeyVarNameBitmapMap
-//                                                        .getAsyncVarNameToBitmap(
-//                                                            curMapLoopKey
-//                                                        )?.toMap() ?: emptyMap()) +
-//                                                    (loopKeyToVarNameBitmapMap
-//                                                        .getAsyncVarNameToBitmap(
-//                                                            curMapLoopKey
-//                                                        )?.toMap() ?: emptyMap())
                                         val curBitmapVarKeyList = varNameToBitmapMap.map {
                                             it.key
                                         }
@@ -958,7 +950,7 @@ class ImageActionManager {
                                             editConstraintListAdapterArg,
                                             importedKeyToSubKeyConList,
                                             addedLoopKey,
-                                            originImportPath,
+                                            (originImportPathList ?: emptyList()) + listOf(importPath),
                                             "${importPath} by imported",
                                             acIVarName,
                                             varNameToBitmapMap,
@@ -997,7 +989,7 @@ class ImageActionManager {
                             editConstraintListAdapterArg,
                             importedKeyToSubKeyConList,
                             addedLoopKey,
-                            originImportPath,
+                            (originImportPathList ?: emptyList()) + listOf(importPath),
                             "${importPath} by imported",
                             acIVarName,
                             varNameToBitmapMap,
@@ -1582,27 +1574,27 @@ class ImageActionManager {
 
             fun isCircleImportErr(
                 context: Context?,
-                originImportPath: String?,
+                originImportPathList: List<String>?,
                 importPath: String,
                 keyToSubKeyConWhere: String,
             ): Boolean {
                 if(
-                    originImportPath.isNullOrEmpty()
+                    originImportPathList.isNullOrEmpty()
                 ) {
                     return false
                 }
                 if(
-                    importPath != originImportPath
+                    !originImportPathList.contains(importPath)
                 ) return false
                 val spanSAcVarKeyName =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
                         CheckTool.ligthBlue,
                         iAcVarKeyName
                     )
-                val spanOriginImportPath =
+                val spanOriginImportPathListCon =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
                         CheckTool.ligthBlue,
-                        originImportPath
+                        originImportPathList.joinToString(",")
                     )
                 val spanImportPath =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -1613,7 +1605,7 @@ class ImageActionManager {
                     ErrLogger.sendErrLog(
                         context,
                         ErrLogger.ImageActionErrType.I_AC_VAR,
-                        "must not circle in ${spanSAcVarKeyName}: importPath: ${spanImportPath}, originImportPath: ${spanOriginImportPath}",
+                        "must not circle in ${spanSAcVarKeyName}: importPath: ${spanImportPath}, originImportPathListCon: ${spanOriginImportPathListCon}",
                         keyToSubKeyConWhere,
                     )
                 }
@@ -3423,7 +3415,7 @@ class ImageActionManager {
                 loopKeyToAsyncDeferredVarNameBitmapMap: LoopKeyToAsyncDeferredVarNameBitmapMap?,
                 exitSignalManager: ExitSignalManager,
                 keyToSubKeyCon: Pair<String, String>?,
-                originImportPath: String?,
+                originImportPathList: List<String>?,
                 keyToSubKeyConWhere: String,
             ): Pair<String,
                     Triple<
@@ -3579,7 +3571,7 @@ class ImageActionManager {
                     val isCircleImportErrJob = async {
                         ImportErrManager.isCircleImportErr(
                             context,
-                            originImportPath,
+                            originImportPathList,
                             importPathSrc,
                             keyToSubKeyConWhere,
                         )

@@ -1,0 +1,459 @@
+package com.puutaro.commandclick.proccess.edit.setting_action.libs
+
+import android.content.Context
+import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
+import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
+import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.QuoteTool
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.withLock
+
+object SettingActionImportManager {
+
+    private val sIfKeyName = SettingActionKeyManager.SettingSubKey.S_IF.key
+    private val valueSeparator = SettingActionKeyManager.valueSeparator
+    private val imageActionVarKey = SettingActionKeyManager.SettingActionsKey.SETTING_ACTION_VAR.key
+    private val escapeRunPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
+    private val asyncRunPrefix = SettingActionKeyManager.VarPrefix.RUN_ASYNC.prefix
+    private const val awaitWaitTimes =
+        SettingActionKeyManager.AwaitManager.awaitWaitTimes
+
+    object BeforeActionImportMapManager {
+        private val beforeActionImportMap = mutableMapOf<String, String>()
+        private val mutex = ReentrantReadWriteLock()
+        fun get(
+            importPath: String
+        ): String? {
+            mutex.readLock().withLock {
+                return beforeActionImportMap.get(importPath)
+            }
+        }
+        fun put(
+            importPath: String,
+            importCon: String
+        ) {
+            mutex.writeLock().withLock {
+                beforeActionImportMap.put(importPath, importCon)
+            }
+        }
+
+        fun init() {
+//                ErrLogger.AlreadyErr.init()
+            mutex.writeLock().withLock {
+                beforeActionImportMap.clear()
+            }
+        }
+    }
+//            private var replaceVariableMapCon = String()
+
+//            fun initBeforeActionImportMap(
+//                setReplaceVariableMap: Map<String, String>?
+//            ){
+////                beforeActionImportMap.clear()
+//                replaceVariableMapCon =
+//                    makeSetRepValeMapCon(setReplaceVariableMap)
+//            }
+
+    private fun makeSetRepValeMapCon(
+        setReplaceVariableMap: Map<String, String>?
+    ): String {
+        if(
+            setReplaceVariableMap.isNullOrEmpty()
+        ) return String()
+        return setReplaceVariableMap.map {
+            "${it.key}\t${it.value}"
+        }.joinToString("\n") + "\n"
+    }
+
+
+    suspend fun makeImportPathAndRenewalVarNameToImportCon(
+        context: Context?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        curMapLoopKey: String,
+        topVarNameToValueStrMap: Map<String, String?>?,
+        loopKeyToAsyncDeferredVarNameValueStrMap: SettingActionData.LoopKeyToAsyncDeferredVarNameValueStrMap?,
+        privateLoopKeyVarNameValueStrMapClass: SettingActionData.PrivateLoopKeyVarNameValueStrMap,
+        loopKeyToVarNameValueStrMapClass: SettingActionData.LoopKeyToVarNameValueStrMap,
+        importedVarNameToValueStrMap: Map<String, String?>?,
+        settingActionExitManager: SettingActionData.SettingActionExitManager,
+        keyToSubKeyCon: Pair<String, String>?,
+        originImportPathList: List<String>?,
+        keyToSubKeyConWhere: String,
+    ): Pair<String,
+            Triple<
+                    String,
+                    List<Pair<String, String>>,
+                    Map<String, String?>,
+                    >,
+            > {
+        val keyToSubKeyContents = listOf(
+            imageActionVarKey,
+            keyToSubKeyCon?.second ?: String()
+        ).joinToString("=")
+        val varNameToValueStrMap =
+            makeVarNameToValueStrMap(
+                curMapLoopKey,
+                topVarNameToValueStrMap,
+                importedVarNameToValueStrMap,
+                loopKeyToVarNameValueStrMapClass,
+                privateLoopKeyVarNameValueStrMapClass,
+                null,
+                null,
+            )
+        val actionImportMapBeforeReplace = ImportMapMaker.comp(
+            keyToSubKeyContents,
+            "${imageActionVarKey}="
+        )
+        val actionImportMap =
+            CmdClickMap.MapReplacer.replaceToPairList(
+                actionImportMapBeforeReplace,
+                varNameToValueStrMap
+            ).toMap()
+        val topIAcVarName = QuoteTool.trimBothEdgeQuote(
+            actionImportMap.get(
+                imageActionVarKey
+            )
+        )
+        val awaitVarNameList = QuoteTool.trimBothEdgeQuote(
+            actionImportMap.get(
+                SettingActionKeyManager.ActionImportManager.ActionImportKey.AWAIT.key
+            )
+        ).let {
+            SettingActionKeyManager.AwaitManager.getAwaitVarNameList(it)
+        }
+        val awaitVarNameValueStrMap = awaitVarNameList.map awaitVarNameList@ {
+                awaitVarName ->
+            var deferredVarNameToValueStrAndBreakSignal: Deferred<
+                    Pair<
+                            Pair<String, String?>,
+                            SettingActionKeyManager.BreakSignal?
+                            >?
+                    >? = null
+            for (i in 1..awaitWaitTimes) {
+//                        if(
+//                            ErrLogger.AlreadyErr.get()
+//                        ) break
+                deferredVarNameToValueStrAndBreakSignal =
+                    loopKeyToAsyncDeferredVarNameValueStrMap
+                        ?.getAsyncVarNameToValueStrAndExitSignal(
+                            curMapLoopKey
+                        )?.get(awaitVarName)
+                if (
+                    deferredVarNameToValueStrAndBreakSignal != null
+                ) {
+                    break
+                }
+                delay(100)
+            }
+            val spanKeyToSubKeyConWhere =
+                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errBrown,
+                    keyToSubKeyConWhere
+                )
+            if(
+                deferredVarNameToValueStrAndBreakSignal == null
+                && curMapLoopKey.isNotEmpty()
+                && awaitVarName.isNotEmpty()
+            ) {
+                val spanAwaitVarName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        awaitVarName
+                    )
+                val spanIAcVarKeyName =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        SettingActionKeyManager.SettingActionsKey.SETTING_ACTION_VAR.key
+                    )
+                val importPath = actionImportMap.get(
+                    SettingActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
+                )
+                val spanImportPath =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        importPath ?: String()
+                    )
+                runBlocking {
+                    SettingActionErrLogger.sendErrLog(
+                        context,
+                        SettingActionErrLogger.SettingActionErrType.AWAIT,
+                        "await var name not exist: ${spanAwaitVarName}, by import path ${spanImportPath}, setting key: ${spanIAcVarKeyName}",
+                        spanKeyToSubKeyConWhere,
+                    )
+                }
+                return@awaitVarNameList String() to null
+            }
+            val varNameToValueStrAndExitSignal =
+                deferredVarNameToValueStrAndBreakSignal?.await()
+            loopKeyToAsyncDeferredVarNameValueStrMap?.clearVarName(
+                curMapLoopKey,
+                awaitVarName,
+            )
+            val varNameToValueStr = varNameToValueStrAndExitSignal?.first
+            val exitSignal = varNameToValueStrAndExitSignal?.second
+            val varName = varNameToValueStr?.first
+                ?: return@awaitVarNameList String() to null
+            if(
+                varName.startsWith(asyncRunPrefix)
+            ) return@awaitVarNameList String() to null
+            val valueStr = varNameToValueStr.second
+            varName to valueStr
+        }.toMap()
+        val judgeTargetStr = QuoteTool.trimBothEdgeQuote(
+            actionImportMap.get(
+                SettingActionKeyManager.ActionImportManager.ActionImportKey.S_IF.key
+            )
+        ).let {
+            CmdClickMap.replaceByBackslashToNormal(
+                it,
+                varNameToValueStrMap,
+            )
+        }
+        val argsPairList = CmdClickMap.createMap(
+            actionImportMapBeforeReplace.get(
+                SettingActionKeyManager.ActionImportManager.ActionImportKey.ARGS.key
+            ),
+            valueSeparator
+        ).filter {
+            it.first.isNotEmpty()
+        }.map {
+                argNameToValueStr ->
+            argNameToValueStr.first to CmdClickMap.replaceByBackslashToNormal(
+                argNameToValueStr.second,
+                varNameToValueStrMap
+            )
+        }
+        val isImportToErrType = when(judgeTargetStr.isEmpty()) {
+            true -> true to null
+            else -> {
+                SettingIfManager.handle(
+                    sIfKeyName,
+                    judgeTargetStr,
+                    argsPairList,
+                )
+            }
+        }
+        val blankReturnValueStr =
+            Pair (
+                String(),
+                Triple(
+                    String(),
+                    emptyList<Pair<String, String>>(),
+                    emptyMap<String, String?>(),
+                ),
+            )
+        val errType = isImportToErrType.second
+        if(errType != null){
+            SettingActionErrLogger.sendErrLog(
+                context,
+                SettingActionErrLogger.SettingActionErrType.S_IF,
+                errType.errMessage,
+                keyToSubKeyConWhere
+            )
+            settingActionExitManager.setExit()
+            return blankReturnValueStr
+        }
+        val isImport = isImportToErrType.first ?: false
+        if(
+            !isImport
+        ) return blankReturnValueStr
+        val importPathSrc = QuoteTool.trimBothEdgeQuote(
+            actionImportMap.get(
+                SettingActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
+            )
+        )
+        val importRepMapBeroreReplace = makeRepValHolderMap(
+            actionImportMapBeforeReplace.get(
+                SettingActionKeyManager.ActionImportManager.ActionImportKey.REPLACE.key
+            )
+        )
+        val importRepMap =
+            CmdClickMap.MapReplacer.replaceToPairList(
+                importRepMapBeroreReplace,
+                varNameToValueStrMap
+            ).toMap()
+        val isBeforeImportErr = withContext(Dispatchers.IO) {
+            val isCircleImportErrJob = async {
+                ImportErrManager.isCircleImportErr(
+                    context,
+                    originImportPathList,
+                    importPathSrc,
+                    keyToSubKeyConWhere,
+                )
+            }
+            val isNotExistJob = async {
+                ImportErrManager.isNotExist(
+                    context,
+                    importPathSrc,
+                    keyToSubKeyConWhere
+                )
+            }
+            isCircleImportErrJob.await()
+                    || isNotExistJob.await()
+        }
+        if(
+            isBeforeImportErr
+        ) return blankReturnValueStr
+        val importSrcConBeforeReplace = makeActionImportSrcCon(
+            context,
+            importPathSrc,
+            fannelInfoMap,
+            setReplaceVariableMap,
+        ).replace(
+            Regex("[${SettingActionKeyManager.landSeparator}]+$"),
+            String(),
+        )
+        val importSrcCon = CmdClickMap.replaceHolderForJsAction(
+            importSrcConBeforeReplace,
+            importRepMap
+        )
+        val importedKeyToSubKeyConList = SettingActionKeyManager.KeyToSubKeyMapListMaker.make(importSrcCon)
+        val settingKeyToVarNameListForReturn =
+            SettingActionKeyManager.makeSettingKeyToVarNameListForReturn(
+                importedKeyToSubKeyConList
+            ).let {
+                SettingActionKeyManager.filterSettingKeyToDefinitionListByValidVarDefinition(
+                    it
+                )
+            }
+        val isErr = withContext(Dispatchers.IO) {
+            val keyToSubKeyConWhereInImportPath = listOf(
+                keyToSubKeyConWhere,
+                "by import path $importPathSrc"
+            ).joinToString("\n")
+            val isImportShadowVarMarkErrJob = async {
+                ImportErrManager.isImportShadowVarMarkErr(
+                    context,
+                    importPathSrc,
+                    importSrcConBeforeReplace,
+                    importRepMapBeroreReplace,
+                    keyToSubKeyConWhere,
+                )
+            }
+//                    val isGlobalVarNameErrWithRunPrefixJob = async {
+//                        ImportErrManager.isGlobalVarNameExistErrWithRunPrefix(
+//                            context,
+//                            settingKeyToVarNameList,
+//                            topIAcVarName,
+//                            keyToSubKeyConWhereInImportPath
+//                        )
+//                    }
+//                    val isGlobalVarNameMultipleExistErrWithoutRunPrefixJob = async {
+//                        ImportErrManager.isGlobalVarNameMultipleErrWithoutRunPrefix(
+//                            context,
+//                            settingKeyToVarNameList,
+//                            topIAcVarName,
+//                            keyToSubKeyConWhereInImportPath
+//                        )
+//                    }
+            val isSettingReturnNotLastErrWithoutRunPrefixJob = async {
+                ImportErrManager.isGlobalVarNameNotLastErrWithoutRunPrefix(
+                    context,
+                    settingKeyToVarNameListForReturn,
+                    importedKeyToSubKeyConList,
+                    topIAcVarName,
+                    keyToSubKeyConWhereInImportPath
+                )
+            }
+            isImportShadowVarMarkErrJob.await()
+//                            || isGlobalVarNameErrWithRunPrefixJob.await()
+//                            || isGlobalVarNameMultipleExistErrWithoutRunPrefixJob.await()
+                    || isSettingReturnNotLastErrWithoutRunPrefixJob.await()
+        }
+        if(
+            isErr
+        ) return blankReturnValueStr
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "smakeImportPathAndRenewalVarNameToImportCon.txt").absolutePath,
+//                    listOf(
+//                        "renewalVarNameSrc: ${renewalVarName}",
+//                        "importSrcCon: ${importSrcCon}",
+//                        "importedKeyToSubKeyConList: ${importedKeyToSubKeyConList}",
+//                    ).joinToString("\n\n") + "\n\n=============\n\n"
+//                )
+        return Pair (
+            importPathSrc,
+            Triple(
+                topIAcVarName,
+                importedKeyToSubKeyConList,
+                awaitVarNameValueStrMap
+            ),
+        )
+    }
+
+    private fun makeRepValHolderMap(
+        replaceKeyConWithQuote: String?,
+    ): Map<String, String> {
+        if(
+            replaceKeyConWithQuote.isNullOrEmpty()
+        ) return emptyMap()
+        val replaceKeyCon = QuoteTool.trimBothEdgeQuote(
+            replaceKeyConWithQuote
+        )
+        val replaceSeparator = '&'
+        return CmdClickMap.createMap(
+            replaceKeyCon,
+            replaceSeparator
+        ).toMap().filterKeys { it.isNotEmpty() }
+    }
+
+    private suspend fun makeActionImportSrcCon(
+        context: Context?,
+        importPath: String,
+//        currentAppDirPath: String,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+    ): String {
+        val beforeActionImportSrcCon = withContext(Dispatchers.IO) {
+            BeforeActionImportMapManager.get(importPath)
+        }
+        if(
+            !beforeActionImportSrcCon.isNullOrEmpty()
+        ) {
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath,"jsAcImport_first_makeActionImportSrcCon.txt").absolutePath,
+//                        listOf(
+//                            "importPath: ${importPath}",
+//                            "beforeActionImportSrcCon: ${beforeActionImportSrcCon}",
+//                        ).joinToString("\n\n") + "\n\n========\n\n"
+//                    )
+            return beforeActionImportSrcCon
+        }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath,"jsAcImport_first_makeActionImportSrcCon.txt").absolutePath,
+//            listOf(
+//                "importPath: ${importPath}",
+//                "beforeActionImportSrcCon: ${beforeActionImportSrcCon}",
+//            ).joinToString("\n\n") + "\n-----\n"
+//        )
+        val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
+        val actionImportSrcCon = SettingFile.read(
+            context,
+            importPath,
+            File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
+            setReplaceVariableMap,
+        )
+        CoroutineScope(Dispatchers.IO).launch {
+            BeforeActionImportMapManager.put(
+                importPath,
+                actionImportSrcCon,
+            )
+        }
+        return actionImportSrcCon
+    }
+}
