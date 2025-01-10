@@ -787,7 +787,7 @@ object VarErrManager {
             SettingActionErrLogger.sendErrLog(
                 context,
                 SettingActionErrLogger.SettingActionErrType.S_VAR,
-                "Not difinition var: ${spanLeaveVarMark}",
+                "Not definition var: ${spanLeaveVarMark}",
                 keyToSubKeyConWhere,
             )
         }
@@ -811,13 +811,18 @@ object VarErrManager {
         topLevelValueStrKeyList: List<String>?,
         keyToSubKeyConWhere: String,
     ): Boolean {
+        val returnTopAcVarNameMacro = SettingActionKeyManager.returnTopAcVarNameMacro
         val shadowSettingKeyToNoRunVarName = settingKeyToNoRunVarNameList.filter {
                 settingKeyToNoRunVarName ->
             settingKeyToNoRunVarName.first != settingReturnKey
         }.firstOrNull {
                 settingKeyToNoRunVarName ->
+            val noRunVarName = settingKeyToNoRunVarName.second
+            if(
+                noRunVarName == returnTopAcVarNameMacro
+            ) return@firstOrNull false
             topLevelValueStrKeyList?.contains(
-                settingKeyToNoRunVarName.second
+                noRunVarName
             ) == true
         }
 //                FileSystems.updateFile(

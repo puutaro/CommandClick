@@ -11,6 +11,7 @@ object SettingActionKeyManager {
     const val subKeySepartor = '?'
     const val valueSeparator = '&'
     val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
+    const val returnTopAcVarNameMacro = "CMDCLICK_OUTPUT_MACRO"
 
     enum class SettingActionsKey(
         val key: String

@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 
 object SystemInfoForSetting {
     suspend fun handle(
-        fragment: Fragment,
+        fragment: Fragment?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
@@ -47,7 +47,7 @@ object SystemInfoForSetting {
             when (methodNameClass) {
                 MethodNameClass.GET_BACKSTACK_COUNT -> {
                     fragment
-                        .activity
+                        ?.activity
                         ?.supportFragmentManager
                         ?.backStackEntryCount
                         ?.toString()

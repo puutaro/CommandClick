@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -28,6 +29,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -37,10 +39,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.lang.ref.WeakReference
 
 class SettingActionManager {
@@ -67,6 +71,7 @@ class SettingActionManager {
         keyToSubKeyCon: String?,
         keyToSubKeyConWhere: String,
         editConstraintListAdapterArg: EditConstraintListAdapter? = null,
+        topAcSVarName: String? = null,
     ): Map<String, String> {
         if(
             fragment == null
@@ -97,7 +102,7 @@ class SettingActionManager {
             SettingActionExecutor.mapRoopKeyUnit,
             null,
             keyToSubKeyConWhere,
-            null,
+            topAcSVarName,
             null,
             null,
         )
@@ -181,6 +186,7 @@ class SettingActionManager {
         private val escapeRunPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
         private val runAsyncPrefix = SettingActionKeyManager.VarPrefix.RUN_ASYNC.prefix
         private val asyncPrefix = SettingActionKeyManager.VarPrefix.ASYNC.prefix
+        private val returnTopAcVarNameMacro = SettingActionKeyManager.returnTopAcVarNameMacro
 
         companion object {
             const val mapRoopKeyUnit = "loop"
@@ -305,7 +311,7 @@ class SettingActionManager {
                         context,
                         settingKeyToNoRunVarNameList,
                         keyToSubKeyConList,
-                        stringVarKeyList,
+                        (stringVarKeyList ?: emptyList()) + (topLevelValueStrKeyList ?: emptyList()),
                         keyToSubKeyConWhere,
                     )
                 }
@@ -723,6 +729,8 @@ class SettingActionManager {
                                 val deferred = async {
                                     SettingVarExecutor().exec(
                                         fragment,
+                                        fannelInfoMap,
+                                        setReplaceVariableMapSrc,
                                         mainSubKeyPairList,
                                         busyboxExecutor,
                                         editConstraintListAdapterArg,
@@ -826,6 +834,8 @@ class SettingActionManager {
                         }
                         SettingVarExecutor().exec(
                             fragment,
+                            fannelInfoMap,
+                            setReplaceVariableMapSrc,
                             mainSubKeyPairList,
                             busyboxExecutor,
                             editConstraintListAdapterArg,
@@ -944,6 +954,16 @@ class SettingActionManager {
                                 && varNameToValueStr != null
                             ) {
                                 privateLoopKeyVarNameValueStrMap.put(
+                                    removedLoopKey,
+                                    topAcSVarName,
+                                    varNameToValueStr.second
+                                )
+                            }
+                            if(
+                                topAcSVarName == returnTopAcVarNameMacro
+                                && varNameToValueStr != null
+                            ){
+                                loopKeyToVarNameValueStrMap.put(
                                     removedLoopKey,
                                     topAcSVarName,
                                     varNameToValueStr.second
@@ -1093,6 +1113,8 @@ class SettingActionManager {
 
             suspend fun exec(
                 fragment: Fragment,
+                fannelInfoMap: Map<String, String>,
+                setReplaceVariableMapSrc: Map<String, String>?,
                 mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
                 busyboxExecutor: BusyboxExecutor?,
                 editConstraintListAdapterArg: EditConstraintListAdapter?,
@@ -1384,9 +1406,13 @@ class SettingActionManager {
 //                            )
                             val resultValueStrToExitMacroAndCheckErr = SettingFuncManager.handle(
                                 fragment,
+                                fannelInfoMap,
+                                setReplaceVariableMapSrc,
+                                busyboxExecutor,
+                                varNameToValueStrMap,
+                                keyToSubKeyConWhere,
                                 funcTypeDotMethod,
                                 argsPairList,
-                                busyboxExecutor,
                                 editConstraintListAdapterArg,
                             )
                             val checkErr = resultValueStrToExitMacroAndCheckErr?.second
@@ -1502,12 +1528,15 @@ private object SettingFuncManager {
     private const val funcTypeAndMethodSeparatorDot = "."
 
     suspend fun handle(
-        fragment: Fragment,
+        fragment: Fragment?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMapSrc: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        topVarNameToValueStrMap: Map<String, String?>?,
+        keyToSubKeyConWhere: String,
         funcTypeDotMethod: String,
         baseArgsPairList: List<Pair<String, String>>,
-        busyboxExecutor: BusyboxExecutor?,
         editConstraintListAdapter: EditConstraintListAdapter?,
-//        varNameToValueStrMap: Map<String, String?>,
     ): Pair<
             Pair<
                     String?,
@@ -1545,7 +1574,7 @@ private object SettingFuncManager {
                 )
             FuncType.TOAST -> {
                 ToastForSetting.handle(
-                    fragment.context,
+                    fragment?.context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -1554,7 +1583,7 @@ private object SettingFuncManager {
             }
             FuncType.DEBUG -> {
                 DebugForSetting.handle(
-                    fragment.context,
+                    fragment?.context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -1641,6 +1670,19 @@ private object SettingFuncManager {
                     baseArgsPairList,
 //                    varNameToValueStrMap,
                 )
+            FuncType.EVAL ->
+                EvalForSetting.handle(
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMapSrc,
+                    busyboxExecutor,
+                    topVarNameToValueStrMap,
+                    keyToSubKeyConWhere,
+                    editConstraintListAdapter,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
         }
 
     }
@@ -1662,6 +1704,226 @@ private object SettingFuncManager {
         LIST("list"),
         RND("rnd"),
         SYSTEM_INFO("systemInfo"),
+        EVAL("eval")
     }
 
+}
+
+object EvalForSetting {
+
+    private const val joinStrIndex = 4
+
+    suspend fun handle(
+        fragment: Fragment?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMapSrc: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        topVarNameToValueStrMap: Map<String, String?>?,
+        keyToSubKeyConWhere: String,
+        editConstraintListAdapterArg: EditConstraintListAdapter? = null,
+        funcName: String,
+        methodNameStr: String,
+        argsPairList: List<Pair<String, String>>,
+    ): Pair<
+            Pair<
+                    String?,
+                    SettingActionKeyManager.BreakSignal?
+                    >?,
+            FuncCheckerForSetting.FuncCheckErr?
+            >? {
+        val methodNameClass = MethodNameClass.entries.firstOrNull {
+            it.str == methodNameStr
+        } ?: let {
+            val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errBrown,
+                funcName
+            )
+            val spanMethodNameStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                methodNameStr
+            )
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
+        }
+        FuncCheckerForSetting.checkArgs(
+            funcName,
+            methodNameStr,
+            methodNameClass.argsNameToTypeList,
+            argsPairList,
+        )?.let { argsCheckErr ->
+            return null to argsCheckErr
+        }
+        val argsList = argsPairList.map {
+            it.second
+        }
+        return withContext(Dispatchers.Main) {
+            when (methodNameClass) {
+                MethodNameClass.MAP -> {
+                    val inputCon = argsList.get(0)
+                    val separator = argsList.get(1)
+                    val elVarName = argsList.get(2)
+                    val settingActionCon = argsList.get(3)
+                    val joinStr = argsList.get(joinStrIndex)
+                    MapOperator.map(
+                        fragment,
+                        fannelInfoMap,
+                        setReplaceVariableMapSrc,
+                        busyboxExecutor,
+                        topVarNameToValueStrMap,
+                        keyToSubKeyConWhere,
+                        editConstraintListAdapterArg,
+                        inputCon,
+                        separator,
+                        elVarName,
+                        settingActionCon,
+                        joinStr,
+                    )
+                }
+            }
+        }
+    }
+
+    private object MapOperator {
+
+        const val returnTopAcVarNameMacro = SettingActionKeyManager.returnTopAcVarNameMacro
+
+        suspend fun map(
+            fragment: Fragment?,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMapSrc: Map<String, String>?,
+            busyboxExecutor: BusyboxExecutor?,
+            topVarNameToValueStrMap: Map<String, String?>?,
+            keyToSubKeyConWhere: String,
+            editConstraintListAdapterArg: EditConstraintListAdapter? = null,
+            inputCon: String,
+            separator: String,
+            elVarName: String,
+            settingActionCon: String,
+            joinStr: String,
+        ): Pair<
+                Pair<
+                        String?,
+                        SettingActionKeyManager.BreakSignal?
+                        >?,
+                FuncCheckerForSetting.FuncCheckErr?
+                > {
+            val info = listOf(
+                "inputCon ${inputCon}",
+                "separator: ${separator}",
+                "elVarName: ${elVarName}",
+                "settingActionCon $settingActionCon",
+                "joinStr: ${joinStr}",
+            ).joinToString(",")
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "leval_func.txt").absolutePath,
+//                listOf(
+//                    "separator: ${separator}",
+//                    "inputCon: ${inputCon}",
+//                    "inputCon.split(separator): ${inputCon.split(separator)}"
+//                ).joinToString("\n\n")
+//            )
+            return withContext(Dispatchers.IO) {
+                val evalMapJobList = when(separator == defaultMacroStr
+                ) {
+                    true -> listOf(inputCon)
+                    else -> inputCon.split(separator)
+                }.map {
+                    el ->
+                    async {
+                        val curTopVarNameToValueStrMap = (topVarNameToValueStrMap ?: emptyMap()) + mapOf(
+                            elVarName to el,
+                        )
+                        val outputVarNameToValueStrMap = SettingActionManager().exec(
+                            fragment,
+                            fannelInfoMap,
+                            setReplaceVariableMapSrc,
+                            busyboxExecutor,
+                            SettingActionAsyncCoroutine(),
+                            curTopVarNameToValueStrMap.map {
+                                it.key
+                            },
+                            curTopVarNameToValueStrMap,
+                            settingActionCon,
+                            "eval: elVarName: ${elVarName}, ${keyToSubKeyConWhere}",
+                            editConstraintListAdapterArg,
+                            returnTopAcVarNameMacro
+                        )
+                        outputVarNameToValueStrMap.get(returnTopAcVarNameMacro)
+                    }
+                }
+                val resultStrList = evalMapJobList.awaitAll()
+                val isJoin = joinStr != defaultMacroStr
+                if(!isJoin){
+                   return@withContext null to null
+                }
+                val resultStr = when(
+                    resultStrList.any {
+                        result -> result == null
+                    }
+                ){
+                    true -> {
+                        val spanJoinStrArgName =
+                            CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.ligthBlue,
+                                mapArgsNameToTypeList.get(joinStrIndex).first
+                            )
+                        val spanDefaultMacroStr =
+                            CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.ligthBlue,
+                                defaultMacroStr
+                            )
+                        val spanInfo = let {
+                            CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.errBrown,
+                                info
+                            )
+                        }
+                        return@withContext  Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ) to  FuncCheckerForSetting.FuncCheckErr(
+                            "When ${spanJoinStrArgName} is not ${spanDefaultMacroStr}, result must exist: ${spanInfo}, ${keyToSubKeyConWhere}"
+                        )
+                    }
+                    else -> resultStrList.joinToString(joinStr)
+                }
+                Pair(
+                    resultStr,
+                    null,
+                ) to null
+            }
+        }
+
+        private const val defaultMacroStr = "NULL"
+    }
+
+
+    enum class MethodNameClass(
+        val str: String,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+    ) {
+        MAP("map", mapArgsNameToTypeList),
+    }
+
+    private val mapArgsNameToTypeList = listOf(
+        Pair(
+            "inputCon",
+            FuncCheckerForSetting.ArgType.STRING,
+        ),
+        Pair(
+            "separator",
+            FuncCheckerForSetting.ArgType.STRING
+        ),
+        Pair(
+            "elVarName",
+            FuncCheckerForSetting.ArgType.STRING,
+        ),
+        Pair(
+            "action",
+            FuncCheckerForSetting.ArgType.STRING
+        ),
+        Pair(
+            "joinStr",
+            FuncCheckerForSetting.ArgType.STRING
+        ),
+    )
 }

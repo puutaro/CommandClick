@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 
 object EditForSetting {
     suspend fun handle(
-        fragment: Fragment,
+        fragment: Fragment?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
@@ -52,7 +52,7 @@ object EditForSetting {
         }
         val terminalFragment = withContext(Dispatchers.Main) {
             TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
-                fragment.activity
+                fragment?.activity
             )
         } ?: return null to FuncCheckerForSetting.FuncCheckErr("Cannot get terminal fragment")
         val settingValueStr = withContext(Dispatchers.Main) {
