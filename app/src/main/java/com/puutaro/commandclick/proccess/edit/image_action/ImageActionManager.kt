@@ -635,7 +635,6 @@ class ImageActionManager {
                         val proposalRenewalVarNameSrcInnnerMapBitmap =
                             privateLoopKeyVarNameBitmapMap.getAsyncVarNameToBitmap(
                                 curMapLoopKey
-//                                addLoopKey(curMapLoopKey)
                             )?.get(
                                 acIVarName
                             )
@@ -730,7 +729,6 @@ class ImageActionManager {
                                         keyToSubKeyConWhere,
                                     )
                                 }
-//                                val removedLoopKey = removeLoopKey(curMapLoopKey)
                                 loopKeyToAsyncDeferredVarNameBitmapMap.put(
                                     curMapLoopKey,
                                     settingVarName,
@@ -865,38 +863,6 @@ class ImageActionManager {
                                 varNameToBitmap.first,
                                 varNameToBitmap.second
                             )
-
-//                            val isGlobalForRawVar =
-//                                globalVarNameRegex.matches(varNameToBitmap.first)
-//                            val isNotRunPrefix =
-//                                !topAcIVarName.isNullOrEmpty()
-//                                        && !topAcIVarName.startsWith(escapeRunPrefix)
-//                            val isRegisterToTopForPrivate =
-//                                isGlobalForRawVar && isNotRunPrefix
-//                            val removedLoopKey =
-//                                removeLoopKey(curMapLoopKey)
-//                            if (
-//                                isRegisterToTopForPrivate
-//                                && !topAcIVarName.isNullOrEmpty()
-//                            ) {
-//                                privateLoopKeyVarNameBitmapMap.put(
-//                                    removedLoopKey,
-//                                    topAcIVarName,
-//                                    varNameToBitmap.second
-//                                )
-//                            }
-//                            val varNameForPut = topAcIVarName
-//                                ?: varNameToBitmap.first
-//                            val isGlobalRegister =
-//                                isGlobalForRawVar
-//                                        && globalVarNameRegex.matches(varNameForPut)
-//                            if (isGlobalRegister) {
-//                                loopKeyToVarNameBitmapMap.put(
-//                                    removedLoopKey,
-//                                    varNameForPut,
-//                                    varNameToBitmap.second
-//                                )
-//                            }
 //                            FileSystems.updateFile(
 //                                File(
 //                                    UsePath.cmdclickDefaultIDebugAppDirPath,
@@ -1384,7 +1350,6 @@ class ImageActionManager {
                                 ),
                                 null,
                             )
-//                                    (mainSubKeyMap.get(mainSubKey) ?: String())
                         }
                         ImageActionKeyManager.ImageSubKey.FUNC -> {
                             if(!isNext) {
@@ -1411,18 +1376,6 @@ class ImageActionManager {
                                     null,
                                     mapOf(itPronoun to itPronounBitmapToBreakSignal?.first),
                                 )
-//                                (importedVarNameToBitmapMap ?: emptyMap()) +
-//                                (topVarNameToVarNameBitmapMap ?: emptyMap()) +
-//                                        (privateLoopKeyVarNameBitmapMapClass
-//                                            .getAsyncVarNameToBitmap(
-//                                                curMapLoopKey
-//                                            )?.toMap() ?: emptyMap()) +
-//                                        (loopKeyToVarNameBitmapMapClass
-//                                            .getAsyncVarNameToBitmap(
-//                                                curMapLoopKey
-//                                            )?.toMap()
-//                                            ?: emptyMap()) +
-//                                        mapOf(itPronoun to itPronounBitmapToExitSignal?.first)
 //                            FileSystems.updateFile(
 //                                File(
 //                                    UsePath.cmdclickDefaultIDebugAppDirPath,
@@ -1450,7 +1403,6 @@ class ImageActionManager {
                                 busyboxExecutor,
                                 editConstraintListAdapterArg,
                                 varNameToBitmapMap
-//                                        (privateLoopKeyVarNameBitmapMapClass.getAsyncVarNameToBitmap(curMapLoopKey) ?: emptyMap<>()),
                             )
                             val checkErr = resultBitmapToExitMacroAndCheckErr?.second
                             if(checkErr != null){
@@ -1540,9 +1492,6 @@ class ImageActionManager {
                         )
                 }
             }
-//            private fun replaceItPronoun(con: String): String {
-//                return con.replace(itReplaceVarStr, itPronounValue)
-//            }
         }
     }
 }
