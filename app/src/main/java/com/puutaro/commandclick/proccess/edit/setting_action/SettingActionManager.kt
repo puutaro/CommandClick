@@ -1786,7 +1786,7 @@ object EvalForSetting {
 
     private object MapOperator {
 
-        const val returnTopAcVarNameMacro = SettingActionKeyManager.returnTopAcVarNameMacro
+        private const val returnTopAcVarNameMacro = SettingActionKeyManager.returnTopAcVarNameMacro
 
         suspend fun map(
             fragment: Fragment?,
