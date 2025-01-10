@@ -1428,7 +1428,8 @@ class SettingActionManager {
                                 itPronounValueStrToBreakSignal = null
                                 return@forEach
                             }
-                            val resultValueStrToExitMacro = resultValueStrToExitMacroAndCheckErr?.first
+                            val resultValueStrToExitMacro =
+                                resultValueStrToExitMacroAndCheckErr?.first
                             VarErrManager.isGlobalVarNullResultErr(
                                 context,
                                 renewalVarName ?: settingVarName,

@@ -12,7 +12,6 @@ object FileSystemsForSettingHandler {
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
-//        varNameToValueStrMap: Map<String, String?>
     ): Pair<
             Pair<
                     String?,
@@ -20,7 +19,6 @@ object FileSystemsForSettingHandler {
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
             >?
-    //Pair<String?, FuncCheckerForSetting.FuncCheckErr?>
     {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
@@ -40,7 +38,6 @@ object FileSystemsForSettingHandler {
             methodNameStr,
             methodNameClass.argsNameToTypeList,
             argsPairList,
-//            varNameToValueStrMap,
         )?.let {
             argsCheckErr ->
             return null to argsCheckErr
@@ -58,16 +55,6 @@ object FileSystemsForSettingHandler {
             MethodNameClass.READ -> {
                 val filePath =
                     argsList.get(0)
-//                SettingFuncTool.getValueStrFromMapOrIt(
-//                    argsList.get(0),
-//                    varNameToValueStrMap,
-//                ) ?: return null
-//                val valurStrKey =
-//                    ImageActionKeyManager.BitmapVar.convertBitmapKey(
-//                        argsList.get(0)
-//                    )
-//                val filePath = varNameToValueStrMap.get(valurStrKey)
-//                    ?: return null
                 Pair(
                     ReadText(filePath).readText(),
                     null
@@ -75,15 +62,7 @@ object FileSystemsForSettingHandler {
             }
             MethodNameClass.WRITE -> {
                 val firstArg = argsList.get(0)
-//                    SettingFuncTool.getValueStrFromMapOrIt(
-//                    argsList.get(0),
-//                    varNameToValueStrMap,
-//                ) ?: return null
                 val secondArg = argsList.get(1)
-//                SettingFuncTool.getValueStrFromMapOrIt(
-//                    argsList.get(1),
-//                    varNameToValueStrMap,
-//                ) ?: return null
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "setting2.txt").absolutePath,
 //                    listOf(
