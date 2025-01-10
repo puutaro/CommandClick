@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -29,7 +28,6 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -43,8 +41,9 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.lang.ref.WeakReference
 
 class SettingActionManager {
@@ -1764,6 +1763,7 @@ object EvalForSetting {
                     val elVarName = argsList.get(2)
                     val settingActionCon = argsList.get(3)
                     val joinStr = argsList.get(joinStrIndex)
+                    val semaphoreLimit = argsList.get(5).toInt()
                     MapOperator.map(
                         fragment,
                         fannelInfoMap,
@@ -1777,6 +1777,7 @@ object EvalForSetting {
                         elVarName,
                         settingActionCon,
                         joinStr,
+                        semaphoreLimit,
                     )
                 }
             }
@@ -1800,6 +1801,7 @@ object EvalForSetting {
             elVarName: String,
             settingActionCon: String,
             joinStr: String,
+            semaphoreLimit: Int,
         ): Pair<
                 Pair<
                         String?,
@@ -1823,35 +1825,56 @@ object EvalForSetting {
 //                ).joinToString("\n\n")
 //            )
             return withContext(Dispatchers.IO) {
-                val evalMapJobList = when(separator == defaultMacroStr
+                val semaphore = when(semaphoreLimit > 0) {
+                    false -> null
+                    else -> Semaphore(semaphoreLimit)
+                }
+                val indexToResultStrJobList = when(separator == defaultMacroStr
                 ) {
                     true -> listOf(inputCon)
                     else -> inputCon.split(separator)
-                }.map {
-                    el ->
+                }.mapIndexed {
+                    index, el ->
                     async {
-                        val curTopVarNameToValueStrMap = (topVarNameToValueStrMap ?: emptyMap()) + mapOf(
-                            elVarName to el,
-                        )
-                        val outputVarNameToValueStrMap = SettingActionManager().exec(
-                            fragment,
-                            fannelInfoMap,
-                            setReplaceVariableMapSrc,
-                            busyboxExecutor,
-                            SettingActionAsyncCoroutine(),
-                            curTopVarNameToValueStrMap.map {
-                                it.key
-                            },
-                            curTopVarNameToValueStrMap,
-                            settingActionCon,
-                            "eval: elVarName: ${elVarName}, ${keyToSubKeyConWhere}",
-                            editConstraintListAdapterArg,
-                            returnTopAcVarNameMacro
-                        )
-                        outputVarNameToValueStrMap.get(returnTopAcVarNameMacro)
+                        when(semaphore == null) {
+                            true -> execAction(
+                                fragment,
+                                fannelInfoMap,
+                                setReplaceVariableMapSrc,
+                                busyboxExecutor,
+                                topVarNameToValueStrMap,
+                                keyToSubKeyConWhere,
+                                editConstraintListAdapterArg,
+                                index,
+                                el,
+                                elVarName,
+                                settingActionCon,
+                            )
+                            else -> semaphore.withPermit {
+                                execAction(
+                                    fragment,
+                                    fannelInfoMap,
+                                    setReplaceVariableMapSrc,
+                                    busyboxExecutor,
+                                    topVarNameToValueStrMap,
+                                    keyToSubKeyConWhere,
+                                    editConstraintListAdapterArg,
+                                    index,
+                                    el,
+                                    elVarName,
+                                    settingActionCon,
+                                )
+                            }
+                        }
                     }
                 }
-                val resultStrList = evalMapJobList.awaitAll()
+                val resultStrList = indexToResultStrJobList.awaitAll().sortedBy {
+                    indexToResultStr ->
+                    indexToResultStr.first
+                }.map {
+                    indexToResultStr ->
+                    indexToResultStr.second
+                }
                 val isJoin = joinStr != defaultMacroStr
                 if(!isJoin){
                    return@withContext null to null
@@ -1894,6 +1917,40 @@ object EvalForSetting {
             }
         }
 
+        private suspend fun execAction(
+            fragment: Fragment?,
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMapSrc: Map<String, String>?,
+            busyboxExecutor: BusyboxExecutor?,
+            topVarNameToValueStrMap: Map<String, String?>?,
+            keyToSubKeyConWhere: String,
+            editConstraintListAdapterArg: EditConstraintListAdapter? = null,
+            index: Int,
+            el: String,
+            elVarName: String,
+            settingActionCon: String,
+        ): Pair<Int, String?> {
+            val curTopVarNameToValueStrMap = (topVarNameToValueStrMap ?: emptyMap()) + mapOf(
+                elVarName to el,
+            )
+            val outputVarNameToValueStrMap = SettingActionManager().exec(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMapSrc,
+                busyboxExecutor,
+                SettingActionAsyncCoroutine(),
+                curTopVarNameToValueStrMap.map {
+                    it.key
+                },
+                curTopVarNameToValueStrMap,
+                settingActionCon,
+                "eval: elVarName: ${elVarName}, ${keyToSubKeyConWhere}",
+                editConstraintListAdapterArg,
+                returnTopAcVarNameMacro
+            )
+            return index to outputVarNameToValueStrMap.get(returnTopAcVarNameMacro)
+        }
+
         private const val defaultMacroStr = "NULL"
     }
 
@@ -1926,5 +1983,9 @@ object EvalForSetting {
             "joinStr",
             FuncCheckerForSetting.ArgType.STRING
         ),
+        Pair(
+            "semaphore",
+            FuncCheckerForSetting.ArgType.INT
+        )
     )
 }
