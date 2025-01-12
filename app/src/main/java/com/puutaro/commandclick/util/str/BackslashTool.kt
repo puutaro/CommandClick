@@ -9,8 +9,12 @@ object BackslashTool {
     fun toNormal(
         targetStr: String
     ): String {
+        val convertedSpecialCodeCon = targetStr.replace(
+            "\\n",
+            "\n"
+        )
         val hexConvertedStr =
-            CmdClickHexCodeToInt.to(targetStr)
+            CmdClickHexCodeToInt.to(convertedSpecialCodeCon)
         val backslashReplaceCon =
             let {
                 val backslash = "\\"
