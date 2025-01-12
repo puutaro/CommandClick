@@ -51,10 +51,6 @@ object EditForSetting {
 //        val argsList = argsPairList.map {
 //            it.second
 //        }
-        val funcCheckerForSetting = FuncCheckerForSetting(
-            funcName,
-            methodNameStr,
-        )
         val args =
             methodNameClass.args
         val terminalFragment = withContext(Dispatchers.Main) {
@@ -73,16 +69,17 @@ object EditForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                         formalArgIndexToNameToTypeList,
                         argsPairList
                     )
-                    val where = FuncCheckerForSetting.makeWhereFromList(
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
                         argsPairList,
                         formalArgIndexToNameToTypeList
                     )
-                    val targetVariableName = funcCheckerForSetting.getStringFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val targetVariableName = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                         mapArgMapList,
                         args.targetVariableNameKeyToIndex,
                         where
@@ -94,8 +91,7 @@ object EditForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val srcFragmentStr =funcCheckerForSetting.getStringFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val srcFragmentStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                         mapArgMapList,
                         args.srcFragmentToIndex,
                         where
@@ -149,10 +145,10 @@ object EditForSetting {
             enum class GetSettingValueEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                TARGET_VARIABLE_NAME("targetVariableName", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SRC_FRAGMENT("srcFragment", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
+                TARGET_VARIABLE_NAME("targetVariableName", 0, FuncCheckerForSetting.ArgType.STRING),
+                SRC_FRAGMENT("srcFragment", 1, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

@@ -53,7 +53,7 @@ object LocalDatetimeForSetting {
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.Companion.ArgType>>?,
+        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>?,
     ){
         NOW("now", null),
     }

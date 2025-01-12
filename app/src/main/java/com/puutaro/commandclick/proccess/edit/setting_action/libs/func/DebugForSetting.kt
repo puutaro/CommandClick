@@ -60,10 +60,6 @@ object DebugForSetting {
 //                ),
 //            )
 //        )
-        val funcCheckerForSetting = FuncCheckerForSetting(
-            funcName,
-            methodNameStr,
-        )
         val args =
             methodNameClass.args
         return withContext(Dispatchers.Main) {
@@ -77,16 +73,17 @@ object DebugForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                         formalArgIndexToNameToTypeList,
                         argsPairList
                     )
-                    val where = FuncCheckerForSetting.makeWhereFromList(
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
                         argsPairList,
                         formalArgIndexToNameToTypeList
                     )
-                    val message = funcCheckerForSetting.getStringFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val message = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                         mapArgMapList,
                         args.messageKeyToIndex,
                         where
@@ -146,9 +143,9 @@ object DebugForSetting {
             enum class ReflectEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                MESSAGE("message", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                MESSAGE("message", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

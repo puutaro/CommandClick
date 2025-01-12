@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.ubuntu
 import android.content.Context
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
@@ -88,6 +87,38 @@ class BusyboxExecutor(
         )
     }
 
+    fun getCmdOutputByErrHandle(
+        commandSrc: String,
+        envMapSrc: Map<String, String>? = null,
+    ): Pair<String, String?> {
+        val envMap = makeRepValHashMap(
+            envMapSrc,
+        )
+        val command = CmdClickMap.replace(
+            commandSrc,
+            envMap,
+        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "shellLog_getOuput.txt").absolutePath,
+//            listOf(
+//                "commandSrc: ${commandSrc}",
+//                "envMapSrc: ${envMapSrc}",
+//                "envMap: ${envMap}",
+//                "command: ${command}",
+//                "out ${execCommandForOutput(
+//                    listOf("sh", "-c", command),
+//                    null
+////            envMap
+//                )}",
+//            ).joinToString("\n\n\n")
+//        )
+        return execCommandForOutputByErrHandle(
+            listOf("sh", "-c", command),
+            null
+//            envMap
+        )
+    }
+
     private fun makeRepValHashMap(
         extraArgsMap: Map<String, String>?,
     ): Map<String, String> {
@@ -146,6 +177,56 @@ class BusyboxExecutor(
             )
         }
         return output.removePrefix("\n")
+    }
+
+    private fun execCommandForOutputByErrHandle(
+        command: List<String>,
+        env: HashMap<String, String>?
+    ): Pair<String, String?> {
+        if (!busyboxWrapper.busyboxIsPresent()) {
+            ubuntuFiles.setupLinksForBusyBox()
+        }
+//        val env = busyboxWrapper.getBusyboxEnv()
+        val processBuilder = ProcessBuilder(command)
+        processBuilder.directory(ubuntuFiles.filesDir)
+        val busyboxHashMap = busyboxWrapper.getBusyboxEnv()
+        val envHash = env?.let {
+            env + busyboxHashMap
+        } ?: busyboxHashMap
+        processBuilder.environment().putAll(envHash)
+        processBuilder.redirectErrorStream(true)
+        return try {
+            val process = processBuilder.start()
+            val stdInToErr = outputStdAndErr(
+                process,
+            )
+            process.waitFor()
+            val exitCode = process.exitValue()
+//            FileSystems.updateFile(
+//                File(
+//                    UsePath.cmdclickDefaultAppDirPath,
+//                    "loutput00.txt"
+//                ).absolutePath,
+//                "exit: ${process.exitValue()}"
+//            )
+            val output = stdInToErr.first
+            val errOutput = stdInToErr.second
+            when(exitCode){
+                0 -> output to null
+                else -> String() to listOf(
+                    output,
+                    errOutput
+                ).filter {
+                    !it.isNullOrEmpty()
+                }.joinToString("\n")
+            }
+        } catch (err: Exception) {
+            LogSystems.stdErr(
+                context,
+                "$err"
+            )
+            String() to err.toString()
+        }
     }
     private fun runCommand(
         command: List<String>,
@@ -434,6 +515,47 @@ class BusyboxExecutor(
             process.errorStream.close()
         }
         return output.removePrefix("\n")
+    }
+
+    private fun outputStdAndErr(
+        process: Process,
+    ): Pair<String, String?> {
+        val inputStream = process.inputStream
+        val reader = inputStream.bufferedReader(Charsets.UTF_8)
+        var output = String()
+        reader.forEachLine { line ->
+            if(
+                line.trim().isEmpty()
+            ) return@forEachLine
+            output += "\n${line}"
+        }
+        if(process.inputStream != null){
+            process.inputStream.close()
+        }
+        val errStream = process.errorStream
+        val errReader = errStream.bufferedReader(Charsets.UTF_8)
+        var errOutput = String()
+        errReader.forEachLine { line ->
+            if(
+                line.trim().isEmpty()
+            ) return@forEachLine
+            errOutput += "\n${line}"
+        }
+        if(process.errorStream != null){
+            process.errorStream.close()
+        }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "loutput.txt").absolutePath,
+//            listOf(
+//               "output: ${output}",
+//                "errOutput: ${errOutput}",
+//                "stdAbndErrOutput: ${stdAbndErrOutput}",
+//                "isErr: ${isErr}",
+//
+//            ).joinToString("\n\n") + "\n====\n"
+//        )
+        return output.removePrefix("\n") to
+                errOutput.removePrefix("\n")
     }
 
     private fun setupForUbuntu(

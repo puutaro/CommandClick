@@ -46,10 +46,6 @@ object MathCulcForSetting {
 //        val argsList = argsPairList.map {
 //            it.second
 //        }
-        val funcCheckerForSetting = FuncCheckerForSetting(
-            funcName,
-            methodNameStr,
-        )
         val args =
             methodNameClass.args
         when(args) {
@@ -62,16 +58,17 @@ object MathCulcForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val formulaStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val formulaStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.formulaKeyToIndex,
                     where
@@ -107,16 +104,17 @@ object MathCulcForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val formulaStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val formulaStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.formulaKeyToIndex,
                     where
@@ -194,9 +192,9 @@ object MathCulcForSetting {
             enum class IntEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FORMULA("formula", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FORMULA("formula", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object FloatArgs : MathMethodArgClass(), ArgType {
@@ -209,9 +207,9 @@ object MathCulcForSetting {
             enum class FloatEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FORMULA("formula", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FORMULA("formula", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

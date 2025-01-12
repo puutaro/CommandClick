@@ -5,12 +5,26 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 object SettingFuncTool {
     fun makeArgsPairList(
         argsPairListBeforeBsEscape: List<Pair<String, String>>,
-        varNameToValueStrMap: Map<String, String?>,
+        varNameToValueStrMap: Map<String, String?>?,
     ): List<Pair<String, String>> {
         return argsPairListBeforeBsEscape.map {
                 (argName, valueStr) ->
             argName to
                     CmdClickMap.replaceByBackslashToNormal(
+                        valueStr,
+                        varNameToValueStrMap,
+                    )
+        }
+    }
+
+    fun makeArgsPairListByEscape(
+        argsPairListBeforeBsEscape: List<Pair<String, String>>,
+        varNameToValueStrMap: Map<String, String?>?,
+    ): List<Pair<String, String>> {
+        return argsPairListBeforeBsEscape.map {
+                (argName, valueStr) ->
+            argName to
+                    CmdClickMap.replaceByBackslashToNormalByEscape(
                         valueStr,
                         varNameToValueStrMap,
                     )

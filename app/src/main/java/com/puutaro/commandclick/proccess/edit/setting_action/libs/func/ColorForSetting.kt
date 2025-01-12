@@ -32,10 +32,6 @@ object ColorForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        val funcCheckerForSetting = FuncCheckerForSetting(
-            funcName,
-            methodNameStr,
-        )
         val args = methodNameClass.args
         if(args != ColorMethodArgClass.RndArgs){
             return null
@@ -50,16 +46,17 @@ object ColorForSetting {
                         formalArgsNameToType.type,
                     )
                 }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val rndMacroStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val rndMacroStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.rndMacroKeyToIndex,
                     where
@@ -102,9 +99,9 @@ object ColorForSetting {
             enum class RndEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                RND_MACRO("rndMacro", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                RND_MACRO("rndMacro", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

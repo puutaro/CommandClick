@@ -45,10 +45,6 @@ object RndForSetting {
 //        val argsList = argsPairList.map {
 //            it.second
 //        }
-        val funcCheckerForSetting = FuncCheckerForSetting(
-            funcName,
-            methodNameStr,
-        )
         val args =
             methodNameClass.args
         return withContext(Dispatchers.Main) {
@@ -62,16 +58,17 @@ object RndForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                         formalArgIndexToNameToTypeList,
                         argsPairList
                     )
-                    val where = FuncCheckerForSetting.makeWhereFromList(
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
                         argsPairList,
                         formalArgIndexToNameToTypeList
                     )
-                    val minInt = funcCheckerForSetting.getIntFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val minInt = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
                         mapArgMapList,
                         args.minIntKeyToIndex,
                         where
@@ -83,8 +80,7 @@ object RndForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val maxInt = funcCheckerForSetting.getIntFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val maxInt = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
                         mapArgMapList,
                         args.maxIntKeyToIndex,
                         where
@@ -160,10 +156,10 @@ object RndForSetting {
             enum class RangeEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                MIN_INT("minInt", 0, FuncCheckerForSetting.Companion.ArgType.INT),
-                MAX_INT("maxInt", 0, FuncCheckerForSetting.Companion.ArgType.INT),
+                MIN_INT("minInt", 0, FuncCheckerForSetting.ArgType.INT),
+                MAX_INT("maxInt", 0, FuncCheckerForSetting.ArgType.INT),
             }
         }
     }

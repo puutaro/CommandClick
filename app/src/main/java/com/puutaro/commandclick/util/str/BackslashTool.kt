@@ -27,6 +27,27 @@ object BackslashTool {
         return backslashReplaceCon
     }
 
+    fun toNormalByEscape(
+        targetStr: String
+    ): String {
+        val convertedSpecialCodeCon = targetStr.replace(
+            "\\n",
+            "\n"
+        )
+        val hexConvertedStr =
+            CmdClickHexCodeToInt.to(convertedSpecialCodeCon)
+        val backslashReplaceCon =
+            let {
+                val backslash = "\\"
+                hexConvertedStr
+                    .replace(
+                        Regex("${backslash}${backslash}([`$])"),
+                        "$1"
+                    )
+            }
+        return backslashReplaceCon
+    }
+
     private object CmdClickHexCodeToInt {
 
         private val cmdClickHexRegex = Regex(

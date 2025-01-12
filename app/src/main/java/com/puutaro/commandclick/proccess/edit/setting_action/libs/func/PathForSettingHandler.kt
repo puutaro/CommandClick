@@ -19,7 +19,7 @@ object PathForSettingHandler {
                     SettingActionKeyManager.BreakSignal?
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
-            >? {
+            > {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {
@@ -46,10 +46,6 @@ object PathForSettingHandler {
 //        val argsList = argsPairList.map {
 //            it.second
 //        }
-        val funcCheckerForSetting = FuncCheckerForSetting(
-            funcName,
-            methodNameStr,
-        )
         val args =
             methodNameClass.args
         return when(args){
@@ -62,16 +58,17 @@ object PathForSettingHandler {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val fannelName = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val fannelName = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.fannelNameKeyToIndex,
                     where
@@ -97,16 +94,17 @@ object PathForSettingHandler {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val fileName = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val fileName = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.fileNameKeyToIndex,
                     where
@@ -132,16 +130,17 @@ object PathForSettingHandler {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val fannelName = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val fannelName = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.fannelNameKeyToIndex,
                     where
@@ -167,16 +166,17 @@ object PathForSettingHandler {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val pathStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.currentSubFannelPathToIndex,
                     where
@@ -202,16 +202,17 @@ object PathForSettingHandler {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val pathStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.currentSubFannelPathToIndex,
                     where
@@ -237,16 +238,17 @@ object PathForSettingHandler {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val pathStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.currentSubFannelPathToIndex,
                     where
@@ -272,16 +274,17 @@ object PathForSettingHandler {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val pathStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.fileNameKeyToIndex,
                     where
@@ -307,16 +310,17 @@ object PathForSettingHandler {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val pathStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.filePathKeyToIndex,
                     where
@@ -342,16 +346,17 @@ object PathForSettingHandler {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val pathStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.filePathKeyToIndex,
                     where
@@ -377,16 +382,17 @@ object PathForSettingHandler {
                             formalArgsNameToType.type,
                         )
                     }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val pathStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.dirPathKeyToIndex,
                     where
@@ -468,9 +474,9 @@ object PathForSettingHandler {
             enum class MakeFannelDirNameEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FANNEL_NAME("fannelName", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FANNEL_NAME("fannelName", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object TrimAllExtendNameArgs : PathMethodArgClass(), ArgType {
@@ -483,9 +489,9 @@ object PathForSettingHandler {
             enum class TrimAllExtendEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FILE_NAME("fileName", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FILE_NAME("fileName", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object MakeFannelRawNameArgs : PathMethodArgClass(), ArgType {
@@ -498,9 +504,9 @@ object PathForSettingHandler {
             enum class MakeFannelRawNameEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FANNEL_NAME("fannelName", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FANNEL_NAME("fannelName", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object GetMainAppDirPathArgs : PathMethodArgClass(), ArgType {
@@ -513,9 +519,9 @@ object PathForSettingHandler {
             enum class GetMainAppDirPathEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                CURRENT_SUB_FANNEL_PATH("currentSubFannelPath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                CURRENT_SUB_FANNEL_PATH("currentSubFannelPath", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object GetMainFannelFilePathArgs : PathMethodArgClass(), ArgType {
@@ -528,9 +534,9 @@ object PathForSettingHandler {
             enum class GetMainFannelFilePathEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                CURRENT_SUB_FANNEL_PATH("currentSubFannelPath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                CURRENT_SUB_FANNEL_PATH("currentSubFannelPath", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object GetMainFannelDirPathArgs : PathMethodArgClass(), ArgType {
@@ -543,9 +549,9 @@ object PathForSettingHandler {
             enum class GetMainFannelDirPathEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                CURRENT_SUB_FANNEL_PATH("currentSubFannelPath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                CURRENT_SUB_FANNEL_PATH("currentSubFannelPath", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object GetParentDirPathArgs : PathMethodArgClass(), ArgType {
@@ -558,9 +564,9 @@ object PathForSettingHandler {
             enum class GetParentDirPathEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FILE_NAME("fileName", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FILE_NAME("fileName", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object GetFileNameArgs : PathMethodArgClass(), ArgType {
@@ -573,9 +579,9 @@ object PathForSettingHandler {
             enum class GetFileNameEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object IsFileArgs : PathMethodArgClass(), ArgType {
@@ -588,9 +594,9 @@ object PathForSettingHandler {
             enum class IsFileArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
 
@@ -604,9 +610,9 @@ object PathForSettingHandler {
             enum class IsDirArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                DIR_PATH("dirPath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                DIR_PATH("dirPath", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

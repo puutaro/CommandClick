@@ -40,10 +40,6 @@ object ReplaceForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        val funcCheckerForSetting = FuncCheckerForSetting(
-            funcName,
-            methodNameStr,
-        )
         val args = methodNameClass.args
         return when(args){
             is ReplaceArgClass.MapEvalArgs -> {
@@ -56,16 +52,17 @@ object ReplaceForSetting {
                         formalArgsNameToType.type,
                     )
                 }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapList(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val targetCon = funcCheckerForSetting.getStringFromArgMapByName(
-                    funcCheckerForSetting,
+                val targetCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
                     args.targetConKeyToDefaultValueStr,
                     where
@@ -91,8 +88,7 @@ object ReplaceForSetting {
                     separator == defaultSeparator
                 val joinStr = when(isSeparatorNull) {
                     true -> String()
-                    else -> funcCheckerForSetting.getStringFromArgMapByName(
-                        funcCheckerForSetting,
+                    else -> FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.joinStrKeyToDefaultValueStr,
                         where
@@ -112,8 +108,7 @@ object ReplaceForSetting {
                         else joinStrSrc
                     }
                 }
-                val semaphoreInt = funcCheckerForSetting.getIntFromArgMapByName(
-                    funcCheckerForSetting,
+                val semaphoreInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
                     args.semaphoreKeyToDefaultValueStr,
                     where
@@ -125,8 +120,7 @@ object ReplaceForSetting {
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-                funcCheckerForSetting.getStringFromArgMapByName(
-                    funcCheckerForSetting,
+                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
                     args.removeRegexKeyToDefaultValueStr,
                     where
@@ -212,55 +206,49 @@ object ReplaceForSetting {
                 val argClass = mapEnumArgsEntries.firstOrNull { arg ->
                     arg.key == argName
                 } ?: return@forEachIndexed
-                when (argClass) {
-                    removeRegexKeyClass -> {
-                        val removeRegexStr =
-                            subKeyMap.get(
-                                removeRegexKeyClass.key
-                            )
-                        val removeRegex = try {
-                            removeRegexStr
-                                ?: throw Exception()
-                            removeRegexStr.toRegex()
-                        } catch (e: Exception) {
-                            return Pair(
-                                null,
-                                makeRegexCompileErr(
-                                    replaceForSettingArgs,
-                                    removeRegexStr,
-                                    index,
-                                    where,
-                                )
-                            )
-                        }
-                        val replaceStr =
-                            subKeyMap.get(
-                                replaceKeyClass.key
-                            ) ?: String()
-                        val tempReplaceTargetCon = try {
-                            replaceTargetCon.replace(
-                                removeRegex,
-                                replaceStr
-                            )
-                        } catch (e: Exception) {
-                            return Pair(
-                                null,
-                                makeReplaceErr(
-                                    replaceForSettingArgs,
-                                    targetCon,
-                                    removeRegexStr,
-                                    replaceStr,
-                                    index,
-                                    where,
-                                )
-                            )
-                        }
-                        replaceTargetCon = tempReplaceTargetCon
-                    }
-
-                    else -> return@forEachIndexed
+                if(argClass != removeRegexKeyClass) return@forEachIndexed
+                val removeRegexStr =
+                    subKeyMap.get(
+                        removeRegexKeyClass.key
+                    )
+                val removeRegex = try {
+                    removeRegexStr
+                        ?: throw Exception()
+                    removeRegexStr.toRegex()
+                } catch (e: Exception) {
+                    return Pair(
+                        null,
+                        makeRegexCompileErr(
+                            replaceForSettingArgs,
+                            removeRegexStr,
+                            index,
+                            where,
+                        )
+                    )
                 }
-
+                val replaceStr =
+                    subKeyMap.get(
+                        replaceKeyClass.key
+                    ) ?: String()
+                val tempReplaceTargetCon = try {
+                    replaceTargetCon.replace(
+                        removeRegex,
+                        replaceStr
+                    )
+                } catch (e: Exception) {
+                    return Pair(
+                        null,
+                        makeReplaceErr(
+                            replaceForSettingArgs,
+                            targetCon,
+                            removeRegexStr,
+                            replaceStr,
+                            index,
+                            where,
+                        )
+                    )
+                }
+                replaceTargetCon = tempReplaceTargetCon
             }
             return Pair(
                 replaceTargetCon,
@@ -449,14 +437,14 @@ object ReplaceForSetting {
             enum class MapEnumArgs(
                 val key: String,
                 val defaultValueStr: String?,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ) {
-                TARGET_CON("targetCon", null, FuncCheckerForSetting.Companion.ArgType.STRING),
-                REMOVE_REGEX("removeRegex", null, FuncCheckerForSetting.Companion.ArgType.STRING),
-                REPLACE_STR("replaceStr", defaultNullMacroStr, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.Companion.ArgType.STRING),
-                JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.Companion.ArgType.INT),
+                TARGET_CON("targetCon", null, FuncCheckerForSetting.ArgType.STRING),
+                REMOVE_REGEX("removeRegex", null, FuncCheckerForSetting.ArgType.STRING),
+                REPLACE_STR("replaceStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
             }
         }
     }

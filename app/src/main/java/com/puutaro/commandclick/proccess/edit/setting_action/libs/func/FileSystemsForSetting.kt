@@ -52,10 +52,6 @@ object FileSystemsForSettingHandler {
 //        val argsList = argsPairList.map {
 //            it.second
 //        }
-        val funcCheckerForSetting = FuncCheckerForSetting(
-            funcName,
-            methodNameStr,
-        )
         val args =
             methodNameClass.args
         return when(args){
@@ -68,16 +64,17 @@ object FileSystemsForSettingHandler {
                         formalArgsNameToType.type,
                     )
                 }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val filePath = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val filePath = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.filePathKeyToIndex,
                     where
@@ -103,16 +100,17 @@ object FileSystemsForSettingHandler {
                         formalArgsNameToType.type,
                     )
                 }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val filePath = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val filePath = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.filePathKeyToIndex,
                     where
@@ -124,8 +122,7 @@ object FileSystemsForSettingHandler {
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-                val contents = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val contents = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.contentsToIndex,
                     where
@@ -159,16 +156,17 @@ object FileSystemsForSettingHandler {
                         formalArgsNameToType.type,
                     )
                 }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val filePath = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val filePath = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.filePathKeyToIndex,
                     where
@@ -180,8 +178,7 @@ object FileSystemsForSettingHandler {
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-                val contents = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val contents = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.contentsToIndex,
                     where
@@ -208,16 +205,17 @@ object FileSystemsForSettingHandler {
                         formalArgsNameToType.type,
                     )
                 }
-                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
-                val where = FuncCheckerForSetting.makeWhereFromList(
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val filePath = funcCheckerForSetting.getStringFromArgMapByIndex(
-                    funcCheckerForSetting,
+                val filePath = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
                     args.filePathKeyToIndex,
                     where
@@ -267,10 +265,10 @@ object FileSystemsForSettingHandler {
             enum class WriteEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
-                CONTENTS("contents", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.ArgType.STRING),
+                CONTENTS("contents", 1, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object UpdateWriteArgs : FileSystemsMethodArgClass(), ArgType {
@@ -287,10 +285,10 @@ object FileSystemsForSettingHandler {
             enum class UpdateWriteEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
-                CONTENTS("contents", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.ArgType.STRING),
+                CONTENTS("contents", 1, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object ReadArgs : FileSystemsMethodArgClass(), ArgType {
@@ -302,9 +300,9 @@ object FileSystemsForSettingHandler {
             enum class ReadEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
 
@@ -317,9 +315,9 @@ object FileSystemsForSettingHandler {
             enum class RemoveEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

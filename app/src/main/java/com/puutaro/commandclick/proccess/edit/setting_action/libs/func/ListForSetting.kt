@@ -45,10 +45,6 @@ object ListForSetting {
 //        val argsList = argsPairList.map {
 //            it.second
 //        }
-        val funcCheckerForSetting = FuncCheckerForSetting(
-            funcName,
-            methodNameStr,
-        )
         val args =
             methodNameClass.args
         return withContext(Dispatchers.Main) {
@@ -62,17 +58,18 @@ object ListForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                         formalArgIndexToNameToTypeList,
                         argsPairList
                     )
-                    val where = FuncCheckerForSetting.makeWhereFromList(
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
                         argsPairList,
                         formalArgIndexToNameToTypeList
                     )
                     val listCon =
-                        funcCheckerForSetting.getStringFromArgMapByIndex(
-                            funcCheckerForSetting,
+                        FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                             mapArgMapList,
                             args.strsKeyToIndex,
                             where
@@ -85,8 +82,7 @@ object ListForSetting {
                         ) to funcErr
                     }
                     val separator =
-                        funcCheckerForSetting.getStringFromArgMapByIndex(
-                            funcCheckerForSetting,
+                        FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                             mapArgMapList,
                             args.separatorToIndex,
                             where
@@ -114,16 +110,17 @@ object ListForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                         formalArgIndexToNameToTypeList,
                         argsPairList
                     )
-                    val where = FuncCheckerForSetting.makeWhereFromList(
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
                         argsPairList,
                         formalArgIndexToNameToTypeList
                     )
-                    val listCon = funcCheckerForSetting.getStringFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val listCon = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                         mapArgMapList,
                         args.strsKeyToIndex,
                         where
@@ -136,8 +133,7 @@ object ListForSetting {
                         ) to funcErr
                     }
                     val separator =
-                        funcCheckerForSetting.getStringFromArgMapByIndex(
-                            funcCheckerForSetting,
+                        FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                             mapArgMapList,
                             args.separatorToIndex,
                             where
@@ -165,17 +161,18 @@ object ListForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                         formalArgIndexToNameToTypeList,
                         argsPairList
                     )
-                    val where = FuncCheckerForSetting.makeWhereFromList(
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
                         argsPairList,
                         formalArgIndexToNameToTypeList
                     )
                     val listCon =
-                        funcCheckerForSetting.getStringFromArgMapByIndex(
-                            funcCheckerForSetting,
+                        FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                             mapArgMapList,
                             args.strsKeyToIndex,
                             where
@@ -188,8 +185,7 @@ object ListForSetting {
                         ) to funcErr
                     }
                     val separator =
-                        funcCheckerForSetting.getStringFromArgMapByIndex(
-                            funcCheckerForSetting,
+                        FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                             mapArgMapList,
                             args.separatorToIndex,
                             where
@@ -202,8 +198,7 @@ object ListForSetting {
                         ) to funcErr
                     }
                     val takeNum =
-                        funcCheckerForSetting.getIntFromArgMapByIndex(
-                            funcCheckerForSetting,
+                        FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
                             mapArgMapList,
                             args.numToIndex,
                             where
@@ -231,16 +226,17 @@ object ListForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                         formalArgIndexToNameToTypeList,
                         argsPairList
                     )
-                    val where = FuncCheckerForSetting.makeWhereFromList(
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
                         argsPairList,
                         formalArgIndexToNameToTypeList
                     )
-                    val listCon = funcCheckerForSetting.getStringFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val listCon = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                         mapArgMapList,
                         args.strsKeyToIndex,
                         where
@@ -252,8 +248,7 @@ object ListForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val separator = funcCheckerForSetting.getStringFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                         mapArgMapList,
                         args.separatorToIndex,
                         where
@@ -265,8 +260,7 @@ object ListForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val takeLastNum = funcCheckerForSetting.getIntFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val takeLastNum = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
                         mapArgMapList,
                         args.numToIndex,
                         where
@@ -294,16 +288,17 @@ object ListForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
                         formalArgIndexToNameToTypeList,
                         argsPairList
                     )
-                    val where = FuncCheckerForSetting.makeWhereFromList(
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
                         argsPairList,
                         formalArgIndexToNameToTypeList
                     )
-                    val con = funcCheckerForSetting.getStringFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val con = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                         mapArgMapList,
                         args.strsKeyToIndex,
                         where
@@ -315,8 +310,7 @@ object ListForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val separator = funcCheckerForSetting.getStringFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                         mapArgMapList,
                         args.separatorToIndex,
                         where
@@ -328,8 +322,7 @@ object ListForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val joinStr = funcCheckerForSetting.getStringFromArgMapByIndex(
-                        funcCheckerForSetting,
+                    val joinStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                         mapArgMapList,
                         args.joinStrToIndex,
                         where
@@ -381,10 +374,10 @@ object ListForSetting {
             enum class RndEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                STRS("strs", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SEPARATOR("separator", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
+                STRS("strs", 0, FuncCheckerForSetting.ArgType.STRING),
+                SEPARATOR("separator", 1, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object ShufArgs : ListMethodArgClass(), ArgType {
@@ -401,10 +394,10 @@ object ListForSetting {
             enum class ShufEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                STRS("strs", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SEPARATOR("separator", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
+                STRS("strs", 0, FuncCheckerForSetting.ArgType.STRING),
+                SEPARATOR("separator", 1, FuncCheckerForSetting.ArgType.STRING),
             }
         }
         data object TakeArgs : ListMethodArgClass(), ArgType {
@@ -425,11 +418,11 @@ object ListForSetting {
             enum class TakeEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                STRS("strs", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SEPARATOR("separator", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
-                NUM("num", 2, FuncCheckerForSetting.Companion.ArgType.INT),
+                STRS("strs", 0, FuncCheckerForSetting.ArgType.STRING),
+                SEPARATOR("separator", 1, FuncCheckerForSetting.ArgType.STRING),
+                NUM("num", 2, FuncCheckerForSetting.ArgType.INT),
             }
         }
         data object TakeLastArgs : ListMethodArgClass(), ArgType {
@@ -450,11 +443,11 @@ object ListForSetting {
             enum class TakeLastEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                STRS("strs", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SEPARATOR("separator", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
-                NUM("num", 2, FuncCheckerForSetting.Companion.ArgType.INT),
+                STRS("strs", 0, FuncCheckerForSetting.ArgType.STRING),
+                SEPARATOR("separator", 1, FuncCheckerForSetting.ArgType.STRING),
+                NUM("num", 2, FuncCheckerForSetting.ArgType.INT),
             }
         }
         data object JoinArgs : ListMethodArgClass(), ArgType {
@@ -475,11 +468,11 @@ object ListForSetting {
             enum class JoinEnumArgs(
                 val key: String,
                 val index: Int,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ){
-                STRS("strs", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SEPARATOR("separator", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
-                JOIN_STR("joinStr", 2, FuncCheckerForSetting.Companion.ArgType.STRING),
+                STRS("strs", 0, FuncCheckerForSetting.ArgType.STRING),
+                SEPARATOR("separator", 1, FuncCheckerForSetting.ArgType.STRING),
+                JOIN_STR("joinStr", 2, FuncCheckerForSetting.ArgType.STRING),
             }
         }
 

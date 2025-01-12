@@ -1647,8 +1647,9 @@ private object SettingFuncManager {
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
+                    argsPairListBeforeBsEscape,
                     busyboxExecutor,
-//                    varNameToValueStrMap,
+                    topVarNameToValueStrMap,
                 )
             FuncType.EDIT ->
                 EditForSetting.handle(
@@ -1779,19 +1780,7 @@ object EvalForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-//        FuncCheckerForSetting.checkArgs(
-//            funcName,
-//            methodNameStr,
-//            methodNameClass.argsNameToTypeList,
-//            argsPairList,
-//        )?.let { argsCheckErr ->
-//            return null to argsCheckErr
-//        }
 
-        val funcCheckerForSetting = FuncCheckerForSetting(
-            funcName,
-            methodNameStr,
-        )
         val args = methodNameClass.args
         return withContext(Dispatchers.Main) {
             when (args) {
@@ -1804,16 +1793,17 @@ object EvalForSetting {
                             formalArgsNameToType.type,
                         )
                     }
-                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapList(
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
                         formalArgIndexToNameToTypeList,
                         argsPairList
                     )
-                    val where = FuncCheckerForSetting.makeWhereFromList(
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
                         argsPairList,
                         formalArgIndexToNameToTypeList
                     )
-                    val inputCon = funcCheckerForSetting.getStringFromArgMapByName(
-                        funcCheckerForSetting,
+                    val inputCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.inputKeyToDefaultValueStr,
                         where
@@ -1825,8 +1815,7 @@ object EvalForSetting {
                                 SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                             ) to funcErr
                         }
-                    val elVarName = funcCheckerForSetting.getStringFromArgMapByName(
-                        funcCheckerForSetting,
+                    val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.elVarNameKeyToDefaultValueStr,
                         where
@@ -1838,8 +1827,7 @@ object EvalForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val settingActionCon = funcCheckerForSetting.getStringFromArgMapByName(
-                        funcCheckerForSetting,
+                    val settingActionCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.actionKeyToDefaultValueStr,
                         where
@@ -1851,8 +1839,7 @@ object EvalForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val indexVarName = funcCheckerForSetting.getStringFromArgMapByName(
-                        funcCheckerForSetting,
+                    val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.indexVarNameKeyToDefaultValueStr,
                         where
@@ -1884,8 +1871,7 @@ object EvalForSetting {
                             "Must be different from ${spanIndexVarName} and ${spanElVarName}: ${spanWhere} "
                         )
                     }
-                    val separator = funcCheckerForSetting.getStringFromArgMapByName(
-                        funcCheckerForSetting,
+                    val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.separatorKeyToDefaultValueStr,
                         where
@@ -1897,8 +1883,7 @@ object EvalForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val joinStr = funcCheckerForSetting.getStringFromArgMapByName(
-                        funcCheckerForSetting,
+                    val joinStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.joinStrKeyToDefaultValueStr,
                         where
@@ -1910,8 +1895,7 @@ object EvalForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val semaphoreLimit = funcCheckerForSetting.getIntFromArgMapByName(
-                        funcCheckerForSetting,
+                    val semaphoreLimit = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                         mapArgMapList,
                         args.semaphoreKeyToDefaultValueStr,
                         where
@@ -2175,15 +2159,15 @@ object EvalForSetting {
             enum class MapEnumArgs(
                 val key: String,
                 val defaultValueStr: String?,
-                val type: FuncCheckerForSetting.Companion.ArgType,
+                val type: FuncCheckerForSetting.ArgType,
             ) {
-                INPUT("inputCon", null, FuncCheckerForSetting.Companion.ArgType.STRING),
-                EL_VAR_NAME("elVarName", null, FuncCheckerForSetting.Companion.ArgType.STRING),
-                ACTION("action", null, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.Companion.ArgType.STRING),
-                INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.Companion.ArgType.STRING),
-                JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.Companion.ArgType.INT)
+                INPUT("inputCon", null, FuncCheckerForSetting.ArgType.STRING),
+                EL_VAR_NAME("elVarName", null, FuncCheckerForSetting.ArgType.STRING),
+                ACTION("action", null, FuncCheckerForSetting.ArgType.STRING),
+                SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT)
             }
         }
     }

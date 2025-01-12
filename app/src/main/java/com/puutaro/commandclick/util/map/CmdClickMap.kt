@@ -10,6 +10,8 @@ import java.io.File
 
 object CmdClickMap {
 
+    private val backslashToEscapeStr = Pair("\\", "CMDCLICL_BACKKSLASH_ESCAPE_STRING")
+
     object MapReplacer {
         private const val separator = '廳'
 
@@ -190,18 +192,14 @@ object CmdClickMap {
         targetCon: String,
         repMapSrc: Map<String, String?>?
     ): String {
-        val backslashToEscapeStr = Pair("\\", "CMDCLICL_BACKKSLASH_ESCAPE_STRING")
-        val repMap = repMapSrc?.map {
-            it.key to it.value?.replace(
-                backslashToEscapeStr.first,
-                backslashToEscapeStr.second
-            )
-        }?.toMap()
+        val repMap = BackSlashSaveMap.make(
+            repMapSrc,
+        )
         return replace(
             targetCon,
             repMap
         ).let {
-            val tonormal = BackslashTool.toNormal(it).replace(
+            val toNormalCon = BackslashTool.toNormal(it).replace(
                 backslashToEscapeStr.second,
                 backslashToEscapeStr.first,
             )
@@ -214,10 +212,68 @@ object CmdClickMap {
 //
 //                ).joinToString("\n\n") + "\n=========\n\n"
 //            )
-            tonormal
+            toNormalCon
         }
     }
 
+    fun replaceByBackslashToNormalByEscape(
+        targetCon: String,
+        repMapSrc: Map<String, String?>?
+    ): String {
+        val repMap = BackSlashSaveMap.make(
+            repMapSrc,
+        )
+        return replace(
+            targetCon,
+            repMap
+        ).let {
+            val toNormalCon =
+                BackslashTool.toNormalByEscape(it)
+                    .replace(
+                    backslashToEscapeStr.second,
+                    backslashToEscapeStr.first,
+                )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lreplace_boTonormao_after_escape.txt").absolutePath,
+//                listOf(
+//                    "targetCon: ${targetCon}",
+//                    "replace: ${it}",
+//                    "tonormal: ${toNormalCon}",
+//                ).joinToString("\n\n") + "\n=========\n\n"
+//            )
+            toNormalCon
+        }
+    }
+
+    private object BackSlashSaveMap {
+        fun make(
+            repMapSrc: Map<String, String?>?,
+        ): Map<String, String?>? {
+            return repMapSrc?.map {
+                it.key to it.value?.replace(
+                    backslashToEscapeStr.first,
+                    backslashToEscapeStr.second
+                )
+            }?.toMap()
+        }
+
+
+        private fun restore(
+            targetCon: String,
+            repMap: Map<String, String?>?,
+        ): String {
+            return replace(
+                targetCon,
+                repMap
+            ).let {
+                val toNormalCon = BackslashTool.toNormalByEscape(it).replace(
+                    backslashToEscapeStr.second,
+                    backslashToEscapeStr.first,
+                )
+                toNormalCon
+            }
+        }
+    }
     fun replaceByAtVar(
         targetCon: String,
         repMap: Map<String, String>?
