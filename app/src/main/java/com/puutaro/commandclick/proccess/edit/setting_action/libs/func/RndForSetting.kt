@@ -5,6 +5,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyMan
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.enums.EnumEntries
 
 object RndForSetting {
     suspend fun handle(
@@ -32,23 +33,69 @@ object RndForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+//        FuncCheckerForSetting.checkArgs(
+//            funcName,
+//            methodNameStr,
+//            methodNameClass.argsNameToTypeList,
+//            argsPairList,
+////            varNameToValueStrMap,
+//        )?.let { argsCheckErr ->
+//            return null to argsCheckErr
+//        }
+//        val argsList = argsPairList.map {
+//            it.second
+//        }
+        val funcCheckerForSetting = FuncCheckerForSetting(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameToTypeList,
-            argsPairList,
-//            varNameToValueStrMap,
-        )?.let { argsCheckErr ->
-            return null to argsCheckErr
-        }
-        val argsList = argsPairList.map {
-            it.second
-        }
-        val settingValueStr = withContext(Dispatchers.Main) {
-            when (methodNameClass) {
-                MethodNameClass.RANGE -> {
-                    val minInt = argsList.get(0).toInt()
-                    val maxInt = argsList.get(1).toInt()
+        )
+        val args =
+            methodNameClass.args
+        return withContext(Dispatchers.Main) {
+            when (args) {
+                is RndMethodArgClass.RangeArgs -> {
+                    val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                            index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
+                    )
+                    val where = FuncCheckerForSetting.makeWhereFromList(
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val minInt = funcCheckerForSetting.getIntFromArgMapByIndex(
+                        funcCheckerForSetting,
+                        mapArgMapList,
+                        args.minIntKeyToIndex,
+                        where
+                    ).let { minIntToErr ->
+                        val funcErr = minIntToErr.second
+                            ?: return@let minIntToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val maxInt = funcCheckerForSetting.getIntFromArgMapByIndex(
+                        funcCheckerForSetting,
+                        mapArgMapList,
+                        args.maxIntKeyToIndex,
+                        where
+                    ).let { maxIntToErr ->
+                        val funcErr = maxIntToErr.second
+                            ?: return@let maxIntToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
                     if(
                         minInt > maxInt
                     ) {
@@ -62,42 +109,62 @@ object RndForSetting {
                         )
                         val spanMinIntStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                             CheckTool.errRedCode,
-                            "${MethodNameClass.RANGE.argsNameToTypeList.first().first}(${minInt})"
+                            "${args.minIntKeyToIndex.first}(${minInt})"
                         )
                         val spanMaxIntStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                             CheckTool.errRedCode,
-                            "${MethodNameClass.RANGE.argsNameToTypeList.get(1).first}(${maxInt})"
+                            "${args.maxIntKeyToIndex.first}(${maxInt})"
                         )
                         Pair(
                             null,
                             FuncCheckerForSetting.FuncCheckErr("[ARG ERR] ${spanMinIntStr} must be lower than ${spanMaxIntStr}: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
                         )
                     }
-                    (minInt..maxInt).random().toString()
+                    Pair(
+                        (minInt..maxInt).random().toString(),
+                        null,
+                    ) to null
                 }
             }
         }
-        return Pair(
-            settingValueStr,
-            null
-        ) to null
     }
 
-    enum class MethodNameClass(
+
+    private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
-    ) {
-        RANGE("range", rangeArgsNameToTypeList),
+        val args: RndMethodArgClass,
+    ){
+        RANGE(
+            "range",
+            RndMethodArgClass.RangeArgs,
+        ),
     }
 
-    private val rangeArgsNameToTypeList = listOf(
-        Pair(
-            "minInt",
-            FuncCheckerForSetting.ArgType.INT,
-        ),
-        Pair(
-            "maxInt",
-            FuncCheckerForSetting.ArgType.INT
-        )
-    )
+
+    private sealed interface ArgType {
+        val entries: EnumEntries<*>
+    }
+
+    private sealed class RndMethodArgClass {
+        data object RangeArgs : RndMethodArgClass(), ArgType {
+            override val entries = RangeEnumArgs.entries
+            val minIntKeyToIndex = Pair(
+                RangeEnumArgs.MIN_INT.key,
+                RangeEnumArgs.MIN_INT.index
+            )
+            val maxIntKeyToIndex = Pair(
+                RangeEnumArgs.MAX_INT.key,
+                RangeEnumArgs.MAX_INT.index
+            )
+
+            enum class RangeEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                MIN_INT("minInt", 0, FuncCheckerForSetting.Companion.ArgType.INT),
+                MAX_INT("maxInt", 0, FuncCheckerForSetting.Companion.ArgType.INT),
+            }
+        }
+    }
 }

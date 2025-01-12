@@ -187,7 +187,26 @@ object SettingIfManager {
                             )
                             return null to IfCheckErr("${spanRegexKey} key failure to compile: ${spanJudgeRegexStr}, ${errWhere}")
                         }
-                        val isMatch = regex.matches(judgeTargetStr)
+                        val isMatch = try {
+                            regex.matches(judgeTargetStr)
+                        } catch (e: Exception){
+                            val spanJudgeTargetArgName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.errRedCode,
+                                judgeTargetArgName
+                            )
+                            val spanJudgeRegexStr =
+                                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                    CheckTool.errRedCode,
+                                    regexStr
+                                )
+                            val errWhere = makeLogErrWhere(
+                                ifKeyName,
+                                regexArgKey,
+                                argIndex,
+                                makeArgsPairListCon(argsPairList)
+                            )
+                            return null to IfCheckErr("Irregular ${spanJudgeTargetArgName} :${spanJudgeRegexStr}, ${errWhere}")
+                        }
                         val matchTypeStr = subKeyMap.get(matchTypeKey)
                         val matchType = matchTypeStrList.firstOrNull {
                                 it.str == matchTypeStr

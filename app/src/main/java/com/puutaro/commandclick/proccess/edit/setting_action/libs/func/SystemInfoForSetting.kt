@@ -34,15 +34,15 @@ object SystemInfoForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
-            funcName,
-            methodNameStr,
-            null,
-            argsPairList,
-//            varNameToValueStrMap,
-        )?.let { argsCheckErr ->
-            return null to argsCheckErr
-        }
+//        FuncCheckerForSetting.checkArgs(
+//            funcName,
+//            methodNameStr,
+//            null,
+//            argsPairList,
+////            varNameToValueStrMap,
+//        )?.let { argsCheckErr ->
+//            return null to argsCheckErr
+//        }
         val settingValueStr = withContext(Dispatchers.Main) {
             when (methodNameClass) {
                 MethodNameClass.GET_BACKSTACK_COUNT -> {

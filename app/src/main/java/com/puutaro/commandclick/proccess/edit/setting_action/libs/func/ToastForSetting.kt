@@ -7,6 +7,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyMan
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.enums.EnumEntries
 
 object ToastForSetting {
 
@@ -36,39 +37,62 @@ object ToastForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+//        FuncCheckerForSetting.checkArgs(
+//            funcName,
+//            methodNameStr,
+//            methodNameClass.readArgsNameToTypeList,
+//            argsPairList,
+////            varNameToValueStrMap,
+//        )?.let {
+//                argsCheckErr ->
+//            return null to argsCheckErr
+//        }
+//        val argsList = argsPairList.map {
+//            it.second
+//        }
+        val funcCheckerForSetting = FuncCheckerForSetting(
             funcName,
             methodNameStr,
-            methodNameClass.readArgsNameToTypeList,
-            argsPairList,
-//            varNameToValueStrMap,
-        )?.let {
-                argsCheckErr ->
-            return null to argsCheckErr
-        }
-        val argsList = argsPairList.map {
-            it.second
-        }
-//        BroadcastSender.normalSend(
-//            context,
-//            BroadCastIntentSchemeTerm.SETING_ACTION_FUNC.action,
-//            listOf(
-//                SettingActionFuncExtra.FUNC_NAME.schema to SettingActionFuncBroadcastManager.FuncClass.TOAST.str,
-//                SettingActionFuncExtra.METHOD_NAME.schema to methodNameClass.str,
-//                SettingActionFuncExtra.ARGS.schema to SettingActionFuncBroadcastManager.makeArgsListCon(
-//                    argsList
-//                ),
-//            )
-//        )
+        )
+        val args =
+            methodNameClass.args
         withContext(Dispatchers.Main) {
-            when (methodNameClass) {
-                MethodNameClass.SHORT -> {
-                    val msg = argsList.get(0)
+            when (args) {
+                is ToastMethodArgClass.ShortArgs -> {
+                    val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                            index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
+                    )
+                    val where = FuncCheckerForSetting.makeWhereFromList(
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val msg = funcCheckerForSetting.getStringFromArgMapByIndex(
+                        funcCheckerForSetting,
+                        mapArgMapList,
+                        args.messageKeyToIndex,
+                        where
+                    ).let { msgToErr ->
+                        val funcErr = msgToErr.second
+                            ?: return@let msgToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
 //                    SettingFuncTool.getValueStrFromMapOrIt(
 //                        argsList.get(0),
 //                        varNameToValueStrMap,
 //                    )
-                    val bitmapVarRegex = Regex("^[$][{][a-zA-Z0-9_]+[}]$")
+//                    val bitmapVarRegex = Regex("^[$][{][a-zA-Z0-9_]+[}]$")
 //                    FileSystems.writeFile(
 //                        File(UsePath.cmdclickDefaultSDebugAppDirPath, "ltoast.txt").absolutePath,
 //                        listOf(
@@ -88,10 +112,38 @@ object ToastForSetting {
 
                 }
 
-                MethodNameClass.LONG -> {
-                    val firstArg = argsList.get(0)
+                is ToastMethodArgClass.LongArgs -> {
+                    val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                            index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
+                    )
+                    val where = FuncCheckerForSetting.makeWhereFromList(
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val msg = funcCheckerForSetting.getStringFromArgMapByIndex(
+                        funcCheckerForSetting,
+                        mapArgMapList,
+                        args.messageKeyToIndex,
+                        where
+                    ).let { msgToErr ->
+                        val funcErr = msgToErr.second
+                            ?: return@let msgToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
                     ToastUtils.showLong(
-                        firstArg
+                        msg
                     )
                 }
             }
@@ -99,20 +151,51 @@ object ToastForSetting {
         return null
     }
 
-    enum class MethodNameClass(
+    private enum class MethodNameClass(
         val str: String,
-        val readArgsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+        val args: ToastMethodArgClass,
     ){
-        SHORT("short", shortArgsNameToTypeList),
-        LONG("long", longArgsNameToTypeList),
+        SHORT("short", ToastMethodArgClass.ShortArgs),
+        LONG("long", ToastMethodArgClass.LongArgs),
     }
 
-    private val shortArgsNameToTypeList = listOf(
-        Pair("message", FuncCheckerForSetting.ArgType.STRING)
-    )
 
+    private sealed interface ArgType {
+        val entries: EnumEntries<*>
+    }
 
-    private val longArgsNameToTypeList = listOf(
-        Pair("message", FuncCheckerForSetting.ArgType.STRING)
-    )
+    private sealed class ToastMethodArgClass {
+        data object ShortArgs : ToastMethodArgClass(), ArgType {
+            override val entries = RangeEnumArgs.entries
+            val messageKeyToIndex = Pair(
+                RangeEnumArgs.MESSAGE.key,
+                RangeEnumArgs.MESSAGE.index
+            )
+
+            enum class RangeEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                MESSAGE("message", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+
+            }
+        }
+        data object LongArgs : ToastMethodArgClass(), ArgType {
+            override val entries = LongEnumArgs.entries
+            val messageKeyToIndex = Pair(
+                LongEnumArgs.MESSAGE.key,
+                LongEnumArgs.MESSAGE.index
+            )
+
+            enum class LongEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                MESSAGE("message", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+
+            }
+        }
+    }
 }

@@ -9,6 +9,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerFor
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.enums.EnumEntries
 
 object EditForSetting {
     suspend fun handle(
@@ -38,53 +39,121 @@ object EditForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+//        FuncCheckerForSetting.checkArgs(
+//            funcName,
+//            methodNameStr,
+//            methodNameClass.argsNameToTypeList,
+//            argsPairList,
+////            varNameToValueStrMap,
+//        )?.let { argsCheckErr ->
+//            return null to argsCheckErr
+//        }
+//        val argsList = argsPairList.map {
+//            it.second
+//        }
+        val funcCheckerForSetting = FuncCheckerForSetting(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameToTypeList,
-            argsPairList,
-//            varNameToValueStrMap,
-        )?.let { argsCheckErr ->
-            return null to argsCheckErr
-        }
-        val argsList = argsPairList.map {
-            it.second
-        }
+        )
+        val args =
+            methodNameClass.args
         val terminalFragment = withContext(Dispatchers.Main) {
             TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
                 fragment?.activity
             )
         } ?: return null to FuncCheckerForSetting.FuncCheckErr("Cannot get terminal fragment")
-        val settingValueStr = withContext(Dispatchers.Main) {
-            when (methodNameClass) {
-                MethodNameClass.GET_SETTING_VALUE -> {
-                    val firstArg = argsList.get(0)
-                    val secondArg = argsList.get(0)
-                    EditComponentFunc.getSettingValue(
-                        terminalFragment,
-                        firstArg,
-                        secondArg,
-                        editConstraintListAdapterArg,
+        return withContext(Dispatchers.Main) {
+            when (args) {
+                is EditMethodArgClass.GetSettingValueArgs -> {
+                    val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                            index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
                     )
+                    val where = FuncCheckerForSetting.makeWhereFromList(
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val targetVariableName = funcCheckerForSetting.getStringFromArgMapByIndex(
+                        funcCheckerForSetting,
+                        mapArgMapList,
+                        args.targetVariableNameKeyToIndex,
+                        where
+                    ).let { targetVariableNameToErr ->
+                        val funcErr = targetVariableNameToErr.second
+                            ?: return@let targetVariableNameToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val srcFragmentStr =funcCheckerForSetting.getStringFromArgMapByIndex(
+                        funcCheckerForSetting,
+                        mapArgMapList,
+                        args.srcFragmentToIndex,
+                        where
+                    ).let { srcFragmentToErr ->
+                        val funcErr = srcFragmentToErr.second
+                            ?: return@let srcFragmentToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    Pair (
+                        EditComponentFunc.getSettingValue(
+                            terminalFragment,
+                            targetVariableName,
+                            srcFragmentStr,
+                            editConstraintListAdapterArg,
+                        ),
+                        null
+                    ) to null
 
                 }
             }
         }
-        return Pair(
-                settingValueStr,
-                null,
-            ) to null
     }
 
-    enum class MethodNameClass(
+    private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
-    ) {
-        GET_SETTING_VALUE("getSettingValue", getSettingValueArgsNameToTypeList),
+        val args: EditMethodArgClass,
+    ){
+        GET_SETTING_VALUE("getSettingValue", EditMethodArgClass.GetSettingValueArgs),
     }
 
-    private val getSettingValueArgsNameToTypeList = listOf(
-        Pair("targetVariableName", FuncCheckerForSetting.ArgType.STRING),
-        Pair("srcFragment", FuncCheckerForSetting.ArgType.STRING),
-    )
+
+    private sealed interface ArgType {
+        val entries: EnumEntries<*>
+    }
+
+    private sealed class EditMethodArgClass {
+        data object GetSettingValueArgs : EditMethodArgClass(), ArgType {
+            override val entries = GetSettingValueEnumArgs.entries
+            val targetVariableNameKeyToIndex = Pair(
+                GetSettingValueEnumArgs.TARGET_VARIABLE_NAME.key,
+                GetSettingValueEnumArgs.TARGET_VARIABLE_NAME.index
+            )
+            val srcFragmentToIndex = Pair(
+                GetSettingValueEnumArgs.SRC_FRAGMENT.key,
+                GetSettingValueEnumArgs.SRC_FRAGMENT.index
+            )
+
+            enum class GetSettingValueEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                TARGET_VARIABLE_NAME("targetVariableName", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                SRC_FRAGMENT("srcFragment", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+    }
 }

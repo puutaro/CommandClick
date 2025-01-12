@@ -4,6 +4,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.func.MathCulc
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import kotlin.enums.EnumEntries
 
 
 object MathCulcForSetting {
@@ -32,68 +33,186 @@ object MathCulcForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+//        FuncCheckerForSetting.checkArgs(
+//            funcName,
+//            methodNameStr,
+//            methodNameClass.argsNameToTypeList,
+//            argsPairList,
+////            varNameToValueStrMap,
+//        )?.let {
+//                argsCheckErr ->
+//            return null to argsCheckErr
+//        }
+//        val argsList = argsPairList.map {
+//            it.second
+//        }
+        val funcCheckerForSetting = FuncCheckerForSetting(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameToTypeList,
-            argsPairList,
-//            varNameToValueStrMap,
-        )?.let {
-                argsCheckErr ->
-            return null to argsCheckErr
-        }
-        val argsList = argsPairList.map {
-            it.second
-        }
-        val firstArg = argsList.get(0)
-        val result = try {
-            when (methodNameClass) {
-                MethodNameClass.FLOAT -> {
-                    MathCulc.float(firstArg).toString()
+        )
+        val args =
+            methodNameClass.args
+        when(args) {
+            is MathMethodArgClass.IntArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val formulaStr = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.formulaKeyToIndex,
+                    where
+                ).let { formulaStrToErr ->
+                    val funcErr = formulaStrToErr.second
+                        ?: return@let formulaStrToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                return try {
+                    Pair(
+                        MathCulc.int(formulaStr).toString(),
+                        null,
+                    ) to null
+                } catch (e: Exception) {
+                    makeFormulaErr(
+                        funcName,
+                        methodNameStr,
+                        formulaStr,
+                    )
                 }
 
-                MethodNameClass.INT -> {
-                    MathCulc.int(firstArg).toString()
+            }
+
+            is MathMethodArgClass.FloatArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val formulaStr = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.formulaKeyToIndex,
+                    where
+                ).let { formulaStrToErr ->
+                    val funcErr = formulaStrToErr.second
+                        ?: return@let formulaStrToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                return try {
+                    Pair(
+                        MathCulc.float(formulaStr).toString(),
+                        null,
+                    ) to null
+                } catch (e: Exception) {
+                    makeFormulaErr(
+                        funcName,
+                        methodNameStr,
+                        formulaStr,
+                    )
                 }
             }
-        } catch (e: Exception){
-            val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.errBrown,
-                funcName
-            )
-            val spanMethodNameStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.errRedCode,
-                methodNameStr
-            )
-            val spanFirstArgStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.errRedCode,
-                firstArg
-            )
-            return null to FuncCheckerForSetting.FuncCheckErr("Formula err: ${spanFuncTypeStr}.${spanMethodNameStr}, arg: ${spanFirstArgStr}")
         }
-        return Pair(
-            result,
-            null
-        ) to null
+    }
+
+    private fun makeFormulaErr(
+        funcName: String,
+        methodNameStr: String,
+        formulaStr: String,
+    ): Pair<Nothing?, FuncCheckerForSetting. FuncCheckErr> {
+        val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+            CheckTool.errBrown,
+            funcName
+        )
+        val spanMethodNameStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+            CheckTool.errRedCode,
+            methodNameStr
+        )
+        val spanFirstArgStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+            CheckTool.errRedCode,
+            formulaStr
+        )
+        return null to FuncCheckerForSetting.FuncCheckErr("Formula err: ${spanFuncTypeStr}.${spanMethodNameStr}, arg: ${spanFirstArgStr}")
     }
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+        val args: MathMethodArgClass,
     ){
         INT(
             "int",
-            formulaArgsNameToTypeList,
+            MathMethodArgClass.IntArgs,
         ),
         FLOAT(
             "float",
-            formulaArgsNameToTypeList,
+            MathMethodArgClass.FloatArgs,
         )
     }
 
-    private val formulaArgsNameToTypeList =  listOf(
-        Pair("formula",
-            FuncCheckerForSetting.ArgType.STRING,
+
+    private sealed interface ArgType {
+        val entries: EnumEntries<*>
+    }
+
+    private sealed class MathMethodArgClass {
+        data object IntArgs : MathMethodArgClass(), ArgType {
+            override val entries = IntEnumArgs.entries
+            val formulaKeyToIndex = Pair(
+                IntEnumArgs.FORMULA.key,
+                IntEnumArgs.FORMULA.index
             )
-    )
+
+            enum class IntEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FORMULA("formula", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object FloatArgs : MathMethodArgClass(), ArgType {
+            override val entries = FloatEnumArgs.entries
+            val formulaKeyToIndex = Pair(
+                FloatEnumArgs.FORMULA.key,
+                FloatEnumArgs.FORMULA.index
+            )
+
+            enum class FloatEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FORMULA("formula", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+    }
 }

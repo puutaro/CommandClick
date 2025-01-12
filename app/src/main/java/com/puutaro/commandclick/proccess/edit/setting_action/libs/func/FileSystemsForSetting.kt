@@ -5,6 +5,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyMan
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import kotlin.enums.EnumEntries
 
 object FileSystemsForSettingHandler {
 
@@ -33,36 +34,109 @@ object FileSystemsForSettingHandler {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
-            funcName,
-            methodNameStr,
-            methodNameClass.argsNameToTypeList,
-            argsPairList,
-        )?.let {
-            argsCheckErr ->
-            return null to argsCheckErr
-        }
+//        FuncCheckerForSetting.checkArgs(
+//            funcName,
+//            methodNameStr,
+//            methodNameClass.argsNameToTypeList,
+//            argsPairList,
+//        )?.let {
+//            argsCheckErr ->
+//            return null to argsCheckErr
+//        }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "settingCheck.txt").absolutePath,
 //            listOf(
 //                "isErr: ${isErr}",
 //            ).joinToString("\n")
 //        )
-        val argsList = argsPairList.map {
-            it.second
-        }
-        return when(methodNameClass){
-            MethodNameClass.READ -> {
-                val filePath =
-                    argsList.get(0)
+//        val argsList = argsPairList.map {
+//            it.second
+//        }
+        val funcCheckerForSetting = FuncCheckerForSetting(
+            funcName,
+            methodNameStr,
+        )
+        val args =
+            methodNameClass.args
+        return when(args){
+            is FileSystemsMethodArgClass.ReadArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val filePath = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.filePathKeyToIndex,
+                    where
+                ).let { filePathToErr ->
+                        val funcErr = filePathToErr.second
+                            ?: return@let filePathToErr.first
+                        return Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
                 Pair(
                     ReadText(filePath).readText(),
                     null
                 ) to null
             }
-            MethodNameClass.WRITE -> {
-                val firstArg = argsList.get(0)
-                val secondArg = argsList.get(1)
+            is FileSystemsMethodArgClass.WriteArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val filePath = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.filePathKeyToIndex,
+                    where
+                ).let { filePathToErr ->
+                    val funcErr = filePathToErr.second
+                        ?: return@let filePathToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val contents = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.contentsToIndex,
+                    where
+                ).let { contentsToErr ->
+                    val funcErr = contentsToErr.second
+                        ?: return@let contentsToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
 //                FileSystems.writeFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "setting2.txt").absolutePath,
 //                    listOf(
@@ -71,24 +145,92 @@ object FileSystemsForSettingHandler {
 //                    ).joinToString("\n")
 //                )
                 FileSystems.writeFile(
-                    firstArg,
-                    secondArg
+                    filePath,
+                    contents
                 )
                 null
             }
-            MethodNameClass.UPDATE_WRITE -> {
-                val firstArg = argsList.get(0)
-                val secondArg = argsList.get(1)
+            is FileSystemsMethodArgClass.UpdateWriteArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val filePath = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.filePathKeyToIndex,
+                    where
+                ).let { filePathToErr ->
+                    val funcErr = filePathToErr.second
+                        ?: return@let filePathToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val contents = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.contentsToIndex,
+                    where
+                ).let { contentsToErr ->
+                    val funcErr = contentsToErr.second
+                        ?: return@let contentsToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 FileSystems.updateFile(
-                    firstArg,
-                    secondArg
+                    filePath,
+                    contents
                 )
                 null
             }
-            MethodNameClass.REMOVE -> {
-                val firstArg = argsList.get(0)
+            is FileSystemsMethodArgClass.RemoveArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val filePath = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.filePathKeyToIndex,
+                    where
+                ).let { filePathToErr ->
+                    val funcErr = filePathToErr.second
+                        ?: return@let filePathToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 FileSystems.removeFiles(
-                    firstArg
+                    filePath
                 )
                 null
             }
@@ -97,22 +239,89 @@ object FileSystemsForSettingHandler {
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+        val args: FileSystemsMethodArgClass,
     ){
-        READ("read", readArgsNameToTypeList),
-        WRITE("write", writeArgsNameToTypeList),
-        UPDATE_WRITE("updateWrite", writeArgsNameToTypeList),
-        REMOVE("remove", readArgsNameToTypeList),
+        READ("read", FileSystemsMethodArgClass.ReadArgs),
+        WRITE("write", FileSystemsMethodArgClass.WriteArgs),
+        UPDATE_WRITE("updateWrite", FileSystemsMethodArgClass.UpdateWriteArgs),
+        REMOVE("remove", FileSystemsMethodArgClass.RemoveArgs),
     }
 
-    private val readArgsNameToTypeList = listOf(
-        Pair("filePath", FuncCheckerForSetting.ArgType.PATH)
-    )
 
+    private sealed interface ArgType {
+        val entries: EnumEntries<*>
+    }
 
-    private val writeArgsNameToTypeList = listOf(
-        Pair("filePath", FuncCheckerForSetting.ArgType.STRING),
-        Pair("contents", FuncCheckerForSetting.ArgType.STRING),
-    )
+    private sealed class FileSystemsMethodArgClass {
+        data object WriteArgs : FileSystemsMethodArgClass(), ArgType {
+            override val entries = WriteEnumArgs.entries
+            val filePathKeyToIndex = Pair(
+                WriteEnumArgs.FILE_PATH.key,
+                WriteEnumArgs.FILE_PATH.index
+            )
+            val contentsToIndex = Pair(
+                WriteEnumArgs.CONTENTS.key,
+                WriteEnumArgs.CONTENTS.index
+            )
+
+            enum class WriteEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                CONTENTS("contents", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object UpdateWriteArgs : FileSystemsMethodArgClass(), ArgType {
+            override val entries = UpdateWriteEnumArgs.entries
+            val filePathKeyToIndex = Pair(
+                UpdateWriteEnumArgs.FILE_PATH.key,
+                UpdateWriteEnumArgs.FILE_PATH.index
+            )
+            val contentsToIndex = Pair(
+                UpdateWriteEnumArgs.CONTENTS.key,
+                UpdateWriteEnumArgs.CONTENTS.index
+            )
+
+            enum class UpdateWriteEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+                CONTENTS("contents", 1, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object ReadArgs : FileSystemsMethodArgClass(), ArgType {
+            override val entries = ReadEnumArgs.entries
+            val filePathKeyToIndex = Pair(
+                ReadEnumArgs.FILE_PATH.key,
+                ReadEnumArgs.FILE_PATH.index
+            )
+            enum class ReadEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+
+        data object RemoveArgs : FileSystemsMethodArgClass(), ArgType {
+            override val entries = RemoveEnumArgs.entries
+            val filePathKeyToIndex = Pair(
+                RemoveEnumArgs.FILE_PATH.key,
+                RemoveEnumArgs.FILE_PATH.index
+            )
+            enum class RemoveEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+    }
 
 }

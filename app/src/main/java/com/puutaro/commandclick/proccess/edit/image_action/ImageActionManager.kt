@@ -421,7 +421,10 @@ class ImageActionManager {
                         || isNotExistReturnOrFuncJob.await()
                         || isBlankReturnErrWithoutRunPrefixJob.await()
             }
-            if(isErr) return
+            if(isErr) {
+                imageActionExitManager.setExit()
+                return
+            }
             keyToSubKeyConList.forEach { keyToSubKeyConSrc ->
                 if (
                     imageActionExitManager.get()

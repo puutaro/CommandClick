@@ -5,6 +5,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyMan
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.str.QuoteTool
+import kotlin.enums.EnumEntries
 
 object ShellToolManagerForSetting {
 
@@ -36,43 +37,89 @@ object ShellToolManagerForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+        val funcCheckerForSetting = FuncCheckerForSetting(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameToTypeList,
-            argsPairList,
-//            varNameToValueStrMap,
-        )?.let {
-                argsCheckErr ->
-            return null to argsCheckErr
+        )
+        val args =
+            methodNameClass.args
+        when(args){
+            is ShellMethodArgClass.ExecArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val cmdStr =
+                    funcCheckerForSetting.getStringFromArgMapByIndex(
+                        funcCheckerForSetting,
+                        mapArgMapList,
+                        args.cmdListKeyToIndex,
+                        where
+                    ).let { cmdStrToErr ->
+                    val funcErr = cmdStrToErr.second
+                        ?: return@let cmdStrToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val cmd = QuoteTool.splitBySurroundedIgnore(
+                    cmdStr,
+                    cmdSeparator
+                ).map {
+                    "${'$'}{b} ${it} "
+                }.joinToString(cmdSeparator.toString())
+                return Pair (
+                    busyboxExecutor?.getCmdOutput(
+                        cmd,
+                        null
+                    ),
+                    null
+                ) to null
+            }
         }
-        val argsList = argsPairList.map {
-            it.second
-        }
-        val firstArg = argsList.get(0)
-        val cmd = QuoteTool.splitBySurroundedIgnore(
-            firstArg,
-            cmdSeparator
-        ).map {
-            "${'$'}{b} ${it} "
-        }.joinToString(cmdSeparator.toString())
-        return Pair (
-            busyboxExecutor?.getCmdOutput(
-                cmd,
-                null
-            ),
-            null
-        ) to null
     }
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+        val args: ShellMethodArgClass,
     ){
-        EXEC("exec", shellArgsNameToTypeList),
+        EXEC("exec", ShellMethodArgClass.ExecArgs),
     }
 
-    private val  shellArgsNameToTypeList = listOf(
-        Pair("cmdList", FuncCheckerForSetting.ArgType.STRING)
-    )
+
+    private sealed interface ArgType {
+        val entries: EnumEntries<*>
+    }
+
+    private sealed class ShellMethodArgClass {
+        data object ExecArgs : ShellMethodArgClass(), ArgType {
+            override val entries = RangeEnumArgs.entries
+            val cmdListKeyToIndex = Pair(
+                RangeEnumArgs.CMD_LIST.key,
+                RangeEnumArgs.CMD_LIST.index
+            )
+
+            enum class RangeEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                CMD_LIST("cmdList", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+
+            }
+        }
+    }
 }

@@ -5,6 +5,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyMan
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.CcPathTool
 import java.io.File
+import kotlin.enums.EnumEntries
 
 object PathForSettingHandler {
     fun handle(
@@ -32,87 +33,373 @@ object PathForSettingHandler {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+//        FuncCheckerForSetting.checkArgs(
+//            funcName,
+//            methodNameStr,
+//            methodNameClass.argsNameToTypeList,
+//            argsPairList,
+////            varNameToValueStrMap,
+//        )?.let {
+//                argsCheckErr ->
+//            return null to argsCheckErr
+//        }
+//        val argsList = argsPairList.map {
+//            it.second
+//        }
+        val funcCheckerForSetting = FuncCheckerForSetting(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameToTypeList,
-            argsPairList,
-//            varNameToValueStrMap,
-        )?.let {
-                argsCheckErr ->
-            return null to argsCheckErr
-        }
-        val argsList = argsPairList.map {
-            it.second
-        }
-        return when(methodNameClass){
-            MethodNameClass.MAKE_FANNEL_DIR_NAME -> {
-                val firstArg = argsList.get(0)
+        )
+        val args =
+            methodNameClass.args
+        return when(args){
+            is PathMethodArgClass.MakeFannelDirNameArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val fannelName = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.fannelNameKeyToIndex,
+                    where
+                ).let { fannelNameToErr ->
+                    val funcErr = fannelNameToErr.second
+                        ?: return@let fannelNameToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 Pair(
-                    CcPathTool.makeFannelDirName(firstArg),
+                    CcPathTool.makeFannelDirName(fannelName),
                     null,
                 ) to null
             }
-            MethodNameClass.TRIM_ALL_EXTEND -> {
-                val firstArg = argsList.get(0)
+            is PathMethodArgClass.TrimAllExtendNameArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val fileName = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.fileNameKeyToIndex,
+                    where
+                ).let { fannelNameToErr ->
+                    val funcErr = fannelNameToErr.second
+                        ?: return@let fannelNameToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 Pair(
-                    CcPathTool.trimAllExtend(firstArg),
+                    CcPathTool.trimAllExtend(fileName),
                     null
                 ) to null
             }
-            MethodNameClass.MAKE_FANNEL_RAW_NAME -> {
-                val firstArg = argsList.get(0)
+            is PathMethodArgClass.MakeFannelRawNameArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val fannelName = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.fannelNameKeyToIndex,
+                    where
+                ).let { fannelNameToErr ->
+                    val funcErr = fannelNameToErr.second
+                        ?: return@let fannelNameToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 Pair(
-                    CcPathTool.makeFannelRawName(firstArg),
+                    CcPathTool.makeFannelRawName(fannelName),
                     null
                 ) to null
             }
-            MethodNameClass.GET_MAIN_APP_DIR_PATH -> {
-                val firstArg = argsList.get(0)
+            is PathMethodArgClass.GetMainAppDirPathArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.currentSubFannelPathToIndex,
+                    where
+                ).let { pathStrToErr ->
+                    val funcErr = pathStrToErr.second
+                        ?: return@let pathStrToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 Pair(
-                    CcPathTool.getMainAppDirPath(firstArg),
+                    CcPathTool.getMainAppDirPath(pathStr),
                     null
                 ) to null
             }
-            MethodNameClass.GET_MAIN_FANNEL_FILE_PATH -> {
-                val firstArg = argsList.get(0)
+            is PathMethodArgClass.GetMainFannelFilePathArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.currentSubFannelPathToIndex,
+                    where
+                ).let { pathStrToErr ->
+                    val funcErr = pathStrToErr.second
+                        ?: return@let pathStrToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 Pair(
-                    CcPathTool.getMainFannelFilePath(firstArg),
+                    CcPathTool.getMainFannelFilePath(pathStr),
                     null,
                 ) to null
             }
-            MethodNameClass.GET_MAIN_FANNEL_DIR_PATH -> {
-                val firstArg = argsList.get(0)
+            is PathMethodArgClass.GetMainFannelDirPathArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.currentSubFannelPathToIndex,
+                    where
+                ).let { pathStrToErr ->
+                    val funcErr = pathStrToErr.second
+                        ?: return@let pathStrToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 Pair(
-                    CcPathTool.getMainFannelDirPath(firstArg),
+                    CcPathTool.getMainFannelDirPath(pathStr),
                     null,
                 ) to null
             }
-            MethodNameClass.GET_PARENT_DIR_PATH -> {
-                val firstArg = argsList.get(0)
+            is PathMethodArgClass.GetParentDirPathArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.fileNameKeyToIndex,
+                    where
+                ).let { pathStrToErr ->
+                    val funcErr = pathStrToErr.second
+                        ?: return@let pathStrToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 Pair(
-                    File(firstArg).parent,
+                    File(pathStr).parent,
                     null,
                 ) to null
             }
-            MethodNameClass.GET_FILE_NAME -> {
-                val firstArg = argsList.get(0)
+            is PathMethodArgClass.GetFileNameArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.filePathKeyToIndex,
+                    where
+                ).let { pathStrToErr ->
+                    val funcErr = pathStrToErr.second
+                        ?: return@let pathStrToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 Pair(
-                    File(firstArg).name,
+                    File(pathStr).name,
                     null,
                 ) to null
             }
-            MethodNameClass.IS_FILE -> {
-                val firstArg = argsList.get(0)
+            is PathMethodArgClass.IsFileArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.filePathKeyToIndex,
+                    where
+                ).let { pathStrToErr ->
+                    val funcErr = pathStrToErr.second
+                        ?: return@let pathStrToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 Pair(
-                    File(firstArg).isFile.toString(),
+                    File(pathStr).isFile.toString(),
                     null,
                     ) to null
             }
-            MethodNameClass.IS_DIR -> {
-                val firstArg = argsList.get(0)
+            is PathMethodArgClass.IsDirArgs -> {
+                val formalArgIndexToNameToTypeList =
+                    args.entries.mapIndexed { index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val pathStr = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.dirPathKeyToIndex,
+                    where
+                ).let { pathStrToErr ->
+                    val funcErr = pathStrToErr.second
+                        ?: return@let pathStrToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 Pair(
-                    File(firstArg).isDirectory.toString(),
+                    File(pathStr).isDirectory.toString(),
                     null,
                     ) to null
             }
@@ -121,97 +408,206 @@ object PathForSettingHandler {
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+        val args: PathMethodArgClass,
     ){
         MAKE_FANNEL_DIR_NAME(
             "makeFannelDirName",
-            listOf(
-                Pair(
-                    "fannelNameSrc",
-                    FuncCheckerForSetting.ArgType.STRING,
-                )
-            )
+            PathMethodArgClass.MakeFannelDirNameArgs
         ),
         TRIM_ALL_EXTEND(
             "trimAllExtend",
-            listOf(
-                Pair(
-                    "fileName",
-                    FuncCheckerForSetting.ArgType.STRING,
-                )
-            )
+            PathMethodArgClass.TrimAllExtendNameArgs
         ),
         MAKE_FANNEL_RAW_NAME(
             "makeFannelRawName",
-            listOf(
-                Pair(
-                    "fannelNameSrc",
-                    FuncCheckerForSetting.ArgType.STRING,
-                    )
-            )
+            PathMethodArgClass.MakeFannelRawNameArgs
         ),
         GET_MAIN_APP_DIR_PATH(
             "getMainAppDirPath",
-            listOf(
-                Pair(
-                    "currentSubFannelPath",
-                    FuncCheckerForSetting.ArgType.STRING,
-                    )
-            )
+            PathMethodArgClass.GetMainAppDirPathArgs
         ),
         GET_MAIN_FANNEL_FILE_PATH(
             "getMainFannelFilePath",
-            listOf(
-                Pair(
-                    "currentSubFannelPath",
-                    FuncCheckerForSetting.ArgType.STRING,
-                    )
-            )
+            PathMethodArgClass.GetMainFannelFilePathArgs
         ),
         GET_MAIN_FANNEL_DIR_PATH(
             "getMainFannelDirPath",
-            listOf(
-                Pair(
-                    "currentSubFannelPath",
-                    FuncCheckerForSetting.ArgType.STRING,
-                    )
-            )
+            PathMethodArgClass.GetMainFannelDirPathArgs
         ),
         GET_PARENT_DIR_PATH(
             "getParentDirPath",
-            listOf(
-                Pair(
-                    "filePath",
-                    FuncCheckerForSetting.ArgType.STRING,
-                    )
-            )
+            PathMethodArgClass.GetParentDirPathArgs
         ),
         GET_FILE_NAME(
             "getFileName",
-            listOf(
-                Pair(
-                    "filePath",
-                    FuncCheckerForSetting.ArgType.STRING,
-                )
-            )
+            PathMethodArgClass.GetFileNameArgs
         ),
         IS_FILE(
             "isFile",
-            listOf(
-                Pair(
-                    "filePath",
-                    FuncCheckerForSetting.ArgType.STRING
-                )
-            )
+            PathMethodArgClass.IsFileArgs
         ),
         IS_DIR(
             "isDir",
-            listOf(
-                Pair(
-                    "isDir",
-                    FuncCheckerForSetting.ArgType.STRING,
-                    )
-            )
+            PathMethodArgClass.IsDirArgs
         ),
+    }
+
+
+    private sealed interface ArgType {
+        val entries: EnumEntries<*>
+    }
+
+    private sealed class PathMethodArgClass {
+        data object MakeFannelDirNameArgs : PathMethodArgClass(), ArgType {
+            override val entries = MakeFannelDirNameEnumArgs.entries
+            val fannelNameKeyToIndex = Pair(
+                MakeFannelDirNameEnumArgs.FANNEL_NAME.key,
+                MakeFannelDirNameEnumArgs.FANNEL_NAME.index
+            )
+
+            enum class MakeFannelDirNameEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FANNEL_NAME("fannelName", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object TrimAllExtendNameArgs : PathMethodArgClass(), ArgType {
+            override val entries = TrimAllExtendEnumArgs.entries
+            val fileNameKeyToIndex = Pair(
+                TrimAllExtendEnumArgs.FILE_NAME.key,
+                TrimAllExtendEnumArgs.FILE_NAME.index
+            )
+
+            enum class TrimAllExtendEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FILE_NAME("fileName", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object MakeFannelRawNameArgs : PathMethodArgClass(), ArgType {
+            override val entries = MakeFannelRawNameEnumArgs.entries
+            val fannelNameKeyToIndex = Pair(
+                MakeFannelRawNameEnumArgs.FANNEL_NAME.key,
+                MakeFannelRawNameEnumArgs.FANNEL_NAME.index
+            )
+
+            enum class MakeFannelRawNameEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FANNEL_NAME("fannelName", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object GetMainAppDirPathArgs : PathMethodArgClass(), ArgType {
+            override val entries = GetMainAppDirPathEnumArgs.entries
+            val currentSubFannelPathToIndex = Pair(
+                GetMainAppDirPathEnumArgs.CURRENT_SUB_FANNEL_PATH.key,
+                GetMainAppDirPathEnumArgs.CURRENT_SUB_FANNEL_PATH.index
+            )
+
+            enum class GetMainAppDirPathEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                CURRENT_SUB_FANNEL_PATH("currentSubFannelPath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object GetMainFannelFilePathArgs : PathMethodArgClass(), ArgType {
+            override val entries = GetMainFannelFilePathEnumArgs.entries
+            val currentSubFannelPathToIndex = Pair(
+                GetMainFannelFilePathEnumArgs.CURRENT_SUB_FANNEL_PATH.key,
+                GetMainFannelFilePathEnumArgs.CURRENT_SUB_FANNEL_PATH.index
+            )
+
+            enum class GetMainFannelFilePathEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                CURRENT_SUB_FANNEL_PATH("currentSubFannelPath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object GetMainFannelDirPathArgs : PathMethodArgClass(), ArgType {
+            override val entries = GetMainFannelDirPathEnumArgs.entries
+            val currentSubFannelPathToIndex = Pair(
+                GetMainFannelDirPathEnumArgs.CURRENT_SUB_FANNEL_PATH.key,
+                GetMainFannelDirPathEnumArgs.CURRENT_SUB_FANNEL_PATH.index
+            )
+
+            enum class GetMainFannelDirPathEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                CURRENT_SUB_FANNEL_PATH("currentSubFannelPath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object GetParentDirPathArgs : PathMethodArgClass(), ArgType {
+            override val entries = GetParentDirPathEnumArgs.entries
+            val fileNameKeyToIndex = Pair(
+                GetParentDirPathEnumArgs.FILE_NAME.key,
+                GetParentDirPathEnumArgs.FILE_NAME.index
+            )
+
+            enum class GetParentDirPathEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FILE_NAME("fileName", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object GetFileNameArgs : PathMethodArgClass(), ArgType {
+            override val entries = GetFileNameEnumArgs.entries
+            val filePathKeyToIndex = Pair(
+                GetFileNameEnumArgs.FILE_PATH.key,
+                GetFileNameEnumArgs.FILE_PATH.index
+            )
+
+            enum class GetFileNameEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+        data object IsFileArgs : PathMethodArgClass(), ArgType {
+            override val entries = IsFileArgs.entries
+            val filePathKeyToIndex = Pair(
+                IsFileArgs.FILE_PATH.key,
+                IsFileArgs.FILE_PATH.index
+            )
+
+            enum class IsFileArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                FILE_PATH("filePath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+
+        data object IsDirArgs : PathMethodArgClass(), ArgType {
+            override val entries = IsDirArgs.entries
+            val dirPathKeyToIndex = Pair(
+                IsDirArgs.DIR_PATH.key,
+                IsDirArgs.DIR_PATH.index
+            )
+
+            enum class IsDirArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                DIR_PATH("dirPath", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
     }
 }

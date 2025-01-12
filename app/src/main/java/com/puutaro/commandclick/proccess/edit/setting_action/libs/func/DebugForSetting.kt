@@ -6,6 +6,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyMan
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.enums.EnumEntries
 
 object DebugForSetting {
 
@@ -35,19 +36,19 @@ object DebugForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
-            funcName,
-            methodNameStr,
-            methodNameClass.readArgsNameToTypeList,
-            argsPairList,
-//            varNameToValueStrMap,
-        )?.let {
-                argsCheckErr ->
-            return null to argsCheckErr
-        }
-        val argsList = argsPairList.map {
-            it.second
-        }
+//        FuncCheckerForSetting.checkArgs(
+//            funcName,
+//            methodNameStr,
+//            methodNameClass.readArgsNameToTypeList,
+//            argsPairList,
+////            varNameToValueStrMap,
+//        )?.let {
+//                argsCheckErr ->
+//            return null to argsCheckErr
+//        }
+//        val argsList = argsPairList.map {
+//            it.second
+//        }
 //        BroadcastSender.normalSend(
 //            context,
 //            BroadCastIntentSchemeTerm.SETING_ACTION_FUNC.action,
@@ -59,10 +60,44 @@ object DebugForSetting {
 //                ),
 //            )
 //        )
+        val funcCheckerForSetting = FuncCheckerForSetting(
+            funcName,
+            methodNameStr,
+        )
+        val args =
+            methodNameClass.args
         return withContext(Dispatchers.Main) {
-            when (methodNameClass) {
-                MethodNameClass.REFLECT -> {
-                    val msg = argsList.get(0)
+            when (args) {
+                is DebugMethodArgClass.ReflectArgs -> {
+                    val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                            index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                    val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
+                    )
+                    val where = FuncCheckerForSetting.makeWhereFromList(
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val message = funcCheckerForSetting.getStringFromArgMapByIndex(
+                        funcCheckerForSetting,
+                        mapArgMapList,
+                        args.messageKeyToIndex,
+                        where
+                    ).let { msgToErr ->
+                        val funcErr = msgToErr.second
+                            ?: return@let msgToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
 //                    SettingFuncTool.getValueStrFromMapOrIt(
 //                        argsList.get(0),
 //                        varNameToValueStrMap,
@@ -80,24 +115,43 @@ object DebugForSetting {
 //                            "msg: ${msg}",
 //                        ).joinToString("\n")
 //                    )
-                    Pair(msg, null) to null
+                    Pair(message, null) to null
                 }
-                MethodNameClass.NULL -> null
+                else -> null
             }
         }
     }
 
-    enum class MethodNameClass(
+    private enum class MethodNameClass(
         val str: String,
-        val readArgsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>?,
+        val args: DebugMethodArgClass?,
     ){
-        REFLECT("reflect", shortArgsNameToTypeList),
-        NULL("null", null)
+        REFLECT("reflect", DebugMethodArgClass.ReflectArgs),
+        NULL("null", null),
     }
 
-    private val shortArgsNameToTypeList = listOf(
-        Pair("message", FuncCheckerForSetting.ArgType.STRING),
-    )
+
+    private sealed interface ArgType {
+        val entries: EnumEntries<*>
+    }
+
+    private sealed class DebugMethodArgClass {
+        data object ReflectArgs : DebugMethodArgClass(), ArgType {
+            override val entries = ReflectEnumArgs.entries
+            val messageKeyToIndex = Pair(
+                ReflectEnumArgs.MESSAGE.key,
+                ReflectEnumArgs.MESSAGE.index
+            )
+
+            enum class ReflectEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                MESSAGE("message", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+    }
 
 
 }

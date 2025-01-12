@@ -168,22 +168,54 @@ object CmdClickMap {
         ) return targetCon
         var repCon = targetCon
         repMap.forEach {
-            repCon = repCon.replace(
-                "\${${it.key}}",
+            val replaceStr =
                 it.value ?: String()
-            )
+            val tempRepCon = try {
+                repCon.replace(
+                    Regex("""([^\\])[$][{]${it.key}[}]"""),
+                    "$1${replaceStr}"
+                ).replace(
+                    Regex("""^[$][{]${it.key}[}]"""),
+                    replaceStr
+                )
+            } catch (e: Exception){
+                repCon
+            }
+            repCon = tempRepCon
         }
         return repCon
     }
 
     fun replaceByBackslashToNormal(
         targetCon: String,
-        repMap: Map<String, String?>?
+        repMapSrc: Map<String, String?>?
     ): String {
+        val backslashToEscapeStr = Pair("\\", "CMDCLICL_BACKKSLASH_ESCAPE_STRING")
+        val repMap = repMapSrc?.map {
+            it.key to it.value?.replace(
+                backslashToEscapeStr.first,
+                backslashToEscapeStr.second
+            )
+        }?.toMap()
         return replace(
-            BackslashTool.toNormal(targetCon),
+            targetCon,
             repMap
-        )
+        ).let {
+            val tonormal = BackslashTool.toNormal(it).replace(
+                backslashToEscapeStr.second,
+                backslashToEscapeStr.first,
+            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lreplace_boTonormao_after.txt").absolutePath,
+//                listOf(
+//                    "targetCon: ${targetCon}",
+//                    "replace: ${it}",
+//                    "tonormal: ${tonormal}",
+//
+//                ).joinToString("\n\n") + "\n=========\n\n"
+//            )
+            tonormal
+        }
     }
 
     fun replaceByAtVar(

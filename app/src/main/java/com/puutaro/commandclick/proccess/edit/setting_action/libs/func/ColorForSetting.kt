@@ -5,15 +5,13 @@ import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.image_tools.ColorTool
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlin.enums.EnumEntries
 
 object ColorForSetting {
     suspend fun handle(
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
-//        varNameToValueStrMap: Map<String, String?>
     ): Pair<
             Pair<
                     String?,
@@ -34,40 +32,81 @@ object ColorForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        FuncCheckerForSetting.checkArgs(
+        val funcCheckerForSetting = FuncCheckerForSetting(
             funcName,
             methodNameStr,
-            methodNameClass.argsNameToTypeList,
-            argsPairList,
-//            varNameToValueStrMap,
-        )?.let { argsCheckErr ->
-            return null to argsCheckErr
+        )
+        val args = methodNameClass.args
+        if(args != ColorMethodArgClass.RndArgs){
+            return null
         }
-        val argsList = argsPairList.map {
-            it.second
-        }
-        val settingValueStr = withContext(Dispatchers.Main) {
-            when (methodNameClass) {
-                MethodNameClass.RND -> {
-                    val firstArg = argsList.get(0)
-                   ColorTool.parseColorMacro(firstArg) ?: CmdClickColorStr.entries.random().str
+        return when(args){
+            is ColorMethodArgClass.RndArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
                 }
+                val mapArgMapList = FuncCheckerForSetting.Companion.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.makeWhereFromList(
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val rndMacroStr = funcCheckerForSetting.getStringFromArgMapByIndex(
+                    funcCheckerForSetting,
+                    mapArgMapList,
+                    args.rndMacroKeyToIndex,
+                    where
+                ).let { (rndMacroStr, funcErr) ->
+                    funcErr
+                        ?: return@let rndMacroStr
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                Pair(
+                    ColorTool.parseColorMacro(rndMacroStr)
+                        ?: CmdClickColorStr.entries.random().str,
+                    null
+                ) to null
             }
         }
-        return Pair(
-            settingValueStr,
-            null
-        ) to null
     }
 
-    enum class MethodNameClass(
+    private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, FuncCheckerForSetting.ArgType>>,
+        val args: ColorMethodArgClass
     ) {
-        RND("rnd", rndArgsNameToTypeList),
+        RND("rnd", ColorMethodArgClass.RndArgs),
     }
 
-    private val rndArgsNameToTypeList = listOf(
-        Pair("rndMacro", FuncCheckerForSetting.ArgType.STRING),
-    )
+    private sealed interface ArgType {
+        val entries: EnumEntries<*>
+    }
+
+    private sealed class ColorMethodArgClass {
+        data object RndArgs : ColorMethodArgClass(), ArgType {
+            override val entries = RndEnumArgs.entries
+            val rndMacroKeyToIndex = Pair(
+                RndEnumArgs.RND_MACRO.key,
+                RndEnumArgs.RND_MACRO.index
+            )
+
+            enum class RndEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.Companion.ArgType,
+            ){
+                RND_MACRO("rndMacro", 0, FuncCheckerForSetting.Companion.ArgType.STRING),
+            }
+        }
+    }
+
 }
