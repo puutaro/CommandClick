@@ -152,18 +152,18 @@ object ShellToolManagerForSetting {
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
-                    mapArgMapList,
-                    args.cmdKeyToDefaultValueStr,
-                    where
-                ).let { cmdStrToErr ->
-                    val funcErr = cmdStrToErr.second
-                        ?: return@let cmdStrToErr.first
-                    return Pair(
-                        null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
-                    ) to funcErr
-                }
+//                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+//                    mapArgMapList,
+//                    args.cmdKeyToDefaultValueStr,
+//                    where
+//                ).let { cmdStrToErr ->
+//                    val funcErr = cmdStrToErr.second
+//                        ?: return@let cmdStrToErr.first
+//                    return Pair(
+//                        null,
+//                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                    ) to funcErr
+//                }
                 val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
                     args.separatorKeyToDefaultValueStr,
@@ -290,12 +290,32 @@ object ShellToolManagerForSetting {
                         >?,
                 FuncCheckerForSetting.FuncCheckErr?
                 > {
-            val argNameToSubKeyMapListForCmd = makeArgNameToSubKeyMapList(
+            val procNameToCmdKeyMapList = makeProcNameToCmdKeyMapList(
                 argsPairList,
                 shellMapArgs,
                 defaultTimeoutInt,
                 where,
             )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "largNameToSubKeyMapListForCmd.txt").absolutePath,
+//                procNameToCmdKeyMapList.joinToString("\n") + "\n========\n\n"
+//            )
+            if(procNameToCmdKeyMapList.isEmpty()){
+                val spanCmdDescriptionKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    "${shellMapArgs.cmdKeyToDefaultValueStr.first} description"
+                )
+                val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errBrown,
+                    where
+                )
+                return Pair(
+                    null,
+                    SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                ) to FuncCheckerForSetting.FuncCheckErr(
+                    "${spanCmdDescriptionKey} key not exist: ${spanWhere}"
+                )
+            }
             val targetConList = when(separator == defaultNullMacroStr){
                 true -> listOf(targetCon)
                 false -> targetCon.split(separator)
@@ -314,7 +334,7 @@ object ShellToolManagerForSetting {
                                     shellMapArgs,
                                     index,
                                     targetLine,
-                                    argNameToSubKeyMapListForCmd,
+                                    procNameToCmdKeyMapList,
                                     defaultTimeoutInt,
                                     where,
                                 )
@@ -328,7 +348,7 @@ object ShellToolManagerForSetting {
                                 shellMapArgs,
                                 index,
                                 targetLine,
-                                argNameToSubKeyMapListForCmd,
+                                procNameToCmdKeyMapList,
                                 defaultTimeoutInt,
                                 where,
                             )
@@ -378,13 +398,13 @@ object ShellToolManagerForSetting {
             shellMapArgs: ShellMethodArgClass.MapArgs,
             index: Int,
             targetLine: String,
-            argNameToSubKeyMapListForCmd: List<Pair<String, Map<String, String>>>,
+            procNameToCmdKeyMapList: List<Pair<String, Map<String, String>>>,
             defaultTimeoutInt: Int,
             where: String,
         ): Pair<Int, Pair<String?, FuncCheckerForSetting.FuncCheckErr?>> {
             val execCmdStr = makeCmd(
-                argNameToSubKeyMapListForCmd,
                 shellMapArgs,
+                procNameToCmdKeyMapList,
                 targetLine,
                 defaultTimeoutInt,
             )
@@ -402,33 +422,38 @@ object ShellToolManagerForSetting {
                     CheckTool.errBrown,
                     where
                 )
+                val spanExecCmdStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    execCmdStr.split("\n").joinToString(" ")
+                )
                 return index to Pair(
                     null,
                     FuncCheckerForSetting.FuncCheckErr(
-                        "Shell err: ${errStd}, ${spanIndex}, ${spanWhere}"
+                        "Shell err: ${errStd}, ${spanIndex}, madeCmd: ${spanExecCmdStr}, ${spanWhere}"
                     )
                 )
             }
             return index to Pair(outToErr?.first, null)
         }
         private fun makeCmd(
-            argNameToSubKeyMapList: List<
+            shellMapArgs: ShellMethodArgClass.MapArgs,
+            procNameToCmdKeyMapList: List<
                     Pair<String, Map<String, String>>
                     >,
-            replaceForSettingArgs: ShellMethodArgClass.MapArgs,
             targetCon: String,
             defaultTimeoutInt: Int,
         ): String {
-            val mapEnumArgsEntries = replaceForSettingArgs.entries
+            val mapEnumArgsEntries = shellMapArgs.entries
             val timeoutKeyClass = ShellMethodArgClass.MapArgs.MapEnumArgs.TIMEOUT
-            val pipCmdList = argNameToSubKeyMapList.mapIndexed { index, (argName, cmdMap) ->
-                val argClass = mapEnumArgsEntries.firstOrNull { arg ->
-                    arg.key == argName
-                } ?: return@mapIndexed String()
-                if(argClass != ShellMethodArgClass.MapArgs.MapEnumArgs.CMD) {
-                    return@mapIndexed String()
-                }
-                val cmd = cmdMap.get(argClass.key)
+            val cmdKey = shellMapArgs.cmdKeyToDefaultValueStr.first
+            val pipCmdList = procNameToCmdKeyMapList.mapIndexed { index, (procName, cmdMap) ->
+//                val argClass = mapEnumArgsEntries.firstOrNull { arg ->
+//                    arg.key == argName
+//                } ?: return@mapIndexed String()
+//                if(argClass != ShellMethodArgClass.MapArgs.MapEnumArgs.CMD) {
+//                    return@mapIndexed String()
+//                }
+                val cmd = cmdMap.get(cmdKey)
                     ?: return String()
                 val timeoutFloatStr = cmdMap.get(
                     timeoutKeyClass.key
@@ -498,7 +523,7 @@ object ShellToolManagerForSetting {
 
         }
 
-        private fun makeArgNameToSubKeyMapList(
+        private fun makeProcNameToCmdKeyMapList(
             argsPairList: List<Pair<String, String>>,
             mapMethodArgs: ShellMethodArgClass.MapArgs,
             defaultTimeoutInt: Int,
@@ -506,21 +531,36 @@ object ShellToolManagerForSetting {
         ): List<
                 Pair<String, Map<String, String>>
                 > {
-            val timeoutKeyClass = ShellMethodArgClass.MapArgs.MapEnumArgs.TIMEOUT
+            val timeoutKey = mapMethodArgs.timeoutKeyToDefaultValueStr.first
+            val cmdKey = mapMethodArgs.cmdKeyToDefaultValueStr.first
+            val noRegisterMapArgList = mapMethodArgs.entries.map {
+                it.key
+            }.filter {
+                it != cmdKey
+            }
             return argsPairList.mapIndexed {
-                    index, (argName, valueStr) ->
-                val argClass = mapMethodArgs.entries.firstOrNull {
-                        arg ->
-                    arg.key == argName
-                } ?: return@mapIndexed String() to emptyMap()
-                if(argClass != ShellMethodArgClass.MapArgs.MapEnumArgs.CMD) {
+                    index, (procName, valueStr) ->
+//                val argClass = mapMethodArgs.entries.firstOrNull {
+//                        arg ->
+//                    arg.key == argName
+//                } ?: return@mapIndexed String() to emptyMap()
+//                val curArgKey = argClass.key
+                if(
+                    procName.isEmpty()
+                    || noRegisterMapArgList.any {
+                        argName ->
+                        argName.startsWith(procName)
+                                || argName.endsWith(procName)
+                    }
+//                    argClass != ShellMethodArgClass.MapArgs.MapEnumArgs.CMD
+
+                    ) {
                     return@mapIndexed String() to emptyMap()
                 }
                 val cmdMap = mapOf(
-                    argName to valueStr,
+                    cmdKey to valueStr,
                 )
                 val replaceStrMap = let {
-                    val timeoutKey = timeoutKeyClass.key
                     val defaultTimeoutMap = mapOf(
                         timeoutKey to defaultTimeoutInt.toString()
                     )
@@ -549,7 +589,7 @@ object ShellToolManagerForSetting {
                         }
                     }
                 }
-                Pair(argName, (cmdMap + replaceStrMap))
+                Pair(procName, (cmdMap + replaceStrMap))
             }.filter {
                 it.first.isNotEmpty()
             }
