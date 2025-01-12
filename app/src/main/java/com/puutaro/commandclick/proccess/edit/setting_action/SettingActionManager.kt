@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -22,20 +21,20 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ListForSe
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.LocalDatetimeForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.MathCulcForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.PathForSettingHandler
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ReplaceForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.RndForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.SettingFuncTool
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ShellToolManagerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.SystemInfoForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
 import com.puutaro.commandclick.util.str.BackslashTool
-import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +46,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.enums.EnumEntries
 
@@ -1393,14 +1391,10 @@ class SettingActionManager {
                                     it.first.isNotEmpty()
                                 }
                             }
-                            val argsPairList = argsPairListBeforeBsEscape.map {
-                                argNameToValueStr ->
-                                argNameToValueStr.first to
-                                        CmdClickMap.replaceByBackslashToNormal(
-                                            argNameToValueStr.second,
-                                            varNameToValueStrMap,
-                                        )
-                            }
+                            val argsPairList = SettingFuncTool.makeArgsPairList(
+                                argsPairListBeforeBsEscape,
+                                varNameToValueStrMap
+                            )
                             val quoteStr = """"aaa\"""""
 //                            if(funcTypeDotMethod.contains("eval")) {
 //                                FileSystems.updateFile(
@@ -1597,7 +1591,7 @@ private object SettingFuncManager {
                 return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}")
             }
         return when(funcType){
-            FuncType.FILE_SYSTEMS ->
+            FuncType.FILE ->
                 FileSystemsForSettingHandler.handle(
                     funcTypeStr,
                     methodName,
@@ -1715,6 +1709,13 @@ private object SettingFuncManager {
                     methodName,
                     baseArgsPairList,
                 )
+            FuncType.REPLACE ->
+                ReplaceForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
+
         }
 
     }
@@ -1722,7 +1723,7 @@ private object SettingFuncManager {
     private enum class FuncType(
         val key: String,
     ) {
-        FILE_SYSTEMS("fileSystems"),
+        FILE("file"),
         TOAST("toast"),
         DEBUG("debug"),
         EXIT("exit"),
@@ -1736,17 +1737,15 @@ private object SettingFuncManager {
         LIST("list"),
         RND("rnd"),
         SYSTEM_INFO("systemInfo"),
-        EVAL("eval")
+        EVAL("eval"),
+        REPLACE("replace"),
     }
 
 }
 
 object EvalForSetting {
 
-    private const val indexVarNameIndex = 2
-    private const val elVarNameIndex = 3
-    private const val joinStrIndex = 5
-    private val defaultNullMacroStr = FuncCheckerForSetting.defaultNullMacroStr
+    private const val defaultNullMacroStr = FuncCheckerForSetting.defaultNullMacroStr
 
     suspend fun handle(
         fragment: Fragment?,
@@ -2184,7 +2183,7 @@ object EvalForSetting {
                 SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.Companion.ArgType.STRING),
                 INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.Companion.ArgType.STRING),
                 JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.Companion.ArgType.STRING),
-                SEMAPHORE("semaphore", "0", FuncCheckerForSetting.Companion.ArgType.INT)
+                SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.Companion.ArgType.INT)
             }
         }
     }

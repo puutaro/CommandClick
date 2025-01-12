@@ -56,7 +56,7 @@ object ImageFuncManager {
                     methodName,
                     baseArgsPairList
                 )
-            FuncType.FILE_SYSTEMS ->
+            FuncType.FILE ->
                 FileSystemsForImageAction.handle(
                     fragment,
                     funcTypeStr,
@@ -80,7 +80,7 @@ object ImageFuncManager {
         val key: String,
     ) {
         ICON("icon"),
-        FILE_SYSTEMS("fileSystems"),
+        FILE("file"),
         DEBUG("debug"),
     }
 

@@ -1,17 +1,19 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
+import com.puutaro.commandclick.util.map.CmdClickMap
 
 object SettingFuncTool {
-    fun getValueStrFromMapOrIt(
-        rawValueStr: String,
+    fun makeArgsPairList(
+        argsPairListBeforeBsEscape: List<Pair<String, String>>,
         varNameToValueStrMap: Map<String, String?>,
-    ): String? {
-
-        if (
-            !SettingActionKeyManager.ValueStrVar.matchStringVarName(rawValueStr)
-        ) return rawValueStr
-        val curSVarKey = SettingActionKeyManager.ValueStrVar.convertStrKey(rawValueStr)
-        return varNameToValueStrMap.get(curSVarKey)
+    ): List<Pair<String, String>> {
+        return argsPairListBeforeBsEscape.map {
+                (argName, valueStr) ->
+            argName to
+                    CmdClickMap.replaceByBackslashToNormal(
+                        valueStr,
+                        varNameToValueStrMap,
+                    )
+        }
     }
 }

@@ -21,25 +21,6 @@ class FuncCheckerForSetting(
             FLOAT,
             BOOL,
         }
-        fun makeWhere2(
-            argsPairList: List<Pair<String, String>>?,
-            argsNameToTypeList: List<Pair<String, String>>?
-        ): String {
-            val currentArgsCon = argsPairList?.map {
-                "${it.first}=${it.second}"
-            }?.joinToString(",")?.let {
-                "current args: ${it}"
-            } ?: String()
-            val formatArgsCon = argsNameToTypeList?.map {
-                "${it.first}(${it.second})"
-            }?.joinToString(",")?.let {
-                "args format: ${it}"
-            } ?: String()
-            return listOf(
-                currentArgsCon,
-                formatArgsCon
-            ).joinToString(", ")
-        }
 
         fun makeWhereFromList(
             argsPairList: List<Pair<String, String>>?,
@@ -161,7 +142,6 @@ class FuncCheckerForSetting(
                 }?.get(MapArgKey.VALUE_STR)
             }
         }
-
     }
 
 //    fun getIntArg(
