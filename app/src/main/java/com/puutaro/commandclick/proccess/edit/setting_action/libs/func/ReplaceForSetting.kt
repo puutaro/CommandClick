@@ -62,13 +62,13 @@ object ReplaceForSetting {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val targetCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                val inputCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
-                    args.targetConKeyToDefaultValueStr,
+                    args.inputConKeyToDefaultValueStr,
                     where
-                ).let { targetConToErr ->
-                    val funcErr = targetConToErr.second
-                        ?: return@let targetConToErr.first
+                ).let { inputConToErr ->
+                    val funcErr = inputConToErr.second
+                        ?: return@let inputConToErr.first
                     return Pair(
                         null,
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
@@ -132,9 +132,9 @@ object ReplaceForSetting {
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-                val targetConList = when(separator == defaultNullMacroStr){
-                    true -> listOf(targetCon)
-                    false -> targetCon.split(separator)
+                val inputConList = when(separator == defaultNullMacroStr){
+                    true -> listOf(inputCon)
+                    false -> inputCon.split(separator)
                 }
                 val semaphore = when(semaphoreInt > 0){
                     true -> Semaphore(semaphoreInt)
@@ -142,24 +142,24 @@ object ReplaceForSetting {
                 }
                 withContext(Dispatchers.IO) {
                     val indexToReplaceJobList = when(semaphore == null) {
-                        false ->  targetConList.mapIndexed { index, targetLine ->
+                        false ->  inputConList.mapIndexed { index, inputLine ->
                             async {
                                 semaphore.withPermit {
                                     index to Replacer.replace(
                                         argNameToSubKeyMapList,
                                         args,
-                                        targetLine,
+                                        inputLine,
                                         where,
                                     )
                                 }
                             }
                         }
-                        else -> targetConList.mapIndexed { index, targetLine ->
+                        else -> inputConList.mapIndexed { index, inputLine ->
                             async {
                                 index to Replacer.replace(
                                     argNameToSubKeyMapList,
                                     args,
-                                    targetLine,
+                                    inputLine,
                                     where,
                                 )
                             }
@@ -193,14 +193,14 @@ object ReplaceForSetting {
         fun replace(
             argNameToSubKeyMapList: List<Pair<String, Map<String, String>>>,
             replaceForSettingArgs: ReplaceArgClass.MapEvalArgs,
-            targetCon: String,
+            inputCon: String,
             where: String,
         ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
             val removeRegexKeyClass =
                 ReplaceArgClass.MapEvalArgs.MapEnumArgs.REMOVE_REGEX
             val replaceKeyClass =
                 ReplaceArgClass.MapEvalArgs.MapEnumArgs.REPLACE_STR
-            var replaceTargetCon = targetCon
+            var replaceInputCon = inputCon
             val mapEnumArgsEntries = replaceForSettingArgs.entries
             argNameToSubKeyMapList.forEachIndexed { index, (argName, subKeyMap) ->
                 val argClass = mapEnumArgsEntries.firstOrNull { arg ->
@@ -230,8 +230,8 @@ object ReplaceForSetting {
                     subKeyMap.get(
                         replaceKeyClass.key
                     ) ?: String()
-                val tempReplaceTargetCon = try {
-                    replaceTargetCon.replace(
+                val tempReplaceInputCon = try {
+                    replaceInputCon.replace(
                         removeRegex,
                         replaceStr
                     )
@@ -240,7 +240,7 @@ object ReplaceForSetting {
                         null,
                         makeReplaceErr(
                             replaceForSettingArgs,
-                            targetCon,
+                            inputCon,
                             removeRegexStr,
                             replaceStr,
                             index,
@@ -248,10 +248,10 @@ object ReplaceForSetting {
                         )
                     )
                 }
-                replaceTargetCon = tempReplaceTargetCon
+                replaceInputCon = tempReplaceInputCon
             }
             return Pair(
-                replaceTargetCon,
+                replaceInputCon,
                 null
             )
         }
@@ -286,19 +286,19 @@ object ReplaceForSetting {
 
         private fun makeReplaceErr(
             replaceForSettingArgs: ReplaceArgClass.MapEvalArgs,
-            targetCon: String,
+            inputCon: String,
             removeRegexStr: String?,
             replaceStr: String,
             index: Int,
             where: String,
         ): FuncCheckerForSetting.FuncCheckErr {
-            val spanTargetConKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+            val spanInputConKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                 CheckTool.errRedCode,
-                replaceForSettingArgs.targetConKeyToDefaultValueStr.first
+                replaceForSettingArgs.inputConKeyToDefaultValueStr.first
             )
-            val spanTargetConValue = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+            val spanInputConValue = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                 CheckTool.errRedCode,
-                targetCon
+                inputCon
             )
             val spanRemoveRegexKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                 CheckTool.errRedCode,
@@ -327,7 +327,7 @@ object ReplaceForSetting {
             val plusWhere = listOf(
                 "index: ${spanIndex}",
                 "${spanReplaceKey}: ${spanReplaceStr}",
-                "${spanTargetConKey}: ${spanTargetConValue}",
+                "${spanInputConKey}: ${spanInputConValue}",
                 "${spanRemoveRegexKey}: ${spanRemoveRegexStrName}"
             ).joinToString(", ")
             return FuncCheckerForSetting.FuncCheckErr(
@@ -358,7 +358,7 @@ object ReplaceForSetting {
             when(argClass) {
                 ReplaceArgClass.MapEvalArgs.MapEnumArgs.SEMAPHORE,
                 ReplaceArgClass.MapEvalArgs.MapEnumArgs.JOIN_STR,
-                ReplaceArgClass.MapEvalArgs.MapEnumArgs.TARGET_CON ->
+                ReplaceArgClass.MapEvalArgs.MapEnumArgs.INPUT_CON ->
                    String() to emptyMap()
                 ReplaceArgClass.MapEvalArgs.MapEnumArgs.SEPARATOR
                     -> {
@@ -409,9 +409,9 @@ object ReplaceForSetting {
         data object MapEvalArgs : ReplaceArgClass(),
             ArgType {
             override val entries = MapEnumArgs.entries
-            val targetConKeyToDefaultValueStr = Pair(
-                MapEnumArgs.TARGET_CON.key,
-                MapEnumArgs.TARGET_CON.defaultValueStr
+            val inputConKeyToDefaultValueStr = Pair(
+                MapEnumArgs.INPUT_CON.key,
+                MapEnumArgs.INPUT_CON.defaultValueStr
             )
             val separatorKeyToDefaultValueStr = Pair(
                 MapEnumArgs.SEPARATOR.key,
@@ -439,7 +439,7 @@ object ReplaceForSetting {
                 val defaultValueStr: String?,
                 val type: FuncCheckerForSetting.ArgType,
             ) {
-                TARGET_CON("targetCon", null, FuncCheckerForSetting.ArgType.STRING),
+                INPUT_CON("inputCon", null, FuncCheckerForSetting.ArgType.STRING),
                 REMOVE_REGEX("removeRegex", null, FuncCheckerForSetting.ArgType.STRING),
                 REPLACE_STR("replaceStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),

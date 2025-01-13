@@ -1,11 +1,9 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -13,7 +11,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import java.io.File
 import kotlin.enums.EnumEntries
 
 object ShellToolManagerForSetting {
@@ -140,13 +137,13 @@ object ShellToolManagerForSetting {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val targetCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                val inputCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
-                    args.targetConKeyToDefaultValueStr,
+                    args.inputConKeyToDefaultValueStr,
                     where
-                ).let { targetConToErr ->
-                    val funcErr = targetConToErr.second
-                        ?: return@let targetConToErr.first
+                ).let { inputConToErr ->
+                    val funcErr = inputConToErr.second
+                        ?: return@let inputConToErr.first
                     return Pair(
                         null,
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
@@ -261,7 +258,7 @@ object ShellToolManagerForSetting {
                     busyboxExecutor,
                     args,
                     argsPairListForCmd,
-                    targetCon,
+                    inputCon,
                     separator,
                     joinStr,
                     semaphoreInt,
@@ -277,7 +274,7 @@ object ShellToolManagerForSetting {
             busyboxExecutor: BusyboxExecutor?,
             shellMapArgs: ShellMethodArgClass.MapArgs,
             argsPairList: List<Pair<String, String>>,
-            targetCon: String,
+            inputCon: String,
             separator: String,
             joinStr: String,
             semaphoreInt: Int,
@@ -316,9 +313,9 @@ object ShellToolManagerForSetting {
                     "${spanCmdDescriptionKey} key not exist: ${spanWhere}"
                 )
             }
-            val targetConList = when(separator == defaultNullMacroStr){
-                true -> listOf(targetCon)
-                false -> targetCon.split(separator)
+            val inputConList = when(separator == defaultNullMacroStr){
+                true -> listOf(inputCon)
+                false -> inputCon.split(separator)
             }
             val semaphore = when(semaphoreInt > 0){
                 true -> Semaphore(semaphoreInt)
@@ -326,14 +323,14 @@ object ShellToolManagerForSetting {
             }
             return withContext(Dispatchers.IO) {
                 val indexToOutputList = when(semaphore == null) {
-                    false ->  targetConList.mapIndexed { index, targetLine ->
+                    false ->  inputConList.mapIndexed { index, inputLine ->
                         async {
                             semaphore.withPermit {
                                 getCmdOutput(
                                     busyboxExecutor,
                                     shellMapArgs,
                                     index,
-                                    targetLine,
+                                    inputLine,
                                     procNameToCmdKeyMapList,
                                     defaultTimeoutInt,
                                     where,
@@ -341,13 +338,13 @@ object ShellToolManagerForSetting {
                             }
                         }
                     }
-                    else -> targetConList.mapIndexed { index, targetLine ->
+                    else -> inputConList.mapIndexed { index, inputLine ->
                         async {
                             val indexAndOutputToErr = getCmdOutput(
                                 busyboxExecutor,
                                 shellMapArgs,
                                 index,
-                                targetLine,
+                                inputLine,
                                 procNameToCmdKeyMapList,
                                 defaultTimeoutInt,
                                 where,
@@ -397,7 +394,7 @@ object ShellToolManagerForSetting {
             busyboxExecutor: BusyboxExecutor?,
             shellMapArgs: ShellMethodArgClass.MapArgs,
             index: Int,
-            targetLine: String,
+            inputLine: String,
             procNameToCmdKeyMapList: List<Pair<String, Map<String, String>>>,
             defaultTimeoutInt: Int,
             where: String,
@@ -405,7 +402,7 @@ object ShellToolManagerForSetting {
             val execCmdStr = makeCmd(
                 shellMapArgs,
                 procNameToCmdKeyMapList,
-                targetLine,
+                inputLine,
                 defaultTimeoutInt,
             )
             val outToErr = busyboxExecutor?.getCmdOutputByErrHandle(
@@ -440,10 +437,9 @@ object ShellToolManagerForSetting {
             procNameToCmdKeyMapList: List<
                     Pair<String, Map<String, String>>
                     >,
-            targetCon: String,
+            inputLine: String,
             defaultTimeoutInt: Int,
         ): String {
-            val mapEnumArgsEntries = shellMapArgs.entries
             val timeoutKeyClass = ShellMethodArgClass.MapArgs.MapEnumArgs.TIMEOUT
             val cmdKey = shellMapArgs.cmdKeyToDefaultValueStr.first
             val pipCmdList = procNameToCmdKeyMapList.mapIndexed { index, (procName, cmdMap) ->
@@ -466,12 +462,12 @@ object ShellToolManagerForSetting {
             }.filter {
                 it.isNotEmpty()
             }
-            val targetConForShellVar = targetCon.replace(
+            val inputConForShellVar = inputLine.replace(
                 "\"",
                 "\\\""
             )
             val tempVarName = "temp_var"
-            val defTempVar = """${tempVarName}="${targetConForShellVar}" """
+            val defTempVar = """${tempVarName}="${inputConForShellVar}" """
             val echoTempVar = """echo "${'$'}${tempVarName}" """
             val updateTempVarCmdTemplate = """${tempVarName}="$(${echoTempVar} | %s )" """
             val updateTempVarCmdsCon = pipCmdList.map {
@@ -486,7 +482,7 @@ object ShellToolManagerForSetting {
                     String()
                 ).joinToString(";\n")
 //            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "llshell_${targetCon.take(4)}.txt").absolutePath,
+//                File(UsePath.cmdclickDefaultAppDirPath, "llshell_${inputCon.take(4)}.txt").absolutePath,
 //                listOf(
 //                    "pipCmdList: ${pipCmdList}",
 //                    "con: ${execShellCmd}"
@@ -627,9 +623,9 @@ object ShellToolManagerForSetting {
         }
         data object MapArgs : ShellMethodArgClass(), ArgType {
             override val entries = MapEnumArgs.entries
-            val targetConKeyToDefaultValueStr = Pair(
-                MapEnumArgs.TARGET_CON.key,
-                MapEnumArgs.TARGET_CON.defaultValueStr
+            val inputConKeyToDefaultValueStr = Pair(
+                MapEnumArgs.INPUT_CON.key,
+                MapEnumArgs.INPUT_CON.defaultValueStr
             )
             val cmdKeyToDefaultValueStr = Pair(
                 MapEnumArgs.CMD.key,
@@ -662,7 +658,7 @@ object ShellToolManagerForSetting {
                 val defaultValueStr: String?,
                 val type: FuncCheckerForSetting.ArgType,
             ){
-                TARGET_CON("targetCon", null, FuncCheckerForSetting.ArgType.STRING),
+                INPUT_CON("inputCon", String(), FuncCheckerForSetting.ArgType.STRING),
                 CMD("cmd", null, FuncCheckerForSetting.ArgType.STRING),
                 TIMEOUT("timeout", 5.toString(), FuncCheckerForSetting.ArgType.INT),
                 SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),

@@ -19,7 +19,7 @@ object ListForSetting {
                     SettingActionKeyManager.BreakSignal?
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
-            >? {
+            > {
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {

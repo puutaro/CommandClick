@@ -2161,7 +2161,7 @@ object EvalForSetting {
                 val defaultValueStr: String?,
                 val type: FuncCheckerForSetting.ArgType,
             ) {
-                INPUT("inputCon", null, FuncCheckerForSetting.ArgType.STRING),
+                INPUT("inputCon", String(), FuncCheckerForSetting.ArgType.STRING),
                 EL_VAR_NAME("elVarName", null, FuncCheckerForSetting.ArgType.STRING),
                 ACTION("action", null, FuncCheckerForSetting.ArgType.STRING),
                 SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
