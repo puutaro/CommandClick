@@ -100,12 +100,17 @@ object ReplaceForSetting {
                                 SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                             ) to funcErr
                         }
-                        val joinStrSrc = joinStrToErr.first
-                        val defaultJoinStr = args.joinStrKeyToDefaultValueStr.second
-                        if (
-                            joinStrSrc == defaultJoinStr
-                        ) separator
-                        else joinStrSrc
+                        SettingFuncTool.makeJoinStrBySeparator(
+                            joinStrToErr,
+                            separator,
+                            args.joinStrKeyToDefaultValueStr.second,
+                        )
+//                        val joinStrSrc = joinStrToErr.first
+//                        val defaultJoinStr = args.joinStrKeyToDefaultValueStr.second
+//                        if (
+//                            joinStrSrc == defaultJoinStr
+//                        ) separator
+//                        else joinStrSrc
                     }
                 }
                 val semaphoreInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(

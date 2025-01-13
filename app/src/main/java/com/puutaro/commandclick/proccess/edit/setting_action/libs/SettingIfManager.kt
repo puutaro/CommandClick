@@ -1,6 +1,9 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
 
 object SettingIfManager {
@@ -10,8 +13,8 @@ object SettingIfManager {
     private enum class IfArgs(
         val str: String
     ){
-        REGEX("regex"),
         MATCH_TYPE("matchType"),
+        BASE("base"),
         CONCAT_CONDITION("concatCondition"),
     }
 
@@ -25,9 +28,22 @@ object SettingIfManager {
     private enum class MatchType(
         val str: String,
     ) {
-        EQUAL("equal"),
-        NOT_EQUAL("notEqual"),
+        EQUAL("=="),
+        NOT_EQUAL("!="),
+        IN("in"),
+        NOT_IN("!in"),
+        LESS("<"),
+        LESS_EQUAL("<="),
+        GREATER(">"),
+        GREATER_EQUAL(">="),
     }
+
+    private val numMachTypeList = listOf(
+        MatchType.LESS,
+        MatchType.LESS_EQUAL,
+        MatchType.GREATER,
+        MatchType.GREATER_EQUAL,
+    )
 
     class IfCheckErr(
         val errMessage: String
@@ -77,6 +93,14 @@ object SettingIfManager {
                 ){
                 return null to argErr
             }
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "ljudge_match.txt").absolutePath,
+//                listOf(
+//                    "judgeTargetStr: ${judgeTargetStr}",
+//                    "matchList: ${matchList}",
+//                    "argErr: ${argErr}",
+//                ).joinToString("\n\n") + "\n\n==========\n\n"
+//            )
             if(matchList.size == 1){
                 return matchList.first() to null
             }
@@ -129,22 +153,23 @@ object SettingIfManager {
             val argNameToSubKeyMapList = makeArgNameToSubKeyMapList(
                 argsPairList,
             )
-            val regexArgKey = IfArgs.REGEX.str
-            argNameToSubKeyMapList.toMap().get(regexArgKey) ?: let {
-                val spanRegexKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+            val matchTypeArgKey = IfArgs.MATCH_TYPE.str
+            argNameToSubKeyMapList.toMap().get(matchTypeArgKey) ?: let {
+                val spanBaseKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                     CheckTool.errRedCode,
-                    regexArgKey
+                    matchTypeArgKey
                 )
                 val errWhere = makeLogErrWhere(
                     ifKeyName,
-                    regexArgKey,
+                    matchTypeArgKey,
                     -1,
                     makeArgsPairListCon(argsPairList)
                 )
-                return null to IfCheckErr("${spanRegexKey} key not exist: ${errWhere}")
+                return null to IfCheckErr("${spanBaseKey} key not exist: ${errWhere}")
             }
-            val matchTypeKey = IfArgs.MATCH_TYPE.str
+            val matchTypeKeyClass = IfArgs.MATCH_TYPE
             val matchTypeStrList = MatchType.entries
+            val baseKey = IfArgs.BASE.str
             val matchList = argNameToSubKeyMapList.mapIndexed {
                 argIndex, argNameToSubKeyMap ->
                 val argName = argNameToSubKeyMap.first
@@ -154,95 +179,160 @@ object SettingIfManager {
                 } ?: let {
                     val errWhere = makeLogErrWhere(
                         ifKeyName,
-                        regexArgKey,
+                        matchTypeArgKey,
                         argIndex,
                         makeArgsPairListCon(argsPairList)
                     )
                     return null to IfCheckErr("args not exist: ${errWhere}")
                 }
+                if(
+                    ifArgs != matchTypeKeyClass
+                ) return@mapIndexed null
                 val subKeyMap = argNameToSubKeyMap.second
-                when(ifArgs) {
-                    IfArgs.CONCAT_CONDITION,
-                    IfArgs.MATCH_TYPE
-                        -> null
-                    IfArgs.REGEX -> {
-                        val regexStr = subKeyMap.get(regexArgKey).toString()
-                        val regex = try {
-                            regexStr.toRegex()
-                        } catch (e: Exception) {
-                            val spanRegexKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                CheckTool.errRedCode,
-                                IfArgs.REGEX.str
-                            )
-                            val spanJudgeRegexStr =
-                                CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                    CheckTool.errRedCode,
-                                    regexStr
-                                )
-                            val errWhere = makeLogErrWhere(
-                                ifKeyName,
-                                regexArgKey,
-                                argIndex,
-                                makeArgsPairListCon(argsPairList)
-                            )
-                            return null to IfCheckErr("${spanRegexKey} key failure to compile: ${spanJudgeRegexStr}, ${errWhere}")
-                        }
-                        val isMatch = try {
-                            regex.matches(judgeTargetStr)
-                        } catch (e: Exception){
-                            val spanJudgeTargetArgName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                CheckTool.errRedCode,
-                                judgeTargetArgName
-                            )
-                            val spanJudgeRegexStr =
-                                CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                    CheckTool.errRedCode,
-                                    regexStr
-                                )
-                            val errWhere = makeLogErrWhere(
-                                ifKeyName,
-                                regexArgKey,
-                                argIndex,
-                                makeArgsPairListCon(argsPairList)
-                            )
-                            return null to IfCheckErr("Irregular ${spanJudgeTargetArgName} :${spanJudgeRegexStr}, ${errWhere}")
-                        }
-                        val matchTypeStr = subKeyMap.get(matchTypeKey)
-                        val matchType = matchTypeStrList.firstOrNull {
-                                it.str == matchTypeStr
-                            } ?: let {
-                                val spanMatchTypeKey =
-                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                        CheckTool.ligthBlue,
-                                        matchTypeKey
-                                    )
-                                val spanMatchTypeValueStr =
-                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                        CheckTool.errRedCode,
-                                        matchTypeStr.toString()
-                                    )
-                                return null to IfCheckErr(
-                                   "${spanMatchTypeKey} must be ${
-                                        matchTypeStrList.map {
-                                            "'${it.str}'"
-                                        }.joinToString(" or ")
-                                    }: ${spanMatchTypeValueStr}, ${
-                                        makeLogErrWhere(
-                                            ifKeyName,
-                                            matchTypeKey,
-                                            argIndex,
-                                            makeArgsPairListCon(argsPairList)
-                                        )
-                                    }"
-                                )
-                            }
-                        val matchResult = when(matchType){
-                            MatchType.EQUAL -> isMatch
-                            MatchType.NOT_EQUAL -> !isMatch
-                        }
-                        matchResult
-                    }
+                val matchTypeKey = ifArgs.str
+                val matchTypeStr = subKeyMap.get(matchTypeKey)
+                val baseCon = subKeyMap.get(baseKey) ?: let {
+                    val spanBaseKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        baseKey
+                    )
+                    val errWhere = makeLogErrWhere(
+                        ifKeyName,
+                        baseKey,
+                        argIndex,
+                        makeArgsPairListCon(argsPairList)
+                    )
+                    return null to IfCheckErr("${spanBaseKey} key con not exist: ${errWhere}")
                 }
+                val matchType = matchTypeStrList.firstOrNull {
+                    it.str == matchTypeStr
+                } ?: let {
+                    val spanMatchTypeKey =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            matchTypeKey
+                        )
+                    val spanMatchTypeValueStr =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            matchTypeStr.toString()
+                        )
+                    return null to IfCheckErr(
+                        "${spanMatchTypeKey} must be ${
+                            matchTypeStrList.map {
+                                "'${it.str}'"
+                            }.joinToString(" or ")
+                        }: ${spanMatchTypeValueStr}, ${
+                            makeLogErrWhere(
+                                ifKeyName,
+                                matchTypeKey,
+                                argIndex,
+                                makeArgsPairListCon(argsPairList)
+                            )
+                        }"
+                    )
+                }
+                val isMatchToErr = when(matchType){
+                    MatchType.EQUAL ->{
+                        Matcher.isEqual(
+                            judgeTargetStr,
+                            baseCon,
+                            argsPairList,
+                            ifKeyName,
+                            argIndex,
+                        )
+//                        let{
+//                            FileSystems.updateFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "ljudge.txt").absolutePath,
+//                                listOf(
+//                                    "judgeTargetStr: ${judgeTargetStr}",
+//                                    "baseCon: ${baseCon}",
+//                                    "argsPairList: ${argsPairList}",
+//                                    "it: ${it}",
+//                                ).joinToString("\n\n") + "\n\n==========\n\n"
+//                            )
+//                            it
+//                        }
+                    }
+                    MatchType.NOT_EQUAL ->{
+                        Matcher.isEqual(
+                            judgeTargetStr,
+                            baseCon,
+                            argsPairList,
+                            ifKeyName,
+                            argIndex,
+                        ).let {
+                            (isMatch, err) ->
+                            isMatch?.let {
+                                !it
+                            } to err
+                        }
+                    }
+                    MatchType.IN ->
+                        Matcher.isIn(
+                            judgeTargetStr,
+                            baseCon,
+                            argsPairList,
+                            ifKeyName,
+                            argIndex,
+                        )
+                    MatchType.NOT_IN ->
+                        Matcher.isIn(
+                            judgeTargetStr,
+                            baseCon,
+                            argsPairList,
+                            ifKeyName,
+                            argIndex,
+                        ).let {
+                                (isMatch, err) ->
+                            isMatch?.let {
+                                !it
+                            } to err
+                        }
+                    MatchType.LESS ->
+                        Matcher.isNumCompare(
+                            judgeTargetStr,
+                            baseCon,
+                            argsPairList,
+                            ifKeyName,
+                            argIndex,
+                            matchType,
+                        )
+                    MatchType.LESS_EQUAL ->
+                        Matcher.isNumCompare(
+                            judgeTargetStr,
+                            baseCon,
+                            argsPairList,
+                            ifKeyName,
+                            argIndex,
+                            matchType,
+                        )
+                    MatchType.GREATER ->
+                        Matcher.isNumCompare(
+                            judgeTargetStr,
+                            baseCon,
+                            argsPairList,
+                            ifKeyName,
+                            argIndex,
+                            matchType,
+                        )
+                    MatchType.GREATER_EQUAL ->
+                        Matcher.isNumCompare(
+                            judgeTargetStr,
+                            baseCon,
+                            argsPairList,
+                            ifKeyName,
+                            argIndex,
+                            matchType,
+                        )
+                }.let {
+                    (isMatch, err) ->
+                    if(
+                        err != null
+                    ) return null to err
+                    isMatch
+                }
+                isMatchToErr
             }.filter {
                 it != null
             }.map {
@@ -251,6 +341,190 @@ object SettingIfManager {
             return matchList to null
         }
 
+        private object Matcher {
+            fun isNumCompare(
+                judgeTargetStr: String,
+                baseFloatStr: String,
+                argsPairList: List<Pair<String, String>>,
+                ifKeyName: String,
+                argIndex: Int,
+                matchType: MatchType,
+            ): Pair<Boolean?, IfCheckErr?> {
+                val judgeTargetFloat = strToFloat(
+                    argsPairList,
+                    judgeTargetStr,
+                    judgeTargetArgName,
+                    argIndex,
+                    ifKeyName,
+                ).let {
+                    (judgeTargetFloat, err) ->
+                    if(err != null){
+                        return null to err
+                    }
+                    judgeTargetFloat
+                }
+                val baseArgKey = IfArgs.BASE.str
+                val baseFloat = strToFloat(
+                    argsPairList,
+                    baseFloatStr,
+                    baseArgKey,
+                    argIndex,
+                    ifKeyName,
+                ).let {
+                        (baseFloat, err) ->
+                    if(err != null){
+                        return null to err
+                    }
+                    baseFloat
+                }
+                return when(matchType){
+                    MatchType.LESS -> judgeTargetFloat < baseFloat
+                    MatchType.LESS_EQUAL -> judgeTargetFloat <= baseFloat
+                    MatchType.GREATER -> judgeTargetFloat > baseFloat
+                    MatchType.GREATER_EQUAL -> judgeTargetFloat >= baseFloat
+                    else -> false
+                } to null
+
+            }
+
+            private fun strToFloat(
+                argsPairList: List<Pair<String, String>>,
+                targetFloatStr: String,
+                targetArgKey: String,
+                argIndex: Int,
+                ifKeyName: String,
+            ): Pair<Float, IfCheckErr?> {
+                return try {
+                    targetFloatStr.toFloat() to null
+                } catch (e: Exception) {
+                    val spanNumMatchTypeKeysCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        numMachTypeList.map {
+                            it.str
+                        }.joinToString(",")
+                    )
+                    val spanTargetKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        targetArgKey
+                    )
+                    val spanTargetStr =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            targetFloatStr.toString()
+                        )
+                    val errWhere = makeLogErrWhere(
+                        ifKeyName,
+                        targetArgKey,
+                        argIndex,
+                        makeArgsPairListCon(argsPairList)
+                    )
+                    return -1f to IfCheckErr(
+                        "In ${spanNumMatchTypeKeysCon}, ${spanTargetKey} key must be number: ${spanTargetStr}, ${errWhere}"
+                    )
+                }
+            }
+            fun isEqual(
+                judgeTargetStr: String,
+                regexStr: String,
+                argsPairList: List<Pair<String, String>>,
+                ifKeyName: String,
+                argIndex: Int,
+            ): Pair<Boolean?, IfCheckErr?> {
+                val baseArgKey = IfArgs.BASE.str
+                val regex = try {
+                    regexStr.toRegex()
+                } catch (e: Exception) {
+                    val spanBaseKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        baseArgKey
+                    )
+                    val spanJudgeRegexStr =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            regexStr
+                        )
+                    val errWhere = makeLogErrWhere(
+                        ifKeyName,
+                        baseArgKey,
+                        argIndex,
+                        makeArgsPairListCon(argsPairList)
+                    )
+                    return null to IfCheckErr("${spanBaseKey} key failure to compile as regex: ${spanJudgeRegexStr}, ${errWhere}")
+                }
+                return try {
+                    regex.matches(judgeTargetStr) to null
+                } catch (e: Exception) {
+                    val spanJudgeTargetArgName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        judgeTargetArgName
+                    )
+                    val spanJudgeRegexStr =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            regexStr
+                        )
+                    val errWhere = makeLogErrWhere(
+                        ifKeyName,
+                        baseArgKey,
+                        argIndex,
+                        makeArgsPairListCon(argsPairList)
+                    )
+                    null to IfCheckErr("Irregular ${spanJudgeTargetArgName} :${spanJudgeRegexStr}, ${errWhere}")
+                }
+            }
+
+            fun isIn(
+                judgeTargetStr: String,
+                regexStr: String,
+                argsPairList: List<Pair<String, String>>,
+                ifKeyName: String,
+                argIndex: Int,
+            ): Pair<Boolean?, IfCheckErr?> {
+                val baseArgKey = IfArgs.BASE.str
+                val regex = try {
+                    regexStr.toRegex()
+                } catch (e: Exception) {
+                    val spanBaseKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        baseArgKey
+                    )
+                    val spanJudgeRegexStr =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            regexStr
+                        )
+                    val errWhere = makeLogErrWhere(
+                        ifKeyName,
+                        baseArgKey,
+                        argIndex,
+                        makeArgsPairListCon(argsPairList)
+                    )
+                    return null to IfCheckErr("${spanBaseKey} key failure to compile as regex: ${spanJudgeRegexStr}, ${errWhere}")
+                }
+                return try {
+                    regex.containsMatchIn(judgeTargetStr) to null
+                } catch (e: Exception) {
+                    val spanJudgeTargetArgName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        judgeTargetArgName
+                    )
+                    val spanJudgeRegexStr =
+                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            regexStr
+                        )
+                    val errWhere = makeLogErrWhere(
+                        ifKeyName,
+                        baseArgKey,
+                        argIndex,
+                        makeArgsPairListCon(argsPairList)
+                    )
+                    null to IfCheckErr("Irregular ${spanJudgeTargetArgName} :${spanJudgeRegexStr}, ${errWhere}")
+                }
+//                return judgeTargetStr.contains(baseStr) to null
+
+            }
+        }
 
         private fun makeArgNameToSubKeyMapList(
             argsPairList: List<Pair<String, String>>,
@@ -260,7 +534,7 @@ object SettingIfManager {
                         Map<String, String>
                         >
                 > {
-            val matchTypeArgName = IfArgs.MATCH_TYPE.str
+            val baseArgName = IfArgs.BASE.str
             return argsPairList.mapIndexed {
                     index, argNameToValueStr ->
                 val argName = argNameToValueStr.first
@@ -276,9 +550,9 @@ object SettingIfManager {
                         )
                         Pair(argName, mainSubKeyMap)
                     }
-                    IfArgs.MATCH_TYPE ->
+                    IfArgs.BASE ->
                         Pair(String(), emptyMap())
-                    IfArgs.REGEX -> {
+                    IfArgs.MATCH_TYPE -> {
                         val funcPartMap = mapOf(
                             argName to valueStr,
                         )
@@ -287,10 +561,10 @@ object SettingIfManager {
                                 argsPairList.getOrNull(index + 1)
                                     ?: return@let emptyMap()
                             val nextArgName = nextArgNameToValueStr.first
-                            when (nextArgName == matchTypeArgName) {
+                            when (nextArgName == baseArgName) {
                                 false -> emptyMap()
                                 else -> mapOf(
-                                    matchTypeArgName to nextArgNameToValueStr.second
+                                    baseArgName to nextArgNameToValueStr.second
                                 )
                             }
                         }

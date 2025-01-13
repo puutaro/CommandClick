@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.map.CmdClickMap
 
 object SettingFuncTool {
@@ -29,5 +31,17 @@ object SettingFuncTool {
                         varNameToValueStrMap,
                     )
         }
+    }
+
+    fun makeJoinStrBySeparator(
+        joinStrToErr: Pair<String, FuncCheckerForSetting. FuncCheckErr?>,
+        separator: String,
+        defaultJoinStr: String?,
+    ): String {
+        val joinStrSrc = joinStrToErr.first
+        return if (
+            joinStrSrc == defaultJoinStr
+        ) separator
+        else joinStrSrc
     }
 }
