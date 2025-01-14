@@ -210,6 +210,14 @@ object ImageActionImport {
             val bitmap = varNameToBitmap.second
             varName to bitmap
         }.toMap()
+        awaitVarNameBitmapMap.forEach {
+            (varName, bitmap) ->
+            privateLoopKeyVarNameBitmapMapClass.put(
+                curMapLoopKey,
+                varName,
+                bitmap
+            )
+        }
         val judgeTargetStr = QuoteTool.trimBothEdgeQuote(
             actionImportMap.get(
                 ImageActionKeyManager.ActionImportManager.ActionImportKey.I_IF.key

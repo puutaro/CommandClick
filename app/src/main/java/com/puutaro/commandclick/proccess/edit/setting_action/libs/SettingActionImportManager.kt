@@ -221,6 +221,14 @@ object SettingActionImportManager {
             val valueStr = varNameToValueStr.second
             varName to valueStr
         }.toMap()
+        awaitVarNameValueStrMap.forEach {
+                (varName, bitmap) ->
+            privateLoopKeyVarNameValueStrMapClass.put(
+                curMapLoopKey,
+                varName,
+                bitmap
+            )
+        }
         val judgeTargetStr = QuoteTool.trimBothEdgeQuote(
             actionImportMapBeforeReplace.get(
                 SettingActionKeyManager.ActionImportManager.ActionImportKey.S_IF.key
