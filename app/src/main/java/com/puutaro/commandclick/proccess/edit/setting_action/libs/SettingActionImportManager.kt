@@ -88,18 +88,19 @@ object SettingActionImportManager {
         topVarNameToValueStrMap: Map<String, String?>?,
         loopKeyToAsyncDeferredVarNameValueStrMap: SettingActionData.LoopKeyToAsyncDeferredVarNameValueStrMap?,
         privateLoopKeyVarNameValueStrMapClass: SettingActionData.PrivateLoopKeyVarNameValueStrMap,
-        loopKeyToVarNameValueStrMapClass: SettingActionData.LoopKeyToVarNameValueStrMap,
+        loopKeyToVarNameValueStrMapClass: SettingActionData.LoopKeyToVarNameValueStrMap?,
         importedVarNameToValueStrMap: Map<String, String?>?,
         settingActionExitManager: SettingActionData.SettingActionExitManager,
         keyToSubKeyCon: Pair<String, String>?,
         originImportPathList: List<String>?,
         keyToSubKeyConWhere: String,
-    ): Pair<String,
+    ): Triple<String,
             Triple<
                     String,
                     List<Pair<String, String>>,
                     Map<String, String?>,
                     >,
+            Map<String,String?>,
             > {
         val keyToSubKeyContents = listOf(
             imageActionVarKey,
@@ -249,13 +250,14 @@ object SettingActionImportManager {
             }
         }
         val blankReturnValueStr =
-            Pair (
+            Triple (
                 String(),
                 Triple(
                     String(),
                     emptyList<Pair<String, String>>(),
                     emptyMap<String, String?>(),
                 ),
+                emptyMap<String, String?>(),
             )
         val errType = isImportToErrType.second
         if(errType != null){
@@ -277,16 +279,35 @@ object SettingActionImportManager {
                 SettingActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
             )
         )
-        val importRepMapBeroreReplace = makeRepValHolderMap(
+        val importRepMapBeforeReplace = makeRepValHolderMap(
             actionImportMapBeforeReplace.get(
                 SettingActionKeyManager.ActionImportManager.ActionImportKey.REPLACE.key
             )
         )
-        val importRepMap =
-            CmdClickMap.MapReplacer.replaceToPairList(
-                importRepMapBeroreReplace,
-                varNameToValueStrMap
-            ).toMap()
+        val importVarNameToValueStrMap =
+            importRepMapBeforeReplace.map {
+                (_, valueStr) ->
+                val blankMapPair =
+                    String() to String()
+                if(
+                    !SettingActionKeyManager.ValueStrVar.matchStringVarName(
+                        valueStr
+                    )
+                ) return@map blankMapPair
+                val importKey = SettingActionKeyManager.ValueStrVar.convertStrKey(valueStr)
+                val importValueStr = varNameToValueStrMap.get(importKey)
+                    ?: return@map  blankMapPair
+                importKey to importValueStr
+            }.filter {
+                (importKey, _) ->
+                importKey.isNotEmpty()
+            }.toMap()
+
+//        val importRepMap =
+//            CmdClickMap.MapReplacer.replaceToPairList(
+//                importRepMapBeroreReplace,
+//                varNameToValueStrMap
+//            ).toMap()
         val isBeforeImportErr = withContext(Dispatchers.IO) {
             val isCircleImportErrJob = async {
                 ImportErrManager.isCircleImportErr(
@@ -320,9 +341,10 @@ object SettingActionImportManager {
         )
         val importSrcCon = CmdClickMap.replaceHolderForJsAction(
             importSrcConBeforeReplace,
-            importRepMap
+            importRepMapBeforeReplace
         )
-        val importedKeyToSubKeyConList = SettingActionKeyManager.KeyToSubKeyMapListMaker.make(importSrcCon)
+        val importedKeyToSubKeyConList =
+            SettingActionKeyManager.KeyToSubKeyMapListMaker.make(importSrcCon)
         val settingKeyToVarNameListForReturn =
             SettingActionKeyManager.makeSettingKeyToVarNameListForReturn(
                 importedKeyToSubKeyConList
@@ -341,7 +363,7 @@ object SettingActionImportManager {
                     context,
                     importPathSrc,
                     importSrcConBeforeReplace,
-                    importRepMapBeroreReplace,
+                    importRepMapBeforeReplace,
                     keyToSubKeyConWhere,
                 )
             }
@@ -386,13 +408,14 @@ object SettingActionImportManager {
 //                        "importedKeyToSubKeyConList: ${importedKeyToSubKeyConList}",
 //                    ).joinToString("\n\n") + "\n\n=============\n\n"
 //                )
-        return Pair (
+        return Triple (
             importPathSrc,
             Triple(
                 topIAcVarName,
                 importedKeyToSubKeyConList,
                 awaitVarNameValueStrMap
             ),
+            importVarNameToValueStrMap,
         )
     }
 

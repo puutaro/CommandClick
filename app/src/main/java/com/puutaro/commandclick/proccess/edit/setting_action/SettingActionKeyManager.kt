@@ -29,6 +29,39 @@ object SettingActionKeyManager {
         ASYNC("async"),
     }
 
+    object LoopKeyManager {
+        const val mapRoopKeyUnit = "loop"
+        private const val mapLoopKeySeparator = "___"
+
+
+        fun addLoopKey(
+            curMapLoopKey: String
+        ): String {
+            return listOf(
+                curMapLoopKey,
+                mapRoopKeyUnit
+            ).joinToString(mapLoopKeySeparator)
+        }
+
+        fun removeLoopKey(
+            curMapLoopKey: String
+        ): String {
+            return curMapLoopKey.removeSuffix(
+                "${mapLoopKeySeparator}${mapRoopKeyUnit}"
+            )
+        }
+
+        fun getResultLoopKeyToVarNameValueMap(
+            loopKeyToVarNameValueStrMap: SettingActionData.LoopKeyToVarNameValueStrMap?
+        ): Map<String, String> {
+            return loopKeyToVarNameValueStrMap
+                ?.getAsyncVarNameToValueStr(mapRoopKeyUnit)
+                ?.map {
+                    it.key to (it.value ?: String())
+                }?.toMap() ?: emptyMap()
+        }
+    }
+
     object ValueStrVar {
 
         const val itPronoun = "it"
@@ -118,7 +151,7 @@ object SettingActionKeyManager {
         curMapLoopKey: String,
         topVarNameToValueStrMap: Map<String, String?>?,
         importedVarNameToValueStrMap: Map<String, String?>?,
-        loopKeyToVarNameValueStrMapClass: SettingActionData.LoopKeyToVarNameValueStrMap,
+        loopKeyToVarNameValueStrMapClass: SettingActionData.LoopKeyToVarNameValueStrMap?,
         privateLoopKeyVarNameValueStrMapClass: SettingActionData.PrivateLoopKeyVarNameValueStrMap,
         curImportedVarNameToValueStrMap: Map<String, String?>?,
         itToBitmapMap: Map<String, String?>?,
@@ -127,7 +160,7 @@ object SettingActionKeyManager {
             (topVarNameToValueStrMap ?: emptyMap()) +
                     (importedVarNameToValueStrMap ?: emptyMap()) +
                     (loopKeyToVarNameValueStrMapClass
-                        .getAsyncVarNameToValueStr(curMapLoopKey)?.toMap()
+                        ?.getAsyncVarNameToValueStr(curMapLoopKey)?.toMap()
                         ?: emptyMap()) +
                     (privateLoopKeyVarNameValueStrMapClass
                         .getAsyncVarNameToValueStr(curMapLoopKey)?.toMap()

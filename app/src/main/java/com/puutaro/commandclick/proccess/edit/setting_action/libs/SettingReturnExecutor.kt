@@ -20,7 +20,7 @@ class SettingReturnExecutor {
         curMapLoopKey: String,
         topVarNameToValueStrMap: Map<String, String?>?,
         privateLoopKeyVarNameValueStrMapClass: SettingActionData.PrivateLoopKeyVarNameValueStrMap,
-        loopKeyToVarNameValueStrMapClass: SettingActionData.LoopKeyToVarNameValueStrMap,
+        loopKeyToVarNameValueStrMapClass: SettingActionData.LoopKeyToVarNameValueStrMap?,
         importedVarNameToValueStrMap: Map<String, String?>?,
         settingActionExitManager: SettingActionData.SettingActionExitManager,
         valueStrBeforeReplace: String,

@@ -31,6 +31,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCorou
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionData
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
@@ -165,7 +166,6 @@ object WithEditConstraintListView{
                         busyboxExecutor,
                         settingActionAsyncCoroutine,
                         null,
-
                         //listOf("testTopVar"),
                         null,
                         it,

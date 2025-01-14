@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -30,6 +31,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -46,6 +48,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.enums.EnumEntries
 
@@ -60,6 +63,8 @@ class SettingActionManager {
         fun init(){
             SettingActionImportManager.BeforeActionImportMapManager.init()
         }
+        private val mapRoopKeyUnit =
+            SettingActionKeyManager.LoopKeyManager.mapRoopKeyUnit
     }
 
     suspend fun exec(
@@ -96,19 +101,27 @@ class SettingActionManager {
             busyboxExecutor,
             topLevelValueStrKeyList
         )
-        settingActionExecutor.makeResultLoopKeyToVarNameValueMap(
+        val loopKeyToVarNameValueStrMap =
+            SettingActionData.LoopKeyToVarNameValueStrMap()
+        val loopClasses = settingActionExecutor.makeResultLoopKeyToVarNameValueMap(
             topVarNameToValueStrMap,
             settingActionAsyncCoroutine,
             editConstraintListAdapterArg,
+            loopKeyToVarNameValueStrMap,
+//            privateLoopKeyVarNameValueStrMap,
+//            loopKeyToAsyncDeferredVarNameValueStrMap,
             keyToSubKeyConList,
-            SettingActionExecutor.mapRoopKeyUnit,
+            mapRoopKeyUnit,
             null,
             keyToSubKeyConWhere,
             topAcSVarName,
             null,
             null,
         )
-        return settingActionExecutor.getResultLoopKeyToVarNameValueMap()
+        val returnLoopKeyToVarNameValueStrMap = loopClasses?.first
+        return SettingActionKeyManager.LoopKeyManager.getResultLoopKeyToVarNameValueMap(
+            returnLoopKeyToVarNameValueStrMap,
+        )
     }
 
     private fun makeSetRepValMap(
@@ -180,52 +193,23 @@ class SettingActionManager {
 
         private val loopKeyToVarNameValueStrMap = SettingActionData.LoopKeyToVarNameValueStrMap()
 //        mutableMapOf<String, MutableMap<String, Bitmap?>>()
-        private val privateLoopKeyVarNameValueStrMap =
-    SettingActionData.PrivateLoopKeyVarNameValueStrMap()
-        private val loopKeyToAsyncDeferredVarNameValueStrMap =
-            SettingActionData.LoopKeyToAsyncDeferredVarNameValueStrMap()
+//        private val privateLoopKeyVarNameValueStrMap =
+//    SettingActionData.PrivateLoopKeyVarNameValueStrMap()
+//        private val loopKeyToAsyncDeferredVarNameValueStrMap =
+//            SettingActionData.LoopKeyToAsyncDeferredVarNameValueStrMap()
         private var settingActionExitManager = SettingActionData.SettingActionExitManager()
         private val escapeRunPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
         private val runAsyncPrefix = SettingActionKeyManager.VarPrefix.RUN_ASYNC.prefix
         private val asyncPrefix = SettingActionKeyManager.VarPrefix.ASYNC.prefix
         private val returnTopAcVarNameMacro = SettingActionKeyManager.returnTopAcVarNameMacro
-
-        companion object {
-            const val mapRoopKeyUnit = "loop"
-            private const val mapLoopKeySeparator = "___"
-        }
-
-
-        private fun addLoopKey(
-            curMapLoopKey: String
-        ): String {
-            return listOf(
-                curMapLoopKey,
-                mapRoopKeyUnit
-            ).joinToString(mapLoopKeySeparator)
-        }
-
-        private fun removeLoopKey(
-            curMapLoopKey: String
-        ): String {
-            return curMapLoopKey.removeSuffix(
-                "${mapLoopKeySeparator}${mapRoopKeyUnit}"
-            )
-        }
-
-        suspend fun getResultLoopKeyToVarNameValueMap(): Map<String, String> {
-            return loopKeyToVarNameValueStrMap
-                .getAsyncVarNameToValueStr(mapRoopKeyUnit)
-                ?.map {
-                    it.key to (it.value ?: String())
-                }?.toMap() ?: emptyMap()
-        }
+        private val mapRoopKeyUnit = SettingActionKeyManager.LoopKeyManager.mapRoopKeyUnit
 
 
         suspend fun makeResultLoopKeyToVarNameValueMap(
             topVarNameToValueStrMap: Map<String, String?>?,
             settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
             editConstraintListAdapterArg: EditConstraintListAdapter?,
+            loopKeyToVarNameValueStrMap: SettingActionData.LoopKeyToVarNameValueStrMap?,
             keyToSubKeyConList: List<Pair<String, String>>?,
             curMapLoopKey: String,
             originImportPathList: List<String>?,
@@ -233,18 +217,26 @@ class SettingActionManager {
             topAcSVarName: String?,
             importedVarNameToValueStrMap: Map<String, String?>?,
             stringVarKeyList: List<String>?,
-        ) {
+        ): Pair<
+            SettingActionData.LoopKeyToVarNameValueStrMap?,
+            SettingActionData.PrivateLoopKeyVarNameValueStrMap,
+//            SettingActionData.LoopKeyToAsyncDeferredVarNameValueStrMap,
+        >? {
             val fragment = fragmentRef.get()
-                ?: return
+                ?: return null
             val context = fragment.context
-                ?: return
-            loopKeyToVarNameValueStrMap
-                .initPrivateLoopKeyVarNameValueStrMapMutex(curMapLoopKey)
-            privateLoopKeyVarNameValueStrMap
-                .initPrivateLoopKeyVarNameValueStrMapMutex(curMapLoopKey)
+                ?: return null
+            val privateLoopKeyVarNameValueStrMap =
+                SettingActionData.PrivateLoopKeyVarNameValueStrMap()
+            val loopKeyToAsyncDeferredVarNameValueStrMap =
+                SettingActionData.LoopKeyToAsyncDeferredVarNameValueStrMap()
+//            loopKeyToVarNameValueStrMap
+//                ?.initPrivateLoopKeyVarNameValueStrMapMutex(curMapLoopKey)
+//            privateLoopKeyVarNameValueStrMap
+//                .initPrivateLoopKeyVarNameValueStrMapMutex(curMapLoopKey)
             if(
                 keyToSubKeyConList.isNullOrEmpty()
-            ) return
+            ) return null
             val isErr = withContext(Dispatchers.IO) {
                 val settingKeyAndAsyncVarNameToAwaitVarNameList =
                     VarErrManager.makeSettingKeyAndAsyncVarNameToAwaitVarNameList(
@@ -409,17 +401,17 @@ class SettingActionManager {
             }
             if(isErr) {
                 settingActionExitManager.setExit()
-                return
+                return null
             }
             keyToSubKeyConList.forEach { keyToSubKeyConSrc ->
                 if (
                     settingActionExitManager.get()
-                ) return
+                ) return null
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sMap.txt").absolutePath,
 //                    listOf(
 //                        "curMapLoopKey: ${curMapLoopKey}",
-//                        "renewalVarName: ${renewalVarName}",
+//                        "topAcSVarName: ${topAcSVarName}",
 //                        "keyToSubKeyConSrc: ${keyToSubKeyConSrc}",
 //                        "loopKeyToVarNameValueMap: ${loopKeyToVarNameValueMap}",
 //                        "innerLoopKeyVarNameValueMap: ${innerLoopKeyVarNameValueMap}",
@@ -502,6 +494,8 @@ class SettingActionManager {
                         ) return@forEach
                         val curImportedVarNameToValueStrMap =
                             renewalVarNameToImportConToVarNameToValueStrMap.third
+                        val importVarNameToValueStrMap =
+                            importPathAndRenewalVarNameToImportConToVarNameValueStrMapToImportRepMap.third
 //                        FileSystems.updateFile(
 //                            File(UsePath.cmdclickDefaultAppDirPath, "sImport.txt").absolutePath,
 //                            listOf(
@@ -531,18 +525,133 @@ class SettingActionManager {
                                         val curStringVarKeyList = varNameToBitmapMap.map {
                                             it.key
                                         }
-                                        makeResultLoopKeyToVarNameValueMap(
+                                        val loopMapClasses = makeResultLoopKeyToVarNameValueMap(
                                             topVarNameToValueStrMap,
                                             settingActionAsyncCoroutine,
                                             editConstraintListAdapterArg,
+                                            null,
                                             importedKeyToSubKeyConList,
-                                            addLoopKey(curMapLoopKey),
+                                            SettingActionKeyManager.LoopKeyManager.addLoopKey(curMapLoopKey),
                                             (originImportPathList?: emptyList()) + listOf(importPath),
                                             "${importPath} by imported",
                                             acIVarName,
-                                            varNameToBitmapMap,
+                                            importVarNameToValueStrMap,
+//                                            varNameToBitmapMap,
                                             curStringVarKeyList
                                         )
+                                        val downLoopKeyVarNameValueStrMap = loopMapClasses?.first
+                                        val downPrivateLoopKeyVarNameValueStrMap = loopMapClasses?.second
+//                                        if(
+//                                            !globalVarNameRegex.matches(acIVarName)
+//                                        ) return@async null
+                                        val proposalRenewalVarNameSrcInnerMapValueStr =
+                                            downPrivateLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStr(
+                                                curMapLoopKey,
+                                            )?.get(
+                                                acIVarName
+                                            )
+//                                        val removedLoopKey =
+//                                            SettingActionKeyManager.LoopKeyManager.removeLoopKey(curMapLoopKey)
+                                        if (
+                                            proposalRenewalVarNameSrcInnerMapValueStr != null
+                                        ) {
+                                            privateLoopKeyVarNameValueStrMap.put(
+                                                curMapLoopKey,
+                                                acIVarName,
+                                                proposalRenewalVarNameSrcInnerMapValueStr
+                                            )
+//                                            privateLoopKeyVarNameValueStrMap.put(
+//                                                removedLoopKey,
+//                                                topAcSVarName,
+//                                                proposalRenewalVarNameSrcInnerMapValueStr
+//                                            )
+                                        }
+
+//                                        FileSystems.updateFile(
+//                                            File(
+//                                                UsePath.cmdclickDefaultSDebugAppDirPath,
+//                                                "image_async_acImport01_${acIVarName}.txt"
+//                                            ).absolutePath,
+//                                            listOf(
+//                                                "proposalRenewalVarNameSrcInnerMapValueStr: ${proposalRenewalVarNameSrcInnerMapValueStr}",
+//                                                "acIVarName:${acIVarName}",
+//                                                "topAcSVarName:${topAcSVarName}",
+//                                                "curMapLoopKey: ${curMapLoopKey}",
+//                                                "curMapLoopKey: loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameValueStrMap.getAsyncVarNameToValueStrAndExitSignal(
+//                                                    curMapLoopKey
+//                                                )}",
+//                                                "curMapLoopKey: privateLoopKeyVarNameValueStrMap: ${privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
+//                                                    curMapLoopKey
+//                                                )}",
+//                                                "curMapLoopKey: loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
+//                                                    curMapLoopKey
+//                                                )}",
+//                                                "addLoopKey(curMapLoopKey): ${SettingActionKeyManager.LoopKeyManager.addLoopKey(curMapLoopKey)}",
+//                                                "addLoopKey(curMapLoopKey) privateLoopKeyVarNameValueStrMap: ${privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
+//                                                    SettingActionKeyManager.LoopKeyManager.addLoopKey(curMapLoopKey)
+//                                                )}",
+//                                                "addLoopKey(curMapLoopKey) loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
+//                                                    SettingActionKeyManager.LoopKeyManager.addLoopKey(curMapLoopKey)
+//                                                )}",
+//                                                "mapRoopKeyUnit:${mapRoopKeyUnit}",
+//                                                "removed loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameValueStrMap.getAsyncVarNameToValueStrAndExitSignal(
+//                                                    mapRoopKeyUnit
+//                                                )}",
+//                                                "removedLoopKey: privateLoopKeyVarNameValueStrMap: ${privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
+//                                                    mapRoopKeyUnit
+//                                                )}",
+//                                                "removedLoopKey: loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
+//                                                    mapRoopKeyUnit
+//                                                )}",
+////                    "varNameToBitmap: ${varNameToBitmap.first}",
+////                    "bitmapWidth: ${varNameToBitmap.second?.width}",
+////                    "bitmapHeight: ${varNameToBitmap.second?.height}",
+//                                            ).joinToString("\n")  + "\n\n========\n\n"
+//                                        )
+//                                        if(
+//                                            topAcSVarName.isNullOrEmpty()
+//                                            || topAcSVarName.startsWith(escapeRunPrefix)
+//                                        ) return@async null
+                                        if(
+//                                            !globalVarNameRegex.matches(topAcSVarName)
+                                            !globalVarNameRegex.matches(curMapLoopKey)
+                                            || mapRoopKeyUnit != curMapLoopKey
+                                        ) return@async null
+                                        val proposalRenewalVarNameSrcMapValueStr =
+                                            downLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStr(
+                                                curMapLoopKey,
+                                            )?.get(acIVarName)
+                                        if (
+                                            proposalRenewalVarNameSrcMapValueStr != null
+                                        ) {
+                                            loopKeyToVarNameValueStrMap?.put(
+                                                mapRoopKeyUnit,
+                                                acIVarName,
+                                                proposalRenewalVarNameSrcMapValueStr
+                                            )
+//                                            loopKeyToVarNameValueStrMap?.put(
+//                                                removedLoopKey,
+//                                                topAcSVarName,
+//                                                proposalRenewalVarNameSrcMapValueStr
+//                                            )
+                                        }
+//                                        if(
+//                                            !globalVarNameRegex.matches(topAcSVarName)
+//                                            || mapRoopKeyUnit != removedLoopKey
+//                                        ) return@async null
+//                                        val proposalRenewalVarNameSrcMapValueStr =
+//                                            downLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStr(
+//                                                curMapLoopKey,
+//                                            )?.get(acIVarName)
+//                                        if (
+//                                            proposalRenewalVarNameSrcMapValueStr != null
+//                                        ) {
+//                                            loopKeyToVarNameValueStrMap?.put(
+//                                                removedLoopKey,
+//                                                topAcSVarName,
+//                                                proposalRenewalVarNameSrcMapValueStr
+//                                            )
+//                                        }
                                         null
                                     }
                                     loopKeyToAsyncDeferredVarNameValueStrMap.put(
@@ -570,18 +679,23 @@ class SettingActionManager {
                         val curStringVarKeyList = varNameToBitmapMap.map {
                             it.key
                         }
-                        makeResultLoopKeyToVarNameValueMap(
+                        val loopMapClasses = makeResultLoopKeyToVarNameValueMap(
                             topVarNameToValueStrMap,
                             settingActionAsyncCoroutine,
                             editConstraintListAdapterArg,
+                            null,
                             importedKeyToSubKeyConList,
-                            addLoopKey(curMapLoopKey),
+                            SettingActionKeyManager.LoopKeyManager.addLoopKey(curMapLoopKey),
                             (originImportPathList ?: emptyList()) + listOf(importPath),
                             "${importPath} by imported",
                             acIVarName,
-                            varNameToBitmapMap,
+                            importVarNameToValueStrMap,
+//                            varNameToBitmapMap,
                             curStringVarKeyList
                         )
+                        val downLoopKeyVarNameValueStrMap = loopMapClasses?.first
+                        val downPrivateLoopKeyVarNameValueStrMap = loopMapClasses?.second
+//                        val downLoopKeyToAsyncDeferredVarNameValueStrMap = loopMapClasses?.third
 //                        FileSystems.updateFile(
 //                            File(
 //                                UsePath.cmdclickDefaultSDebugAppDirPath,
@@ -597,32 +711,32 @@ class SettingActionManager {
 //                                "varNameToBitmapMap: ${varNameToBitmapMap}",
 //                            ).joinToString("\n")  + "\n\n========\n\n"
 //                        )
-                        if (
-                            topAcSVarName.isNullOrEmpty()
-                        ) return@forEach
-                        if(
-                            topAcSVarName.startsWith(escapeRunPrefix)
-                        ) return@forEach
                         val proposalRenewalVarNameSrcInnerMapValueStr =
-                            privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
+                            downPrivateLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStr(
                                 curMapLoopKey,
 //                                addLoopKey(curMapLoopKey)
                             )?.get(
                                 acIVarName
                             )
-                        if(
-                            !globalVarNameRegex.matches(acIVarName)
-                        ) return@forEach
-                        val removedLoopKey = removeLoopKey(curMapLoopKey)
+//                        if(
+//                            !globalVarNameRegex.matches(acIVarName)
+//                        ) return@forEach
                         if (
                             proposalRenewalVarNameSrcInnerMapValueStr != null
                         ) {
                             privateLoopKeyVarNameValueStrMap.put(
-                                removedLoopKey,
-                                topAcSVarName,
+                                curMapLoopKey,
+                                acIVarName,
                                 proposalRenewalVarNameSrcInnerMapValueStr
                             )
+//                            privateLoopKeyVarNameValueStrMap.put(
+//                                removedLoopKey,
+//                                topAcSVarName,
+//                                proposalRenewalVarNameSrcInnerMapValueStr
+//                            )
                         }
+                        val removedLoopKey =
+                            SettingActionKeyManager.LoopKeyManager.removeLoopKey(curMapLoopKey)
 //                        FileSystems.updateFile(
 //                            File(
 //                                UsePath.cmdclickDefaultSDebugAppDirPath,
@@ -631,7 +745,7 @@ class SettingActionManager {
 //                            listOf(
 //                                "proposalRenewalVarNameSrcInnerMapValueStr: ${proposalRenewalVarNameSrcInnerMapValueStr}",
 //                                "acIVarName:${acIVarName}",
-//                                "topAcIVarName:${topAcIVarName}",
+//                                "topAcSVarName:${topAcSVarName}",
 //                                "curMapLoopKey: ${curMapLoopKey}",
 //                                "curMapLoopKey: loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameValueStrMap.getAsyncVarNameToValueStrAndExitSignal(
 //                                    curMapLoopKey
@@ -639,15 +753,15 @@ class SettingActionManager {
 //                                "curMapLoopKey: privateLoopKeyVarNameValueStrMap: ${privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
 //                                    curMapLoopKey
 //                                )}",
-//                                "curMapLoopKey: loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap.getAsyncVarNameToValueStr(
+//                                "curMapLoopKey: loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
 //                                    curMapLoopKey
 //                                )}",
-//                                "addLoopKey(curMapLoopKey): ${addLoopKey(curMapLoopKey)}",
+//                                "addLoopKey(curMapLoopKey): ${SettingActionKeyManager.LoopKeyManager.addLoopKey(curMapLoopKey)}",
 //                                "addLoopKey(curMapLoopKey) privateLoopKeyVarNameValueStrMap: ${privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
-//                                    addLoopKey(curMapLoopKey)
+//                                    SettingActionKeyManager.LoopKeyManager.addLoopKey(curMapLoopKey)
 //                                )}",
-//                                "addLoopKey(curMapLoopKey) loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap.getAsyncVarNameToValueStr(
-//                                    addLoopKey(curMapLoopKey)
+//                                "addLoopKey(curMapLoopKey) loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
+//                                    SettingActionKeyManager.LoopKeyManager.addLoopKey(curMapLoopKey)
 //                                )}",
 //                                "removedLoopKey:${removedLoopKey}",
 //                                "removed loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameValueStrMap.getAsyncVarNameToValueStrAndExitSignal(
@@ -656,7 +770,7 @@ class SettingActionManager {
 //                                "removedLoopKey: privateLoopKeyVarNameValueStrMap: ${privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
 //                                    removedLoopKey
 //                                )}",
-//                                "removedLoopKey: loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap.getAsyncVarNameToValueStr(
+//                                "removedLoopKey: loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
 //                                    removedLoopKey
 //                                )}",
 ////                    "varNameToBitmap: ${varNameToBitmap.first}",
@@ -664,21 +778,33 @@ class SettingActionManager {
 ////                    "bitmapHeight: ${varNameToBitmap.second?.height}",
 //                            ).joinToString("\n")  + "\n\n========\n\n"
 //                        )
+//                        if (
+//                            topAcSVarName.isNullOrEmpty()
+//                            || topAcSVarName.startsWith(escapeRunPrefix)
+//                        ) return@forEach
                         if(
-                            !globalVarNameRegex.matches(topAcSVarName)
+//                            !globalVarNameRegex.matches(topAcSVarName)
+                            !globalVarNameRegex.matches(acIVarName)
+                            || mapRoopKeyUnit != curMapLoopKey
+//                            || mapRoopKeyUnit != removedLoopKey
                         ) return@forEach
                         val proposalRenewalVarNameSrcMapValueStr =
-                            loopKeyToVarNameValueStrMap.getAsyncVarNameToValueStr(
+                            downLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStr(
                             curMapLoopKey,
                         )?.get(acIVarName)
                         if (
                             proposalRenewalVarNameSrcMapValueStr != null
                         ) {
-                            loopKeyToVarNameValueStrMap.put(
-                                removedLoopKey,
-                                topAcSVarName,
+                            loopKeyToVarNameValueStrMap?.put(
+                                mapRoopKeyUnit,
+                                acIVarName,
                                 proposalRenewalVarNameSrcMapValueStr
                             )
+//                            loopKeyToVarNameValueStrMap?.put(
+//                                removedLoopKey,
+//                                topAcSVarName,
+//                                proposalRenewalVarNameSrcMapValueStr
+//                            )
                         }
 //                        FileSystems.updateFile(
 //                            File(
@@ -687,7 +813,7 @@ class SettingActionManager {
 //                            ).absolutePath,
 //                            listOf(
 //                                "acIVarName:${acIVarName}",
-//                                "topAcIVarName:${topAcIVarName}",
+//                                "topAcSVarName:${topAcSVarName}",
 //                                "curMapLoopKey: ${curMapLoopKey}",
 //                                "curMapLoopKey: loopKeyToAsyncDeferredVarNameBitmapMap: ${loopKeyToAsyncDeferredVarNameValueStrMap.getAsyncVarNameToValueStrAndExitSignal(
 //                                    curMapLoopKey
@@ -695,7 +821,7 @@ class SettingActionManager {
 //                                "curMapLoopKey: privateLoopKeyVarNameValueStrMap: ${privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
 //                                    curMapLoopKey
 //                                )}",
-//                                "curMapLoopKey: loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap.getAsyncVarNameToValueStr(
+//                                "curMapLoopKey: loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
 //                                    curMapLoopKey
 //                                )}",
 //                                "removedLoopKey:${removedLoopKey}",
@@ -705,7 +831,7 @@ class SettingActionManager {
 //                                "removedLoopKey: privateLoopKeyVarNameValueStrMap: ${privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
 //                                    removedLoopKey
 //                                )}",
-//                                "removedLoopKey: loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap.getAsyncVarNameToValueStr(
+//                                "removedLoopKey: loopKeyToVarNameValueStrMap: ${loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
 //                                    removedLoopKey
 //                                )}",
 ////                    "varNameToBitmap: ${varNameToBitmap.first}",
@@ -756,7 +882,7 @@ class SettingActionManager {
                                     settingVarName,
                                     deferred
                                 )
-                                val removedLoopKey = removeLoopKey(curMapLoopKey)
+                                val removedLoopKey = SettingActionKeyManager.LoopKeyManager.removeLoopKey(curMapLoopKey)
 //                                FileSystems.updateFile(
 //                                    File(
 //                                        UsePath.cmdclickDefaultSDebugAppDirPath,
@@ -764,7 +890,7 @@ class SettingActionManager {
 //                                    ).absolutePath,
 //                                    listOf(
 //                                        "keyToSubKeyConList: ${keyToSubKeyConList}",
-//                                        "imageVarKey: ${imageVarKey}",
+////                                        "imageVarKey: ${imageVarKey}",
 //                                        "mainSubKeyPairList: ${mainSubKeyPairList}",
 //                                        "settingVarName: $settingVarName",
 //                                        "isAsync: ${isAsync}",
@@ -778,28 +904,28 @@ class SettingActionManager {
 //                                            privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
 //                                                curMapLoopKey
 //                                            )}",
-//                                        "topAcIVarName: ${topAcIVarName}",
+//                                        "topAcSVarName: ${topAcSVarName}",
 //                                    ).joinToString("\n")
 //                                )
-                                if (
-                                    removedLoopKey == curMapLoopKey
-                                ) return@launch
-                                val isGlobalForRawVar =
-                                    globalVarNameRegex.matches(settingVarName)
-                                if (
-                                    !isGlobalForRawVar
-                                ) return@launch
-                                if (
-                                    topAcSVarName.isNullOrEmpty()
-                                ) return@launch
-                                if (
-                                    topAcSVarName.startsWith(escapeRunPrefix)
-                                ) return@launch
-                                loopKeyToAsyncDeferredVarNameValueStrMap.put(
-                                    removedLoopKey,
-                                    topAcSVarName,
-                                    deferred
-                                )
+//                                if (
+//                                    removedLoopKey == curMapLoopKey
+//                                ) return@launch
+//                                val isGlobalForRawVar =
+//                                    globalVarNameRegex.matches(settingVarName)
+//                                if (
+//                                    !isGlobalForRawVar
+//                                ) return@launch
+//                                if (
+//                                    topAcSVarName.isNullOrEmpty()
+//                                ) return@launch
+//                                if (
+//                                    topAcSVarName.startsWith(escapeRunPrefix)
+//                                ) return@launch
+//                                loopKeyToAsyncDeferredVarNameValueStrMap.put(
+//                                    removedLoopKey,
+//                                    topAcSVarName,
+//                                    deferred
+//                                )
 //                                FileSystems.updateFile(
 //                                    File(
 //                                        UsePath.cmdclickDefaultSDebugAppDirPath,
@@ -807,7 +933,7 @@ class SettingActionManager {
 //                                    ).absolutePath,
 //                                    listOf(
 //                                        "keyToSubKeyConList: ${keyToSubKeyConList}",
-//                                        "imageVarKey: ${imageVarKey}",
+////                                        "imageVarKey: ${imageVarKey}",
 //                                        "mainSubKeyPairList: ${mainSubKeyPairList}",
 //                                        "settingVarName: $settingVarName",
 //                                        "isAsync: ${isAsync}",
@@ -822,11 +948,11 @@ class SettingActionManager {
 //                                                curMapLoopKey
 //                                            )}",
 //                                        "loopKeyToVarNameBitmapMap: ${
-//                                            loopKeyToVarNameValueStrMap.getAsyncVarNameToValueStr(
+//                                            loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
 //                                                curMapLoopKey
 //                                            )}",
 //                                        "loopKeyToVarNameBitmapMap: ${
-//                                            loopKeyToVarNameValueStrMap.getAsyncVarNameToValueStr(
+//                                            loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
 //                                                removedLoopKey
 //                                            )}"
 //                                    ).joinToString("\n")
@@ -861,7 +987,11 @@ class SettingActionManager {
                                 exitSignalClass == SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                             ) {
                                 settingActionExitManager.setExit()
-                                return
+                                return Pair(
+                                    loopKeyToVarNameValueStrMap,
+                                    privateLoopKeyVarNameValueStrMap,
+//                                    loopKeyToAsyncDeferredVarNameValueStrMap,
+                                )
                             }
                             val varNameToValueStr = varNameToStrValueAndExitSignal.first
                             privateLoopKeyVarNameValueStrMap.put(
@@ -869,6 +999,16 @@ class SettingActionManager {
                                 varNameToValueStr.first,
                                 varNameToValueStr.second
                             )
+                            if(
+                                globalVarNameRegex.matches(varNameToValueStr.first)
+                                && curMapLoopKey == mapRoopKeyUnit
+                                ) {
+                                loopKeyToVarNameValueStrMap?.put(
+                                    mapRoopKeyUnit,
+                                    varNameToValueStr.first,
+                                    varNameToValueStr.second
+                                )
+                            }
 //                            FileSystems.updateFile(
 //                                File(
 //                                    UsePath.cmdclickDefaultSDebugAppDirPath,
@@ -876,30 +1016,30 @@ class SettingActionManager {
 //                                ).absolutePath,
 //                                listOf(
 //                                    "keyToSubKeyConList: ${keyToSubKeyConList}",
-//                                    "imageVarKey: ${imageVarKey}",
+////                                    "imageVarKey: ${imageVarKey}",
 //                                    "mainSubKeyPairList: ${mainSubKeyPairList}",
 //                                    "settingVarName: $settingVarName",
 //                                    "isAsync: ${isAsync}",
 //                                    "curMapLoopKey: ${curMapLoopKey}",
-//                                    "removedLoopKey: ${removedLoopKey}",
+//                                    "mapRoopKeyUnit: ${mapRoopKeyUnit}",
 //                                    "varName: ${varNameToValueStr.first}",
-//                                    "topAcIVarName: ${topAcIVarName}",
-//                                    "varNameForPut: ${varNameForPut}",
+//                                    "topAcIVarName: ${topAcSVarName}",
+////                                    "varNameForPut: ${varNameForPut}",
 //                                    "curMapLoopKey privateLoopKeyVarNameBitmapMap: ${
 //                                        privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
 //                                            curMapLoopKey
 //                                        )}",
-//                                    "removedLoopKey privateLoopKeyVarNameBitmapMap: ${
+//                                    "mapRoopKeyUnit privateLoopKeyVarNameBitmapMap: ${
 //                                        privateLoopKeyVarNameValueStrMap.getAsyncVarNameToValueStr(
-//                                            removedLoopKey
+//                                            mapRoopKeyUnit
 //                                        )}",
 //                                    "curMapLoopKey loopKeyToVarNameBitmapMap: ${
-//                                        loopKeyToVarNameValueStrMap.getAsyncVarNameToValueStr(
+//                                        loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
 //                                            curMapLoopKey
 //                                        )}",
-//                                    "removedLoopKey loopKeyToVarNameBitmapMap: ${
-//                                        loopKeyToVarNameValueStrMap.getAsyncVarNameToValueStr(
-//                                            removedLoopKey
+//                                    "mapRoopKeyUnit loopKeyToVarNameBitmapMap: ${
+//                                        loopKeyToVarNameValueStrMap?.getAsyncVarNameToValueStr(
+//                                            mapRoopKeyUnit
 //                                        )}",
 //                                ).joinToString("\n")
 //                            )
@@ -949,10 +1089,14 @@ class SettingActionManager {
                                 if(
                                     !isReturnVarStrNullResultErr
                                 ) return@isReturnVarStrNullResultErr
-                                return
+                                return Pair(
+                                    loopKeyToVarNameValueStrMap,
+                                    privateLoopKeyVarNameValueStrMap,
+//                                    loopKeyToAsyncDeferredVarNameValueStrMap,
+                                )
                             }
                             val removedLoopKey =
-                                removeLoopKey(curMapLoopKey)
+                                SettingActionKeyManager.LoopKeyManager.removeLoopKey(curMapLoopKey)
                             if (
                                 isRegisterToTop
                                 && !topAcSVarName.isNullOrEmpty()
@@ -968,7 +1112,7 @@ class SettingActionManager {
                                 topAcSVarName == returnTopAcVarNameMacro
                                 && varNameToValueStr != null
                             ){
-                                loopKeyToVarNameValueStrMap.put(
+                                loopKeyToVarNameValueStrMap?.put(
                                     removedLoopKey,
                                     topAcSVarName,
                                     varNameToValueStr.second
@@ -1022,10 +1166,18 @@ class SettingActionManager {
                             when(breakSignalClass){
                                 SettingActionKeyManager.BreakSignal.EXIT_SIGNAL -> {
                                     settingActionExitManager.setExit()
-                                    return
+                                    return Pair(
+                                        loopKeyToVarNameValueStrMap,
+                                        privateLoopKeyVarNameValueStrMap,
+//                                        loopKeyToAsyncDeferredVarNameValueStrMap,
+                                    )
                                 }
                                 SettingActionKeyManager.BreakSignal.RETURN_SIGNAL -> {
-                                    return
+                                    return Pair(
+                                        loopKeyToVarNameValueStrMap,
+                                        privateLoopKeyVarNameValueStrMap,
+//                                        loopKeyToAsyncDeferredVarNameValueStrMap,
+                                    )
                                 }
                                 else -> {}
                             }
@@ -1034,6 +1186,11 @@ class SettingActionManager {
                     }
                 }
             }
+            return Pair(
+                loopKeyToVarNameValueStrMap,
+                privateLoopKeyVarNameValueStrMap,
+//                loopKeyToAsyncDeferredVarNameValueStrMap,
+            )
         }
 
         private fun makeMainSubKeyPairList(
@@ -1123,7 +1280,7 @@ class SettingActionManager {
                 topVarNameToValueStrMap: Map<String, String?>?,
                 loopKeyToAsyncDeferredVarNameValueStrMap: SettingActionData.LoopKeyToAsyncDeferredVarNameValueStrMap?,
                 privateLoopKeyVarNameValueStrMapClass: SettingActionData.PrivateLoopKeyVarNameValueStrMap,
-                loopKeyToVarNameValueStrMapClass: SettingActionData.LoopKeyToVarNameValueStrMap,
+                loopKeyToVarNameValueStrMapClass: SettingActionData.LoopKeyToVarNameValueStrMap?,
                 importedVarNameToValueStrMap: Map<String, String?>?,
                 settingActionExitManager: SettingActionData.SettingActionExitManager,
                 settingVarName: String,
