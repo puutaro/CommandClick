@@ -296,6 +296,8 @@ object SettingActionImportManager {
                 SettingActionKeyManager.ActionImportManager.ActionImportKey.REPLACE.key
             )
         )
+        val varNameToValueStrMapPlusAwait =
+            varNameToValueStrMap + awaitVarNameValueStrMap
         val importVarNameToValueStrMap =
             importRepMapBeforeReplace.map {
                 (_, valueStr) ->
@@ -307,7 +309,7 @@ object SettingActionImportManager {
                     )
                 ) return@map blankMapPair
                 val importKey = SettingActionKeyManager.ValueStrVar.convertStrKey(valueStr)
-                val importValueStr = varNameToValueStrMap.get(importKey)
+                val importValueStr = varNameToValueStrMapPlusAwait.get(importKey)
                     ?: return@map  blankMapPair
                 importKey to importValueStr
             }.filter {

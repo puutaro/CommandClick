@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.image_action
 
+import android.graphics.Bitmap
+import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionData
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
 
@@ -25,6 +27,36 @@ object ImageActionKeyManager {
         RUN("run"),
         RUN_ASYNC("${RUN.prefix}Async"),
         ASYNC("async"),
+    }
+
+    object LoopKeyManager {
+        const val mapRoopKeyUnit = "loop"
+        private const val mapLoopKeySeparator = "___"
+
+
+        fun addLoopKey(
+            curMapLoopKey: String
+        ): String {
+            return listOf(
+                curMapLoopKey,
+                mapRoopKeyUnit
+            ).joinToString(mapLoopKeySeparator)
+        }
+
+        fun removeLoopKey(
+            curMapLoopKey: String
+        ): String {
+            return curMapLoopKey.removeSuffix(
+                "${mapLoopKeySeparator}${mapRoopKeyUnit}"
+            )
+        }
+
+        suspend fun getResultLoopKeyToVarNameValueMap(
+            loopKeyToVarNameBitmapMap: ImageActionData.LoopKeyToVarNameBitmapMap?
+        ): Map<String, Bitmap?> {
+            return loopKeyToVarNameBitmapMap?.getAsyncVarNameToBitmap(mapRoopKeyUnit)
+                ?: emptyMap()
+        }
     }
 
     object BitmapVar {
@@ -197,5 +229,28 @@ object ImageActionKeyManager {
                 mainKey to subKeyAfterStr
             }
         }
+    }
+
+    suspend fun makeValueToBitmapMap(
+        curMapLoopKey: String,
+        topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
+        importedVarNameToBitmapMap: Map<String, Bitmap?>?,
+        loopKeyToVarNameBitmapMapClass: ImageActionData.LoopKeyToVarNameBitmapMap?,
+        privateLoopKeyVarNameBitmapMapClass: ImageActionData.PrivateLoopKeyVarNameBitmapMap,
+        curImportedVarNameToBitmapMap: Map<String, Bitmap?>?,
+        itToBitmapMap: Map<String, Bitmap?>?,
+    ): Map<String, Bitmap?> {
+        return (topVarNameToVarNameBitmapMap ?: emptyMap()) +
+                (importedVarNameToBitmapMap ?: emptyMap()) +
+                (loopKeyToVarNameBitmapMapClass
+                    ?.getAsyncVarNameToBitmap(
+                        curMapLoopKey
+                    )?.toMap() ?: emptyMap()) +
+                (privateLoopKeyVarNameBitmapMapClass
+                    .getAsyncVarNameToBitmap(
+                        curMapLoopKey
+                    )?.toMap() ?: emptyMap()) +
+                (curImportedVarNameToBitmapMap ?: emptyMap()) +
+                (itToBitmapMap ?: emptyMap())
     }
 }

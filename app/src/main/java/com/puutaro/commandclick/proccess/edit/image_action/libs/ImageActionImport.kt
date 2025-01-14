@@ -86,22 +86,39 @@ object ImageActionImport {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         curMapLoopKey: String,
+        topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
         loopKeyToAsyncDeferredVarNameBitmapMap: ImageActionData.LoopKeyToAsyncDeferredVarNameBitmapMap?,
+        loopKeyToVarNameBitmapMap: ImageActionData.LoopKeyToVarNameBitmapMap?,
+        privateLoopKeyVarNameBitmapMapClass: ImageActionData.PrivateLoopKeyVarNameBitmapMap,
+        importedVarNameToBitmapMap: Map<String, Bitmap?>?,
         imageActionExitManager: ImageActionData.ImageActionExitManager,
         keyToSubKeyCon: Pair<String, String>?,
         originImportPathList: List<String>?,
         keyToSubKeyConWhere: String,
-    ): Pair<String,
+    ): Triple<
+            String,
             Triple<
                     String,
                     List<Pair<String, String>>,
                     Map<String, Bitmap?>,
-                    >
+                    >,
+            Map<String, Bitmap?>?
             > {
         val keyToSubKeyContents = listOf(
             imageActionVarKey,
             keyToSubKeyCon?.second ?: String()
         ).joinToString("=")
+        val varNameToBitmapMap =
+            ImageActionKeyManager.makeValueToBitmapMap(
+                curMapLoopKey,
+                topVarNameToVarNameBitmapMap,
+                importedVarNameToBitmapMap,
+                loopKeyToVarNameBitmapMap,
+                privateLoopKeyVarNameBitmapMapClass,
+                null,
+                null,
+            )
+
         val actionImportMap = ImportMapMaker.comp(
             keyToSubKeyContents,
             "${imageActionVarKey}="
@@ -215,12 +232,15 @@ object ImageActionImport {
             )
         }
         val blankReturnValue =
-            String() to
-                    Triple(
-                        String(),
-                        emptyList<Pair<String, String>>(),
-                        emptyMap<String, Bitmap?>(),
-                    )
+            Triple(
+            String(),
+            Triple(
+                String(),
+                emptyList<Pair<String, String>>(),
+                emptyMap<String, Bitmap?>(),
+            ),
+        null,
+            )
         val errType = isImportToErrType.second
         if(errType != null){
             ImageActionErrLogger.sendErrLog(
@@ -277,6 +297,26 @@ object ImageActionImport {
                 ImageActionKeyManager.ActionImportManager.ActionImportKey.REPLACE.key
             )
         )
+        val varNameToBitmapMapPlusAwait =
+            varNameToBitmapMap + awaitVarNameBitmapMap
+        val importVarNameToBitmapMap =
+            importRepMap.map {
+                    (_, bitmapVarMark) ->
+                val blankMapPair =
+                    String() to null
+                if(
+                    !ImageActionKeyManager.BitmapVar.matchBitmapVarName(
+                        bitmapVarMark
+                    )
+                ) return@map blankMapPair
+                val importKey = ImageActionKeyManager.BitmapVar.convertBitmapKey(bitmapVarMark)
+                val importBitmap = varNameToBitmapMapPlusAwait.get(importKey)
+                    ?: return@map  blankMapPair
+                importKey to importBitmap
+            }.filter {
+                    (importKey, _) ->
+                importKey.isNotEmpty()
+            }.toMap()
         val importSrcCon = CmdClickMap.replaceHolderForJsAction(
             importSrcConBeforeReplace,
             importRepMap
@@ -294,15 +334,15 @@ object ImageActionImport {
                 keyToSubKeyConWhere,
                 "by import path $importPathSrc"
             ).joinToString("\n")
-            val isImportShadowVarMarkErrJob = async {
-                ImageActionImportErrManager.isImportShadowVarMarkErr(
-                    context,
-                    importPathSrc,
-                    importSrcConBeforeReplace,
-                    importRepMap,
-                    keyToSubKeyConWhere,
-                )
-            }
+//            val isImportShadowVarMarkErrJob = async {
+//                ImageActionImportErrManager.isImportShadowVarMarkErr(
+//                    context,
+//                    importPathSrc,
+//                    importSrcConBeforeReplace,
+//                    importRepMap,
+//                    keyToSubKeyConWhere,
+//                )
+//            }
 //                    val isGlobalVarNameErrWithRunPrefixJob = async {
 //                        ImageActionImportErrManager.isGlobalVarNameExistErrWithRunPrefix(
 //                            context,
@@ -328,10 +368,10 @@ object ImageActionImport {
                     keyToSubKeyConWhereInImportPath
                 )
             }
-            isImportShadowVarMarkErrJob.await()
+//            isImportShadowVarMarkErrJob.await()
 //                            || isGlobalVarNameErrWithRunPrefixJob.await()
 //                            || isGlobalVarNameMultipleExistErrWithoutRunPrefixJob.await()
-                    || isGlobalVarNameNotLastErrWithoutRunPrefixJob.await()
+                    isGlobalVarNameNotLastErrWithoutRunPrefixJob.await()
         }
         if(
             isErr
@@ -344,10 +384,14 @@ object ImageActionImport {
 //                        "importedKeyToSubKeyConList: ${importedKeyToSubKeyConList}",
 //                    ).joinToString("\n\n") + "\n\n=============\n\n"
 //                )
-        return importPathSrc to Triple(
-            topIAcVarName,
-            importedKeyToSubKeyConList,
-            awaitVarNameBitmapMap
+        return Triple (
+            importPathSrc,
+            Triple(
+                topIAcVarName,
+                importedKeyToSubKeyConList,
+                awaitVarNameBitmapMap
+            ),
+            importVarNameToBitmapMap
         )
     }
 
