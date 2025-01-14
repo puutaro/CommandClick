@@ -3,11 +3,19 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import kotlin.enums.EnumEntries
 
 object ListForSetting {
+
+    private const val defaultNullMacroStr = FuncCheckerForSetting.defaultNullMacroStr
+
     suspend fun handle(
         funcName: String,
         methodNameStr: String,
@@ -339,7 +347,194 @@ object ListForSetting {
                         null,
                     ) to null
                 }
+                is ListMethodArgClass.FilterArgs -> {
+                    val formalArgIndexToNameToTypeList =
+                        args.entries.mapIndexed { index, formalArgsNameToType ->
+                            Triple(
+                                index,
+                                formalArgsNameToType.key,
+                                formalArgsNameToType.type,
+                            )
+                        }
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
+                    )
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val inputCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.inputConKeyToDefaultValueStr,
+                        where
+                    ).let { inputConToErr ->
+                        val funcErr = inputConToErr.second
+                            ?: return@let inputConToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.matchTypeKeyToDefaultValueStr,
+                        where
+                    ).let { matchTypeStrToErr ->
+                        val funcErr = matchTypeStrToErr.second
+                            ?: return@let matchTypeStrToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.separatorKeyToDefaultValueStr,
+                        where
+                    ).let { separatorToErr ->
+                        val funcErr = separatorToErr.second
+                            ?: return@let separatorToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val defaultSeparator =
+                        args.separatorKeyToDefaultValueStr.second
+                    val isSeparatorNull =
+                        separator == defaultSeparator
+                    val joinStr = when(isSeparatorNull) {
+                        true -> String()
+                        else -> FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                            mapArgMapList,
+                            args.joinStrKeyToDefaultValueStr,
+                            where
+                        ).let { joinStrToErr ->
+                            val funcErr = joinStrToErr.second
+                            if (funcErr != null) {
+                                return@withContext Pair(
+                                    null,
+                                    SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ) to funcErr
+                            }
+                            SettingFuncTool.makeJoinStrBySeparator(
+                                joinStrToErr,
+                                separator,
+                                args.joinStrKeyToDefaultValueStr.second,
+                            )
+                        }
+                    }
+                    val semaphoreInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                        mapArgMapList,
+                        args.semaphoreKeyToDefaultValueStr,
+                        where
+                    ).let { semaphoreIntToErr ->
+                        val funcErr = semaphoreIntToErr.second
+                            ?: return@let semaphoreIntToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    Filter.filter(
+                        funcName,
+                        methodNameStr,
+                        argsPairList,
+                        inputCon,
+                        separator,
+                        joinStr,
+                        semaphoreInt,
+                    )
+                }
             }
+        }
+    }
+
+    private object Filter {
+        suspend fun filter(
+            funcName: String,
+            methodNameStr: String,
+            argsPairList: List<Pair<String, String>>,
+            inputCon: String,
+            separator: String,
+            joinStr: String,
+            semaphoreInt: Int,
+        ): Pair<
+                Pair<
+                        String?,
+                        SettingActionKeyManager.BreakSignal?
+                        >?,
+                FuncCheckerForSetting.FuncCheckErr?
+                > {
+            val inputConList = when (separator == defaultNullMacroStr) {
+                true -> listOf(inputCon)
+                false -> inputCon.split(separator)
+            }
+            val semaphore = when (semaphoreInt > 0) {
+                true -> Semaphore(semaphoreInt)
+                else -> null
+            }
+            val indexAndLineAndMatchErrJobListJob = withContext(Dispatchers.IO) {
+                when (semaphore == null) {
+                    false -> inputConList.mapIndexed { index, inputLine ->
+                        async {
+                            semaphore.withPermit {
+                                Triple(
+                                    index,
+                                    inputLine,
+                                    SettingIfManager.IfArgMatcher.match(
+                                        "${funcName}.${methodNameStr}",
+                                        inputLine,
+                                        argsPairList,
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    else -> inputConList.mapIndexed { index, inputLine ->
+                        async {
+                            Triple(
+                                index,
+                                inputLine,
+                                SettingIfManager.IfArgMatcher.match(
+                                    "${funcName}.${methodNameStr}",
+                                    inputLine,
+                                    argsPairList,
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+            val lineToMatchErrJobListJob =
+                indexAndLineAndMatchErrJobListJob
+                    .awaitAll()
+                    .sortedBy {
+                        it.first
+                    }.map {
+                        indexTolineToMatchErr ->
+                        indexTolineToMatchErr.second to
+                                indexTolineToMatchErr.third
+                    }
+            lineToMatchErrJobListJob.firstOrNull {
+                lineAndMatchErrJobList ->
+                lineAndMatchErrJobList.second.second != null
+            }?.let {
+                funcErr ->
+                return@let null to funcErr
+            }
+            val filterLineLittCon = lineToMatchErrJobListJob.filter {
+                lineAndMatchErr ->
+                lineAndMatchErr.second.first ?: false
+            }.map {
+                lineAndMatchErr ->
+                lineAndMatchErr.first
+            }.joinToString(joinStr)
+            return Pair(filterLineLittCon, null) to null
         }
     }
 
@@ -351,7 +546,8 @@ object ListForSetting {
         SHUF("shuf", ListMethodArgClass.ShufArgs),
         TAKE("take", ListMethodArgClass.TakeArgs),
         TAKE_LAST("takeLast", ListMethodArgClass.TakeLastArgs),
-        JOIN("join", ListMethodArgClass.JoinArgs)
+        JOIN("join", ListMethodArgClass.JoinArgs),
+        FILTER("filter", ListMethodArgClass.FilterArgs),
     }
 
 
@@ -473,6 +669,51 @@ object ListForSetting {
                 STRS("strs", 0, FuncCheckerForSetting.ArgType.STRING),
                 SEPARATOR("separator", 1, FuncCheckerForSetting.ArgType.STRING),
                 JOIN_STR("joinStr", 2, FuncCheckerForSetting.ArgType.STRING),
+            }
+        }
+        data object FilterArgs : ListMethodArgClass(), ArgType {
+            override val entries = FilterEnumArgs.entries
+            val inputConKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.INPUT_CON.key,
+                FilterEnumArgs.INPUT_CON.defaultValueStr
+            )
+            val separatorKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.SEPARATOR.key,
+                FilterEnumArgs.SEPARATOR.defaultValueStr
+            )
+            val joinStrKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.JOIN_STR.key,
+                FilterEnumArgs.JOIN_STR.defaultValueStr
+            )
+            val matchTypeKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.MATCH_TYPE.key,
+                FilterEnumArgs.MATCH_TYPE.defaultValueStr
+            )
+            val valueKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.VALUE.key,
+                FilterEnumArgs.VALUE.defaultValueStr
+            )
+            val regexKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.REGEX.key,
+                FilterEnumArgs.REGEX.defaultValueStr
+            )
+            val semaphoreKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.SEMAPORE.key,
+                FilterEnumArgs.SEMAPORE.defaultValueStr
+            )
+
+            enum class FilterEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                INPUT_CON("inputCon", null, FuncCheckerForSetting.ArgType.STRING),
+                SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                MATCH_TYPE(SettingIfManager.IfArgs.MATCH_TYPE.str, null, FuncCheckerForSetting.ArgType.STRING),
+                VALUE(SettingIfManager.IfArgs.VALUE.str, String(), FuncCheckerForSetting.ArgType.STRING),
+                REGEX(SettingIfManager.IfArgs.REGEX.str, String(), FuncCheckerForSetting.ArgType.STRING),
+                SEMAPORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
             }
         }
 

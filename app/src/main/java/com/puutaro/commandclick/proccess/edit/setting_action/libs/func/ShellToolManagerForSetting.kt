@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.proccess.edit.setting_action.EvalForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -196,12 +197,6 @@ object ShellToolManagerForSetting {
                             separator,
                             args.joinStrKeyToDefaultValueStr.second,
                         )
-//                        val joinStrSrc = joinStrToErr.first
-//                        val defaultJoinStr = args.joinStrKeyToDefaultValueStr.second
-//                        if (
-//                            joinStrSrc == defaultJoinStr
-//                        ) separator
-//                        else joinStrSrc
                     }
                 }
                 val timeoutInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -244,6 +239,18 @@ object ShellToolManagerForSetting {
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
+                val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.indexVarNameKeyToDefaultValueStr,
+                    where
+                ).let { indexVarNameToErr ->
+                    val funcErr = indexVarNameToErr.second
+                        ?: return@let indexVarNameToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 val argsPairListForCmd = when(enableEscape){
                     true -> SettingFuncTool.makeArgsPairListByEscape(
                         argsPairListBeforeBsEscape,
@@ -268,6 +275,7 @@ object ShellToolManagerForSetting {
                     joinStr,
                     semaphoreInt,
                     timeoutInt,
+                    indexVarName,
                     where,
                 )
             }
@@ -284,6 +292,7 @@ object ShellToolManagerForSetting {
             joinStr: String,
             semaphoreInt: Int,
             defaultTimeoutInt: Int,
+            indexVarName: String,
             where: String,
         ): Pair<
                 Pair<
@@ -331,12 +340,14 @@ object ShellToolManagerForSetting {
                     false ->  inputConList.mapIndexed { index, inputLine ->
                         async {
                             semaphore.withPermit {
+                                val indexToVarNamePair = Pair(indexVarName, index.toString())
                                 getCmdOutput(
                                     busyboxExecutor,
                                     shellMapArgs,
                                     index,
                                     inputLine,
                                     procNameToCmdKeyMapList,
+                                    indexToVarNamePair,
                                     defaultTimeoutInt,
                                     where,
                                 )
@@ -345,12 +356,14 @@ object ShellToolManagerForSetting {
                     }
                     else -> inputConList.mapIndexed { index, inputLine ->
                         async {
+                            val indexToVarNamePair = Pair(indexVarName, index.toString())
                             val indexAndOutputToErr = getCmdOutput(
                                 busyboxExecutor,
                                 shellMapArgs,
                                 index,
                                 inputLine,
                                 procNameToCmdKeyMapList,
+                                indexToVarNamePair,
                                 defaultTimeoutInt,
                                 where,
                             )
@@ -401,6 +414,7 @@ object ShellToolManagerForSetting {
             index: Int,
             inputLine: String,
             procNameToCmdKeyMapList: List<Pair<String, Map<String, String>>>,
+            indexToVarNamePair: Pair<String, String>,
             defaultTimeoutInt: Int,
             where: String,
         ): Pair<Int, Pair<String?, FuncCheckerForSetting.FuncCheckErr?>> {
@@ -408,6 +422,7 @@ object ShellToolManagerForSetting {
                 shellMapArgs,
                 procNameToCmdKeyMapList,
                 inputLine,
+                indexToVarNamePair,
                 defaultTimeoutInt,
             )
             val outToErr = busyboxExecutor?.getCmdOutputByErrHandle(
@@ -443,6 +458,7 @@ object ShellToolManagerForSetting {
                     Pair<String, Map<String, String>>
                     >,
             inputLine: String,
+            indexToVarNamePair: Pair<String, String>,
             defaultTimeoutInt: Int,
         ): String {
             val timeoutKeyClass = ShellMethodArgClass.MapArgs.MapEnumArgs.TIMEOUT
@@ -485,7 +501,10 @@ object ShellToolManagerForSetting {
                     updateTempVarCmdsCon,
                     echoTempVar,
                     String()
-                ).joinToString(";\n")
+                ).joinToString(";\n").replace(
+                    "${'$'}${indexToVarNamePair.first}",
+                    indexToVarNamePair.second
+                )
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "llshell_${inputCon.take(4)}.txt").absolutePath,
 //                listOf(
@@ -656,6 +675,10 @@ object ShellToolManagerForSetting {
                 MapEnumArgs.ESCAPE.key,
                 MapEnumArgs.ESCAPE.defaultValueStr
             )
+            val indexVarNameKeyToDefaultValueStr = Pair(
+                MapEnumArgs.INDEX_VAR_NAME.key,
+                MapEnumArgs.INDEX_VAR_NAME.defaultValueStr
+            )
 
 
             enum class MapEnumArgs(
@@ -670,6 +693,7 @@ object ShellToolManagerForSetting {
                 JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
                 ESCAPE("escape", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

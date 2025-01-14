@@ -10,7 +10,7 @@ object SettingIfManager {
 
     private const val judgeTargetArgName = "judgeTarget"
 
-    private enum class IfArgs(
+    enum class IfArgs(
         val str: String
     ){
         MATCH_TYPE("matchType"),
@@ -73,7 +73,7 @@ object SettingIfManager {
         )
     }
 
-    private object IfArgMatcher {
+    object IfArgMatcher {
 
 
         fun match(

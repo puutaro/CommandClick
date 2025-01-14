@@ -460,6 +460,7 @@ object FuncCheckerForSetting {
             if (
                 funcCheckBaseErr != null
             ) return Pair(null.toString(), funcCheckBaseErr)
+
             return try {
                 valueStr.toString() to null
             } catch (e: Exception) {
