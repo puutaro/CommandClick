@@ -522,9 +522,10 @@ class SettingActionManager {
                                                 curImportedVarNameToValueStrMap,
                                                 null,
                                             )
-                                        val curStringVarKeyList = varNameToBitmapMap.map {
-                                            it.key
-                                        }
+                                        val curStringVarKeyList =
+                                            ((topVarNameToValueStrMap ?: emptyMap()) + importVarNameToValueStrMap).map {
+                                                it.key
+                                            }
                                         val loopMapClasses = makeResultLoopKeyToVarNameValueMap(
                                             topVarNameToValueStrMap,
                                             settingActionAsyncCoroutine,
@@ -676,7 +677,7 @@ class SettingActionManager {
                                 curImportedVarNameToValueStrMap,
                                 null,
                             )
-                        val curStringVarKeyList = varNameToBitmapMap.map {
+                        val curStringVarKeyList = ((topVarNameToValueStrMap ?: emptyMap()) + curImportedVarNameToValueStrMap).map {
                             it.key
                         }
                         val loopMapClasses = makeResultLoopKeyToVarNameValueMap(

@@ -87,56 +87,56 @@ object ImportErrManager {
         return true
     }
 
-    fun isImportShadowVarMarkErr(
-        context: Context?,
-        importPath: String,
-        importSrcConBeforeReplace: String,
-        importRepMap: Map<String, String>,
-        keyToSubKeyConWhere: String,
-    ): Boolean {
-        val importVarDollMarkList = importRepMap.filter {
-            SettingActionKeyManager.ValueStrVar.matchStringVarName(it.value)
-        }.map {
-            it.value
-        }
-        val importShadowVarDollMark = importVarDollMarkList.firstOrNull {
-            importSrcConBeforeReplace.contains(it)
-        }
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "lisImportShadowVarMarkErr.txt").absolutePath,
-//                    listOf(
-//                        "importVarDollMarkList: ${importVarDollMarkList}",
-//                        "importSrcConBeforeReplace: ${importSrcConBeforeReplace}",
-//                    ).joinToString("\n\n") + "\n\n====\n\n"
-//                )
-        if(
-            importShadowVarDollMark.isNullOrEmpty()
-        ) return false
-        val spanSAcVarKeyName =
-            CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
-                sAcVarKeyName
-            )
-        val spanImportShadowVar =
-            CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
-                importShadowVarDollMark
-            )
-        val spanImportPath =
-            CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.errRedCode,
-                importPath
-            )
-        runBlocking {
-            SettingActionErrLogger.sendErrLog(
-                context,
-                SettingActionErrLogger.SettingActionErrType.S_AC_VAR,
-                "must not shadow variable in ${spanSAcVarKeyName}: importPath: ${spanImportPath}, shadowVar: ${spanImportShadowVar}",
-                keyToSubKeyConWhere,
-            )
-        }
-        return true
-    }
+//    fun isImportShadowVarMarkErr(
+//        context: Context?,
+//        importPath: String,
+//        importSrcConBeforeReplace: String,
+//        importRepMap: Map<String, String>,
+//        keyToSubKeyConWhere: String,
+//    ): Boolean {
+//        val importVarDollMarkList = importRepMap.filter {
+//            SettingActionKeyManager.ValueStrVar.matchStringVarName(it.value)
+//        }.map {
+//            it.value
+//        }
+//        val importShadowVarDollMark = importVarDollMarkList.firstOrNull {
+//            importSrcConBeforeReplace.contains(it)
+//        }
+////                FileSystems.updateFile(
+////                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "lisImportShadowVarMarkErr.txt").absolutePath,
+////                    listOf(
+////                        "importVarDollMarkList: ${importVarDollMarkList}",
+////                        "importSrcConBeforeReplace: ${importSrcConBeforeReplace}",
+////                    ).joinToString("\n\n") + "\n\n====\n\n"
+////                )
+//        if(
+//            importShadowVarDollMark.isNullOrEmpty()
+//        ) return false
+//        val spanSAcVarKeyName =
+//            CheckTool.LogVisualManager.execMakeSpanTagHolder(
+//                CheckTool.ligthBlue,
+//                sAcVarKeyName
+//            )
+//        val spanImportShadowVar =
+//            CheckTool.LogVisualManager.execMakeSpanTagHolder(
+//                CheckTool.ligthBlue,
+//                importShadowVarDollMark
+//            )
+//        val spanImportPath =
+//            CheckTool.LogVisualManager.execMakeSpanTagHolder(
+//                CheckTool.errRedCode,
+//                importPath
+//            )
+//        runBlocking {
+//            SettingActionErrLogger.sendErrLog(
+//                context,
+//                SettingActionErrLogger.SettingActionErrType.S_AC_VAR,
+//                "must not shadow variable in ${spanSAcVarKeyName}: importPath: ${spanImportPath}, shadowVar: ${spanImportShadowVar}",
+//                keyToSubKeyConWhere,
+//            )
+//        }
+//        return true
+//    }
 
 //            fun isGlobalVarNameExistErrWithRunPrefix(
 //                context: Context?,

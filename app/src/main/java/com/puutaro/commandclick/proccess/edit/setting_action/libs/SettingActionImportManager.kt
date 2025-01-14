@@ -7,6 +7,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -120,18 +121,18 @@ object SettingActionImportManager {
             keyToSubKeyContents,
             "${imageActionVarKey}="
         )
-        val actionImportMap =
-            CmdClickMap.MapReplacer.replaceToPairList(
-                actionImportMapBeforeReplace,
-                varNameToValueStrMap
-            ).toMap()
+//        val actionImportMap =
+//            CmdClickMap.MapReplacer.replaceToPairList(
+//                actionImportMapBeforeReplace,
+//                varNameToValueStrMap
+//            ).toMap()
         val topIAcVarName = QuoteTool.trimBothEdgeQuote(
-            actionImportMap.get(
+            actionImportMapBeforeReplace.get(
                 imageActionVarKey
             )
         )
         val awaitVarNameList = QuoteTool.trimBothEdgeQuote(
-            actionImportMap.get(
+            actionImportMapBeforeReplace.get(
                 SettingActionKeyManager.ActionImportManager.ActionImportKey.AWAIT.key
             )
         ).let {
@@ -181,9 +182,14 @@ object SettingActionImportManager {
                         CheckTool.ligthBlue,
                         SettingActionKeyManager.SettingActionsKey.SETTING_ACTION_VAR.key
                     )
-                val importPath = actionImportMap.get(
+                val importPath = actionImportMapBeforeReplace.get(
                     SettingActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
-                )
+                )?.let {
+                    CmdClickMap.replaceByBackslashToNormal(
+                        it,
+                        varNameToValueStrMap
+                    )
+                }
                 val spanImportPath =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
                         CheckTool.errRedCode,
@@ -216,7 +222,7 @@ object SettingActionImportManager {
             varName to valueStr
         }.toMap()
         val judgeTargetStr = QuoteTool.trimBothEdgeQuote(
-            actionImportMap.get(
+            actionImportMapBeforeReplace.get(
                 SettingActionKeyManager.ActionImportManager.ActionImportKey.S_IF.key
             )
         ).let {
@@ -275,9 +281,15 @@ object SettingActionImportManager {
             !isImport
         ) return blankReturnValueStr
         val importPathSrc = QuoteTool.trimBothEdgeQuote(
-            actionImportMap.get(
+            actionImportMapBeforeReplace.get(
                 SettingActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
-            )
+            )?.let {
+                importPathSrc ->
+                CmdClickMap.replaceByBackslashToNormal(
+                    importPathSrc,
+                    varNameToValueStrMap
+                )
+            }
         )
         val importRepMapBeforeReplace = makeRepValHolderMap(
             actionImportMapBeforeReplace.get(
@@ -302,7 +314,14 @@ object SettingActionImportManager {
                 (importKey, _) ->
                 importKey.isNotEmpty()
             }.toMap()
-
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "limpot.txt").absolutePath,
+//            listOf(
+//                "curMapLoopKey: ${curMapLoopKey}",
+//                "importMapBeforeReplace: ${actionImportMapBeforeReplace}",
+//                "importVarNameToValueStrMap: ${importVarNameToValueStrMap}"
+//            ).joinToString("\n\n") + "\n\n===========\n\n"
+//        )
 //        val importRepMap =
 //            CmdClickMap.MapReplacer.replaceToPairList(
 //                importRepMapBeroreReplace,
@@ -358,15 +377,15 @@ object SettingActionImportManager {
                 keyToSubKeyConWhere,
                 "by import path $importPathSrc"
             ).joinToString("\n")
-            val isImportShadowVarMarkErrJob = async {
-                ImportErrManager.isImportShadowVarMarkErr(
-                    context,
-                    importPathSrc,
-                    importSrcConBeforeReplace,
-                    importRepMapBeforeReplace,
-                    keyToSubKeyConWhere,
-                )
-            }
+//            val isImportShadowVarMarkErrJob = async {
+//                ImportErrManager.isImportShadowVarMarkErr(
+//                    context,
+//                    importPathSrc,
+//                    importSrcConBeforeReplace,
+//                    importRepMapBeforeReplace,
+//                    keyToSubKeyConWhere,
+//                )
+//            }
 //                    val isGlobalVarNameErrWithRunPrefixJob = async {
 //                        ImportErrManager.isGlobalVarNameExistErrWithRunPrefix(
 //                            context,
@@ -392,10 +411,10 @@ object SettingActionImportManager {
                     keyToSubKeyConWhereInImportPath
                 )
             }
-            isImportShadowVarMarkErrJob.await()
+//            isImportShadowVarMarkErrJob.await()
 //                            || isGlobalVarNameErrWithRunPrefixJob.await()
 //                            || isGlobalVarNameMultipleExistErrWithoutRunPrefixJob.await()
-                    || isSettingReturnNotLastErrWithoutRunPrefixJob.await()
+                    isSettingReturnNotLastErrWithoutRunPrefixJob.await()
         }
         if(
             isErr
