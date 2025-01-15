@@ -1,9 +1,6 @@
 package com.puutaro.commandclick.util.str
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
 
 
 object QuoteTool {
@@ -21,20 +18,35 @@ object QuoteTool {
 //        )
         return targetStr?.trim()
             .let {
-            execTrim(
-                it,
+                val trimCon = execTrim(
+                    it,
                 '"'
-            )
+                )
+                val isEqual = trimCon == it
+                if(
+                    !isEqual
+                ) return trimCon
+                trimCon
         }.let {
-            execTrim(
+            val trimCon = execTrim(
                 it,
                 '\''
             )
+                val isEqual = trimCon == it
+                if(
+                    !isEqual
+                    ) return trimCon
+                trimCon
         }.let {
-            execTrim(
+            val trimCon = execTrim(
                 it,
                 '`'
             )
+                val isEqual = trimCon == it
+                if(
+                    !isEqual
+                ) return trimCon
+                trimCon
         }
     }
 
@@ -320,6 +332,9 @@ object QuoteTool {
         if(
             targetStr.isNullOrEmpty()
         ) return String()
+        if(
+            targetStr.length == 1
+        ) return targetStr
         if(
             targetStr.startsWith(targetQuote)
             && targetStr.endsWith(targetQuote)

@@ -1,18 +1,13 @@
 package com.puutaro.commandclick.util.str
 
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
-
 object BackslashTool {
+
 
     fun toNormal(
         targetStr: String
     ): String {
-        val convertedSpecialCodeCon = targetStr.replace(
-            "\\n",
-            "\n"
-        )
+        val convertedSpecialCodeCon =
+            SpecialStr.replace(targetStr)
         val hexConvertedStr =
             CmdClickHexCodeToInt.to(convertedSpecialCodeCon)
         val backslashReplaceCon =
@@ -30,10 +25,8 @@ object BackslashTool {
     fun toNormalByEscape(
         targetStr: String
     ): String {
-        val convertedSpecialCodeCon = targetStr.replace(
-            "\\n",
-            "\n"
-        )
+        val convertedSpecialCodeCon =
+            SpecialStr.replace(targetStr)
         val hexConvertedStr =
             CmdClickHexCodeToInt.to(convertedSpecialCodeCon)
         val backslashReplaceCon =
@@ -46,6 +39,26 @@ object BackslashTool {
                     )
             }
         return backslashReplaceCon
+    }
+
+    private object SpecialStr {
+        fun replace(
+            con: String,
+        ): String{
+            val specialStrToCodePairList = listOf(
+                Pair("\\n", "\n"),
+                Pair("\\t", "\t"),
+            )
+            var replaceCon = con
+            specialStrToCodePairList.forEach {
+                    (specialStr, code) ->
+                replaceCon = replaceCon.replace(
+                    specialStr,
+                    code
+                )
+            }
+            return replaceCon
+        }
     }
 
     private object CmdClickHexCodeToInt {

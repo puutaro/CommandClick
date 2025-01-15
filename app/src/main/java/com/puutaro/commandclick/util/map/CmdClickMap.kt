@@ -208,7 +208,7 @@ object CmdClickMap {
 //                listOf(
 //                    "targetCon: ${targetCon}",
 //                    "replace: ${it}",
-//                    "tonormal: ${tonormal}",
+//                    "toNormalCon: ${toNormalCon}",
 //
 //                ).joinToString("\n\n") + "\n=========\n\n"
 //            )

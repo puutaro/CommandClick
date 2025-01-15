@@ -1,6 +1,9 @@
 package com.puutaro.commandclick.util
 
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
+import java.io.File
 
 object CcScript {
 
@@ -19,6 +22,14 @@ object CcScript {
             keyValueList,
             separator
         )
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lreplace_makeKeyValuePairFromSeparatedString.txt").absolutePath,
+//            listOf(
+//                "keyValueString: $keyValueString",
+//                "keyValueList: $keyValueList",
+//                "parameterValue: $parameterValue",
+//            ).joinToString("\n") + "\n\n==========\n\n"
+//        )
         return parametarKey to parameterValue
     }
 
