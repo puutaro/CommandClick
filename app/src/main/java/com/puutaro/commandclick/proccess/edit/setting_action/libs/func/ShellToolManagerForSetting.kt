@@ -225,7 +225,44 @@ object ShellToolManagerForSetting {
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-
+                val alreadyUseVarNameList = listOf(
+                    indexVarName,
+                    fieldVarPrefix
+                ).filter {
+                    it != defaultNullMacroStr
+                }
+                val alreadyUseVarListCon = alreadyUseVarNameList.joinToString(", ")
+                val isDuplicate =
+                    let {
+                        val sortedAlreadyUseVarNameList =
+                            alreadyUseVarNameList.sortedBy { it }
+                        sortedAlreadyUseVarNameList !=
+                                sortedAlreadyUseVarNameList.distinct()
+                    }
+                if(isDuplicate){
+                    val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        args.indexVarNameKeyToDefaultValueStr.first
+                    )
+                    val spanFieldVarPrefix = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        args.fieldVarPrefixKeyToDefaultValueStr.first
+                    )
+                    val spanAlreadyUseVarListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        alreadyUseVarListCon
+                    )
+                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        where
+                    )
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to  FuncCheckerForSetting. FuncCheckErr(
+                        "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}, ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
+                    )
+                }
                 val argsPairListForCmd = when(enableEscape){
                     true -> SettingFuncTool.makeArgsPairListByEscape(
                         argsPairListBeforeBsEscape,
@@ -389,7 +426,6 @@ object ShellToolManagerForSetting {
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-                val alreadyUseVarName = mutableListOf<String>()
                 val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
                     args.indexVarNameKeyToDefaultValueStr,
@@ -402,7 +438,6 @@ object ShellToolManagerForSetting {
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-                alreadyUseVarName.add(indexVarName)
                 val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
                     args.delimiterKeyToDefaultValueStr,
@@ -426,6 +461,44 @@ object ShellToolManagerForSetting {
                         null,
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
+                }
+                val alreadyUseVarNameList = listOf(
+                    indexVarName,
+                    fieldVarPrefix
+                ).filter {
+                    it != defaultNullMacroStr
+                }
+                val isDuplicate =
+                    let {
+                        val sortedAlreadyUseVarNameList =
+                            alreadyUseVarNameList.sortedBy { it }
+                        sortedAlreadyUseVarNameList !=
+                                sortedAlreadyUseVarNameList.distinct()
+                    }
+                if(isDuplicate){
+                    val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        args.indexVarNameKeyToDefaultValueStr.first
+                    )
+                    val spanFieldVarPrefix = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        args.fieldVarPrefixKeyToDefaultValueStr.first
+                    )
+                    val alreadyUseVarListCon = alreadyUseVarNameList.joinToString(", ")
+                    val spanAlreadyUseVarListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        alreadyUseVarListCon
+                    )
+                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        where
+                    )
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to  FuncCheckerForSetting. FuncCheckErr(
+                        "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}, ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
+                    )
                 }
 
                 val argsPairListForCmd = when(enableEscape){
@@ -520,14 +593,14 @@ object ShellToolManagerForSetting {
 
                     else -> inputConList.mapIndexed { index, inputLine ->
                         async {
-                            val indexToVarNamePair = Pair(indexVarName, index.toString())
+                            val indexVarNameToIndexPair = Pair(indexVarName, index.toString())
                             val indexAndOutputToErr = getCmdOutput(
                                 busyboxExecutor,
                                 execMapArgs,
                                 mainCmd,
                                 index,
                                 inputLine,
-                                indexToVarNamePair,
+                                indexVarNameToIndexPair,
                                 timeoutInt,
                                 delimiter,
                                 fieldVarPrefix,
@@ -579,7 +652,7 @@ object ShellToolManagerForSetting {
             mainCmd: String,
             index: Int,
             inputLine: String,
-            indexToVarNamePair: Pair<String, String>,
+            indexVarNameToIndexPair: Pair<String, String>,
             timeoutInt: Int,
             delimiter: String,
             fieldVarPrefix: String,
@@ -589,7 +662,7 @@ object ShellToolManagerForSetting {
                 shellMapArgs,
                 mainCmd,
                 inputLine,
-                indexToVarNamePair,
+                indexVarNameToIndexPair,
                 timeoutInt,
                 delimiter,
                 fieldVarPrefix,
@@ -606,7 +679,7 @@ object ShellToolManagerForSetting {
             shellMapArgs: ShellMethodArgClass.ExecArgs,
             mainCmd: String,
             inputLine: String,
-            indexToVarNamePair: Pair<String, String>,
+            indexVarNameToInexPair: Pair<String, String>,
             timeoutInt: Int,
             delimiter: String,
             fieldVarPrefix: String,
@@ -628,15 +701,24 @@ object ShellToolManagerForSetting {
                     "set -ue",
                     totalCmd,
                     String()
-                ).joinToString(";\n").replace(
-                    "${'$'}${indexToVarNamePair.first}",
-                    indexToVarNamePair.second
+                ).joinToString(";\n").let replaceByIndex@ {
+                    val indexVarName = indexVarNameToInexPair.first
+                    if(
+                        indexVarName == defaultNullMacroStr
+                    ) return@replaceByIndex it
+                    it.replace(
+                    "${'$'}${indexVarName}",
+                    indexVarNameToInexPair.second
                 )
-
-            return SettingFuncTool.replaceShellCmdByFieldVarName(
-                execShellCmd,
+                }
+            val fieldVarNameToValueStrList = SettingFuncTool.FieldVarPrefix.makeFieldVarNameToValueStrList(
                 inputConForShellVar,
                 delimiter,
+                fieldVarPrefix,
+            )
+            return SettingFuncTool.FieldVarPrefix.replaceElementByFieldVarName(
+                execShellCmd,
+                fieldVarNameToValueStrList,
                 fieldVarPrefix,
             )
 //            FileSystems.updateFile(
@@ -730,12 +812,13 @@ object ShellToolManagerForSetting {
                         (key, valueStr) ->
                         !valueMapKeyList.contains(key)
                     }
-                    if(
+                    when(
                         nextArgOrOpKeyIndex < 0
-                    ) return@let emptyMap()
-                    focusArgsPairList.filterIndexed {
-                            innerIndex, _ ->
-                        innerIndex < nextArgOrOpKeyIndex
+                    ) {
+                        true -> focusArgsPairList
+                        else -> focusArgsPairList.filterIndexed { innerIndex, _ ->
+                            innerIndex < nextArgOrOpKeyIndex
+                        }
                     }.toMap()
                 }
 //                argsPairList.filterIndexed()
@@ -927,7 +1010,7 @@ object ShellToolManagerForSetting {
                     Pair<String, Map<String, String>>
                     >,
             inputLine: String,
-            indexToVarNamePair: Pair<String, String>,
+            indexVarNameToIndexPair: Pair<String, String>,
             defaultTimeoutInt: Int,
             delimiter: String,
             fieldVarPrefix: String,
@@ -972,14 +1055,24 @@ object ShellToolManagerForSetting {
                     updateTempVarCmdsCon,
                     echoTempVar,
                     String()
-                ).joinToString(";\n").replace(
-                    "${'$'}${indexToVarNamePair.first}",
-                    indexToVarNamePair.second
+                ).joinToString(";\n").let replaceByIndex@ {
+                    val indexVarName = indexVarNameToIndexPair.first
+                    if(
+                        indexVarName == defaultNullMacroStr
+                    ) return@replaceByIndex it
+                    it.replace(
+                    "${'$'}${indexVarName}",
+                    indexVarNameToIndexPair.second
                 )
-            return SettingFuncTool.replaceShellCmdByFieldVarName(
-                execShellCmd,
+                }
+            val fieldVarNameToValueStrList = SettingFuncTool.FieldVarPrefix.makeFieldVarNameToValueStrList(
                 inputConForShellVar,
                 delimiter,
+                fieldVarPrefix,
+            )
+            return SettingFuncTool.FieldVarPrefix.replaceElementByFieldVarName(
+                execShellCmd,
+                fieldVarNameToValueStrList,
                 fieldVarPrefix,
             )
 //            FileSystems.updateFile(

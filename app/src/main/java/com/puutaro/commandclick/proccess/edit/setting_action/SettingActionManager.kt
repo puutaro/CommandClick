@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -31,7 +30,6 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -48,7 +46,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.enums.EnumEntries
 
@@ -1990,26 +1987,6 @@ object EvalForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    if(indexVarName == elVarName){
-                        val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
-                            args.indexVarNameKeyToDefaultValueStr.first
-                        )
-                        val spanElVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
-                            args.elVarNameKeyToDefaultValueStr.first
-                        )
-                        val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.errBrown,
-                            where
-                        )
-                        return@withContext Pair(
-                            null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
-                        ) to  FuncCheckerForSetting. FuncCheckErr(
-                            "Must be different from ${spanIndexVarName} and ${spanElVarName}: ${spanWhere} "
-                        )
-                    }
                     val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.separatorKeyToDefaultValueStr,
@@ -2046,6 +2023,73 @@ object EvalForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
+                    val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.delimiterKeyToDefaultValueStr,
+                        where
+                    ).let { delimiterToErr ->
+                        val funcErr = delimiterToErr.second
+                            ?: return@let delimiterToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.fieldVarPrefixKeyToDefaultValueStr,
+                        where
+                    ).let { fieldVarPrefixToErr ->
+                        val funcErr = fieldVarPrefixToErr.second
+                            ?: return@let fieldVarPrefixToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val alreadyUseVarNameList = listOf(
+                        elVarName,
+                        indexVarName,
+                        fieldVarPrefix
+                    ).filter {
+                        it != defaultNullMacroStr
+                    }
+                    val isDuplicate =
+                        let {
+                            val sortedAlreadyUseVarNameList =
+                                alreadyUseVarNameList.sortedBy { it }
+                            sortedAlreadyUseVarNameList !=
+                                    sortedAlreadyUseVarNameList.distinct()
+                        }
+                    if(isDuplicate){
+                        val spanElVarNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            args.elVarNameKeyToDefaultValueStr.first
+                        )
+                        val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            args.indexVarNameKeyToDefaultValueStr.first
+                        )
+                        val spanFieldVarPrefix = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            args.fieldVarPrefixKeyToDefaultValueStr.first
+                        )
+                        val alreadyUseVarListCon = alreadyUseVarNameList.joinToString(", ")
+                        val spanAlreadyUseVarListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            alreadyUseVarListCon
+                        )
+                        val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errBrown,
+                            where
+                        )
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to  FuncCheckerForSetting. FuncCheckErr(
+                            "Must be different from ${spanElVarNameKey}, ${spanIndexVarName} and ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
+                        )
+                    }
                     MapOperator.map(
                         fragment,
                         fannelInfoMap,
@@ -2062,6 +2106,8 @@ object EvalForSetting {
                         settingActionCon,
                         joinStr,
                         semaphoreLimit,
+                        delimiter,
+                        fieldVarPrefix,
                     )
                 }
             }
@@ -2092,6 +2138,8 @@ object EvalForSetting {
             settingActionCon: String,
             joinStr: String,
             semaphoreLimit: Int,
+            delimiter: String,
+            fieldVarPrefix: String,
         ): Pair<
                 Pair<
                         String?,
@@ -2106,6 +2154,9 @@ object EvalForSetting {
                 "elVarName: ${elVarName}",
                 "settingActionCon $settingActionCon",
                 "joinStr: ${joinStr}",
+                "semaphoreLimit: ${semaphoreLimit}",
+                "delimiter: ${delimiter}",
+                "fieldVarPrefix: ${fieldVarPrefix}",
             ).joinToString(",")
             val topVarNameToValueStrMap = topVarNameToValueStrMapSrc?.filterKeys{
                 it != itPronoun
@@ -2131,6 +2182,20 @@ object EvalForSetting {
                 }.mapIndexed {
                     index, el ->
                     async {
+                        val fieldVarNameToValueStrMap = SettingFuncTool.FieldVarPrefix.makeFieldVarNameToValueStrList(
+                            el,
+                            delimiter,
+                            fieldVarPrefix,
+                        )?.map {
+                                (fieldVarName, valueStr) ->
+                            fieldVarName to valueStr
+                        }?.toMap() ?: emptyMap()
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "leval_replace.txt").absolutePath,
+//                            listOf(
+//                                "fieldVarMarkToValueStrMap: ${fieldVarMarkToValueStrMap}",
+//                            ).joinToString("\n\n")
+//                        )
                         when(semaphore == null) {
                             true -> execAction(
                                 fragment,
@@ -2145,6 +2210,7 @@ object EvalForSetting {
                                 el,
                                 elVarName,
                                 settingActionCon,
+                                fieldVarNameToValueStrMap,
                             )
                             else -> semaphore.withPermit {
                                 execAction(
@@ -2160,6 +2226,7 @@ object EvalForSetting {
                                     el,
                                     elVarName,
                                     settingActionCon,
+                                    fieldVarNameToValueStrMap,
                                 )
                             }
                         }
@@ -2228,11 +2295,12 @@ object EvalForSetting {
             el: String,
             elVarName: String,
             settingActionCon: String,
+            fieldVarMarkToValueStrMap: Map<String, String>,
         ): Pair<Int, String?> {
             val curTopVarNameToValueStrMap = (topVarNameToValueStrMap ?: emptyMap()) + mapOf(
                 elVarName to el,
                 indexVarName to index.toString(),
-            )
+            ) + fieldVarMarkToValueStrMap
             val outputVarNameToValueStrMap = SettingActionManager().exec(
                 fragment,
                 fannelInfoMap,
@@ -2294,6 +2362,14 @@ object EvalForSetting {
                 MapEnumArgs.SEMAPHORE.key,
                 MapEnumArgs.SEMAPHORE.defaultValueStr
             )
+            val delimiterKeyToDefaultValueStr = Pair(
+                MapEnumArgs.DELIMITER.key,
+                MapEnumArgs.DELIMITER.defaultValueStr
+            )
+            val fieldVarPrefixKeyToDefaultValueStr = Pair(
+                MapEnumArgs.FIELD_VAR_PREFIX.key,
+                MapEnumArgs.FIELD_VAR_PREFIX.defaultValueStr
+            )
 
             enum class MapEnumArgs(
                 val key: String,
@@ -2306,7 +2382,9 @@ object EvalForSetting {
                 SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
-                SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT)
+                SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
+                DELIMITER("delimiter", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                FIELD_VAR_PREFIX("fieldVarPrefix", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

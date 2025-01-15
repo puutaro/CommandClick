@@ -1,15 +1,20 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager.ConcatCondition
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import java.io.File
 import kotlin.enums.EnumEntries
 
 object ListForSetting {
@@ -439,15 +444,124 @@ object ListForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    Filter.filter(
+                    val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.elVarNameKeyToDefaultValueStr,
+                        where
+                    ).let { elVarNameToErr ->
+                        val funcErr = elVarNameToErr.second
+                            ?: return@let elVarNameToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.indexVarNameKeyToDefaultValueStr,
+                        where
+                    ).let { indexVarNameToErr ->
+                        val funcErr = indexVarNameToErr.second
+                            ?: return@let indexVarNameToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.delimiterKeyToDefaultValueStr,
+                        where
+                    ).let { delimiterToErr ->
+                        val funcErr = delimiterToErr.second
+                            ?: return@let delimiterToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.fieldVarPrefixKeyToDefaultValueStr,
+                        where
+                    ).let { fieldVarNameToErr ->
+                        val funcErr = fieldVarNameToErr.second
+                            ?: return@let fieldVarNameToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val alreadyUseVarNameList = listOf(
+                        elVarName,
+                        indexVarName,
+                        fieldVarPrefix
+                    ).filter {
+                        it != defaultNullMacroStr
+                    }
+                    val isDuplicate =
+                        let {
+                            val sortedAlreadyUseVarNameList =
+                                alreadyUseVarNameList.sortedBy { it }
+                            sortedAlreadyUseVarNameList !=
+                                    sortedAlreadyUseVarNameList.distinct()
+                        }
+                    if(isDuplicate){
+                        val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            args.indexVarNameKeyToDefaultValueStr.first
+                        )
+                        val spanElVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            args.elVarNameKeyToDefaultValueStr.first
+                        )
+                        val spanFieldVarPrefix = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            args.fieldVarPrefixKeyToDefaultValueStr.first
+                        )
+                        val alreadyUseVarListCon = alreadyUseVarNameList.joinToString(", ")
+                        val spanAlreadyUseVarListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.ligthBlue,
+                            alreadyUseVarListCon
+                        )
+                        val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errBrown,
+                            where
+                        )
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to  FuncCheckerForSetting. FuncCheckErr(
+                            "Must be different from ${spanIndexVarName} ${spanElVarName}, and ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
+                        )
+                    }
+                    val boolToErr = Filter.filter(
                         funcName,
                         methodNameStr,
+                        args,
                         argsPairList,
                         inputCon,
                         separator,
                         joinStr,
                         semaphoreInt,
+                        elVarName,
+                        indexVarName,
+                        delimiter,
+                        fieldVarPrefix,
+                        where,
                     )
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lfilteer.txt").absolutePath,
+//                        listOf(
+//                            "elVarName: ${elVarName}",
+//                            "indexVarName: ${indexVarName}",
+//                            "fieldVarPrefix: ${fieldVarPrefix}",
+//                            "delimiter: ${delimiter}",
+//                            "argsPairList: ${argsPairList}",
+//                            "boolToErr: ${boolToErr}"
+//                        ).joinToString("\n\n") + "\n=====\n\n"
+//                    )
+                    boolToErr
                 }
             }
         }
@@ -457,11 +571,17 @@ object ListForSetting {
         suspend fun filter(
             funcName: String,
             methodNameStr: String,
+            args: ListMethodArgClass.FilterArgs,
             argsPairList: List<Pair<String, String>>,
             inputCon: String,
             separator: String,
             joinStr: String,
             semaphoreInt: Int,
+            elVarName: String,
+            indexVarName: String,
+            delimiter: String,
+            fieldVarPrefix: String,
+            where: String,
         ): Pair<
                 Pair<
                         String?,
@@ -482,14 +602,27 @@ object ListForSetting {
                     false -> inputConList.mapIndexed { index, inputLine ->
                         async {
                             semaphore.withPermit {
+                                val boolToErr = culcBool(
+                                    funcName,
+                                    methodNameStr,
+                                    args,
+                                    argsPairList,
+                                    inputLine,
+                                    elVarName,
+                                    indexVarName,
+                                    index,
+                                    delimiter,
+                                    fieldVarPrefix,
+                                )
                                 Triple(
                                     index,
                                     inputLine,
-                                    SettingIfManager.IfArgMatcher.match(
-                                        "${funcName}.${methodNameStr}",
-                                        inputLine,
-                                        argsPairList,
-                                    )
+                                    boolToErr
+//                                    SettingIfManager.IfArgMatcher.match(
+//                                        "${funcName}.${methodNameStr}",
+//                                        targetConWithReplace,
+//                                        argsPairListWithReplace,
+//                                    )
                                 )
                             }
                         }
@@ -497,44 +630,327 @@ object ListForSetting {
 
                     else -> inputConList.mapIndexed { index, inputLine ->
                         async {
+                            val boolToErr = culcBool(
+                                funcName,
+                                methodNameStr,
+                                args,
+                                argsPairList,
+                                inputLine,
+                                elVarName,
+                                indexVarName,
+                                index,
+                                delimiter,
+                                fieldVarPrefix,
+                            )
+//                            FileSystems.updateFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "lfilteer_culcBool.txt").absolutePath,
+//                                listOf(
+//                                    "elVarName: ${elVarName}",
+//                                    "indexVarName: ${indexVarName}",
+//                                    "fieldVarPrefix: ${fieldVarPrefix}",
+//                                    "delimiter: ${delimiter}",
+//                                    "argsPairList: ${argsPairList}",
+//                                    "boolToErr: ${boolToErr}"
+//                                ).joinToString("\n\n") + "\n=====\n\n"
+//                            )
                             Triple(
                                 index,
                                 inputLine,
-                                SettingIfManager.IfArgMatcher.match(
-                                    "${funcName}.${methodNameStr}",
-                                    inputLine,
-                                    argsPairList,
-                                )
+                                boolToErr
+//                                    SettingIfManager.IfArgMatcher.match(
+//                                        "${funcName}.${methodNameStr}",
+//                                        targetConWithReplace,
+//                                        argsPairListWithReplace,
+//                                    )
                             )
+//                            Triple(
+//                                index,
+//                                inputLine,
+//                                SettingIfManager.IfArgMatcher.match(
+//                                    "${funcName}.${methodNameStr}",
+//                                    targetConWithReplace,
+//                                    argsPairListWithReplace,
+//                                )
+//                            )
                         }
                     }
                 }
             }
-            val lineToMatchErrJobListJob =
+            val lineToMatchErrList =
                 indexAndLineAndMatchErrJobListJob
                     .awaitAll()
                     .sortedBy {
-                        it.first
+                        (index, _, _) ->
+                        index
                     }.map {
-                        indexTolineToMatchErr ->
-                        indexTolineToMatchErr.second to
-                                indexTolineToMatchErr.third
+                        (_, line, matchErr) ->
+                        line to matchErr
                     }
-            lineToMatchErrJobListJob.firstOrNull {
-                lineAndMatchErrJobList ->
-                lineAndMatchErrJobList.second.second != null
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lfilteer_culcBool_lineToMatchErrJobList.txt").absolutePath,
+//                listOf(
+//                    "elVarName: ${elVarName}",
+//                    "indexVarName: ${indexVarName}",
+//                    "fieldVarPrefix: ${fieldVarPrefix}",
+//                    "delimiter: ${delimiter}",
+//                    "argsPairList: ${argsPairList}",
+//                    "lineToMatchErrJobList: ${lineToMatchErrList}"
+//                ).joinToString("\n\n") + "\n=====\n\n"
+//            )
+            lineToMatchErrList.firstOrNull {
+                (_, boolToErr) ->
+                boolToErr.second != null
             }?.let {
-                funcErr ->
-                return@let null to funcErr
+                    (_, boolToErr) ->
+                return null to FuncCheckerForSetting.FuncCheckErr(boolToErr.second?.errMessage.toString())
             }
-            val filterLineLittCon = lineToMatchErrJobListJob.filter {
+            val filterLineListCon = lineToMatchErrList.filter {
                 lineAndMatchErr ->
                 lineAndMatchErr.second.first ?: false
             }.map {
                 lineAndMatchErr ->
                 lineAndMatchErr.first
             }.joinToString(joinStr)
-            return Pair(filterLineLittCon, null) to null
+            return Pair(filterLineListCon, null) to null
+        }
+    }
+
+    private fun culcBool(
+        funcName: String,
+        methodNameStr: String,
+        args: ListMethodArgClass.FilterArgs,
+        argsPairList: List<Pair<String, String>>,
+        inputLine: String,
+        elVarName: String,
+        indexVarName: String,
+        elIndex: Int,
+        delimiter: String,
+        fieldVarPrefix: String,
+    ): Pair<Boolean?, SettingIfManager. IfCheckErr?> {
+        val argsPairListWithReplace = replaceArgNameToValueStrList(
+            inputLine,
+            argsPairList,
+            elVarName,
+            indexVarName,
+            elIndex,
+            delimiter,
+            fieldVarPrefix,
+        )
+        val ifKeyPairsList = makeIfKeyPairsList(
+            argsPairListWithReplace
+        )
+        val targetKey = args.targetToDefaultValueStr.first
+        val boolToErrList = ifKeyPairsList.map {
+                ifKeyPairList ->
+            val targetCon = PairListTool.getValue(
+                ifKeyPairList,
+                targetKey
+            )
+            if(targetCon.isNullOrEmpty()){
+                return SettingIfManager.makeJudgeTargetNotExistErr(
+                        "${funcName}.${methodNameStr}",
+                        argsPairList,
+                    )
+            }
+            SettingIfManager.IfArgMatcher.match(
+                "${funcName}.${methodNameStr}",
+                targetCon,
+                ifKeyPairList.filter{
+                    (ifKey, _) ->
+                    ifKey != targetKey
+                },
+            )
+        }
+        boolToErrList.firstOrNull {
+                (_, err) ->
+            err != null
+        }.let {
+                boolToErr ->
+            val err = boolToErr?.second
+                ?: return@let
+            return null to err
+        }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "llistForseettg${elIndex}.txt").absolutePath,
+//            listOf(
+//                "index: ${elIndex}",
+//                "elVarName: ${elVarName}",
+//                "indexVarName: ${indexVarName}",
+//                "fieldVarPrefix: ${fieldVarPrefix}",
+//                "delimiter: ${delimiter}",
+//                "argsPairList: ${argsPairList}",
+//                "argsPairListWithReplace: ${argsPairListWithReplace}",
+//                "ifKeyPairsList: ${ifKeyPairsList}",
+//                "boolToErrList: ${boolToErrList}",
+//                "boolToErrList.size: ${boolToErrList.size}",
+//                "ifKeyPairsList: ${ifKeyPairsList}",
+//            ).joinToString("\n\n") + "\n=====\n\n"
+//        )
+        return when(boolToErrList.size == 1) {
+            true -> boolToErrList.first()
+            else -> {
+                val concatConditionStr = PairListTool.getValue(
+                    argsPairList,
+                    args.concatConditionKeyToDefaultValueStr.first,
+                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "llistForseettg${elIndex}_condition.txt").absolutePath,
+//                    listOf(
+//                        "index: ${elIndex}",
+//                        "elVarName: ${elVarName}",
+//                        "indexVarName: ${indexVarName}",
+//                        "fieldVarPrefix: ${fieldVarPrefix}",
+//                        "delimiter: ${delimiter}",
+//                        "argsPairList: ${argsPairList}",
+//                        "argsPairListWithReplace: ${argsPairListWithReplace}",
+//                        "ifKeyPairsList: ${ifKeyPairsList}",
+//                        "concatCondition ${ConcatCondition.entries.firstOrNull {
+//                            it.str == concatConditionStr
+//                        }}",
+//                        "err ${SettingIfManager.IfArgMatcher.makeConcatConditionKeyNotExistErr(
+//                            "${funcName}.${methodNameStr}",
+//                            concatConditionStr,
+//                            argsPairList
+//                        )}"
+//                    ).joinToString("\n\n") + "\n=====\n\n"
+//                )
+                val concatCondition = ConcatCondition.entries.firstOrNull {
+                    it.str == concatConditionStr
+                } ?: let {
+                    return SettingIfManager.IfArgMatcher.makeConcatConditionKeyNotExistErr(
+                            "${funcName}.${methodNameStr}",
+                            concatConditionStr,
+                            argsPairList
+                        )
+                }
+                SettingIfManager.IfArgMatcher.culcMatchResult(
+                    concatCondition,
+                    boolToErrList.map {
+                        it.first ?: true
+                    },
+                ) to null
+            }
+        }
+    }
+
+    private fun makeIfKeyPairsList(
+        argsPairList: List<Pair<String, String>>,
+    ):  List<List<Pair<String, String>>> {
+        val targetKey =
+            ListMethodArgClass.FilterArgs.FilterEnumArgs.TARGET.key
+        val ifArgsKeyListExcludeTarget = listOf(
+            ListMethodArgClass.FilterArgs.FilterEnumArgs.MATCH_TYPE.key,
+            ListMethodArgClass.FilterArgs.FilterEnumArgs.VALUE.key,
+            ListMethodArgClass.FilterArgs.FilterEnumArgs.REGEX.key,
+        )
+        val ifArgsKeyList =
+            ifArgsKeyListExcludeTarget +
+                    listOf(targetKey)
+        val ifArgNameToValueStrList = argsPairList.filter {
+            (argName, _) ->
+            ifArgsKeyList.contains(argName)
+        }
+        val defaultMapReturnPair =
+            listOf(String() to String())
+        return ifArgNameToValueStrList.mapIndexed {
+                index, (ifArgName, valueStr) ->
+            if(
+                ifArgName.isEmpty()
+                || ifArgName != targetKey
+            ) {
+                return@mapIndexed defaultMapReturnPair
+            }
+            val targetToValueStr = 
+                targetKey to valueStr
+            val ifArgsKeyPairExcludeTarget = let {
+                val focusArgsPairList = ifArgNameToValueStrList.filterIndexed {
+                        innerIndex, _ ->
+                    innerIndex > index
+                }
+                if(
+                    focusArgsPairList.isEmpty()
+                ) return@let defaultMapReturnPair
+                val nextTargetKeyIndex = focusArgsPairList.indexOfFirst {
+                        (key, valueStr) ->
+                    key == targetKey
+                }
+                when(
+                    nextTargetKeyIndex < 0
+                ) {
+                    true -> focusArgsPairList
+                    else -> focusArgsPairList.filterIndexed { innerIndex, _ ->
+                        innerIndex < nextTargetKeyIndex
+                    }
+                }
+            }
+            listOf(targetToValueStr) + ifArgsKeyPairExcludeTarget
+        }.filter {
+                ifKeyPairs ->
+            ifKeyPairs.all {
+                (ifKey, _) ->
+                ifKey.isNotEmpty()
+            }
+        }
+    }
+
+    private fun replaceArgNameToValueStrList(
+        inputLine: String,
+        argsPairList: List<Pair<String, String>>,
+        elVarName: String,
+        indexVarName: String,
+        elIndex: Int,
+        delimiter: String,
+        fieldVarPrefix: String,
+    ): List<Pair<String, String>> {
+        return argsPairList.map { (argName, valueStr) ->
+            argName to replaceByElAndFieldVar(
+                valueStr,
+                inputLine,
+                elVarName,
+                indexVarName,
+                elIndex,
+                delimiter,
+                fieldVarPrefix,
+            )
+        }
+    }
+
+    private fun replaceByElAndFieldVar(
+        valueStr: String,
+        inputLine: String,
+        elVarName: String,
+        indexVarName: String,
+        elIndex: Int,
+        delimiter: String,
+        fieldVarPrefix: String,
+    ): String {
+        return SettingFuncTool.FieldVarPrefix.makeFieldVarNameToValueStrList(
+            inputLine,
+            delimiter,
+            fieldVarPrefix
+        ).let {
+                fieldVarNameToValueStrList ->
+            SettingFuncTool.FieldVarPrefix.replaceElementByFieldVarName(
+                valueStr,
+                fieldVarNameToValueStrList,
+                fieldVarPrefix,
+            ).let replaceByEl@ {
+                if(
+                    elVarName == defaultNullMacroStr
+                ) return@replaceByEl it
+                it.replace(
+                    "${'$'}${elVarName}",
+                    inputLine
+                )
+            }.let replaceByIndex@ {
+                if(
+                    indexVarName == defaultNullMacroStr
+                ) return@replaceByIndex it
+                it.replace(
+                    "${'$'}${indexVarName}",
+                    elIndex.toString()
+                )
+            }
         }
     }
 
@@ -693,13 +1109,37 @@ object ListForSetting {
                 FilterEnumArgs.VALUE.key,
                 FilterEnumArgs.VALUE.defaultValueStr
             )
+            val targetToDefaultValueStr = Pair(
+                FilterEnumArgs.TARGET.key,
+                FilterEnumArgs.TARGET.defaultValueStr
+            )
             val regexKeyToDefaultValueStr = Pair(
                 FilterEnumArgs.REGEX.key,
                 FilterEnumArgs.REGEX.defaultValueStr
             )
             val semaphoreKeyToDefaultValueStr = Pair(
-                FilterEnumArgs.SEMAPORE.key,
-                FilterEnumArgs.SEMAPORE.defaultValueStr
+                FilterEnumArgs.SEMAPHORE.key,
+                FilterEnumArgs.SEMAPHORE.defaultValueStr
+            )
+            val elVarNameKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.EL_VAR_NAME.key,
+                FilterEnumArgs.EL_VAR_NAME.defaultValueStr
+            )
+            val indexVarNameKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.INDEX_VAR_NAME.key,
+                FilterEnumArgs.INDEX_VAR_NAME.defaultValueStr
+            )
+            val delimiterKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.DELIMITER.key,
+                FilterEnumArgs.DELIMITER.defaultValueStr
+            )
+            val fieldVarPrefixKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.FIELD_VAR_PREFIX.key,
+                FilterEnumArgs.FIELD_VAR_PREFIX.defaultValueStr
+            )
+            val concatConditionKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.CONCAT_CONDITION.key,
+                FilterEnumArgs.CONCAT_CONDITION.defaultValueStr
             )
 
             enum class FilterEnumArgs(
@@ -713,7 +1153,13 @@ object ListForSetting {
                 MATCH_TYPE(SettingIfManager.IfArgs.MATCH_TYPE.str, null, FuncCheckerForSetting.ArgType.STRING),
                 VALUE(SettingIfManager.IfArgs.VALUE.str, String(), FuncCheckerForSetting.ArgType.STRING),
                 REGEX(SettingIfManager.IfArgs.REGEX.str, String(), FuncCheckerForSetting.ArgType.STRING),
-                SEMAPORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
+                TARGET("target", null, FuncCheckerForSetting.ArgType.STRING),
+                SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
+                EL_VAR_NAME("elVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                DELIMITER("delimiter", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                FIELD_VAR_PREFIX("fieldVarPrefix", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                CONCAT_CONDITION("concatCondition", null, FuncCheckerForSetting.ArgType.STRING),
             }
         }
 

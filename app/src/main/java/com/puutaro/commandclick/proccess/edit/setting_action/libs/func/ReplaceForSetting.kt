@@ -125,6 +125,81 @@ object ReplaceForSetting {
                         SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
+                val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.indexVarNameKeyToDefaultValueStr,
+                    where
+                ).let { indexVarNameToErr ->
+                    val funcErr = indexVarNameToErr.second
+                        ?: return@let indexVarNameToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.delimiterKeyToDefaultValueStr,
+                    where
+                ).let { delimiterToErr ->
+                    val funcErr = delimiterToErr.second
+                        ?: return@let delimiterToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.fieldVarPrefixToDefaultValueStr,
+                    where
+                ).let {
+                    fieldVarPrefixToErr ->
+                    val funcErr = fieldVarPrefixToErr.second
+                        ?: return@let fieldVarPrefixToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val alreadyUseVarNameList = listOf(
+                    indexVarName,
+                    fieldVarPrefix
+                ).filter {
+                    it != defaultNullMacroStr
+                }
+                val isDuplicate =
+                    let {
+                        val sortedAlreadyUseVarNameList =
+                            alreadyUseVarNameList.sortedBy { it }
+                        sortedAlreadyUseVarNameList !=
+                                sortedAlreadyUseVarNameList.distinct()
+                    }
+                if(isDuplicate){
+                    val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        args.indexVarNameKeyToDefaultValueStr.first
+                    )
+                    val spanFieldVarPrefix = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        args.fieldVarPrefixToDefaultValueStr.first
+                    )
+                    val alreadyUseVarListCon = alreadyUseVarNameList.joinToString(", ")
+                    val spanAlreadyUseVarListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.ligthBlue,
+                        alreadyUseVarListCon
+                    )
+                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        where
+                    )
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to  FuncCheckerForSetting. FuncCheckErr(
+                        "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}, ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
+                    )
+                }
                 FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
                     args.removeRegexKeyToDefaultValueStr,
@@ -154,6 +229,10 @@ object ReplaceForSetting {
                                         argNameToSubKeyMapList,
                                         args,
                                         inputLine,
+                                        indexVarName,
+                                        index,
+                                        delimiter,
+                                        fieldVarPrefix,
                                         where,
                                     )
                                 }
@@ -165,6 +244,10 @@ object ReplaceForSetting {
                                     argNameToSubKeyMapList,
                                     args,
                                     inputLine,
+                                    indexVarName,
+                                    index,
+                                    delimiter,
+                                    fieldVarPrefix,
                                     where,
                                 )
                             }
@@ -199,6 +282,10 @@ object ReplaceForSetting {
             argNameToSubKeyMapList: List<Pair<String, Map<String, String>>>,
             replaceForSettingArgs: ReplaceArgClass.MapEvalArgs,
             inputCon: String,
+            indexVarName: String,
+            elIndex: Int,
+            delimiter: String,
+            fieldVarPrefix: String,
             where: String,
         ): Pair<String?, FuncCheckerForSetting.FuncCheckErr?> {
             val removeRegexKeyClass =
@@ -207,6 +294,11 @@ object ReplaceForSetting {
                 ReplaceArgClass.MapEvalArgs.MapEnumArgs.REPLACE_STR
             var replaceInputCon = inputCon
             val mapEnumArgsEntries = replaceForSettingArgs.entries
+            val fieldVarNameToValueStrList = SettingFuncTool.FieldVarPrefix.makeFieldVarNameToValueStrList(
+                inputCon,
+                delimiter,
+                fieldVarPrefix,
+            )
             argNameToSubKeyMapList.forEachIndexed { index, (argName, subKeyMap) ->
                 val argClass = mapEnumArgsEntries.firstOrNull { arg ->
                     arg.key == argName
@@ -215,7 +307,21 @@ object ReplaceForSetting {
                 val removeRegexStr =
                     subKeyMap.get(
                         removeRegexKeyClass.key
-                    )
+                    )?.let {
+                        SettingFuncTool.FieldVarPrefix.replaceElementByFieldVarName(
+                            it,
+                            fieldVarNameToValueStrList,
+                            fieldVarPrefix,
+                        ).let replaceByIndex@ {
+                            if(
+                                indexVarName == defaultNullMacroStr
+                            ) return@replaceByIndex it
+                            it.replace(
+                            "${'$'}${indexVarName}",
+                            elIndex.toString()
+                            )
+                        }
+                    }
                 val removeRegex = try {
                     removeRegexStr
                         ?: throw Exception()
@@ -234,7 +340,17 @@ object ReplaceForSetting {
                 val replaceStr =
                     subKeyMap.get(
                         replaceKeyClass.key
-                    ) ?: String()
+                    )?.let {
+                        SettingFuncTool.FieldVarPrefix.replaceElementByFieldVarName(
+                            it,
+                            fieldVarNameToValueStrList,
+                            fieldVarPrefix,
+                        ).replace(
+                            "${'$'}${indexVarName}",
+                            elIndex.toString()
+
+                        )
+                    } ?: String()
                 val tempReplaceInputCon = try {
                     replaceInputCon.replace(
                         removeRegex,
@@ -361,6 +477,9 @@ object ReplaceForSetting {
             val replaceStrKeyClass =
                 ReplaceArgClass.MapEvalArgs.MapEnumArgs.REPLACE_STR
             when(argClass) {
+                ReplaceArgClass.MapEvalArgs.MapEnumArgs.INDEX_VAR_NAME,
+                ReplaceArgClass.MapEvalArgs.MapEnumArgs.DELIMITER,
+                ReplaceArgClass.MapEvalArgs.MapEnumArgs.FIELD_VAR_PREFIX,
                 ReplaceArgClass.MapEvalArgs.MapEnumArgs.SEMAPHORE,
                 ReplaceArgClass.MapEvalArgs.MapEnumArgs.JOIN_STR,
                 ReplaceArgClass.MapEvalArgs.MapEnumArgs.INPUT_CON ->
@@ -438,6 +557,18 @@ object ReplaceForSetting {
                 MapEnumArgs.SEMAPHORE.key,
                 MapEnumArgs.SEMAPHORE.defaultValueStr
             )
+            val indexVarNameKeyToDefaultValueStr = Pair(
+                MapEnumArgs.INDEX_VAR_NAME.key,
+                MapEnumArgs.INDEX_VAR_NAME.defaultValueStr
+            )
+            val delimiterKeyToDefaultValueStr = Pair(
+                MapEnumArgs.DELIMITER.key,
+                MapEnumArgs.DELIMITER.defaultValueStr
+            )
+            val fieldVarPrefixToDefaultValueStr = Pair(
+                MapEnumArgs.FIELD_VAR_PREFIX.key,
+                MapEnumArgs.FIELD_VAR_PREFIX.defaultValueStr
+            )
 
             enum class MapEnumArgs(
                 val key: String,
@@ -450,6 +581,9 @@ object ReplaceForSetting {
                 SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
+                INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                DELIMITER("delimiter", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                FIELD_VAR_PREFIX("fieldVarPrefix", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

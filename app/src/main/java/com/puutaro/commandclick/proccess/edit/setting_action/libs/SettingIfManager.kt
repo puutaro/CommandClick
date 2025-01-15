@@ -1,9 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
 
 
 object SettingIfManager {
@@ -19,7 +16,7 @@ object SettingIfManager {
         CONCAT_CONDITION("concatCondition"),
     }
 
-    private enum class ConcatCondition(
+    enum class ConcatCondition(
         val str: String
     ){
         AND("and"),
@@ -56,20 +53,30 @@ object SettingIfManager {
         argsPairList: List<Pair<String, String>>,
     ): Pair<Boolean?, IfCheckErr?> {
         val judgeTargetStr = judgeTargetStrSrc.ifEmpty {
-            val errWhere = makeLogErrWhere(
+            return makeJudgeTargetNotExistErr(
                 ifKeyName,
-                judgeTargetArgName,
-                -1,
-                makeArgsPairListCon(argsPairList),
-            )
-            return null to IfCheckErr(
-                "${judgeTargetArgName} not exist: ${errWhere}"
+                argsPairList,
             )
         }
         return IfArgMatcher.match(
             ifKeyName,
             judgeTargetStr,
             argsPairList
+        )
+    }
+
+    fun makeJudgeTargetNotExistErr(
+        ifKeyName: String,
+        argsPairList: List<Pair<String, String>>,
+    ): Pair<Boolean?, IfCheckErr?> {
+        val errWhere = makeLogErrWhere(
+            ifKeyName,
+            judgeTargetArgName,
+            -1,
+            makeArgsPairListCon(argsPairList),
+        )
+        return null to IfCheckErr(
+            "${judgeTargetArgName} not exist: ${errWhere}"
         )
     }
 
@@ -107,19 +114,24 @@ object SettingIfManager {
             }
             val concatConditionKey =
                 IfArgs.CONCAT_CONDITION.str
-            val concatConditionSTr = argNameToSubKeyMapPairList.toMap().get(
+            val concatConditionStr = argNameToSubKeyMapPairList.toMap().get(
                 concatConditionKey
             )
             val concatCondition = ConcatCondition.entries.firstOrNull {
-                it.str == concatConditionSTr
+                it.str == concatConditionStr
             } ?: let {
+                makeConcatConditionKeyNotExistErr(
+                    ifKeyName,
+                    concatConditionStr,
+                    argNameToSubKeyMapPairList
+                )
                 val spanConcatConditionKeyName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                     CheckTool.ligthBlue,
                     concatConditionKey,
                 )
                 val spanConcatConditionStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                     CheckTool.errRedCode,
-                    concatConditionSTr.toString()
+                    concatConditionStr.toString()
                 )
                 return null to IfCheckErr(
                     "${spanConcatConditionKeyName} must be ${
@@ -131,7 +143,18 @@ object SettingIfManager {
                         makeArgsPairListCon(argNameToSubKeyMapPairList)
                     )}")
             }
-            val matchResult = when(concatCondition){
+            val matchResult = culcMatchResult(
+                concatCondition,
+                matchList,
+            )
+            return matchResult to null
+        }
+
+        fun culcMatchResult(
+            concatCondition: ConcatCondition,
+            matchList: List<Boolean>,
+        ):Boolean {
+            return when(concatCondition){
                 ConcatCondition.AND -> {
                     matchList.all {
                         it
@@ -143,9 +166,32 @@ object SettingIfManager {
                     }
                 }
             }
-            return matchResult to null
         }
 
+        fun makeConcatConditionKeyNotExistErr(
+            ifKeyName: String,
+            concatConditionStr: String?,
+            argNameToSubKeyMapPairList: List<Pair<String, String>>
+        ): Pair<Boolean?, IfCheckErr?> {
+            val concatConditionKey = IfArgs.CONCAT_CONDITION.str
+            val spanConcatConditionKeyName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.ligthBlue,
+                concatConditionKey,
+            )
+            val spanConcatConditionStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                concatConditionStr.toString()
+            )
+            return null to IfCheckErr(
+                "${spanConcatConditionKeyName} must be ${
+                    ConcatCondition.entries.map { "'${it.str}'" }.joinToString(" or ")
+                }: ${spanConcatConditionStr} ${makeLogErrWhere(
+                    ifKeyName,
+                    concatConditionKey,
+                    -1,
+                    makeArgsPairListCon(argNameToSubKeyMapPairList)
+                )}")
+        }
         private fun makeMatchListToErr(
             ifKeyName: String,
             judgeTargetStr: String,

@@ -50,46 +50,77 @@ object SettingFuncTool {
         else joinStrSrc
     }
 
-    fun replaceShellCmdByFieldVarName(
-        execShellCmd: String,
-        inputConForShellVar: String,
-        delimiter: String,
-        fieldVarPrefix: String,
-    ): String {
-        if (
-            delimiter == defaultNullMacroStr
-            || fieldVarPrefix == defaultNullMacroStr
-        ) return execShellCmd
-        val fieldVarMarkToElList =
-            inputConForShellVar.split(delimiter)
-                .mapIndexed { index, el ->
-                    "${'$'}${fieldVarPrefix}${index}" to el
-                }
-        var execShellCmdWithReplace = execShellCmd
-        fieldVarMarkToElList.forEach { (fieldVarName, el) ->
-            execShellCmdWithReplace = execShellCmdWithReplace.replace(
-                fieldVarName,
-                el
+    object FieldVarPrefix {
+        fun replaceElementByFieldVarName(
+            targetCon: String,
+            fieldVarNameToValueStrList: List<Pair<String, String>>?,
+            fieldVarPrefix: String,
+        ): String {
+            if (
+                fieldVarNameToValueStrList.isNullOrEmpty()
+            ) return targetCon
+
+            var targetConWithReplace = targetCon
+            fieldVarNameToValueStrList.forEach { (fieldVarName, el) ->
+                targetConWithReplace =
+                    targetConWithReplace.replace(
+                        Regex("""([^\\])[$]${fieldVarName}"""),
+                        "$1${el}"
+                    ).replace(
+                        Regex("""^[$]${fieldVarName}"""),
+                        el
+                    )
+            }
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lDelireplace.txt").absolutePath,
+//                listOf(
+//                    "execShellCmd: ${targetCon}",
+//                    "fieldVarMarkToValueStrList: ${fieldVarNameToValueStrList}",
+//                    "execShellCmdWithReplace: ${targetConWithReplace}",
+//                    "execShellCmdWithReplaceWithRep: ${
+//                        targetConWithReplace.replace(
+//                            Regex("[$]${fieldVarPrefix}[0-9]{1,5}"),
+//                            String()
+//                        )
+//                    }",
+//                ).joinToString("\n\n")+ "\n\n==========\n\n"
+//            )
+            return targetConWithReplace.replace(
+                Regex("[$]${fieldVarPrefix}[0-9]{1,5}"),
+                String()
             )
         }
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lDelireplace.txt").absolutePath,
-//            listOf(
-//                "execShellCmd: ${execShellCmd}",
-//                "inputConForShellVar: ${inputConForShellVar}",
-//                "delimiter: ${delimiter}",
-//                "fieldVarPrefix: ${fieldVarPrefix}",
-//                "fieldVarMarkToElList: ${fieldVarMarkToElList}",
-//                "execShellCmdWithReplace: ${execShellCmdWithReplace}",
-//                "execShellCmdWithReplaceWithRep: ${execShellCmdWithReplace.replace(
-//                    Regex("[$]${fieldVarPrefix}[0-9]{1,5}"),
-//                    String()
-//                )}",
-//            ).joinToString("\n\n")
-//        )
-        return execShellCmdWithReplace.replace(
-            Regex("[$]${fieldVarPrefix}[0-9]{1,5}"),
-            String()
-        )
+
+        fun makeFieldVarNameToValueStrList(
+            inputCon: String,
+            delimiter: String,
+            fieldVarPrefix: String,
+        ): List<Pair<String, String>>? {
+            if (
+                delimiter == defaultNullMacroStr
+                || fieldVarPrefix == defaultNullMacroStr
+            ) return null
+//            FileSystems.updateFile(
+//                File(
+//                    UsePath.cmdclickDefaultAppDirPath,
+//                    "lDelireplace_makeFieldVarMarkToValueStrList.txt"
+//                ).absolutePath,
+//                listOf(
+//                    "inputConForShellVar: ${inputCon}",
+//                    "delimiter: ${delimiter}",
+//                    "fieldVarPrefix: ${fieldVarPrefix}",
+//                    "pair: ${
+//                        inputCon.split(delimiter)
+//                            .mapIndexed { index, el ->
+//                                "${'$'}${fieldVarPrefix}${index}" to el
+//                            }
+//                    }",
+//                ).joinToString("\n\n") + "\n\n==========\n\n"
+//            )
+            return inputCon.split(delimiter)
+                .mapIndexed { index, el ->
+                    "${fieldVarPrefix}${index}" to el
+                }
+        }
     }
 }
