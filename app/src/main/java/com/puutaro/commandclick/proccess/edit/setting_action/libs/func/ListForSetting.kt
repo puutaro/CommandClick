@@ -5,6 +5,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyMan
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager.ConcatCondition
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ListForSetting.ListMethodArgClass.UniqArgs.UniqType
 import com.puutaro.commandclick.util.str.PairListTool
 import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +15,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import kotlin.enums.EnumEntries
+import kotlin.math.abs
 
 object ListForSetting {
 
@@ -813,7 +815,7 @@ object ListForSetting {
                             endFieldInt.toString()
                         )
                         val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.errRedCode,
+                            CheckTool.errBrown,
                             where
                         )
                         return@withContext null to FuncCheckerForSetting.FuncCheckErr(
@@ -831,6 +833,166 @@ object ListForSetting {
                         uniqTypeStr,
                     )
                 }
+                is ListMethodArgClass.RangeArgs -> {
+                    val formalArgIndexToNameToTypeList =
+                        args.entries.mapIndexed { index, formalArgsNameToType ->
+                            Triple(
+                                index,
+                                formalArgsNameToType.key,
+                                formalArgsNameToType.type,
+                            )
+                        }
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
+                    )
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val startInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                        mapArgMapList,
+                        args.startKeyToDefaultValueStr,
+                        where
+                    ).let { startIntToErr ->
+                        val funcErr = startIntToErr.second
+                            ?: return@let startIntToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val endInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                        mapArgMapList,
+                        args.endKeyToDefaultValueStr,
+                        where
+                    ).let { endIntToErr ->
+                        val funcErr = endIntToErr.second
+                            ?: return@let endIntToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val stepInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                        mapArgMapList,
+                        args.stepKeyToDefaultValueStr,
+                        where
+                    ).let { stepIntToErr ->
+                        val funcErr = stepIntToErr.second
+                            ?: return@let stepIntToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    if(
+                        stepInt < 1
+                    ){
+                        val spanStepKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.lightBlue,
+                            args.stepKeyToDefaultValueStr.first
+                        )
+                        val spanStepInt = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            stepInt.toString()
+                        )
+                        val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errBrown,
+                            where
+                        )
+                        return@withContext null to FuncCheckerForSetting.FuncCheckErr(
+                            "${spanStepKey} must be >= 1: ${spanStepInt}, ${spanWhere}"
+                        )
+                    }
+                    val joinStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                            mapArgMapList,
+                            args.joinStrKeyToDefaultValueStr,
+                            where
+                        ).let { joinStrToErr ->
+                            val funcErr = joinStrToErr.second
+                                ?: return@let joinStrToErr.first
+                            return@withContext Pair(
+                                null,
+                                SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            ) to funcErr
+                        }
+                    Range.range(
+                        args,
+                        joinStr,
+                        startInt,
+                        endInt,
+                        stepInt,
+                        where,
+                    )
+                }
+            }
+        }
+    }
+
+    private object Range {
+        fun range(
+            args: ListMethodArgClass.RangeArgs,
+            joinStr: String,
+            startInt: Int,
+            endInt: Int,
+            stepInt: Int,
+            where: String,
+        ): Pair<
+                Pair<
+                        String?,
+                        SettingActionKeyManager.BreakSignal?
+                        >?,
+                FuncCheckerForSetting.FuncCheckErr?
+                >{
+            val stepAbs = abs(stepInt)
+            return try {
+                val rangeListCon = when(startInt <= endInt) {
+                    false -> (endInt..startInt step stepAbs).reversed()
+                    else -> (startInt..endInt step stepAbs)
+                }.joinToString(joinStr)
+                Pair(
+                    rangeListCon,
+                    null
+                ) to null
+            } catch (e:Exception){
+                val spanStartKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.lightBlue,
+                    args.startKeyToDefaultValueStr.first
+                )
+                val spanStartInt = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    startInt.toString()
+                )
+                val spanEndKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.lightBlue,
+                    args.endKeyToDefaultValueStr.first
+                )
+                val spanEndInt = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    endInt.toString()
+                )
+                val spanStepKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.lightBlue,
+                    args.stepKeyToDefaultValueStr.first
+                )
+                val spanStepInt = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    stepInt.toString()
+                )
+                val spanErrMessage = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errBrown,
+                    where
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr(
+                    "Range err: ${spanErrMessage}, ${spanStartKey}: ${spanStartInt}, ${spanEndKey}: ${spanEndInt}, ${spanStepKey}: ${spanStepInt}, ${spanWhere}"
+                )
             }
         }
     }
@@ -876,9 +1038,9 @@ object ListForSetting {
             val uniqType = args.uniqTypeEntries.firstOrNull {
                     sortTypeClass ->
                 sortTypeClass.str == uniqTypeStr
-            } ?: ListMethodArgClass.UniqArgs.UniqType.NORMAL
+            } ?: UniqType.NORMAL
             val sortedInputConList = when(uniqType){
-                ListMethodArgClass.UniqArgs.UniqType.NORMAL -> {
+                UniqType.NORMAL -> {
                     duplicateMap.map {
                         (uniqJudgeEl, count) ->
                         val el = elToUniqJudgeElList.firstOrNull {
@@ -888,7 +1050,7 @@ object ListForSetting {
                         el
                     }
                 }
-                ListMethodArgClass.UniqArgs.UniqType.COUNT -> let {
+                UniqType.COUNT -> let {
                     if(
                         delimiter == defaultNullMacroStr
                     ) return@let inputConList
@@ -901,7 +1063,7 @@ object ListForSetting {
                         "${count}${delimiter}${el}"
                     }
                 }
-                ListMethodArgClass.UniqArgs.UniqType.DUPLICATE -> {
+                UniqType.DUPLICATE -> {
                     elToUniqJudgeElList.filter {
                         (el, innerUniqJudgeEl) ->
                         (duplicateMap.get(innerUniqJudgeEl) ?: 0) > 1
@@ -910,7 +1072,7 @@ object ListForSetting {
                         el
                     }
                 }
-                ListMethodArgClass.UniqArgs.UniqType.NOT_DUPLICATE ->
+                UniqType.NOT_DUPLICATE ->
                     elToUniqJudgeElList.filter {
                             (el, innerUniqJudgeEl) ->
                         (duplicateMap.get(innerUniqJudgeEl) ?: 0) == 1
@@ -1379,6 +1541,7 @@ object ListForSetting {
         FILTER("filter", ListMethodArgClass.FilterArgs),
         SORT("sort", ListMethodArgClass.SortArgs),
         UNIQ("uniq", ListMethodArgClass.UniqArgs),
+        RANGE("range", ListMethodArgClass.RangeArgs)
     }
 
 
@@ -1682,6 +1845,36 @@ object ListForSetting {
                 COUNT("count"),
                 DUPLICATE("onlyDup"),
                 NOT_DUPLICATE("notDup"),
+            }
+        }
+
+        data object RangeArgs: ListMethodArgClass(), ArgType {
+            override val entries = RangeEnumArgs.entries
+            val joinStrKeyToDefaultValueStr = Pair(
+                RangeEnumArgs.JOIN_STR.key,
+                RangeEnumArgs.JOIN_STR.defaultValueStr
+            )
+            val startKeyToDefaultValueStr = Pair(
+                RangeEnumArgs.START.key,
+                RangeEnumArgs.START.defaultValueStr
+            )
+            val endKeyToDefaultValueStr = Pair(
+                RangeEnumArgs.END.key,
+                RangeEnumArgs.END.defaultValueStr
+            )
+            val stepKeyToDefaultValueStr = Pair(
+                RangeEnumArgs.STEP.key,
+                RangeEnumArgs.STEP.defaultValueStr
+            )
+            enum class RangeEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                JOIN_STR("joinStr", null, FuncCheckerForSetting.ArgType.STRING),
+                START("start", null, FuncCheckerForSetting.ArgType.INT),
+                END("end", null, FuncCheckerForSetting.ArgType.INT),
+                STEP("step", 1.toString(), FuncCheckerForSetting.ArgType.INT),
             }
         }
     }
