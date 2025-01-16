@@ -2,10 +2,8 @@ package com.puutaro.commandclick.proccess.edit.lib
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -306,7 +304,7 @@ object SettingFile {
                     && loopVarName.isNullOrEmpty()
                     ){
                     val spanTimes = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         ImportKey.TIMES.key
                     )
                     val spanLoopVarNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -340,7 +338,7 @@ object SettingFile {
                     && isAlreadyUseLoopVarNameList(loopVarName)
                 ){
                     val spanLoopVarNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         ImportKey.LOOP_VAR_NAME.key
                     )
                     val spanLoopVarName = loopVarName?.let {

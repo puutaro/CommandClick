@@ -22,7 +22,7 @@ object CheckTool {
     const val errMark = "ERROR"
     const val errRedCode = "#ff0000"
     const val errBrown = "#804903"
-    const val ligthBlue = "#0cadf2"
+    const val lightBlue = "#0cadf2"
 
     enum class JsOrActionMark(
         val mark: String

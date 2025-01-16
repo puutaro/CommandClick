@@ -1,18 +1,15 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.func.MathCulc
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import java.io.File
 import kotlin.enums.EnumEntries
 
 
@@ -133,11 +130,11 @@ object MathCulcForSetting {
                     && indexVarName != defaultNullMacroStr
                     ){
                     val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         args.indexVarNameKeyToDefaultValueStr.first
                     )
                     val spanElVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         args.elVarNameKeyToDefaultValueStr.first
                     )
                     val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -285,11 +282,11 @@ object MathCulcForSetting {
                     && indexVarName != defaultNullMacroStr
                 ){
                     val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         args.indexVarNameKeyToDefaultValueStr.first
                     )
                     val spanElVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         args.elVarNameKeyToDefaultValueStr.first
                     )
                     val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(

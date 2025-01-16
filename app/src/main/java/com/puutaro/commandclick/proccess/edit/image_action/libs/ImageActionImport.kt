@@ -173,7 +173,7 @@ object ImageActionImport {
                     )
                 val spanIAcVarKeyName =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         ImageActionKeyManager.ImageActionsKey.IMAGE_ACTION_VAR.key
                     )
                 val importPath = actionImportMap.get(

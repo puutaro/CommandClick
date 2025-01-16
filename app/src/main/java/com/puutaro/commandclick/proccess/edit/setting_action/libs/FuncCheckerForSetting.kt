@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 object FuncCheckerForSetting {
@@ -581,7 +579,7 @@ object FuncCheckerForSetting {
                 logIndex
             )
             val spanArgType = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 argTypeStr
             )
             val spanArgStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(

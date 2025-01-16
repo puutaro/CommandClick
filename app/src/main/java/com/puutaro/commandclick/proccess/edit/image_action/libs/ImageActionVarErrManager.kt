@@ -185,12 +185,12 @@ object ImageActionVarErrManager {
                 ) return@forEach
                 val spanSettingKeyName =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         settingKey
                     )
                 val spanAwaitKeyName =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         awaitKey
                     )
                 val spanAwaitVarName =
@@ -284,12 +284,12 @@ object ImageActionVarErrManager {
             if(indexToSubKeyPairListWithAwait == null){
                 val spanSettingKeyName =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         settingKey
                     )
                 val spanAwaitKeyName =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         awaitKey
                     )
                 val spanAwaitAsyncVarName =
@@ -314,12 +314,12 @@ object ImageActionVarErrManager {
             ) {
                 val spanSettingKeyName =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         settingKey
                     )
                 val spanAwaitKeyName =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         awaitKey
                     )
                 val spanAwaitAsyncVarName =
@@ -357,12 +357,12 @@ object ImageActionVarErrManager {
             if(!isNotAwaitBeforeAsyncVarErr) return@forEach
             val spanSettingKeyName =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     settingKey
                 )
             val spanAwaitKeyName =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     awaitKey
                 )
             val spanAwaitAsyncVarName =
@@ -427,12 +427,12 @@ object ImageActionVarErrManager {
             ) return@forEachIndexed
             val spanSettingKeyName =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     settingKey
                 )
             val spanAwaitKeyName =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     awaitKey
                 )
             val spanAwaitVarNameListCon =
@@ -495,12 +495,12 @@ object ImageActionVarErrManager {
             ) return@forEachIndexed
             val spanSettingKeyName =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     settingKey
                 )
             val spanAwaitKeyName =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     awaitKey
                 )
             val spanAwaitVarNameListCon =
@@ -553,17 +553,17 @@ object ImageActionVarErrManager {
                 )
             val spanImageVarMainKey =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     imageVarMainKey
                 )
             val spanFuncKey =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     funcKey
                 )
             val spanOnReturnKey =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     onReturnKey
                 )
             runBlocking {
@@ -617,7 +617,7 @@ object ImageActionVarErrManager {
             val settingKeyName = settingKeyToVarName.first
             val spanSettingKeyName =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     settingKeyName
                 )
             val spanRunVarName =
@@ -886,7 +886,7 @@ object ImageActionVarErrManager {
             val settingKeyName = settingKeyToVarName.first
             val spanSettingKeyName =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     settingKeyName
                 )
             val spanVarName =

@@ -1285,7 +1285,7 @@ class ImageActionManager {
                                         )
                                     val spanIVarKeyName =
                                         CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                            CheckTool.ligthBlue,
+                                            CheckTool.lightBlue,
                                             ImageActionKeyManager.ImageActionsKey.IMAGE_VAR.key
                                         )
                                     runBlocking {

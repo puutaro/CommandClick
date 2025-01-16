@@ -40,7 +40,7 @@ object ImageActionReturnErrManager {
             )
         val spanSettingReturnKey =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 imageReturnKey
             )
         val spanSubKeyName =
@@ -95,7 +95,7 @@ object ImageActionReturnErrManager {
             )
         val spanEscapeRunPrefix =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 escapeRunPrefix
             )
         runBlocking {
@@ -266,7 +266,7 @@ object ImageActionReturnErrManager {
             ) return@forEachIndexed
             val spanImageReturnKey =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     imageReturnKey
                 )
             val spanReturnVarName =

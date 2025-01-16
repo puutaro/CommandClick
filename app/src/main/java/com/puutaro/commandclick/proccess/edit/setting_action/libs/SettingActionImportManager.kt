@@ -7,7 +7,6 @@ import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -179,7 +178,7 @@ object SettingActionImportManager {
                     )
                 val spanIAcVarKeyName =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         SettingActionKeyManager.SettingActionsKey.SETTING_ACTION_VAR.key
                     )
                 val importPath = actionImportMapBeforeReplace.get(

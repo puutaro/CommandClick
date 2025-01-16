@@ -33,12 +33,12 @@ object ImageActionImportErrManager {
         ) return false
         val spanSAcVarKeyName =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 iAcVarKeyName
             )
         val spanOriginImportPathListCon =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 originImportPathList.joinToString(",")
             )
         val spanImportPath =
@@ -69,7 +69,7 @@ object ImageActionImportErrManager {
         }
         val spanSAdVarKeyName =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 iAcVarKeyName
             )
         val spanImportPath =
@@ -117,12 +117,12 @@ object ImageActionImportErrManager {
         ) return false
         val spanSAcVarKeyName =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 iAcVarKeyName
             )
         val spanImportShadowVar =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 importShadowVarSharpMark
             )
         val spanImportPath =
@@ -282,12 +282,12 @@ object ImageActionImportErrManager {
         ) return false
         val spanEscapeRunPrefix =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 escapeRunPrefix
             )
         val spanRunAsyncPrefix =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 runAsyncPrefix
             )
         val spanAsyncPrefix =
@@ -297,12 +297,12 @@ object ImageActionImportErrManager {
             )
         val spanIAdVarKeyName =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 iAcVarKeyName
             )
         val spanImageReturnKey =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 imageReturnKey
             )
         val spanGlobalVarName =
@@ -312,7 +312,7 @@ object ImageActionImportErrManager {
             )
         val spanIIfKey =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 iIfKey
             )
 //                FileSystems.updateFile(

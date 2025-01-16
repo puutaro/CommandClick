@@ -1417,7 +1417,7 @@ class SettingActionManager {
                                         )
                                     val spanIVarKeyName =
                                         CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                            CheckTool.ligthBlue,
+                                            CheckTool.lightBlue,
                                             SettingActionKeyManager.SettingActionsKey.SETTING_VAR.key
                                         )
                                     runBlocking {
@@ -2067,16 +2067,16 @@ object EvalForSetting {
 //                            args.elVarNameKeyToDefaultValueStr.first
 //                        )
                         val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
+                            CheckTool.lightBlue,
                             args.indexVarNameKeyToDefaultValueStr.first
                         )
                         val spanFieldVarPrefix = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
+                            CheckTool.lightBlue,
                             args.fieldVarPrefixKeyToDefaultValueStr.first
                         )
                         val alreadyUseVarListCon = alreadyUseVarNameList.joinToString(", ")
                         val spanAlreadyUseVarListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
+                            CheckTool.lightBlue,
                             alreadyUseVarListCon
                         )
                         val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -2252,12 +2252,12 @@ object EvalForSetting {
                     true -> {
                         val spanJoinStrArgName =
                             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                CheckTool.ligthBlue,
+                                CheckTool.lightBlue,
                                 args.joinStrKeyToDefaultValueStr.first,
                             )
                         val spanDefaultMacroStr =
                             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                CheckTool.ligthBlue,
+                                CheckTool.lightBlue,
                                 defaultNullMacroStr
                             )
                         val spanInfo = let {

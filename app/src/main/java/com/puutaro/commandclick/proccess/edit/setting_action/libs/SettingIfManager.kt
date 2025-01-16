@@ -1,9 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
 
 
 object SettingIfManager {
@@ -130,7 +127,7 @@ object SettingIfManager {
                     argNameToSubKeyMapPairList
                 )
                 val spanConcatConditionKeyName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     concatConditionKey,
                 )
                 val spanConcatConditionStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -179,7 +176,7 @@ object SettingIfManager {
         ): Pair<Boolean?, IfCheckErr?> {
             val concatConditionKey = IfArgs.CONCAT_CONDITION.str
             val spanConcatConditionKeyName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 concatConditionKey,
             )
             val spanConcatConditionStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -278,7 +275,7 @@ object SettingIfManager {
                 } ?: let {
                     val spanMatchTypeKey =
                         CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
+                            CheckTool.lightBlue,
                             matchTypeKey
                         )
                     val spanMatchTypeValueStr =
@@ -347,12 +344,12 @@ object SettingIfManager {
         ):  IfCheckErr {
             val spanRegexKey =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     regexKey
                 )
             val spanMatchTypeKey =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                    CheckTool.ligthBlue,
+                    CheckTool.lightBlue,
                     matchType.str
                 )
             val spanMatchTypeValueStr =
@@ -582,7 +579,7 @@ object SettingIfManager {
                     targetFloatStr.toFloat() to null
                 } catch (e: Exception) {
                     val spanNumMatchTypeKeysCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         numMachTypeList.map {
                             it.str
                         }.joinToString(",")
@@ -778,7 +775,7 @@ object SettingIfManager {
             argIndex.toString()
         )
         val spanSIfKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-            CheckTool.ligthBlue,
+            CheckTool.lightBlue,
             ifKeyName,
         )
         val spanSubKeyCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -788,7 +785,7 @@ object SettingIfManager {
         val errWhere =
             "arg name: ${spanArgName}, index: ${spanArgIndex}, setting key: ${spanSIfKey}, subKeyCon: ${spanSubKeyCon}"
         return CheckTool.LogVisualManager.execMakeSpanTagHolder(
-            CheckTool.ligthBlue,
+            CheckTool.lightBlue,
             errWhere
         )
     }

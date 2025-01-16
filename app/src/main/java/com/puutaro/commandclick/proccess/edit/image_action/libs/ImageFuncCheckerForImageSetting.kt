@@ -2,9 +2,7 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs
 
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
-import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 object ImageFuncCheckerForImageSetting {
@@ -233,7 +231,7 @@ object ImageFuncCheckerForImageSetting {
                 (index + 1).toString()
             )
             val spanArgType = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 argType.name
             )
             val spanArgStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(

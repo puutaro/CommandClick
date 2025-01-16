@@ -1404,7 +1404,7 @@ object EditComponent {
                         val tagKeyName =
                                 Template.EditComponentKey.TAG.key
                         val spanTagGenre = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                CheckTool.ligthBlue,
+                                CheckTool.lightBlue,
                                 tagJanre.str
                         )
                         val spanTagNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(

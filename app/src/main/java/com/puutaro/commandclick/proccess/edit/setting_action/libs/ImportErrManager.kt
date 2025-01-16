@@ -32,12 +32,12 @@ object ImportErrManager {
         ) return false
         val spanSAcVarKeyName =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 sAcVarKeyName
             )
         val spanOriginImportPathListCon =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 originImportPathList.joinToString(",")
             )
         val spanImportPath =
@@ -68,7 +68,7 @@ object ImportErrManager {
         }
         val spanSAdVarKeyName =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 sAcVarKeyName
             )
         val spanImportPath =
@@ -266,12 +266,12 @@ object ImportErrManager {
         ) return false
         val spanEscapeRunPrefix =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 escapeRunPrefix
             )
         val spanRunAsyncPrefix =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 runAsyncPrefix
             )
         val spanAsyncPrefix =
@@ -281,12 +281,12 @@ object ImportErrManager {
             )
         val spanSAdVarKeyName =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 sAcVarKeyName
             )
         val spanSettingReturnKey =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 settingReturnKey
             )
         val spanGlobalVarName =
@@ -296,7 +296,7 @@ object ImportErrManager {
             )
         val spanSIfKey =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                CheckTool.ligthBlue,
+                CheckTool.lightBlue,
                 sIfKey
             )
 //                FileSystems.updateFile(

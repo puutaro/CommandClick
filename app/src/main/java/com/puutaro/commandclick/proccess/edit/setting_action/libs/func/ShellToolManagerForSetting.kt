@@ -242,15 +242,15 @@ object ShellToolManagerForSetting {
                     }
                 if(isDuplicate){
                     val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         args.indexVarNameKeyToDefaultValueStr.first
                     )
                     val spanFieldVarPrefix = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         args.fieldVarPrefixKeyToDefaultValueStr.first
                     )
                     val spanAlreadyUseVarListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         alreadyUseVarListCon
                     )
                     val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -478,16 +478,16 @@ object ShellToolManagerForSetting {
                     }
                 if(isDuplicate){
                     val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         args.indexVarNameKeyToDefaultValueStr.first
                     )
                     val spanFieldVarPrefix = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         args.fieldVarPrefixKeyToDefaultValueStr.first
                     )
                     val alreadyUseVarListCon = alreadyUseVarNameList.joinToString(", ")
                     val spanAlreadyUseVarListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.ligthBlue,
+                        CheckTool.lightBlue,
                         alreadyUseVarListCon
                     )
                     val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(

@@ -1,12 +1,10 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager.ConcatCondition
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.PairListTool
 import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +13,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import java.io.File
 import kotlin.enums.EnumEntries
 
 object ListForSetting {
@@ -509,7 +506,7 @@ object ListForSetting {
                         }
                     if(isDuplicate){
                         val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
+                            CheckTool.lightBlue,
                             args.indexVarNameKeyToDefaultValueStr.first
                         )
 //                        val spanElVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -517,12 +514,12 @@ object ListForSetting {
 //                            args.elVarNameKeyToDefaultValueStr.first
 //                        )
                         val spanFieldVarPrefix = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
+                            CheckTool.lightBlue,
                             args.fieldVarPrefixKeyToDefaultValueStr.first
                         )
                         val alreadyUseVarListCon = alreadyUseVarNameList.joinToString(", ")
                         val spanAlreadyUseVarListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
+                            CheckTool.lightBlue,
                             alreadyUseVarListCon
                         )
                         val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -564,7 +561,413 @@ object ListForSetting {
 //                    )
                     boolToErr
                 }
+                is ListMethodArgClass.SortArgs -> {
+                    val formalArgIndexToNameToTypeList =
+                        args.entries.mapIndexed { index, formalArgsNameToType ->
+                            Triple(
+                                index,
+                                formalArgsNameToType.key,
+                                formalArgsNameToType.type,
+                            )
+                        }
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
+                    )
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val inputCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.inputConKeyToDefaultValueStr,
+                        where
+                    ).let { inputConToErr ->
+                        val funcErr = inputConToErr.second
+                            ?: return@let inputConToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.separatorKeyToDefaultValueStr,
+                        where
+                    ).let { separatorToErr ->
+                        val funcErr = separatorToErr.second
+                            ?: return@let separatorToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val defaultSeparator =
+                        args.separatorKeyToDefaultValueStr.second
+                    val isSeparatorNull =
+                        separator == defaultSeparator
+                    val joinStr = when(isSeparatorNull) {
+                        true -> String()
+                        else -> FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                            mapArgMapList,
+                            args.joinStrKeyToDefaultValueStr,
+                            where
+                        ).let { joinStrToErr ->
+                            val funcErr = joinStrToErr.second
+                            if (funcErr != null) {
+                                return@withContext Pair(
+                                    null,
+                                    SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ) to funcErr
+                            }
+                            SettingFuncTool.makeJoinStrBySeparator(
+                                joinStrToErr,
+                                separator,
+                                args.joinStrKeyToDefaultValueStr.second,
+                            )
+                        }
+                    }
+                    val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.delimiterKeyToDefaultValueStr,
+                        where
+                    ).let { delimiterToErr ->
+                        val funcErr = delimiterToErr.second
+                            ?: return@let delimiterToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val sortTypeStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.sortTypeKeyToDefaultValueStr,
+                        where
+                    ).let { sortTypeToErr ->
+                        val funcErr = sortTypeToErr.second
+                            ?: return@let sortTypeToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val fieldInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                        mapArgMapList,
+                        args.fieldKeyToDefaultValueStr,
+                        where
+                    ).let { targetFieldToErr ->
+                        val funcErr = targetFieldToErr.second
+                            ?: return@let targetFieldToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    Sort.sort(
+                        args,
+                        inputCon,
+                        separator,
+                        joinStr,
+                        delimiter,
+                        fieldInt,
+                        sortTypeStr,
+                    )
+                }
+                is ListMethodArgClass.UniqArgs -> {
+                    val formalArgIndexToNameToTypeList =
+                        args.entries.mapIndexed { index, formalArgsNameToType ->
+                            Triple(
+                                index,
+                                formalArgsNameToType.key,
+                                formalArgsNameToType.type,
+                            )
+                        }
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
+                    )
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val inputCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.inputConKeyToDefaultValueStr,
+                        where
+                    ).let { inputConToErr ->
+                        val funcErr = inputConToErr.second
+                            ?: return@let inputConToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.separatorKeyToDefaultValueStr,
+                        where
+                    ).let { separatorToErr ->
+                        val funcErr = separatorToErr.second
+                            ?: return@let separatorToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val defaultSeparator =
+                        args.separatorKeyToDefaultValueStr.second
+                    val isSeparatorNull =
+                        separator == defaultSeparator
+                    val joinStr = when(isSeparatorNull) {
+                        true -> String()
+                        else -> FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                            mapArgMapList,
+                            args.joinStrKeyToDefaultValueStr,
+                            where
+                        ).let { joinStrToErr ->
+                            val funcErr = joinStrToErr.second
+                            if (funcErr != null) {
+                                return@withContext Pair(
+                                    null,
+                                    SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ) to funcErr
+                            }
+                            SettingFuncTool.makeJoinStrBySeparator(
+                                joinStrToErr,
+                                separator,
+                                args.joinStrKeyToDefaultValueStr.second,
+                            )
+                        }
+                    }
+                    val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.delimiterKeyToDefaultValueStr,
+                        where
+                    ).let { delimiterToErr ->
+                        val funcErr = delimiterToErr.second
+                            ?: return@let delimiterToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val uniqTypeStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.uniqTypeToDefaultValueStr,
+                        where
+                    ).let { uniqTypeStrToErr ->
+                        val funcErr = uniqTypeStrToErr.second
+                            ?: return@let uniqTypeStrToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val startFieldInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                        mapArgMapList,
+                        args.startFieldKeyToDefaultValueStr,
+                        where
+                    ).let { startFieldIntToErr ->
+                        val funcErr = startFieldIntToErr.second
+                            ?: return@let startFieldIntToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    } - 1
+                    val endFieldInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                        mapArgMapList,
+                        args.endFieldKeyToDefaultValueStr,
+                        where
+                    ).let { endFieldIntToErr ->
+                        val funcErr = endFieldIntToErr.second
+                            ?: return@let endFieldIntToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    } - 1
+                    if(
+                        startFieldInt > factAllFieldNum
+                        && endFieldInt > factAllFieldNum
+                        && startFieldInt > endFieldInt
+                        ){
+                        val spanStartFieldKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.lightBlue,
+                            args.startFieldKeyToDefaultValueStr.first
+                        )
+                        val spanStartFieldInt = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            startFieldInt.toString()
+                        )
+                        val spanEndFieldKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.lightBlue,
+                            args.endFieldKeyToDefaultValueStr.first
+                        )
+                        val spanEndFieldInt = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            endFieldInt.toString()
+                        )
+                        val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            where
+                        )
+                        return@withContext null to FuncCheckerForSetting.FuncCheckErr(
+                            "Must be ${spanStartFieldKey} <= ${spanEndFieldKey}: ${spanStartFieldInt} > ${spanEndFieldInt}: ${spanWhere}"
+                        )
+                    }
+                    Uniq.uniq(
+                        args,
+                        inputCon,
+                        separator,
+                        joinStr,
+                        delimiter,
+                        startFieldInt,
+                        endFieldInt,
+                        uniqTypeStr,
+                    )
+                }
             }
+        }
+    }
+
+    private object Uniq {
+        fun uniq(
+            args: ListMethodArgClass.UniqArgs,
+            inputCon: String,
+            separator: String,
+            joinStr: String,
+            delimiter: String,
+            startFieldInt: Int,
+            endFieldIntSrc: Int,
+            uniqTypeStr: String,
+        ): Pair<
+                Pair<
+                        String?,
+                        SettingActionKeyManager.BreakSignal?
+                        >?,
+                FuncCheckerForSetting.FuncCheckErr?
+                > {
+            val inputConList = inputCon.split(separator)
+            val elToUniqJudgeElList = inputConList.map {
+                el ->
+                if(
+                    delimiter == defaultNullMacroStr
+                    || startFieldInt <= factAllFieldNum
+                ) return@map el to el
+                val fieldList = el.split(delimiter)
+                val endFieldInt = when(
+                    endFieldIntSrc <= factAllFieldNum
+                ){
+                    true -> fieldList.lastIndex
+                    else -> endFieldIntSrc
+                }
+                val uniqJudgeEl = fieldList.filterIndexed { index, _ ->
+                    index in startFieldInt..endFieldInt
+                }.joinToString(delimiter)
+                el to uniqJudgeEl
+            }
+            val duplicateMap = elToUniqJudgeElList.groupBy { it.second }
+                .mapValues { it.value.size }
+            val uniqType = args.uniqTypeEntries.firstOrNull {
+                    sortTypeClass ->
+                sortTypeClass.str == uniqTypeStr
+            } ?: ListMethodArgClass.UniqArgs.UniqType.NORMAL
+            val sortedInputConList = when(uniqType){
+                ListMethodArgClass.UniqArgs.UniqType.NORMAL -> {
+                    duplicateMap.map {
+                        (uniqJudgeEl, count) ->
+                        val el = elToUniqJudgeElList.firstOrNull {
+                            (el, innerUniqJudgeEl) ->
+                            innerUniqJudgeEl == uniqJudgeEl
+                        }?.first ?: String()
+                        el
+                    }
+                }
+                ListMethodArgClass.UniqArgs.UniqType.COUNT -> let {
+                    if(
+                        delimiter == defaultNullMacroStr
+                    ) return@let inputConList
+                    duplicateMap.map {
+                            (uniqJudgeEl, count) ->
+                        val el = elToUniqJudgeElList.firstOrNull {
+                                (el, innerUniqJudgeEl) ->
+                            innerUniqJudgeEl == uniqJudgeEl
+                        }?.first ?: String()
+                        "${count}${delimiter}${el}"
+                    }
+                }
+                ListMethodArgClass.UniqArgs.UniqType.DUPLICATE -> {
+                    elToUniqJudgeElList.filter {
+                        (el, innerUniqJudgeEl) ->
+                        (duplicateMap.get(innerUniqJudgeEl) ?: 0) > 1
+                    }.map {
+                            (el, innerUniqJudgeEl) ->
+                        el
+                    }
+                }
+                ListMethodArgClass.UniqArgs.UniqType.NOT_DUPLICATE ->
+                    elToUniqJudgeElList.filter {
+                            (el, innerUniqJudgeEl) ->
+                        (duplicateMap.get(innerUniqJudgeEl) ?: 0) == 1
+                    }.map {
+                            (el, innerUniqJudgeEl) ->
+                        el
+                    }
+            }
+            return Pair(
+                sortedInputConList.joinToString(joinStr),
+                null
+            ) to null
+        }
+    }
+
+    private object Sort {
+        fun sort(
+            args: ListMethodArgClass.SortArgs,
+            inputCon: String,
+            separator: String,
+            joinStr: String,
+            delimiter: String,
+            fieldInt: Int,
+            sortTypeStr: String,
+        ): Pair<
+                Pair<
+                        String?,
+                        SettingActionKeyManager.BreakSignal?
+                        >?,
+                FuncCheckerForSetting.FuncCheckErr?
+                > {
+            val normalSortedInputConList = inputCon.split(separator).sortedBy { el ->
+                when (fieldInt <= 0) {
+                    true -> el
+                    else -> let {
+                        if (
+                            delimiter == defaultNullMacroStr
+                        ) return@let el
+                        el.split(delimiter)
+                            .getOrNull(fieldInt - 1)
+                            ?: String()
+                    }
+                }
+            }
+           val sortType = args.sortTypeEntries.firstOrNull {
+                sortTypeClass ->
+                sortTypeClass.str == sortTypeStr
+            } ?: ListMethodArgClass.SortArgs.SortType.ORDINAL
+            val sortedInputConList = when(sortType){
+                ListMethodArgClass.SortArgs.SortType.ORDINAL -> normalSortedInputConList
+                ListMethodArgClass.SortArgs.SortType.REVERSE -> normalSortedInputConList.reversed()
+                ListMethodArgClass.SortArgs.SortType.RANDOM -> normalSortedInputConList.shuffled()
+            }
+            return Pair(
+                sortedInputConList.joinToString(joinStr),
+                null
+            ) to null
         }
     }
 
@@ -724,54 +1127,53 @@ object ListForSetting {
             }.joinToString(joinStr)
             return Pair(filterLineListCon, null) to null
         }
-    }
 
-    private fun culcBool(
-        funcName: String,
-        methodNameStr: String,
-        args: ListMethodArgClass.FilterArgs,
-        argsPairList: List<Pair<String, String>>,
-        inputLine: String,
+        private fun culcBool(
+            funcName: String,
+            methodNameStr: String,
+            args: ListMethodArgClass.FilterArgs,
+            argsPairList: List<Pair<String, String>>,
+            inputLine: String,
 //        elVarName: String,
-        indexVarName: String,
-        elIndex: Int,
-        delimiter: String,
-        fieldVarPrefix: String,
-    ): Pair<Boolean?, SettingIfManager. IfCheckErr?> {
-        val argsPairListWithReplace = replaceArgNameToValueStrList(
-            inputLine,
-            argsPairList,
+            indexVarName: String,
+            elIndex: Int,
+            delimiter: String,
+            fieldVarPrefix: String,
+        ): Pair<Boolean?, SettingIfManager. IfCheckErr?> {
+            val argsPairListWithReplace = replaceArgNameToValueStrList(
+                inputLine,
+                argsPairList,
 //            elVarName,
-            indexVarName,
-            elIndex,
-            delimiter,
-            fieldVarPrefix,
-        )
-        val ifKeyPairsList = makeIfKeyPairsList(
-            argsPairListWithReplace
-        )
-        val targetKey = args.targetToDefaultValueStr.first
-        val boolToErrList = ifKeyPairsList.map {
-                ifKeyPairList ->
-            val targetCon = PairListTool.getValue(
-                ifKeyPairList,
-                targetKey
-            ) ?: inputLine
+                indexVarName,
+                elIndex,
+                delimiter,
+                fieldVarPrefix,
+            )
+            val ifKeyPairsList = makeIfKeyPairsList(
+                argsPairListWithReplace
+            )
+            val targetKey = args.targetToDefaultValueStr.first
+            val boolToErrList = ifKeyPairsList.map {
+                    ifKeyPairList ->
+                val targetCon = PairListTool.getValue(
+                    ifKeyPairList,
+                    targetKey
+                ) ?: inputLine
 //            if(targetCon.isNullOrEmpty()){
 //                return SettingIfManager.makeJudgeTargetNotExistErr(
 //                        "${funcName}.${methodNameStr}",
 //                        argsPairList,
 //                    )
 //            }
-            SettingIfManager.IfArgMatcher.match(
-                "${funcName}.${methodNameStr}",
-                targetCon,
-                ifKeyPairList.filter{
-                    (ifKey, _) ->
-                    ifKey != targetKey
-                },
-            )
-        }
+                SettingIfManager.IfArgMatcher.match(
+                    "${funcName}.${methodNameStr}",
+                    targetCon,
+                    ifKeyPairList.filter{
+                            (ifKey, _) ->
+                        ifKey != targetKey
+                    },
+                )
+            }
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "llistForseettg${elIndex}.txt").absolutePath,
 //            listOf(
@@ -787,22 +1189,22 @@ object ListForSetting {
 //                "ifKeyPairsList: ${ifKeyPairsList}",
 //            ).joinToString("\n\n") + "\n=====\n\n"
 //        )
-        boolToErrList.firstOrNull {
-                (_, err) ->
-            err != null
-        }.let {
-                boolToErr ->
-            val err = boolToErr?.second
-                ?: return@let
-            return null to err
-        }
-        return when(boolToErrList.size == 1) {
-            true -> boolToErrList.first()
-            else -> {
-                val concatConditionStr = PairListTool.getValue(
-                    argsPairList,
-                    args.concatConditionKeyToDefaultValueStr.first,
-                )
+            boolToErrList.firstOrNull {
+                    (_, err) ->
+                err != null
+            }.let {
+                    boolToErr ->
+                val err = boolToErr?.second
+                    ?: return@let
+                return null to err
+            }
+            return when(boolToErrList.size == 1) {
+                true -> boolToErrList.first()
+                else -> {
+                    val concatConditionStr = PairListTool.getValue(
+                        argsPairList,
+                        args.concatConditionKeyToDefaultValueStr.first,
+                    )
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "llistForseettg${elIndex}_condition.txt").absolutePath,
 //                    listOf(
@@ -823,91 +1225,93 @@ object ListForSetting {
 //                        )}"
 //                    ).joinToString("\n\n") + "\n=====\n\n"
 //                )
-                val concatCondition = ConcatCondition.entries.firstOrNull {
-                    it.str == concatConditionStr
-                } ?: let {
-                    return SettingIfManager.IfArgMatcher.makeConcatConditionKeyNotExistErr(
+                    val concatCondition = ConcatCondition.entries.firstOrNull {
+                        it.str == concatConditionStr
+                    } ?: let {
+                        return SettingIfManager.IfArgMatcher.makeConcatConditionKeyNotExistErr(
                             "${funcName}.${methodNameStr}",
                             concatConditionStr,
                             argsPairList
                         )
+                    }
+                    SettingIfManager.IfArgMatcher.culcMatchResult(
+                        concatCondition,
+                        boolToErrList.map {
+                            it.first ?: true
+                        },
+                    ) to null
                 }
-                SettingIfManager.IfArgMatcher.culcMatchResult(
-                    concatCondition,
-                    boolToErrList.map {
-                        it.first ?: true
-                    },
-                ) to null
             }
+        }
+
+        private fun makeIfKeyPairsList(
+            argsPairList: List<Pair<String, String>>,
+        ):  List<List<Pair<String, String>>> {
+            val targetKey =
+                ListMethodArgClass.FilterArgs.FilterEnumArgs.TARGET.key
+            val matchTypeKey =
+                ListMethodArgClass.FilterArgs.FilterEnumArgs.MATCH_TYPE.key
+            val valueKey =
+                ListMethodArgClass.FilterArgs.FilterEnumArgs.VALUE.key
+            val regexKey =
+                ListMethodArgClass.FilterArgs.FilterEnumArgs.REGEX.key
+            val lastDefiniteKeyList = listOf(
+                valueKey,
+                regexKey
+            )
+            val ifArgsKeyList = listOf(
+                targetKey,
+                matchTypeKey,
+                valueKey,
+                ListMethodArgClass.FilterArgs.FilterEnumArgs.REGEX.key,
+            )
+            val ifArgNameToValueStrList = argsPairList.filter {
+                    (argName, _) ->
+                ifArgsKeyList.contains(argName)
+            }
+            val defaultMapReturnPair =
+                listOf(String() to String())
+            val filterKeyToValueStrList = ifArgNameToValueStrList.filter {
+                    (ifArgName, _) ->
+                ifArgsKeyList.contains(ifArgName)
+            }.reversed()
+            val judgeKeyToValueStrList = filterKeyToValueStrList.mapIndexed {
+                    index, (filterKey, valueStr) ->
+                if(
+                    index != 0
+                    && !lastDefiniteKeyList.contains(filterKey)
+                ) return@mapIndexed defaultMapReturnPair
+                val lastFilterKeyToValueStr =
+                    filterKey to valueStr
+                val matchTypeOrTargetKeyPairList = let {
+                    val focusFilterKeyToValueStrList = filterKeyToValueStrList.filterIndexed { innerIndex, _ ->
+                        innerIndex > index
+                    }
+                    val nextValueKeyIndex =
+                        focusFilterKeyToValueStrList.indexOfFirst { (filterKey, _) ->
+                            lastDefiniteKeyList.contains(filterKey)
+                        }
+                    when (
+                        nextValueKeyIndex < 0
+                    ) {
+                        true -> focusFilterKeyToValueStrList
+                        else -> focusFilterKeyToValueStrList.filterIndexed { innerIndex, _ ->
+                            innerIndex < nextValueKeyIndex
+                        }
+                    }.reversed()
+                }
+                matchTypeOrTargetKeyPairList + listOf(lastFilterKeyToValueStr)
+            }.filter {
+                    ifKeyPairs ->
+                ifKeyPairs.all {
+                        (ifKey, _) ->
+                    ifKey.isNotEmpty()
+                }
+            }.reversed()
+            return judgeKeyToValueStrList
         }
     }
 
-    private fun makeIfKeyPairsList(
-        argsPairList: List<Pair<String, String>>,
-    ):  List<List<Pair<String, String>>> {
-        val targetKey =
-            ListMethodArgClass.FilterArgs.FilterEnumArgs.TARGET.key
-        val matchTypeKey =
-            ListMethodArgClass.FilterArgs.FilterEnumArgs.MATCH_TYPE.key
-        val valueKey =
-            ListMethodArgClass.FilterArgs.FilterEnumArgs.VALUE.key
-        val regexKey =
-            ListMethodArgClass.FilterArgs.FilterEnumArgs.REGEX.key
-        val lastDefiniteKeyList = listOf(
-            valueKey,
-            regexKey
-        )
-        val ifArgsKeyList = listOf(
-            targetKey,
-            matchTypeKey,
-            valueKey,
-            ListMethodArgClass.FilterArgs.FilterEnumArgs.REGEX.key,
-        )
-        val ifArgNameToValueStrList = argsPairList.filter {
-            (argName, _) ->
-            ifArgsKeyList.contains(argName)
-        }
-        val defaultMapReturnPair =
-            listOf(String() to String())
-        val filterKeyToValueStrList = ifArgNameToValueStrList.filter {
-            (ifArgName, _) ->
-            ifArgsKeyList.contains(ifArgName)
-        }.reversed()
-        val judgeKeyToValueStrList = filterKeyToValueStrList.mapIndexed {
-            index, (filterKey, valueStr) ->
-            if(
-                index != 0
-                && !lastDefiniteKeyList.contains(filterKey)
-            ) return@mapIndexed defaultMapReturnPair
-            val lastFilterKeyToValueStr =
-                filterKey to valueStr
-            val matchTypeOrTargetKeyPairList = let {
-                val focusFilterKeyToValueStrList = filterKeyToValueStrList.filterIndexed { innerIndex, _ ->
-                    innerIndex > index
-                }
-                val nextValueKeyIndex =
-                    focusFilterKeyToValueStrList.indexOfFirst { (filterKey, _) ->
-                        lastDefiniteKeyList.contains(filterKey)
-                    }
-                when (
-                    nextValueKeyIndex < 0
-                ) {
-                    true -> focusFilterKeyToValueStrList
-                    else -> focusFilterKeyToValueStrList.filterIndexed { innerIndex, _ ->
-                        innerIndex < nextValueKeyIndex
-                    }
-                }.reversed()
-            }
-            matchTypeOrTargetKeyPairList + listOf(lastFilterKeyToValueStr)
-        }.filter {
-                ifKeyPairs ->
-            ifKeyPairs.all {
-                    (ifKey, _) ->
-                ifKey.isNotEmpty()
-            }
-        }.reversed()
-        return judgeKeyToValueStrList
-    }
 
     private fun replaceArgNameToValueStrList(
         inputLine: String,
@@ -973,12 +1377,17 @@ object ListForSetting {
         TAKE_LAST("takeLast", ListMethodArgClass.TakeLastArgs),
         JOIN("join", ListMethodArgClass.JoinArgs),
         FILTER("filter", ListMethodArgClass.FilterArgs),
+        SORT("sort", ListMethodArgClass.SortArgs),
+        UNIQ("uniq", ListMethodArgClass.UniqArgs),
     }
 
 
     private sealed interface ArgType {
         val entries: EnumEntries<*>
     }
+
+    private const val allFieldNum = 0
+    private const val factAllFieldNum = -1
 
     private sealed class ListMethodArgClass {
         data object RndArgs : ListMethodArgClass(), ArgType {
@@ -1172,5 +1581,108 @@ object ListForSetting {
             }
         }
 
+        data object SortArgs: ListMethodArgClass(), ArgType {
+            override val entries = SortEnumArgs.entries
+            val sortTypeEntries = SortType.entries
+            val inputConKeyToDefaultValueStr = Pair(
+                SortEnumArgs.INPUT_CON.key,
+                SortEnumArgs.INPUT_CON.defaultValueStr
+            )
+            val separatorKeyToDefaultValueStr = Pair(
+                SortEnumArgs.SEPARATOR.key,
+                SortEnumArgs.SEPARATOR.defaultValueStr
+            )
+            val joinStrKeyToDefaultValueStr = Pair(
+                SortEnumArgs.JOIN_STR.key,
+                SortEnumArgs.JOIN_STR.defaultValueStr
+            )
+            val delimiterKeyToDefaultValueStr = Pair(
+                SortEnumArgs.DELIMITER.key,
+                SortEnumArgs.DELIMITER.defaultValueStr
+            )
+            val fieldKeyToDefaultValueStr = Pair(
+                SortEnumArgs.FIELD.key,
+                SortEnumArgs.FIELD.defaultValueStr
+            )
+            val sortTypeKeyToDefaultValueStr = Pair(
+                SortEnumArgs.SORT_TYPE.key,
+                SortEnumArgs.SORT_TYPE.defaultValueStr
+            )
+            enum class SortEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                INPUT_CON("inputCon", null, FuncCheckerForSetting.ArgType.STRING),
+                SEPARATOR("separator", null, FuncCheckerForSetting.ArgType.STRING),
+                JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                DELIMITER("delimiter", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                FIELD("field", 0.toString(), FuncCheckerForSetting.ArgType.STRING),
+                SORT_TYPE("sortType", SortType.ORDINAL.str, FuncCheckerForSetting.ArgType.STRING),
+            }
+
+            enum class SortType (
+                val str: String,
+            ){
+                ORDINAL("ordinal"),
+                REVERSE("rev"),
+                RANDOM("rnd"),
+            }
+        }
+        data object UniqArgs: ListMethodArgClass(), ArgType {
+            override val entries = UniqEnumArgs.entries
+            val uniqTypeEntries = UniqType.entries
+            val inputConKeyToDefaultValueStr = Pair(
+                UniqEnumArgs.INPUT_CON.key,
+                UniqEnumArgs.INPUT_CON.defaultValueStr
+            )
+            val separatorKeyToDefaultValueStr = Pair(
+                UniqEnumArgs.SEPARATOR.key,
+                UniqEnumArgs.SEPARATOR.defaultValueStr
+            )
+            val joinStrKeyToDefaultValueStr = Pair(
+                UniqEnumArgs.JOIN_STR.key,
+                UniqEnumArgs.JOIN_STR.defaultValueStr
+            )
+            val delimiterKeyToDefaultValueStr = Pair(
+                UniqEnumArgs.DELIMITER.key,
+                UniqEnumArgs.DELIMITER.defaultValueStr
+            )
+            val startFieldKeyToDefaultValueStr = Pair(
+                UniqEnumArgs.START_FIELD.key,
+                UniqEnumArgs.START_FIELD.defaultValueStr
+            )
+            val endFieldKeyToDefaultValueStr = Pair(
+                UniqEnumArgs.END_FIELD.key,
+                UniqEnumArgs.END_FIELD.defaultValueStr
+            )
+            val uniqTypeToDefaultValueStr = Pair(
+               UniqEnumArgs.UNIQ_TYPE.key,
+               UniqEnumArgs.UNIQ_TYPE.defaultValueStr
+            )
+
+            enum class UniqEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                INPUT_CON("inputCon", null, FuncCheckerForSetting.ArgType.STRING),
+                SEPARATOR("separator", null, FuncCheckerForSetting.ArgType.STRING),
+                JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                DELIMITER("delimiter", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                START_FIELD("startField", allFieldNum.toString(), FuncCheckerForSetting.ArgType.STRING),
+                END_FIELD("endField", allFieldNum.toString(), FuncCheckerForSetting.ArgType.STRING),
+                UNIQ_TYPE("uniqType", UniqType.NORMAL.str, FuncCheckerForSetting.ArgType.STRING),
+
+            }
+            enum class UniqType (
+                val str: String,
+            ){
+                NORMAL("normal"),
+                COUNT("count"),
+                DUPLICATE("onlyDup"),
+                NOT_DUPLICATE("notDup"),
+            }
+        }
     }
 }
