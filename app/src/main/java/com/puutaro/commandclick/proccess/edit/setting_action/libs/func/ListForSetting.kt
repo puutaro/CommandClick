@@ -1162,7 +1162,7 @@ object ListForSetting {
                 MATCH_TYPE(SettingIfManager.IfArgs.MATCH_TYPE.str, null, FuncCheckerForSetting.ArgType.STRING),
                 VALUE(SettingIfManager.IfArgs.VALUE.str, String(), FuncCheckerForSetting.ArgType.STRING),
                 REGEX(SettingIfManager.IfArgs.REGEX.str, String(), FuncCheckerForSetting.ArgType.STRING),
-                TARGET("target", null, FuncCheckerForSetting.ArgType.STRING),
+                TARGET("target", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
 //                EL_VAR_NAME("elVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
