@@ -4,6 +4,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -706,10 +707,11 @@ object ShellToolManagerForSetting {
                     if(
                         indexVarName == defaultNullMacroStr
                     ) return@replaceByIndex it
-                    it.replace(
-                    "${'$'}${indexVarName}",
-                    indexVarNameToInexPair.second
-                )
+                    VarMarkTool.replaceByValue(
+                        it,
+                        indexVarName,
+                        indexVarNameToInexPair.second
+                    )
                 }
             val fieldVarNameToValueStrList = SettingFuncTool.FieldVarPrefix.makeFieldVarNameToValueStrList(
                 inputConForShellVar,
@@ -1060,10 +1062,11 @@ object ShellToolManagerForSetting {
                     if(
                         indexVarName == defaultNullMacroStr
                     ) return@replaceByIndex it
-                    it.replace(
-                    "${'$'}${indexVarName}",
-                    indexVarNameToIndexPair.second
-                )
+                    VarMarkTool.replaceByValue(
+                        it,
+                        indexVarName,
+                        indexVarNameToIndexPair.second
+                    )
                 }
             val fieldVarNameToValueStrList = SettingFuncTool.FieldVarPrefix.makeFieldVarNameToValueStrList(
                 inputConForShellVar,

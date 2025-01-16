@@ -1,10 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
-import java.io.File
+import com.puutaro.commandclick.util.str.VarMarkTool
 
 object SettingFuncTool {
 
@@ -63,12 +61,10 @@ object SettingFuncTool {
             var targetConWithReplace = targetCon
             fieldVarNameToValueStrList.forEach { (fieldVarName, el) ->
                 targetConWithReplace =
-                    targetConWithReplace.replace(
-                        Regex("""([^\\])[$]${fieldVarName}"""),
-                        "$1${el}"
-                    ).replace(
-                        Regex("""^[$]${fieldVarName}"""),
-                        el
+                    VarMarkTool.replaceByValue(
+                        targetConWithReplace,
+                        fieldVarName,
+                        el,
                     )
             }
 //            FileSystems.updateFile(
@@ -86,7 +82,7 @@ object SettingFuncTool {
 //                ).joinToString("\n\n")+ "\n\n==========\n\n"
 //            )
             return targetConWithReplace.replace(
-                Regex("[$]${fieldVarPrefix}[0-9]{1,5}"),
+                Regex("[$][{]${fieldVarPrefix}[0-9]{1,5}[}]"),
                 String()
             )
         }
@@ -97,9 +93,18 @@ object SettingFuncTool {
             fieldVarPrefix: String,
         ): List<Pair<String, String>>? {
             if (
-                delimiter == defaultNullMacroStr
-                || fieldVarPrefix == defaultNullMacroStr
+                fieldVarPrefix == defaultNullMacroStr
             ) return null
+            val fieldVarNameToValueStrList =
+                listOf("${fieldVarPrefix}0" to inputCon) + when(
+                delimiter == defaultNullMacroStr
+            ) {
+                true -> emptyList()
+                else -> inputCon.split(delimiter)
+                    .mapIndexed { index, el ->
+                        "${fieldVarPrefix}${index + 1}" to el
+                    }
+            }
 //            FileSystems.updateFile(
 //                File(
 //                    UsePath.cmdclickDefaultAppDirPath,
@@ -109,18 +114,10 @@ object SettingFuncTool {
 //                    "inputConForShellVar: ${inputCon}",
 //                    "delimiter: ${delimiter}",
 //                    "fieldVarPrefix: ${fieldVarPrefix}",
-//                    "pair: ${
-//                        inputCon.split(delimiter)
-//                            .mapIndexed { index, el ->
-//                                "${'$'}${fieldVarPrefix}${index}" to el
-//                            }
-//                    }",
+//                    "pair: ${fieldVarNameToValueStrList}",
 //                ).joinToString("\n\n") + "\n\n==========\n\n"
 //            )
-            return inputCon.split(delimiter)
-                .mapIndexed { index, el ->
-                    "${fieldVarPrefix}${index}" to el
-                }
+            return fieldVarNameToValueStrList
         }
     }
 }

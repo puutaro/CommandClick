@@ -8,6 +8,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManag
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager.ConcatCondition
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.PairListTool
+import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -444,18 +445,18 @@ object ListForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
-                        mapArgMapList,
-                        args.elVarNameKeyToDefaultValueStr,
-                        where
-                    ).let { elVarNameToErr ->
-                        val funcErr = elVarNameToErr.second
-                            ?: return@let elVarNameToErr.first
-                        return@withContext Pair(
-                            null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
-                        ) to funcErr
-                    }
+//                    val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+//                        mapArgMapList,
+//                        args.elVarNameKeyToDefaultValueStr,
+//                        where
+//                    ).let { elVarNameToErr ->
+//                        val funcErr = elVarNameToErr.second
+//                            ?: return@let elVarNameToErr.first
+//                        return@withContext Pair(
+//                            null,
+//                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                        ) to funcErr
+//                    }
                     val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.indexVarNameKeyToDefaultValueStr,
@@ -493,7 +494,7 @@ object ListForSetting {
                         ) to funcErr
                     }
                     val alreadyUseVarNameList = listOf(
-                        elVarName,
+//                        elVarName,
                         indexVarName,
                         fieldVarPrefix
                     ).filter {
@@ -511,10 +512,10 @@ object ListForSetting {
                             CheckTool.ligthBlue,
                             args.indexVarNameKeyToDefaultValueStr.first
                         )
-                        val spanElVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
-                            args.elVarNameKeyToDefaultValueStr.first
-                        )
+//                        val spanElVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+//                            CheckTool.ligthBlue,
+//                            args.elVarNameKeyToDefaultValueStr.first
+//                        )
                         val spanFieldVarPrefix = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                             CheckTool.ligthBlue,
                             args.fieldVarPrefixKeyToDefaultValueStr.first
@@ -532,7 +533,7 @@ object ListForSetting {
                             null,
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to  FuncCheckerForSetting. FuncCheckErr(
-                            "Must be different from ${spanIndexVarName} ${spanElVarName}, and ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
+                            "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
                         )
                     }
                     val boolToErr = Filter.filter(
@@ -544,7 +545,7 @@ object ListForSetting {
                         separator,
                         joinStr,
                         semaphoreInt,
-                        elVarName,
+//                        elVarName,
                         indexVarName,
                         delimiter,
                         fieldVarPrefix,
@@ -577,7 +578,7 @@ object ListForSetting {
             separator: String,
             joinStr: String,
             semaphoreInt: Int,
-            elVarName: String,
+//            elVarName: String,
             indexVarName: String,
             delimiter: String,
             fieldVarPrefix: String,
@@ -608,7 +609,7 @@ object ListForSetting {
                                     args,
                                     argsPairList,
                                     inputLine,
-                                    elVarName,
+//                                    elVarName,
                                     indexVarName,
                                     index,
                                     delimiter,
@@ -636,7 +637,7 @@ object ListForSetting {
                                 args,
                                 argsPairList,
                                 inputLine,
-                                elVarName,
+//                                elVarName,
                                 indexVarName,
                                 index,
                                 delimiter,
@@ -702,7 +703,17 @@ object ListForSetting {
                 boolToErr.second != null
             }?.let {
                     (_, boolToErr) ->
-                return null to FuncCheckerForSetting.FuncCheckErr(boolToErr.second?.errMessage.toString())
+                val spanPlusWhere =
+                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        where
+                    )
+                return null to FuncCheckerForSetting.FuncCheckErr(
+                    listOf(
+                        boolToErr.second?.errMessage.toString(),
+                        spanPlusWhere
+                    ).joinToString(", ")
+                )
             }
             val filterLineListCon = lineToMatchErrList.filter {
                 lineAndMatchErr ->
@@ -721,7 +732,7 @@ object ListForSetting {
         args: ListMethodArgClass.FilterArgs,
         argsPairList: List<Pair<String, String>>,
         inputLine: String,
-        elVarName: String,
+//        elVarName: String,
         indexVarName: String,
         elIndex: Int,
         delimiter: String,
@@ -730,7 +741,7 @@ object ListForSetting {
         val argsPairListWithReplace = replaceArgNameToValueStrList(
             inputLine,
             argsPairList,
-            elVarName,
+//            elVarName,
             indexVarName,
             elIndex,
             delimiter,
@@ -745,13 +756,13 @@ object ListForSetting {
             val targetCon = PairListTool.getValue(
                 ifKeyPairList,
                 targetKey
-            )
-            if(targetCon.isNullOrEmpty()){
-                return SettingIfManager.makeJudgeTargetNotExistErr(
-                        "${funcName}.${methodNameStr}",
-                        argsPairList,
-                    )
-            }
+            ) ?: inputLine
+//            if(targetCon.isNullOrEmpty()){
+//                return SettingIfManager.makeJudgeTargetNotExistErr(
+//                        "${funcName}.${methodNameStr}",
+//                        argsPairList,
+//                    )
+//            }
             SettingIfManager.IfArgMatcher.match(
                 "${funcName}.${methodNameStr}",
                 targetCon,
@@ -761,20 +772,10 @@ object ListForSetting {
                 },
             )
         }
-        boolToErrList.firstOrNull {
-                (_, err) ->
-            err != null
-        }.let {
-                boolToErr ->
-            val err = boolToErr?.second
-                ?: return@let
-            return null to err
-        }
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "llistForseettg${elIndex}.txt").absolutePath,
 //            listOf(
 //                "index: ${elIndex}",
-//                "elVarName: ${elVarName}",
 //                "indexVarName: ${indexVarName}",
 //                "fieldVarPrefix: ${fieldVarPrefix}",
 //                "delimiter: ${delimiter}",
@@ -786,6 +787,15 @@ object ListForSetting {
 //                "ifKeyPairsList: ${ifKeyPairsList}",
 //            ).joinToString("\n\n") + "\n=====\n\n"
 //        )
+        boolToErrList.firstOrNull {
+                (_, err) ->
+            err != null
+        }.let {
+                boolToErr ->
+            val err = boolToErr?.second
+                ?: return@let
+            return null to err
+        }
         return when(boolToErrList.size == 1) {
             true -> boolToErrList.first()
             else -> {
@@ -797,7 +807,6 @@ object ListForSetting {
 //                    File(UsePath.cmdclickDefaultAppDirPath, "llistForseettg${elIndex}_condition.txt").absolutePath,
 //                    listOf(
 //                        "index: ${elIndex}",
-//                        "elVarName: ${elVarName}",
 //                        "indexVarName: ${indexVarName}",
 //                        "fieldVarPrefix: ${fieldVarPrefix}",
 //                        "delimiter: ${delimiter}",
@@ -838,65 +847,72 @@ object ListForSetting {
     ):  List<List<Pair<String, String>>> {
         val targetKey =
             ListMethodArgClass.FilterArgs.FilterEnumArgs.TARGET.key
-        val ifArgsKeyListExcludeTarget = listOf(
-            ListMethodArgClass.FilterArgs.FilterEnumArgs.MATCH_TYPE.key,
-            ListMethodArgClass.FilterArgs.FilterEnumArgs.VALUE.key,
+        val matchTypeKey =
+            ListMethodArgClass.FilterArgs.FilterEnumArgs.MATCH_TYPE.key
+        val valueKey =
+            ListMethodArgClass.FilterArgs.FilterEnumArgs.VALUE.key
+        val regexKey =
+            ListMethodArgClass.FilterArgs.FilterEnumArgs.REGEX.key
+        val lastDefiniteKeyList = listOf(
+            valueKey,
+            regexKey
+        )
+        val ifArgsKeyList = listOf(
+            targetKey,
+            matchTypeKey,
+            valueKey,
             ListMethodArgClass.FilterArgs.FilterEnumArgs.REGEX.key,
         )
-        val ifArgsKeyList =
-            ifArgsKeyListExcludeTarget +
-                    listOf(targetKey)
         val ifArgNameToValueStrList = argsPairList.filter {
             (argName, _) ->
             ifArgsKeyList.contains(argName)
         }
         val defaultMapReturnPair =
             listOf(String() to String())
-        return ifArgNameToValueStrList.mapIndexed {
-                index, (ifArgName, valueStr) ->
+        val filterKeyToValueStrList = ifArgNameToValueStrList.filter {
+            (ifArgName, _) ->
+            ifArgsKeyList.contains(ifArgName)
+        }.reversed()
+        val judgeKeyToValueStrList = filterKeyToValueStrList.mapIndexed {
+            index, (filterKey, valueStr) ->
             if(
-                ifArgName.isEmpty()
-                || ifArgName != targetKey
-            ) {
-                return@mapIndexed defaultMapReturnPair
-            }
-            val targetToValueStr = 
-                targetKey to valueStr
-            val ifArgsKeyPairExcludeTarget = let {
-                val focusArgsPairList = ifArgNameToValueStrList.filterIndexed {
-                        innerIndex, _ ->
+                index != 0
+                && !lastDefiniteKeyList.contains(filterKey)
+            ) return@mapIndexed defaultMapReturnPair
+            val lastFilterKeyToValueStr =
+                filterKey to valueStr
+            val matchTypeOrTargetKeyPairList = let {
+                val focusFilterKeyToValueStrList = filterKeyToValueStrList.filterIndexed { innerIndex, _ ->
                     innerIndex > index
                 }
-                if(
-                    focusArgsPairList.isEmpty()
-                ) return@let defaultMapReturnPair
-                val nextTargetKeyIndex = focusArgsPairList.indexOfFirst {
-                        (key, valueStr) ->
-                    key == targetKey
-                }
-                when(
-                    nextTargetKeyIndex < 0
-                ) {
-                    true -> focusArgsPairList
-                    else -> focusArgsPairList.filterIndexed { innerIndex, _ ->
-                        innerIndex < nextTargetKeyIndex
+                val nextValueKeyIndex =
+                    focusFilterKeyToValueStrList.indexOfFirst { (filterKey, _) ->
+                        lastDefiniteKeyList.contains(filterKey)
                     }
-                }
+                when (
+                    nextValueKeyIndex < 0
+                ) {
+                    true -> focusFilterKeyToValueStrList
+                    else -> focusFilterKeyToValueStrList.filterIndexed { innerIndex, _ ->
+                        innerIndex < nextValueKeyIndex
+                    }
+                }.reversed()
             }
-            listOf(targetToValueStr) + ifArgsKeyPairExcludeTarget
+            matchTypeOrTargetKeyPairList + listOf(lastFilterKeyToValueStr)
         }.filter {
                 ifKeyPairs ->
             ifKeyPairs.all {
-                (ifKey, _) ->
+                    (ifKey, _) ->
                 ifKey.isNotEmpty()
             }
-        }
+        }.reversed()
+        return judgeKeyToValueStrList
     }
 
     private fun replaceArgNameToValueStrList(
         inputLine: String,
         argsPairList: List<Pair<String, String>>,
-        elVarName: String,
+//        elVarName: String,
         indexVarName: String,
         elIndex: Int,
         delimiter: String,
@@ -906,7 +922,7 @@ object ListForSetting {
             argName to replaceByElAndFieldVar(
                 valueStr,
                 inputLine,
-                elVarName,
+//                elVarName,
                 indexVarName,
                 elIndex,
                 delimiter,
@@ -918,7 +934,7 @@ object ListForSetting {
     private fun replaceByElAndFieldVar(
         valueStr: String,
         inputLine: String,
-        elVarName: String,
+//        elVarName: String,
         indexVarName: String,
         elIndex: Int,
         delimiter: String,
@@ -934,21 +950,14 @@ object ListForSetting {
                 valueStr,
                 fieldVarNameToValueStrList,
                 fieldVarPrefix,
-            ).let replaceByEl@ {
-                if(
-                    elVarName == defaultNullMacroStr
-                ) return@replaceByEl it
-                it.replace(
-                    "${'$'}${elVarName}",
-                    inputLine
-                )
-            }.let replaceByIndex@ {
+            ).let replaceByIndex@ {
                 if(
                     indexVarName == defaultNullMacroStr
                 ) return@replaceByIndex it
-                it.replace(
-                    "${'$'}${indexVarName}",
-                    elIndex.toString()
+                VarMarkTool.replaceByValue(
+                    it,
+                    indexVarName,
+                    elIndex.toString(),
                 )
             }
         }
@@ -1121,10 +1130,10 @@ object ListForSetting {
                 FilterEnumArgs.SEMAPHORE.key,
                 FilterEnumArgs.SEMAPHORE.defaultValueStr
             )
-            val elVarNameKeyToDefaultValueStr = Pair(
-                FilterEnumArgs.EL_VAR_NAME.key,
-                FilterEnumArgs.EL_VAR_NAME.defaultValueStr
-            )
+//            val elVarNameKeyToDefaultValueStr = Pair(
+//                FilterEnumArgs.EL_VAR_NAME.key,
+//                FilterEnumArgs.EL_VAR_NAME.defaultValueStr
+//            )
             val indexVarNameKeyToDefaultValueStr = Pair(
                 FilterEnumArgs.INDEX_VAR_NAME.key,
                 FilterEnumArgs.INDEX_VAR_NAME.defaultValueStr
@@ -1155,7 +1164,7 @@ object ListForSetting {
                 REGEX(SettingIfManager.IfArgs.REGEX.str, String(), FuncCheckerForSetting.ArgType.STRING),
                 TARGET("target", null, FuncCheckerForSetting.ArgType.STRING),
                 SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
-                EL_VAR_NAME("elVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+//                EL_VAR_NAME("elVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 DELIMITER("delimiter", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 FIELD_VAR_PREFIX("fieldVarPrefix", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),

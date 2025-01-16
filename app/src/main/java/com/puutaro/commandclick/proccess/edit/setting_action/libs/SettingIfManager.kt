@@ -1,6 +1,9 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
 
 object SettingIfManager {
@@ -106,6 +109,7 @@ object SettingIfManager {
 //                listOf(
 //                    "judgeTargetStr: ${judgeTargetStr}",
 //                    "matchList: ${matchList}",
+//                    "argNameToSubKeyMapPairList: ${argNameToSubKeyMapPairList}",
 //                    "argErr: ${argErr}",
 //                ).joinToString("\n\n") + "\n\n==========\n\n"
 //            )
@@ -200,6 +204,14 @@ object SettingIfManager {
             val argNameToSubKeyMapList = makeArgNameToSubKeyMapList(
                 argsPairList,
             )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "ljudge_makeMatchListToErr.txt").absolutePath,
+//                listOf(
+//                    "judgeTargetStr: ${judgeTargetStr}",
+//                    "argsPairList: ${argsPairList}",
+//                    "argNameToSubKeyMapList: ${argNameToSubKeyMapList}",
+//                ).joinToString("\n\n") + "\n\n==========\n\n"
+//            )
             val matchTypeArgKey = IfArgs.MATCH_TYPE.str
             argNameToSubKeyMapList.toMap().get(matchTypeArgKey) ?: let {
                 val spanMatchTypeKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(

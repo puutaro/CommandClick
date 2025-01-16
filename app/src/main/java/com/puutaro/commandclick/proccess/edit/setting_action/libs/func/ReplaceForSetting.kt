@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -316,9 +317,10 @@ object ReplaceForSetting {
                             if(
                                 indexVarName == defaultNullMacroStr
                             ) return@replaceByIndex it
-                            it.replace(
-                            "${'$'}${indexVarName}",
-                            elIndex.toString()
+                            VarMarkTool.replaceByValue(
+                                it,
+                                indexVarName,
+                                elIndex.toString(),
                             )
                         }
                     }
@@ -345,11 +347,14 @@ object ReplaceForSetting {
                             it,
                             fieldVarNameToValueStrList,
                             fieldVarPrefix,
-                        ).replace(
-                            "${'$'}${indexVarName}",
-                            elIndex.toString()
-
-                        )
+                        ).let {
+                            conWithReplaceByFieldVarName ->
+                            VarMarkTool.replaceByValue(
+                                conWithReplaceByFieldVarName,
+                                indexVarName,
+                                elIndex.toString(),
+                            )
+                        }
                     } ?: String()
                 val tempReplaceInputCon = try {
                     replaceInputCon.replace(

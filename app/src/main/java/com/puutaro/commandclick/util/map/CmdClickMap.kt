@@ -1,12 +1,10 @@
 package com.puutaro.commandclick.util.map
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.BackslashTool
 import com.puutaro.commandclick.util.str.QuoteTool
-import java.io.File
+import com.puutaro.commandclick.util.str.VarMarkTool
 
 object CmdClickMap {
 
@@ -172,17 +170,11 @@ object CmdClickMap {
         repMap.forEach {
             val replaceStr =
                 it.value ?: String()
-            val tempRepCon = try {
-                repCon.replace(
-                    Regex("""([^\\])[$][{]${it.key}[}]"""),
-                    "$1${replaceStr}"
-                ).replace(
-                    Regex("""^[$][{]${it.key}[}]"""),
-                    replaceStr
-                )
-            } catch (e: Exception){
-                repCon
-            }
+            val tempRepCon = VarMarkTool.replaceByValue(
+                repCon,
+                it.key,
+                replaceStr,
+            )
             repCon = tempRepCon
         }
         return repCon

@@ -1951,18 +1951,30 @@ object EvalForSetting {
                                 SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                             ) to funcErr
                         }
-                    val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
-                        args.elVarNameKeyToDefaultValueStr,
+                        args.fieldVarPrefixKeyToDefaultValueStr,
                         where
-                    ).let { elVarNameToErr ->
-                        val funcErr = elVarNameToErr.second
-                            ?: return@let elVarNameToErr.first
+                    ).let { fieldVarPrefixToErr ->
+                        val funcErr = fieldVarPrefixToErr.second
+                            ?: return@let fieldVarPrefixToErr.first
                         return@withContext Pair(
                             null,
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
+//                    val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+//                        mapArgMapList,
+//                        args.elVarNameKeyToDefaultValueStr,
+//                        where
+//                    ).let { elVarNameToErr ->
+//                        val funcErr = elVarNameToErr.second
+//                            ?: return@let elVarNameToErr.first
+//                        return@withContext Pair(
+//                            null,
+//                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                        ) to funcErr
+//                    }
                     val settingActionCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.actionKeyToDefaultValueStr,
@@ -2035,22 +2047,10 @@ object EvalForSetting {
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
-                        mapArgMapList,
-                        args.fieldVarPrefixKeyToDefaultValueStr,
-                        where
-                    ).let { fieldVarPrefixToErr ->
-                        val funcErr = fieldVarPrefixToErr.second
-                            ?: return@let fieldVarPrefixToErr.first
-                        return@withContext Pair(
-                            null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
-                        ) to funcErr
-                    }
                     val alreadyUseVarNameList = listOf(
-                        elVarName,
+//                        elVarName,
+                        fieldVarPrefix,
                         indexVarName,
-                        fieldVarPrefix
                     ).filter {
                         it != defaultNullMacroStr
                     }
@@ -2062,10 +2062,10 @@ object EvalForSetting {
                                     sortedAlreadyUseVarNameList.distinct()
                         }
                     if(isDuplicate){
-                        val spanElVarNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.ligthBlue,
-                            args.elVarNameKeyToDefaultValueStr.first
-                        )
+//                        val spanElVarNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+//                            CheckTool.ligthBlue,
+//                            args.elVarNameKeyToDefaultValueStr.first
+//                        )
                         val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                             CheckTool.ligthBlue,
                             args.indexVarNameKeyToDefaultValueStr.first
@@ -2087,7 +2087,7 @@ object EvalForSetting {
                             null,
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                         ) to  FuncCheckerForSetting. FuncCheckErr(
-                            "Must be different from ${spanElVarNameKey}, ${spanIndexVarName} and ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
+                            "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
                         )
                     }
                     MapOperator.map(
@@ -2102,7 +2102,7 @@ object EvalForSetting {
                         inputCon,
                         separator,
                         indexVarName,
-                        elVarName,
+//                        elVarName,
                         settingActionCon,
                         joinStr,
                         semaphoreLimit,
@@ -2134,7 +2134,7 @@ object EvalForSetting {
             inputCon: String,
             separator: String,
             indexVarName: String,
-            elVarName: String,
+//            elVarName: String,
             settingActionCon: String,
             joinStr: String,
             semaphoreLimit: Int,
@@ -2151,7 +2151,7 @@ object EvalForSetting {
                 "inputCon ${inputCon}",
                 "separator: ${separator}",
                 "indexVarName: ${indexVarName}",
-                "elVarName: ${elVarName}",
+//                "elVarName: ${elVarName}",
                 "settingActionCon $settingActionCon",
                 "joinStr: ${joinStr}",
                 "semaphoreLimit: ${semaphoreLimit}",
@@ -2207,8 +2207,8 @@ object EvalForSetting {
                                 editConstraintListAdapterArg,
                                 index,
                                 indexVarName,
-                                el,
-                                elVarName,
+//                                el,
+//                                elVarName,
                                 settingActionCon,
                                 fieldVarNameToValueStrMap,
                             )
@@ -2223,8 +2223,8 @@ object EvalForSetting {
                                     editConstraintListAdapterArg,
                                     index,
                                     indexVarName,
-                                    el,
-                                    elVarName,
+//                                    el,
+//                                    elVarName,
                                     settingActionCon,
                                     fieldVarNameToValueStrMap,
                                 )
@@ -2292,13 +2292,13 @@ object EvalForSetting {
             editConstraintListAdapterArg: EditConstraintListAdapter? = null,
             index: Int,
             indexVarName: String,
-            el: String,
-            elVarName: String,
+//            el: String,
+//            elVarName: String,
             settingActionCon: String,
             fieldVarMarkToValueStrMap: Map<String, String>,
         ): Pair<Int, String?> {
             val curTopVarNameToValueStrMap = (topVarNameToValueStrMap ?: emptyMap()) + mapOf(
-                elVarName to el,
+//                elVarName to el,
                 indexVarName to index.toString(),
             ) + fieldVarMarkToValueStrMap
             val outputVarNameToValueStrMap = SettingActionManager().exec(
@@ -2312,7 +2312,7 @@ object EvalForSetting {
                 },
                 curTopVarNameToValueStrMap,
                 settingActionCon,
-                "eval: indexVarName: ${indexVarName}, elVarName: ${elVarName}, ${keyToSubKeyConWhere}",
+                "eval: indexVarName: ${indexVarName}, ${keyToSubKeyConWhere}",
                 editConstraintListAdapterArg,
                 returnTopAcVarNameMacro
             )
@@ -2338,9 +2338,13 @@ object EvalForSetting {
                 MapEnumArgs.INPUT.key,
                 MapEnumArgs.INPUT.defaultValueStr
             )
-            val elVarNameKeyToDefaultValueStr = Pair(
-                MapEnumArgs.EL_VAR_NAME.key,
-                MapEnumArgs.EL_VAR_NAME.defaultValueStr
+//            val elVarNameKeyToDefaultValueStr = Pair(
+//                MapEnumArgs.EL_VAR_NAME.key,
+//                MapEnumArgs.EL_VAR_NAME.defaultValueStr
+//            )
+            val fieldVarPrefixKeyToDefaultValueStr = Pair(
+                MapEnumArgs.FIELD_VAR_PREFIX.key,
+                MapEnumArgs.FIELD_VAR_PREFIX.defaultValueStr
             )
             val actionKeyToDefaultValueStr = Pair(
                 MapEnumArgs.ACTION.key,
@@ -2366,10 +2370,6 @@ object EvalForSetting {
                 MapEnumArgs.DELIMITER.key,
                 MapEnumArgs.DELIMITER.defaultValueStr
             )
-            val fieldVarPrefixKeyToDefaultValueStr = Pair(
-                MapEnumArgs.FIELD_VAR_PREFIX.key,
-                MapEnumArgs.FIELD_VAR_PREFIX.defaultValueStr
-            )
 
             enum class MapEnumArgs(
                 val key: String,
@@ -2377,14 +2377,14 @@ object EvalForSetting {
                 val type: FuncCheckerForSetting.ArgType,
             ) {
                 INPUT("inputCon", String(), FuncCheckerForSetting.ArgType.STRING),
-                EL_VAR_NAME("elVarName", null, FuncCheckerForSetting.ArgType.STRING),
+//                EL_VAR_NAME("elVarName", null, FuncCheckerForSetting.ArgType.STRING),
+                FIELD_VAR_PREFIX("fieldVarPrefix", null, FuncCheckerForSetting.ArgType.STRING),
                 ACTION("action", null, FuncCheckerForSetting.ArgType.STRING),
                 SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
                 DELIMITER("delimiter", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
-                FIELD_VAR_PREFIX("fieldVarPrefix", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }
