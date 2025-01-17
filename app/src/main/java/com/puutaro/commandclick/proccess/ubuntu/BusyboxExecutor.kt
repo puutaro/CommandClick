@@ -90,6 +90,7 @@ class BusyboxExecutor(
     fun getCmdOutputByErrHandle(
         commandSrc: String,
         envMapSrc: Map<String, String>? = null,
+        chDirPath: String?,
     ): Pair<String, String?> {
         val envMap = makeRepValHashMap(
             envMapSrc,
@@ -114,7 +115,8 @@ class BusyboxExecutor(
 //        )
         return execCommandForOutputByErrHandle(
             listOf("sh", "-c", command),
-            null
+            null,
+            chDirPath,
 //            envMap
         )
     }
@@ -181,7 +183,8 @@ class BusyboxExecutor(
 
     private fun execCommandForOutputByErrHandle(
         command: List<String>,
-        env: HashMap<String, String>?
+        env: HashMap<String, String>?,
+        chDirPath: String?,
     ): Pair<String, String?> {
         if (!busyboxWrapper.busyboxIsPresent()) {
             ubuntuFiles.setupLinksForBusyBox()
@@ -195,6 +198,13 @@ class BusyboxExecutor(
         } ?: busyboxHashMap
         processBuilder.environment().putAll(envHash)
         processBuilder.redirectErrorStream(true)
+        chDirPath?.let {
+            val dir = File(it)
+            if (
+                !dir.isDirectory
+            ) return@let
+            processBuilder.directory(File(it))
+        }
         return try {
             val process = processBuilder.start()
             val stdInToErr = outputStdAndErr(

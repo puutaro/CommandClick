@@ -240,6 +240,7 @@ object ShellToolManagerForSetting {
                         sortedAlreadyUseVarNameList !=
                                 sortedAlreadyUseVarNameList.distinct()
                     }
+
                 if(isDuplicate){
                     val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                         CheckTool.lightBlue,
@@ -264,6 +265,25 @@ object ShellToolManagerForSetting {
                         "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}, ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
                     )
                 }
+                val chDirPath = FuncCheckerForSetting.Getter.getDirFromArgMapByName(
+                    mapArgMapList,
+                    args.chDirKeyToDefaultValueStr,
+                    where
+                ).let { chDirToErr ->
+                    val funcErr = chDirToErr.second
+                        ?: return@let chDirToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    chDirPathSrc ->
+                    if(
+                        chDirPathSrc == defaultNullMacroStr
+                    ) return@let null
+                    chDirPathSrc
+                }
+
                 val argsPairListForCmd = when(enableEscape){
                     true -> SettingFuncTool.makeArgsPairListByEscape(
                         argsPairListBeforeBsEscape,
@@ -292,6 +312,7 @@ object ShellToolManagerForSetting {
                     indexVarName,
                     delimiter,
                     fieldVarPrefix,
+                    chDirPath,
                     where
                 )
             }
@@ -501,6 +522,24 @@ object ShellToolManagerForSetting {
                         "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}, ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
                     )
                 }
+                val chDirPath = FuncCheckerForSetting.Getter.getDirFromArgMapByName(
+                    mapArgMapList,
+                    args.chDirKeyToDefaultValueStr,
+                    where
+                ).let { chDirToErr ->
+                    val funcErr = chDirToErr.second
+                        ?: return@let chDirToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                        chDirPathSrc ->
+                    if(
+                        chDirPathSrc == defaultNullMacroStr
+                    ) return@let null
+                    chDirPathSrc
+                }
 
                 val argsPairListForCmd = when(enableEscape){
                     true -> SettingFuncTool.makeArgsPairListByEscape(
@@ -529,6 +568,7 @@ object ShellToolManagerForSetting {
                     indexVarName,
                     delimiter,
                     fieldVarPrefix,
+                    chDirPath,
                     where,
                 )
             }
@@ -549,6 +589,7 @@ object ShellToolManagerForSetting {
             indexVarName: String,
             delimiter: String,
             fieldVarPrefix: String,
+            chDirPath: String?,
             where: String,
         ): Pair<
                 Pair<
@@ -586,6 +627,7 @@ object ShellToolManagerForSetting {
                                     timeoutInt,
                                     delimiter,
                                     fieldVarPrefix,
+                                    chDirPath,
                                     where,
                                 )
                             }
@@ -605,6 +647,7 @@ object ShellToolManagerForSetting {
                                 timeoutInt,
                                 delimiter,
                                 fieldVarPrefix,
+                                chDirPath,
                                 where,
                             )
 //                            FileSystems.updateFile(
@@ -657,6 +700,7 @@ object ShellToolManagerForSetting {
             timeoutInt: Int,
             delimiter: String,
             fieldVarPrefix: String,
+            chDirPath: String?,
             where: String,
         ): Pair<Int, Pair<String?, FuncCheckerForSetting.FuncCheckErr?>> {
             val execCmdStr = makeCmd(
@@ -672,6 +716,7 @@ object ShellToolManagerForSetting {
                 busyboxExecutor,
                 execCmdStr,
                 index,
+                chDirPath,
                 where,
             )
         }
@@ -859,6 +904,7 @@ object ShellToolManagerForSetting {
             indexVarName: String,
             delimiter: String,
             fieldVarPrefix: String,
+            chDirPath: String?,
             where: String,
         ): Pair<
                 Pair<
@@ -917,6 +963,7 @@ object ShellToolManagerForSetting {
                                     defaultTimeoutInt,
                                     delimiter,
                                     fieldVarPrefix,
+                                    chDirPath,
                                     where,
                                 )
                             }
@@ -935,6 +982,7 @@ object ShellToolManagerForSetting {
                                 defaultTimeoutInt,
                                 delimiter,
                                 fieldVarPrefix,
+                                chDirPath,
                                 where,
                             )
 //                            FileSystems.updateFile(
@@ -988,6 +1036,7 @@ object ShellToolManagerForSetting {
             defaultTimeoutInt: Int,
             delimiter: String,
             fieldVarPrefix: String,
+            chDirPath: String?,
             where: String,
         ): Pair<Int, Pair<String?, FuncCheckerForSetting.FuncCheckErr?>> {
             val execCmdStr = makeCmd(
@@ -1003,6 +1052,7 @@ object ShellToolManagerForSetting {
                 busyboxExecutor,
                 execCmdStr,
                 index,
+                chDirPath,
                 where,
             )
         }
@@ -1192,11 +1242,13 @@ object ShellToolManagerForSetting {
         busyboxExecutor: BusyboxExecutor?,
         execCmdStr: String,
         index: Int,
+        chDirPath: String?,
         where: String,
     ): Pair<Int, Pair<String?, FuncCheckerForSetting.FuncCheckErr?>> {
         val outToErr = busyboxExecutor?.getCmdOutputByErrHandle(
             execCmdStr,
             null,
+            chDirPath,
         )
         val errStd = outToErr?.second
         if(!errStd.isNullOrEmpty()){
@@ -1286,6 +1338,10 @@ object ShellToolManagerForSetting {
                 ExecEnumArgs.FIELD_VAR_PREFIX.key,
                 ExecEnumArgs.FIELD_VAR_PREFIX.defaultValueStr,
             )
+            val chDirKeyToDefaultValueStr = Pair(
+                ExecEnumArgs.CH_DIR.key,
+                ExecEnumArgs.CH_DIR.defaultValueStr,
+            )
 
 
             enum class ExecEnumArgs(
@@ -1305,6 +1361,7 @@ object ShellToolManagerForSetting {
                 INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 DELIMITER("delimiter", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 FIELD_VAR_PREFIX("fieldVarPrefix", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                CH_DIR("chDir", defaultNullMacroStr, FuncCheckerForSetting.ArgType.DIR),
             }
         }
         data object MapArgs : ShellMethodArgClass(), ArgType {
@@ -1349,6 +1406,10 @@ object ShellToolManagerForSetting {
                 MapEnumArgs.FIELD_VAR_PREFIX.key,
                 MapEnumArgs.FIELD_VAR_PREFIX.defaultValueStr
             )
+            val chDirKeyToDefaultValueStr = Pair(
+                MapEnumArgs.CH_DIR.key,
+                MapEnumArgs.CH_DIR.defaultValueStr
+            )
 
 
             enum class MapEnumArgs(
@@ -1366,6 +1427,7 @@ object ShellToolManagerForSetting {
                 INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 DELIMITER("delimiter", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 FIELD_VAR_PREFIX("fieldVarPrefix", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                CH_DIR("chDir", defaultNullMacroStr, FuncCheckerForSetting.ArgType.DIR),
             }
         }
     }

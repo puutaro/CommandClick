@@ -11,7 +11,8 @@ object FuncCheckerForSetting {
 
     const val defaultNullMacroStr = "NULL"
     enum class ArgType {
-        PATH,
+        FILE,
+        DIR,
         STRING,
         INT,
         FLOAT,
@@ -473,7 +474,7 @@ object FuncCheckerForSetting {
             }
         }
 
-        fun getPathFromArgMapByName(
+        fun getFileFromArgMapByName(
             mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
             argNameToDefaultValueStr: Pair<String, String?>,
             where: String,
@@ -484,7 +485,7 @@ object FuncCheckerForSetting {
                 argName,
                 mapArgMapList,
             ).let { targetArgMap ->
-                getPathArg(
+                getFileArg(
                     argName,
                     targetArgMap?.get(FuncCheckerForSetting.MapArg.MapArgKey.VALUE_STR)
                         ?: defaultValueStr,
@@ -495,7 +496,7 @@ object FuncCheckerForSetting {
             }
         }
 
-        fun getPathFromArgMapByIndex(
+        fun getFileFromArgMapByIndex(
             mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
             argNameToIndex: Pair<String, Int>,
             where: String,
@@ -506,7 +507,7 @@ object FuncCheckerForSetting {
                 argIndex,
                 mapArgMapList,
             ).let { targetArgMap ->
-                getPathArg(
+                getFileArg(
                     argName,
                     targetArgMap?.get(FuncCheckerForSetting.MapArg.MapArgKey.VALUE_STR),
                     targetArgMap?.get(MapArg.MapArgKey.INDEX),
@@ -516,7 +517,7 @@ object FuncCheckerForSetting {
             }
         }
 
-        private fun getPathArg(
+        private fun getFileArg(
             argName: String,
             valueStr: String?,
             logIndexSrc: String?,
@@ -538,7 +539,96 @@ object FuncCheckerForSetting {
             return try {
                 if (
                     File(pathEntry).isFile
-                    || File(pathEntry).isDirectory
+                    || pathEntry == defaultNullMacroStr
+                ) pathEntry to null
+                else {
+                    null.toString() to launchTypeCheckErr2(
+                        mapArgMap?.get(MapArg.MapArgKey.NAME).toString(),
+                        (logIndex ?: mapArgMap?.get(MapArg.MapArgKey.INDEX)).toString(),
+                        mapArgMap?.get(MapArg.MapArgKey.TYPE).toString(),
+                        mapArgMap?.get(MapArg.MapArgKey.VALUE_STR).toString(),
+                        String(),
+                        where,
+                    )
+                }
+            } catch (e: Exception) {
+                null.toString() to launchTypeCheckErr2(
+                    mapArgMap?.get(MapArg.MapArgKey.NAME).toString(),
+                    (logIndex ?: mapArgMap?.get(MapArg.MapArgKey.INDEX)).toString(),
+                    mapArgMap?.get(MapArg.MapArgKey.TYPE).toString(),
+                    mapArgMap?.get(MapArg.MapArgKey.VALUE_STR).toString(),
+                    String(),
+                    where,
+                )
+            }
+        }
+
+        fun getDirFromArgMapByName(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToDefaultValueStr: Pair<String, String?>,
+            where: String,
+        ): Pair<String, FuncCheckErr?> {
+            val argName = argNameToDefaultValueStr.first
+            val defaultValueStr = argNameToDefaultValueStr.second
+            return MapArg.getMapByArgName(
+                argName,
+                mapArgMapList,
+            ).let { targetArgMap ->
+                getDirArg(
+                    argName,
+                    targetArgMap?.get(FuncCheckerForSetting.MapArg.MapArgKey.VALUE_STR)
+                        ?: defaultValueStr,
+                    null.toString(),
+                    targetArgMap,
+                    where,
+                )
+            }
+        }
+
+        fun getDirFromArgMapByIndex(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToIndex: Pair<String, Int>,
+            where: String,
+        ): Pair<String, FuncCheckErr?> {
+            val argName = argNameToIndex.first
+            val argIndex = argNameToIndex.second
+            return MapArg.getMapByIndex(
+                argIndex,
+                mapArgMapList,
+            ).let { targetArgMap ->
+                getDirArg(
+                    argName,
+                    targetArgMap?.get(FuncCheckerForSetting.MapArg.MapArgKey.VALUE_STR),
+                    targetArgMap?.get(MapArg.MapArgKey.INDEX),
+                    targetArgMap,
+                    where,
+                )
+            }
+        }
+
+        private fun getDirArg(
+            argName: String,
+            valueStr: String?,
+            logIndexSrc: String?,
+            mapArgMap: Map<MapArg.MapArgKey, String?>?,
+            where: String
+        ): Pair<String, FuncCheckErr?> {
+            val logIndex =
+                (logIndexSrc ?: mapArgMap?.get(MapArg.MapArgKey.INDEX)).toString()
+            val funcCheckBaseErr = SettingActionArgCheckTool.checkByExist(
+                argName,
+                logIndex,
+                valueStr,
+                where
+            )
+            if (
+                funcCheckBaseErr != null
+            ) return null.toString() to funcCheckBaseErr
+            val pathEntry = valueStr.toString()
+            return try {
+                if (
+                    File(pathEntry).isDirectory
+                    || pathEntry == defaultNullMacroStr
                 ) pathEntry to null
                 else {
                     null.toString() to launchTypeCheckErr2(
@@ -594,7 +684,7 @@ object FuncCheckerForSetting {
                 it.name == argTypeStr
             }
             return when (argType) {
-                ArgType.PATH ->
+                ArgType.FILE ->
                     FuncCheckErr(
                         "Arg ${spanArgName} not found path: ${spanArgStr}, func.method: index: ${spanArgIndex}, ${spanWhere}"
                     )
