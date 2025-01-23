@@ -1,4 +1,5 @@
 version,name,date,download_count
+0.0.1,repbash-0_0_1-arm64,2025-01-23,966
 0.0.1,repbash-0_0_1-arm64,2025-01-22,966
 0.0.1,repbash-0_0_1-arm64,2025-01-21,965
 0.0.1,repbash-0_0_1-arm64,2025-01-20,965
@@ -114,6 +115,7 @@ version,name,date,download_count
 0.0.1,repbash-0_0_1-arm64,2024-10-02,642
 0.0.1,repbash-0_0_1-arm64,2024-10-02,640
 0.0.1,repbash-0_0_1-arm64,2024-10-01,640
+0.0.1,repbash-0_0_1-amd64,2025-01-23,5
 0.0.1,repbash-0_0_1-amd64,2025-01-22,5
 0.0.1,repbash-0_0_1-amd64,2025-01-21,5
 0.0.1,repbash-0_0_1-amd64,2025-01-20,5
