@@ -257,8 +257,9 @@ object SettingActionImportManager {
             else -> {
                 SettingIfManager.handle(
                     sIfKeyName,
-                    judgeTargetStr,
+//                    judgeTargetStr,
                     argsPairList,
+                    varNameToValueStrMap
                 )
             }
         }

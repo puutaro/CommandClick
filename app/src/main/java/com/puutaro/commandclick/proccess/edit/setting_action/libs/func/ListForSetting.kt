@@ -4,7 +4,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager.ConcatCondition
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager.GlueType
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ListForSetting.ListMethodArgClass.UniqArgs.UniqType
 import com.puutaro.commandclick.util.str.PairListTool
 import com.puutaro.commandclick.util.str.VarMarkTool
@@ -378,6 +378,18 @@ object ListForSetting {
                     ).let { inputConToErr ->
                         val funcErr = inputConToErr.second
                             ?: return@let inputConToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.targetToDefaultValueStr,
+                        where
+                    ).let { targetStrToErr ->
+                        val funcErr = targetStrToErr.second
+                            ?: return@let targetStrToErr.first
                         return@withContext Pair(
                             null,
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
@@ -1317,10 +1329,10 @@ object ListForSetting {
             val targetKey = args.targetToDefaultValueStr.first
             val boolToErrList = ifKeyPairsList.map {
                     ifKeyPairList ->
-                val targetCon = PairListTool.getValue(
-                    ifKeyPairList,
-                    targetKey
-                ) ?: inputLine
+//                val targetCon = PairListTool.getValue(
+//                    ifKeyPairList,
+//                    targetKey
+//                ) ?: inputLine
 //            if(targetCon.isNullOrEmpty()){
 //                return SettingIfManager.makeJudgeTargetNotExistErr(
 //                        "${funcName}.${methodNameStr}",
@@ -1329,11 +1341,11 @@ object ListForSetting {
 //            }
                 SettingIfManager.IfArgMatcher.match(
                     "${funcName}.${methodNameStr}",
-                    targetCon,
                     ifKeyPairList.filter{
                             (ifKey, _) ->
                         ifKey != targetKey
                     },
+                    null,
                 )
             }
 //        FileSystems.updateFile(
@@ -1363,9 +1375,9 @@ object ListForSetting {
             return when(boolToErrList.size == 1) {
                 true -> boolToErrList.first()
                 else -> {
-                    val concatConditionStr = PairListTool.getValue(
+                    val glueStr = PairListTool.getValue(
                         argsPairList,
-                        args.concatConditionKeyToDefaultValueStr.first,
+                        args.glueKeyToDefaultValueStr.first,
                     )
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "llistForseettg${elIndex}_condition.txt").absolutePath,
@@ -1387,17 +1399,17 @@ object ListForSetting {
 //                        )}"
 //                    ).joinToString("\n\n") + "\n=====\n\n"
 //                )
-                    val concatCondition = ConcatCondition.entries.firstOrNull {
-                        it.str == concatConditionStr
+                    val glueType = GlueType.entries.firstOrNull {
+                        it.str == glueStr
                     } ?: let {
-                        return SettingIfManager.IfArgMatcher.makeConcatConditionKeyNotExistErr(
+                        return SettingIfManager.IfArgMatcher.makeGlueKeyNotExistErr(
                             "${funcName}.${methodNameStr}",
-                            concatConditionStr,
+                            glueStr,
                             argsPairList
                         )
                     }
                     SettingIfManager.IfArgMatcher.culcMatchResult(
-                        concatCondition,
+                        glueType,
                         boolToErrList.map {
                             it.first ?: true
                         },
@@ -1682,6 +1694,10 @@ object ListForSetting {
                 FilterEnumArgs.JOIN_STR.key,
                 FilterEnumArgs.JOIN_STR.defaultValueStr
             )
+            val targetToDefaultValueStr = Pair(
+                FilterEnumArgs.TARGET.key,
+                FilterEnumArgs.TARGET.defaultValueStr
+            )
             val matchTypeKeyToDefaultValueStr = Pair(
                 FilterEnumArgs.MATCH_TYPE.key,
                 FilterEnumArgs.MATCH_TYPE.defaultValueStr
@@ -1689,10 +1705,6 @@ object ListForSetting {
             val valueKeyToDefaultValueStr = Pair(
                 FilterEnumArgs.VALUE.key,
                 FilterEnumArgs.VALUE.defaultValueStr
-            )
-            val targetToDefaultValueStr = Pair(
-                FilterEnumArgs.TARGET.key,
-                FilterEnumArgs.TARGET.defaultValueStr
             )
             val regexKeyToDefaultValueStr = Pair(
                 FilterEnumArgs.REGEX.key,
@@ -1718,9 +1730,9 @@ object ListForSetting {
                 FilterEnumArgs.FIELD_VAR_PREFIX.key,
                 FilterEnumArgs.FIELD_VAR_PREFIX.defaultValueStr
             )
-            val concatConditionKeyToDefaultValueStr = Pair(
-                FilterEnumArgs.CONCAT_CONDITION.key,
-                FilterEnumArgs.CONCAT_CONDITION.defaultValueStr
+            val glueKeyToDefaultValueStr = Pair(
+                FilterEnumArgs.GLUE.key,
+                FilterEnumArgs.GLUE.defaultValueStr
             )
 
             enum class FilterEnumArgs(
@@ -1731,16 +1743,16 @@ object ListForSetting {
                 INPUT_CON("inputCon", null, FuncCheckerForSetting.ArgType.STRING),
                 SEPARATOR("separator", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
-                MATCH_TYPE(SettingIfManager.IfArgs.MATCH_TYPE.str, null, FuncCheckerForSetting.ArgType.STRING),
+                TARGET(SettingIfManager.IfArgs.TARGET.str, null, FuncCheckerForSetting.ArgType.STRING),
+                MATCH_TYPE(SettingIfManager.IfArgs.MATCHER.str, null, FuncCheckerForSetting.ArgType.STRING),
                 VALUE(SettingIfManager.IfArgs.VALUE.str, String(), FuncCheckerForSetting.ArgType.STRING),
                 REGEX(SettingIfManager.IfArgs.REGEX.str, String(), FuncCheckerForSetting.ArgType.STRING),
-                TARGET("target", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 SEMAPHORE("semaphore", 0.toString(), FuncCheckerForSetting.ArgType.INT),
 //                EL_VAR_NAME("elVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 INDEX_VAR_NAME("indexVarName", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 DELIMITER("delimiter", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
                 FIELD_VAR_PREFIX("fieldVarPrefix", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
-                CONCAT_CONDITION("concatCondition", null, FuncCheckerForSetting.ArgType.STRING),
+                GLUE("glue", null, FuncCheckerForSetting.ArgType.STRING),
             }
         }
 

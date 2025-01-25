@@ -218,11 +218,10 @@ object ImageActionImport {
                 bitmap
             )
         }
-        val judgeTargetStr = QuoteTool.trimBothEdgeQuote(
-            actionImportMap.get(
+        val isIfJudge =
+            !actionImportMap.get(
                 ImageActionKeyManager.ActionImportManager.ActionImportKey.I_IF.key
-            )
-        )
+            ).isNullOrEmpty()
         val argsPairList = CmdClickMap.createMap(
             actionImportMap.get(
                 ImageActionKeyManager.ActionImportManager.ActionImportKey.ARGS.key
@@ -231,12 +230,13 @@ object ImageActionImport {
         ).filter {
             it.first.isNotEmpty()
         }
-        val isImportToErrType = when(judgeTargetStr.isEmpty()) {
-            true -> true to null
+        val isImportToErrType = when(isIfJudge) {
+            false -> true to null
             else -> SettingIfManager.handle(
                 iIfKeyName,
-                judgeTargetStr,
-                argsPairList
+//                judgeTargetStr,
+                argsPairList,
+                null
             )
         }
         val blankReturnValue =

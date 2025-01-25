@@ -1457,8 +1457,8 @@ class ImageActionManager {
                                 isNext = true
                                 return@forEach
                             }
-                            val judgeTargetStr = mainSubKeyMap.get(mainSubKey)
-                                ?: return@forEach
+//                            val judgeTargetStr = mainSubKeyMap.get(mainSubKey)
+//                                ?: return@forEach
                             val argsPairList = CmdClickMap.createMap(
                                 mainSubKeyMap.get(
                                     ImageActionKeyManager.ImageSubKey.ARGS.key
@@ -1469,8 +1469,9 @@ class ImageActionManager {
                             }
                             val isImportToErrType = SettingIfManager.handle(
                                 iIfKeyName,
-                                judgeTargetStr,
-                                argsPairList
+//                                judgeTargetStr,
+                                argsPairList,
+                                null,
                             )
                             val errType = isImportToErrType.second
                             if(errType != null){

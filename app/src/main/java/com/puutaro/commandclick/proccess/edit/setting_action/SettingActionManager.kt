@@ -1610,13 +1610,6 @@ class SettingActionManager {
                                 isNext = true
                                 return@forEach
                             }
-                            val judgeTargetStr = mainSubKeyMapSrc.get(mainSubKey)?.let {
-                                    judgeTargetStrSrc ->
-                                CmdClickMap.replaceByBackslashToNormal(
-                                    judgeTargetStrSrc,
-                                    varNameToValueStrMap,
-                                )
-                            } ?: return@forEach
                             val argsPairList = CmdClickMap.createMap(
                                 mainSubKeyMapSrc.get(
                                     SettingActionKeyManager.SettingSubKey.ARGS.key
@@ -1634,8 +1627,8 @@ class SettingActionManager {
                             }
                             val isNextToErrType = SettingIfManager.handle(
                                 sIfKeyName,
-                                judgeTargetStr,
                                 argsPairList,
+                                varNameToValueStrMap,
                             )
                             val errType = isNextToErrType.second
                             if(errType != null){

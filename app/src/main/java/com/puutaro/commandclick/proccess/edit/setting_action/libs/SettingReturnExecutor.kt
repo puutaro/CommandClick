@@ -91,13 +91,13 @@ class SettingReturnExecutor {
                         isNext = true
                         return@forEach
                     }
-                    val judgeTargetStr = mainSubKeyMapSrc.get(mainSubKey)?.let {
-                            judgeTargetStrSrc ->
-                        CmdClickMap.replaceByBackslashToNormal(
-                            judgeTargetStrSrc,
-                            varNameToValueStrMap,
-                        )
-                    } ?: return@forEach
+//                    val judgeTargetStr = mainSubKeyMapSrc.get(mainSubKey)?.let {
+//                            judgeTargetStrSrc ->
+//                        CmdClickMap.replaceByBackslashToNormal(
+//                            judgeTargetStrSrc,
+//                            varNameToValueStrMap,
+//                        )
+//                    } ?: return@forEach
                     val argsPairList = CmdClickMap.createMap(
                         mainSubKeyMapSrc.get(
                             SettingActionKeyManager.SettingSubKey.ARGS.key
@@ -115,8 +115,9 @@ class SettingReturnExecutor {
                     }
                     val isReturnToErrType = SettingIfManager.handle(
                         sIf.key,
-                        judgeTargetStr,
+//                        judgeTargetStr,
                         argsPairList,
+                        varNameToValueStrMap
                     )
 //                            FileSystems.updateFile(
 //                                File(

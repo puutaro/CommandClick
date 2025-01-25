@@ -69,8 +69,8 @@ class ImageReturnExecutor {
                         isNext = true
                         return@forEach
                     }
-                    val judgeTargetStr = mainSubKeyMapSrc.get(mainSubKey)
-                        ?: return@forEach
+//                    val judgeTargetStr = mainSubKeyMapSrc.get(mainSubKey)
+//                        ?: return@forEach
                     val argsPairList = CmdClickMap.createMap(
                         mainSubKeyMapSrc.get(
                             ImageActionKeyManager.ImageSubKey.ARGS.key
@@ -81,8 +81,9 @@ class ImageReturnExecutor {
                     }
                     val isReturnToErrType = SettingIfManager.handle(
                         iIf.key,
-                        judgeTargetStr,
+//                        judgeTargetStr,
                         argsPairList,
+                        null,
                     )
 //                            FileSystems.updateFile(
 //                                File(
