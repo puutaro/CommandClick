@@ -1119,7 +1119,7 @@ private object ActionImportPutter {
         val actionImportMap = ImportMapMaker.comp(
             subKeyCon,
             "${actionVarKey}="
-        )
+        ).toMap()
         val importPathSrc = QuoteTool.trimBothEdgeQuote(
             actionImportMap.get(
                 JsActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
@@ -1776,7 +1776,7 @@ private object PairToMapInList {
         val tsvImportMapSrc = ImportMapMaker.comp(
             "${tsvVarsMainKeyName}=${mapConSrc}",
             "${tsvVarsMainKeyName}="
-        )
+        ).toMap()
         val importPathKey = JsActionKeyManager.CommonPathKey.IMPORT_PATH.key
         val importPath = tsvImportMapSrc.get(
             importPathKey

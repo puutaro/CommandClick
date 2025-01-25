@@ -106,6 +106,16 @@ object SettingActionImportManager {
             imageActionVarKey,
             keyToSubKeyCon?.second ?: String()
         ).joinToString("=")
+        val blankReturnValueStr =
+            Triple (
+                String(),
+                Triple(
+                    String(),
+                    emptyList<Pair<String, String>>(),
+                    emptyMap<String, String?>(),
+                ),
+                emptyMap<String, String?>(),
+            )
         val varNameToValueStrMap =
             makeVarNameToValueStrMap(
                 curMapLoopKey,
@@ -116,10 +126,11 @@ object SettingActionImportManager {
                 null,
                 null,
             )
-        val actionImportMapBeforeReplace = ImportMapMaker.comp(
+        val actionImportPairListBeforeReplace = ImportMapMaker.comp(
             keyToSubKeyContents,
             "${imageActionVarKey}="
         )
+        val actionImportMapBeforeReplace = actionImportPairListBeforeReplace.toMap()
 //        val actionImportMap =
 //            CmdClickMap.MapReplacer.replaceToPairList(
 //                actionImportMapBeforeReplace,
@@ -228,7 +239,27 @@ object SettingActionImportManager {
                 bitmap
             )
         }
-        val judgeTargetStr = QuoteTool.trimBothEdgeQuote(
+        val sIfKey = SettingActionKeyManager.SettingReturnManager.SettingReturnKey.S_IF.key
+        val ifMapList = actionImportPairListBeforeReplace.filter {
+                mainSubKeyPair ->
+            val mainSubKey = mainSubKeyPair.first
+//            val mainSubKeyMapSrc = mainSubKeyPair.second
+            mainSubKey == sIfKey
+        }
+        IfErrManager.isMultipleSpecifyErr(
+            context,
+            ifMapList.size,
+            sIfKeyName,
+            keyToSubKeyConWhere,
+        ).let {
+                isMultipleSpecifyErr ->
+            if(
+                !isMultipleSpecifyErr
+            ) return@let
+            settingActionExitManager.setExit()
+            return blankReturnValueStr
+        }
+        val ifProcName = QuoteTool.trimBothEdgeQuote(
             actionImportMapBeforeReplace.get(
                 SettingActionKeyManager.ActionImportManager.ActionImportKey.S_IF.key
             )
@@ -252,7 +283,7 @@ object SettingActionImportManager {
                 varNameToValueStrMap
             )
         }
-        val isImportToErrType = when(judgeTargetStr.isEmpty()) {
+        val isImportToErrType = when(ifProcName.isEmpty()) {
             true -> true to null
             else -> {
                 SettingIfManager.handle(
@@ -263,16 +294,6 @@ object SettingActionImportManager {
                 )
             }
         }
-        val blankReturnValueStr =
-            Triple (
-                String(),
-                Triple(
-                    String(),
-                    emptyList<Pair<String, String>>(),
-                    emptyMap<String, String?>(),
-                ),
-                emptyMap<String, String?>(),
-            )
         val errType = isImportToErrType.second
         if(errType != null){
             SettingActionErrLogger.sendErrLog(

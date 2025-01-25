@@ -110,6 +110,7 @@ object SettingActionKeyManager {
         ARGS("args"),
         ON_RETURN("onReturn"),
         S_IF("sIf"),
+        S_IF_END("sIfEnd"),
         VALUE("value"),
         AWAIT("await"),
     }
@@ -138,6 +139,7 @@ object SettingActionKeyManager {
             val key: String,
         ) {
             S_IF(SettingSubKey.S_IF.key),
+            S_IF_END(SettingSubKey.S_IF_END.key),
             ARGS(SettingSubKey.ARGS.key),
         }
     }

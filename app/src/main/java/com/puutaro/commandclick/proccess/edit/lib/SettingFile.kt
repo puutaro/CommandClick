@@ -484,7 +484,7 @@ object SettingFile {
             return ImportMapMaker.comp(
                 importKeyAndSubKeyCon,
                 "${importPreWord}="
-            )
+            ).toMap()
         }
 
         fun getImportPath(

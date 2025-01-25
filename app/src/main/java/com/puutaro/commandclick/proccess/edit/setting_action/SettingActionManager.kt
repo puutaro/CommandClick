@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.IfErrManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.ReturnErrManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionData
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionErrLogger
@@ -233,6 +234,17 @@ class SettingActionManager {
                 keyToSubKeyConList.isNullOrEmpty()
             ) return null
             val isErr = withContext(Dispatchers.IO) {
+                val isIfHoldErrJob = async {
+                    IfErrManager.isIfHoldErr(
+                        context,
+                        keyToSubKeyConList,
+                        Pair(
+                            SettingActionKeyManager.SettingSubKey.S_IF.key,
+                            SettingActionKeyManager.SettingSubKey.S_IF_END.key,
+                        ),
+                        keyToSubKeyConWhere
+                    )
+                }
                 val settingKeyAndAsyncVarNameToAwaitVarNameList =
                     VarErrManager.makeSettingKeyAndAsyncVarNameToAwaitVarNameList(
                         keyToSubKeyConList
@@ -377,7 +389,8 @@ class SettingActionManager {
 //                        topAcSVarName,
 //                        )
 //                }
-                isAwaitNotAsyncVarErrJob.await()
+                isIfHoldErrJob.await()
+                        || isAwaitNotAsyncVarErrJob.await()
                         || isAwaitDuplicateAsyncVarErrJob.await()
                         || isAwaitNotDefiniteVarErrJob.await()
                         || isNotAwaitAsyncVarErrOrAwaitInAsyncVarErrJob.await()
@@ -1205,6 +1218,7 @@ class SettingActionManager {
                 } ?: return@mapIndexed Pair(String(), emptyMap())
                 val innerSubKeyCon = subKeyToCon.second
                 when(innerSubKeyClass) {
+                    SettingActionKeyManager.SettingSubKey.S_IF_END,
                     SettingActionKeyManager.SettingSubKey.SETTING_VAR,
                     SettingActionKeyManager.SettingSubKey.SETTING_RETURN,
                     SettingActionKeyManager.SettingSubKey.VALUE,
@@ -1275,6 +1289,8 @@ class SettingActionManager {
                         String?,
                         SettingActionKeyManager.BreakSignal?
                         >? = null
+                val ifStackList =
+                    mutableListOf<SettingIfManager.IfStack>()
                 mainSubKeyPairList.forEach {
                         mainSubKeyPair ->
                     val varNameToValueStrMap = makeVarNameToValueStrMap(
@@ -1303,13 +1319,20 @@ class SettingActionManager {
                     val privateSubKeyClass = SettingActionKeyManager.SettingSubKey.entries.firstOrNull {
                         it.key == mainSubKey
                     } ?: return@forEach
+                    val isNext = ifStackList.lastOrNull().let {
+                        ifStack ->
+                        if(
+                            ifStack == null
+                        ) return@let true
+                        ifStack.bool
+                    }
                     when(privateSubKeyClass) {
                         SettingActionKeyManager.SettingSubKey.SETTING_VAR,
                         SettingActionKeyManager.SettingSubKey.SETTING_RETURN,
                         SettingActionKeyManager.SettingSubKey.ARGS -> {}
                         SettingActionKeyManager.SettingSubKey.VALUE -> {
                             if(!isNext) {
-                                isNext = true
+//                                isNext = true
                                 return@forEach
                             }
                             val valueString = let {
@@ -1341,11 +1364,11 @@ class SettingActionManager {
                                 }
                             }
                             itPronounValueStrToBreakSignal = Pair(valueString, null)
-                            isNext = true
+//                            isNext = true
                         }
                         SettingActionKeyManager.SettingSubKey.AWAIT -> {
                             if(!isNext){
-                                isNext = true
+//                                isNext = true
                                 return@forEach
                             }
                             val mainSubKeyMap = CmdClickMap.MapReplacer.replaceToPairList(
@@ -1454,7 +1477,7 @@ class SettingActionManager {
                         }
                         SettingActionKeyManager.SettingSubKey.ON_RETURN -> {
                             if(!isNext) {
-                                isNext = true
+//                                isNext = true
                                 return@forEach
                             }
                             val returnString = let {
@@ -1510,7 +1533,7 @@ class SettingActionManager {
                         }
                         SettingActionKeyManager.SettingSubKey.FUNC -> {
                             if(!isNext) {
-                                isNext = true
+//                                isNext = true
                                 return@forEach
                             }
                             val funcTypeDotMethod = mainSubKeyMapSrc.get(mainSubKey)?.let {
@@ -1607,7 +1630,7 @@ class SettingActionManager {
                         }
                         SettingActionKeyManager.SettingSubKey.S_IF -> {
                             if(!isNext) {
-                                isNext = true
+//                                isNext = true
                                 return@forEach
                             }
                             val argsPairList = CmdClickMap.createMap(
@@ -1641,17 +1664,88 @@ class SettingActionManager {
                                     )
                                 }
                                 itPronounValueStrToBreakSignal = null
-                                isNext = false
+//                                isNext = false
+                                settingActionExitManager.setExit()
+                                return@forEach
+                            }
+                            val sIfProcName = IfErrManager.makeIfProcNameNotExistInRuntime(
+                                mainSubKey,
+                                mainSubKeyMapSrc.get(mainSubKey)
+                            ).let {
+                                    (ifProcName, errMsg) ->
+                                if(
+                                    errMsg == null
+                                ) return@let ifProcName
+                                runBlocking {
+                                    SettingActionErrLogger.sendErrLog(
+                                        context,
+                                        SettingActionErrLogger.SettingActionErrType.S_IF,
+                                        errMsg,
+                                        keyToSubKeyConWhere
+                                    )
+                                }
                                 settingActionExitManager.setExit()
                                 return@forEach
                             }
                             val isNextBool = isNextToErrType.first ?: false
-                            isNext = isNextBool
+                            ifStackList.add(
+                                SettingIfManager.IfStack(
+                                    sIfProcName,
+                                    isNextBool
+                                )
+                            )
+//                            isNext = isNextBool
+                        }
+                        SettingActionKeyManager.SettingSubKey.S_IF_END -> {
+                            val sIfProcName = IfErrManager.makeIfProcNameNotExistInRuntime(
+                                mainSubKey,
+                                mainSubKeyMapSrc.get(mainSubKey)
+                            ).let {
+                                (ifProcName, errMsg) ->
+                                if(
+                                    errMsg == null
+                                ) return@let ifProcName
+                                runBlocking {
+                                    SettingActionErrLogger.sendErrLog(
+                                        context,
+                                        SettingActionErrLogger.SettingActionErrType.S_IF,
+                                        errMsg,
+                                        keyToSubKeyConWhere
+                                    )
+                                }
+                                settingActionExitManager.setExit()
+                                return@forEach
+                            }
+                            if(
+                                ifStackList.lastOrNull()?.ifProcName != sIfProcName
+                            ) {
+                                return@forEach
+                            }
+//                            IfErrManager.makeLastIfProcNotMatchErr(
+//                                mainSubKey,
+//                                ifStackList.lastOrNull()?.ifProcName,
+//                                sIfProcName,
+//                            )?.let {
+//                                errMsg ->
+//                                SettingActionErrLogger.sendErrLog(
+//                                    context,
+//                                    SettingActionErrLogger.SettingActionErrType.S_IF,
+//                                    errMsg,
+//                                    keyToSubKeyConWhere
+//                                )
+//                                settingActionExitManager.setExit()
+//                                return@forEach
+//                            }
+                            if(
+                                ifStackList.isNotEmpty()
+                            ) {
+                                ifStackList.removeAt(ifStackList.lastIndex)
+                            }
                         }
                     }
-                    if(privateSubKeyClass != SettingActionKeyManager.SettingSubKey.S_IF){
-                        isNext = true
-                    }
+//                    if(privateSubKeyClass != SettingActionKeyManager.SettingSubKey.S_IF){
+//                        isNext = true
+//                    }
                 }
                 val isNoImageVar =
                     settingVarName.startsWith(escapeRunPrefix)

@@ -122,7 +122,7 @@ object ImageActionImport {
         val actionImportMap = ImportMapMaker.comp(
             keyToSubKeyContents,
             "${imageActionVarKey}="
-        )
+        ).toMap()
         val topIAcVarName = QuoteTool.trimBothEdgeQuote(
             actionImportMap.get(
                 imageActionVarKey

@@ -6,7 +6,7 @@ object ImportMapMaker {
     fun comp(
         subKeyCon: String,
         firstSubKeyWithEqualPrefix: String,
-    ): Map<String, String> {
+    ): List<Pair<String, String>> {
         val subKeySeparator = '?'
         val subKeyConList = subKeyCon.split(subKeySeparator)
         val importPathKeyCon = subKeyConList.firstOrNull()
@@ -27,7 +27,7 @@ object ImportMapMaker {
             return CmdClickMap.createMap(
                 subKeyCon,
                 subKeySeparator
-            ).toMap()
+            )
         }
         val otherKeyCon = subKeyConList.filterIndexed { index, _ ->
             index > 0
@@ -65,7 +65,7 @@ object ImportMapMaker {
         return CmdClickMap.createMap(
             compQuoteSubKeyCon,
             subKeySeparator
-        ).toMap()
+        )
     }
 
     private fun extractEndsQuote(

@@ -11,6 +11,11 @@ object SettingIfManager {
 
     private const val ifAnnotation = "ifAnnotation"
 
+    data class IfStack(
+        val ifProcName: String,
+        val bool: Boolean,
+    )
+
     enum class IfArgs(
         val str: String
     ){
@@ -109,7 +114,6 @@ object SettingIfManager {
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "ljudge_match.txt").absolutePath,
 //                listOf(
-//                    "judgeTargetStr: ${judgeTargetStr}",
 //                    "matchList: ${matchList}",
 //                    "argNameToSubKeyMapPairList: ${argNameToSubKeyMapPairList}",
 //                    "argErr: ${argErr}",
@@ -214,6 +218,13 @@ object SettingIfManager {
             val ifKeyMapList = makeIfKeyMapList(
                 argsPairList,
             )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "ljudge_makeMatchListToErr.txt").absolutePath,
+//                listOf(
+//                    "argsPairList: ${argsPairList}",
+//                    "ifKeyMapList: ${ifKeyMapList}",
+//                ).joinToString("\n\n") + "\n\n==========\n\n"
+//            )
             let {
                 val requireIfKeyList = listOf(
                     listOf(targetKey),
@@ -240,13 +251,6 @@ object SettingIfManager {
                     )
                 }
             }
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "ljudge_makeMatchListToErr.txt").absolutePath,
-//                listOf(
-//                    "argsPairList: ${argsPairList}",
-//                    "ifKeyMapList: ${ifKeyMapList}",
-//                ).joinToString("\n\n") + "\n\n==========\n\n"
-//            )
             val matchTypeStrList = MatchType.entries
             val valueKey = IfArgs.VALUE.str
             val regexKey = IfArgs.REGEX.str
