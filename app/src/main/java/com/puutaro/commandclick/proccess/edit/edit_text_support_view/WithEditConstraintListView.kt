@@ -219,7 +219,7 @@ object WithEditConstraintListView{
         withContext(Dispatchers.IO) {
             ImageActionManager.init()
         }
-        return
+//        return
 //        val imageAcTestDirPath = File(UsePath.cmdclickDefaultAppDirPath, "imageAc").absolutePath
 //        FileSystems.removeAndCreateDir(
 //            imageAcTestDirPath

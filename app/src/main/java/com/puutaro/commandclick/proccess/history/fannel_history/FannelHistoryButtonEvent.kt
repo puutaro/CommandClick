@@ -23,6 +23,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
+import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.FannelManageAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
@@ -34,6 +35,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.ListJsDialogV2Script
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog.Companion.PromptMapList
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelInfo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
@@ -52,6 +54,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.FannelSettingMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
@@ -72,6 +75,7 @@ object FannelHistoryButtonEvent {
     private val settingSectionStart =  CommandClickScriptVariable.SETTING_SEC_START
     private val settingSectionEnd =  CommandClickScriptVariable.SETTING_SEC_END
     private val escapePrefix = '_'
+    private val filePrefix = EditSettings.filePrefix
 
     fun invoke(
        fragment: Fragment
@@ -460,14 +464,73 @@ object FannelHistoryButtonEvent {
                     FactFannel.creatingToast()
                     return
                 }
-                when(fannelName == SystemFannel.home) {
-                    true -> {
-                        preferenceEdit(fragment)
-                    }
-                    false -> ScriptFileEdit.edit(
-                        fragment,
-                        fannelName
+                val terminalFragment = when(fragment is TerminalFragment) {
+                    true -> fragment
+                    else -> TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
+                        fragment.activity
                     )
+                } ?: return
+                val useFannelName = when(fannelName == SystemFannel.home) {
+                    true -> SystemFannel.preference
+                    else -> fannelName
+                }
+                when(fannelName == SystemFannel.home) {
+                    true -> preferenceEdit(fragment)
+                    false -> {
+                        val editListConfigPath = let {
+                            val useFannelPath =  File(
+                                UsePath.cmdclickDefaultAppDirPath,
+                                useFannelName
+                            ).absolutePath
+                            val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+                                fragment.context,
+                                useFannelPath
+                            )
+                            val settingVariableList = CommandClickVariables.extractValListFromHolder(
+                                ReadText(useFannelPath).textToList(),
+                                settingSectionStart,
+                                settingSectionEnd
+                            )?.joinToString("\n")?.let {
+                                SetReplaceVariabler.execReplaceByReplaceVariables(
+                                    it,
+                                    setReplaceVariableMap,
+                                    useFannelName,
+                                )
+                            }?.split("\n")
+                            val editListConfigPathSrc = SettingVariableReader.getStrValue(
+                                settingVariableList,
+                                CommandClickScriptVariable.EDIT_LIST_CONFIG,
+                                String()
+                            )
+                            when(editListConfigPathSrc.startsWith(filePrefix)){
+                                false -> null
+                                else -> editListConfigPathSrc.removePrefix(filePrefix)
+                            }
+                        } ?: return
+                        val useFannelInfoMap = FannelInfoTool.makeFannelInfoMapByString(
+                            useFannelName,
+                            String()
+                        )
+                        terminalFragment.editListDialogForOrdinaryRevolver?.show(
+                            useFannelInfoMap.map {
+                                "${it.key}=${it.value}"
+                            }.joinToString(JsFannelInfo.fannelInfoMapSeparator.toString()),
+                            editListConfigPath
+                        )
+                        return
+//                        when(fannelName == SystemFannel.home) {
+//                            true -> {
+//                                preferenceEdit(fragment)
+//                            }
+//
+//                            false -> {
+//                                ScriptFileEdit.edit(
+//                                    fragment,
+//                                    fannelName
+//                                )
+//                            }
+//                        }
+                    }
                 }
             }
         }
