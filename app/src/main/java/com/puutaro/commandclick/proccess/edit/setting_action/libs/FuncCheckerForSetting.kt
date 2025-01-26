@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
+import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import java.io.File
 
 object FuncCheckerForSetting {
@@ -17,6 +19,7 @@ object FuncCheckerForSetting {
         INT,
         FLOAT,
         BOOL,
+        BITMAP,
     }
 
     object WhereManager {
@@ -311,6 +314,95 @@ object FuncCheckerForSetting {
                 (valueStr?.toBoolean() as Boolean) to null
             } catch (e: Exception) {
                 errReturnBool to launchTypeCheckErr2(
+                    mapArgMap?.get(MapArg.MapArgKey.NAME).toString(),
+                    (logIndex ?: mapArgMap?.get(MapArg.MapArgKey.INDEX)).toString(),
+                    mapArgMap?.get(MapArg.MapArgKey.TYPE).toString(),
+                    mapArgMap?.get(MapArg.MapArgKey.VALUE_STR).toString(),
+                    String(),
+                    where,
+                )
+            }
+        }
+
+        fun getBitmapFromArgMapByName(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToDefaultValueStr: Pair<String, String?>,
+            varNameToBitmapMap: Map<String, Bitmap?>,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckErr?> {
+            val argKey = argNameToDefaultValueStr.first
+            val defaultValueStr = argNameToDefaultValueStr.second
+            return MapArg.getMapByArgName(
+                argKey,
+                mapArgMapList,
+            ).let { targetArgMap ->
+                getBitmapArg(
+                    argKey,
+                    targetArgMap?.get(FuncCheckerForSetting.MapArg.MapArgKey.VALUE_STR)
+                        ?: defaultValueStr,
+                    null.toString(),
+                    targetArgMap,
+                    varNameToBitmapMap,
+                    where,
+                )
+            }
+        }
+
+        fun getBitmapFromArgMapByIndex(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToIndex: Pair<String, Int>,
+            varNameToBitmapMap: Map<String, Bitmap?>?,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckErr?> {
+            val argName = argNameToIndex.first
+            val argIndex = argNameToIndex.second
+            return MapArg.getMapByIndex(
+                argIndex,
+                mapArgMapList,
+            ).let { targetArgMap ->
+                getBitmapArg(
+                    argName,
+                    targetArgMap?.get(FuncCheckerForSetting.MapArg.MapArgKey.VALUE_STR),
+                    targetArgMap?.get(MapArg.MapArgKey.INDEX),
+                    targetArgMap,
+                    varNameToBitmapMap,
+                    where,
+                )
+            }
+        }
+
+        private fun getBitmapArg(
+            argName: String,
+            valueStr: String?,
+            logIndexSrc: String?,
+            mapArgMap: Map<MapArg.MapArgKey, String?>?,
+            varNameToBitmapMap: Map<String, Bitmap?>?,
+            where: String
+        ): Pair<Bitmap?, FuncCheckErr?> {
+            val logIndex =
+                (logIndexSrc ?: mapArgMap?.get(MapArg.MapArgKey.INDEX)).toString()
+            val funcCheckBaseErr = SettingActionArgCheckTool.checkByExist(
+                argName,
+                logIndex,
+                valueStr,
+                where
+            )
+            val errReturnBitmap = null
+            if (
+                funcCheckBaseErr != null
+            ) return Pair(errReturnBitmap, funcCheckBaseErr)
+            return try {
+                valueStr ?: throw Exception()
+                if(
+                    !ImageActionKeyManager.BitmapVar.matchBitmapVarName(valueStr)
+                ){
+                    throw Exception()
+                }
+                val bitmapKey = ImageActionKeyManager.BitmapVar.convertBitmapKey(valueStr)
+                val bitmap = varNameToBitmapMap?.get(bitmapKey) ?: throw Exception()
+                bitmap to null
+            } catch (e: Exception) {
+                errReturnBitmap to launchTypeCheckErr2(
                     mapArgMap?.get(MapArg.MapArgKey.NAME).toString(),
                     (logIndex ?: mapArgMap?.get(MapArg.MapArgKey.INDEX)).toString(),
                     mapArgMap?.get(MapArg.MapArgKey.TYPE).toString(),

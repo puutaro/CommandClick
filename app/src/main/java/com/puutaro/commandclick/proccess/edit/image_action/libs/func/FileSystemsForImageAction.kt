@@ -4,9 +4,10 @@ import android.graphics.Bitmap
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
-import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageFuncCheckerForImageSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import kotlin.enums.EnumEntries
 
 object FileSystemsForImageAction {
     fun handle(
@@ -20,7 +21,7 @@ object FileSystemsForImageAction {
                     Bitmap?,
                     ImageActionKeyManager.BreakSignal?
                     >?,
-            ImageFuncCheckerForImageSetting. FuncCheckErr?
+            FuncCheckerForSetting.FuncCheckErr?
             >? {
         val context =
             fragment.context
@@ -36,64 +37,146 @@ object FileSystemsForImageAction {
                 CheckTool.errRedCode,
                 methodNameStr
             )
-            return null to ImageFuncCheckerForImageSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        ImageFuncCheckerForImageSetting.checkArgs(
-            funcName,
-            methodNameStr,
-            methodNameClass.argsNameToTypeList,
-            argsPairList,
-            varNameToBitmapMap,
-        )?.let {
-                argsCheckErr ->
-            return null to argsCheckErr
+        val args =
+            methodNameClass.args
+        return when(args){
+            is FileMethodArgClass.SaveArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val savePath = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
+                    mapArgMapList,
+                    args.savePathStrKeyToIndex,
+                    where
+                ).let { savePathToErr ->
+                    val funcErr = savePathToErr.second
+                        ?: return@let savePathToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
+                    mapArgMapList,
+                    args.bitmapKeyToIndex,
+                    varNameToBitmapMap,
+                    where
+                ).let { savePathToErr ->
+                    val funcErr = savePathToErr.second
+                        ?: return@let savePathToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                FileSystems.writeFromByteArray(
+                   savePath,
+                   BitmapTool.convertBitmapToByteArray(bitmap)
+                )
+                null
+            }
         }
+
+//        ImageFuncCheckerForImageSetting.checkArgs(
+//            funcName,
+//            methodNameStr,
+//            methodNameClass.argsNameToTypeList,
+//            argsPairList,
+//            varNameToBitmapMap,
+//        )?.let {
+//                argsCheckErr ->
+//            return null to argsCheckErr
+//        }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "settingCheck.txt").absolutePath,
 //            listOf(
 //                "isErr: ${isErr}",
 //            ).joinToString("\n")
 //        )
-        val argsList = argsPairList.map {
-            it.second
-        }
-        return when(methodNameClass){
-            MethodNameClass.SAVE -> {
-//                FileSystems.writeFile(
-//                    File(UsePath.cmdclickDefaultIDebugAppDirPath, "image_save.txt").absolutePath,
-//                    listOf(
-//                        varNameToBitmapMap.map {
-//                            "${it.key} height: ${it.value?.height} width: ${it.value?.width}"
-//                        }.joinToString("\n")
-//                    ).joinToString("\n\n")
-//                )
-                val savePath = argsList.get(0)
-                val bitmapKey =
-                    ImageActionKeyManager.BitmapVar.convertBitmapKey(
-                        argsList.get(1)
-                    )
-                val bitmap = varNameToBitmapMap.get(bitmapKey)
-                    ?: return null
-               FileSystems.writeFromByteArray(
-                   savePath,
-                   BitmapTool.convertBitmapToByteArray(bitmap)
-               )
-                null
-            }
-        }
+//        val argsList = argsPairList.map {
+//            it.second
+//        }
+//        return when(methodNameClass){
+//            MethodNameClass.SAVE -> {
+////                FileSystems.writeFile(
+////                    File(UsePath.cmdclickDefaultIDebugAppDirPath, "image_save.txt").absolutePath,
+////                    listOf(
+////                        varNameToBitmapMap.map {
+////                            "${it.key} height: ${it.value?.height} width: ${it.value?.width}"
+////                        }.joinToString("\n")
+////                    ).joinToString("\n\n")
+////                )
+//                val savePath = argsList.get(0)
+//                val bitmapKey =
+//                    ImageActionKeyManager.BitmapVar.convertBitmapKey(
+//                        argsList.get(1)
+//                    )
+//                val bitmap = varNameToBitmapMap.get(bitmapKey)
+//                    ?: return null
+//               FileSystems.writeFromByteArray(
+//                   savePath,
+//                   BitmapTool.convertBitmapToByteArray(bitmap)
+//               )
+//                null
+//            }
+//        }
     }
 
     private enum class MethodNameClass(
         val str: String,
-        val argsNameToTypeList: List<Pair<String, ImageFuncCheckerForImageSetting.ArgType>>,
+        val args: FileMethodArgClass,
     ){
-        SAVE("save", readArgsNameToTypeList),
+        SAVE("save", FileMethodArgClass.SaveArgs),
     }
 
-    private val readArgsNameToTypeList = listOf(
-        Pair("savePath", ImageFuncCheckerForImageSetting.ArgType.STRING),
-        Pair("bitmapVarName", ImageFuncCheckerForImageSetting.ArgType.BITMAP_VAR_NAME),
-    )
+//    private val readArgsNameToTypeList = listOf(
+//        Pair("savePath", ImageFuncCheckerForImageSetting.ArgType.STRING),
+//        Pair("bitmapVarName", ImageFuncCheckerForImageSetting.ArgType.BITMAP_VAR_NAME),
+//    )
 
+    private sealed interface ArgType {
+        val entries: EnumEntries<*>
+    }
+
+    private sealed class FileMethodArgClass {
+        data object SaveArgs : FileMethodArgClass(), ArgType {
+            override val entries = SaveEnumArgs.entries
+            val savePathStrKeyToIndex = Pair(
+                SaveEnumArgs.SAVE_PATH.key,
+                SaveEnumArgs.SAVE_PATH.index
+            )
+            val bitmapKeyToIndex = Pair(
+                SaveEnumArgs.BITMAP.key,
+                SaveEnumArgs.BITMAP.index
+            )
+
+            enum class SaveEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                SAVE_PATH("savePath", 0, FuncCheckerForSetting.ArgType.STRING),
+                BITMAP("bitmap", 1, FuncCheckerForSetting.ArgType.BITMAP),
+
+            }
+        }
+    }
 
 }

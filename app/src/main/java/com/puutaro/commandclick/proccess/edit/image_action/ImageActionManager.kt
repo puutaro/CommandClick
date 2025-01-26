@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.image_action
 
 import android.graphics.Bitmap
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
@@ -77,6 +78,7 @@ class ImageActionManager {
         fannelInfoMap: Map<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        imageView: AppCompatImageView?,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         topLevelBitmapStrKeyList: List<String>?,
         topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
@@ -106,6 +108,7 @@ class ImageActionManager {
             topLevelBitmapStrKeyList,
         )
         val loopClasses = imageActionExecutor.makeResultLoopKeyToVarNameValueMap(
+            imageView,
             topVarNameToVarNameBitmapMap,
             imageActionAsyncCoroutine,
             editConstraintListAdapterArg,
@@ -200,6 +203,7 @@ class ImageActionManager {
 
 
         suspend fun makeResultLoopKeyToVarNameValueMap(
+            imageView: AppCompatImageView?,
             topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
             imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
             editConstraintListAdapterArg: EditConstraintListAdapter?,
@@ -547,6 +551,7 @@ class ImageActionManager {
 //                                            ).joinToString("\n")  + "\n\n========\n\n"
 //                                        )
                                         val loopMapClasses = makeResultLoopKeyToVarNameValueMap(
+                                            imageView,
                                             topVarNameToVarNameBitmapMap,
                                             imageActionAsyncCoroutine,
                                             editConstraintListAdapterArg,
@@ -612,6 +617,7 @@ class ImageActionManager {
                                 it.key
                             }
                         val loopMapClasses = makeResultLoopKeyToVarNameValueMap(
+                            imageView,
                             topVarNameToVarNameBitmapMap,
                             imageActionAsyncCoroutine,
                             editConstraintListAdapterArg,
@@ -721,6 +727,7 @@ class ImageActionManager {
                                         fragment,
                                         mainSubKeyPairList,
                                         busyboxExecutor,
+                                        imageView,
                                         editConstraintListAdapterArg,
                                         topVarNameToVarNameBitmapMap,
                                         curMapLoopKey,
@@ -843,6 +850,7 @@ class ImageActionManager {
                             fragment,
                             mainSubKeyPairList,
                             busyboxExecutor,
+                            imageView,
                             editConstraintListAdapterArg,
                             topVarNameToVarNameBitmapMap,
                             curMapLoopKey,
@@ -1194,6 +1202,7 @@ class ImageActionManager {
                 fragment: Fragment,
                 mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
                 busyboxExecutor: BusyboxExecutor?,
+                imageView: AppCompatImageView?,
                 editConstraintListAdapterArg: EditConstraintListAdapter?,
                 topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
                 curMapLoopKey: String,
@@ -1443,6 +1452,7 @@ class ImageActionManager {
                                 funcTypeDotMethod,
                                 argsPairList,
                                 busyboxExecutor,
+                                imageView,
                                 editConstraintListAdapterArg,
                                 varNameToBitmapMap
                             )

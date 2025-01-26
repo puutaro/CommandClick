@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.isVisible
@@ -206,6 +207,7 @@ object WithEditConstraintListView{
                         fannelInfoMap,
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
+                        null,
                         imageActionAsyncCoroutine,
                         null,
 //                        listOf("testTopVar"),
@@ -873,6 +875,7 @@ object WithEditConstraintListView{
                 fannelInfoMap,
                 setReplaceVariableMap,
                 busyboxExecutor,
+                null,
                 imageActionAsyncCoroutine,
                 globalVarNameToBitmapMap.map {
                     it.key
@@ -1056,6 +1059,12 @@ object WithEditConstraintListView{
                                         }
                                 CoroutineScope(Dispatchers.IO).launch {
 //                                    val varNameToBitmapMapInContents =
+                                    val imageView = withContext(Dispatchers.IO){
+                                        contentsLayout.children.firstOrNull {
+                                                view ->
+                                            view is AppCompatImageView
+                                        } as? AppCompatImageView
+                                    }
                                     withContext(Dispatchers.IO){
                                         val topLevelVarNameToBitmapMap =
                                             globalVarNameToBitmapMap + varNameToBitmapMapInFrame
@@ -1070,6 +1079,7 @@ object WithEditConstraintListView{
                                             fannelInfoMap,
                                             setReplaceVariableMap,
                                             busyboxExecutor,
+                                            imageView,
                                             imageActionAsyncCoroutine,
                                             topLevelVarNameToBitmapMap.map {
                                                 it.key

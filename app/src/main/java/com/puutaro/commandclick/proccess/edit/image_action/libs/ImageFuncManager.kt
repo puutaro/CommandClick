@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs
 
 import android.graphics.Bitmap
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
@@ -8,6 +9,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystemsForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImageAction
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 
 object ImageFuncManager {
@@ -19,6 +21,7 @@ object ImageFuncManager {
         funcTypeDotMethod: String,
         baseArgsPairList: List<Pair<String, String>>,
         busyboxExecutor: BusyboxExecutor?,
+        imageView: AppCompatImageView?,
         editConstraintListAdapter: EditConstraintListAdapter?,
         varNameToBitmapMap: Map<String, Bitmap?>,
     ): Pair<
@@ -26,7 +29,7 @@ object ImageFuncManager {
                     Bitmap?,
                     ImageActionKeyManager.BreakSignal?
                     >?,
-            ImageFuncCheckerForImageSetting.FuncCheckErr?
+            FuncCheckerForSetting.FuncCheckErr?
             >? {
         val funcTypeAndMethodList =
             funcTypeDotMethod.split(funcTypeAndMethodSeparatorDot)
@@ -38,7 +41,7 @@ object ImageFuncManager {
                 CheckTool.errRedCode,
                 funcTypeStr
             )
-            return null to ImageFuncCheckerForImageSetting.FuncCheckErr("Irregular func name: ${spanFuncTypeStr}")
+            return null to FuncCheckerForSetting.FuncCheckErr("Irregular func name: ${spanFuncTypeStr}")
         }
         val methodName = funcTypeAndMethodList.getOrNull(1)
             ?: let {
@@ -46,7 +49,7 @@ object ImageFuncManager {
                     CheckTool.errRedCode,
                     funcTypeStr
                 )
-                return null to ImageFuncCheckerForImageSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}")
+                return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}")
             }
         return when(funcType){
             FuncType.ICON ->

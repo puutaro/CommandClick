@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.setMargins
@@ -533,12 +534,19 @@ class EditConstraintListAdapter(
                     key to it.value
                 }?.toMap() ?: emptyMap()
             }
+            val imageView = withContext(Dispatchers.IO){
+                holder.bkFrameLayout.children.firstOrNull {
+                        view ->
+                    view is AppCompatImageView
+                } as? AppCompatImageView
+            }
             val varNameToBitmapMapInFrame = withContext(Dispatchers.IO){
                 ImageActionManager().exec(
                     fragment,
                     fannelInfoMap,
                     setReplaceVariableMap,
                     busyboxExecutor,
+                    imageView,
                     imageActionAsyncCoroutine,
                     globalVarNameToBitmapMap.map {
                         it.key
@@ -804,6 +812,12 @@ class EditConstraintListAdapter(
                                     }
                                 CoroutineScope(Dispatchers.IO).launch {
 //                                    val varNameToBitmapMapInContents =
+                                    val imageView = withContext(Dispatchers.IO){
+                                        contentsFrameLayout.children.firstOrNull {
+                                            view ->
+                                            view is AppCompatImageView
+                                        } as? AppCompatImageView
+                                    }
                                     withContext(Dispatchers.IO){
                                         val topLevelVarNameToBitmapMap =
                                             globalVarNameToBitmapMap + varNameToBitmapMapInFrame
@@ -812,6 +826,7 @@ class EditConstraintListAdapter(
                                             fannelInfoMap,
                                             setReplaceVariableMap,
                                             busyboxExecutor,
+                                            imageView,
                                             imageActionAsyncCoroutine,
                                             topLevelVarNameToBitmapMap.map {
                                                 it.key
