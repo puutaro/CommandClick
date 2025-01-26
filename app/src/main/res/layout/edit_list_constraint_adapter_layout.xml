@@ -33,21 +33,21 @@
             android:backgroundTint="@color/white_green"
             android:gravity="center"
             >
-            <include
-                android:id="@+id/button_frame_layout1"
-                layout="@layout/icon_caption_layout_for_edit_constraint_list"
-                />
-            <include
-                android:id="@+id/button_frame_layout2"
-                layout="@layout/icon_caption_layout_for_edit_constraint_list"
-                />
-            <include
-                android:id="@+id/button_frame_layout3"
-                layout="@layout/icon_caption_layout_for_edit_constraint_list"
-                />
-            <include
-                android:id="@+id/button_frame_layout4"
-                layout="@layout/icon_caption_layout_for_edit_constraint_list"
-                />
+<!--            <include-->
+<!--                android:id="@+id/button_frame_layout1"-->
+<!--                layout="@layout/icon_caption_layout_for_edit_constraint_list"-->
+<!--                />-->
+<!--            <include-->
+<!--                android:id="@+id/button_frame_layout2"-->
+<!--                layout="@layout/icon_caption_layout_for_edit_constraint_list"-->
+<!--                />-->
+<!--            <include-->
+<!--                android:id="@+id/button_frame_layout3"-->
+<!--                layout="@layout/icon_caption_layout_for_edit_constraint_list"-->
+<!--                />-->
+<!--            <include-->
+<!--                android:id="@+id/button_frame_layout4"-->
+<!--                layout="@layout/icon_caption_layout_for_edit_constraint_list"-->
+<!--                />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

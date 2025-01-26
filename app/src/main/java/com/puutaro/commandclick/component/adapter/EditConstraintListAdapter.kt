@@ -263,14 +263,14 @@ class EditConstraintListAdapter(
         val totalConstraintLayout = materialCardView.findViewById<ConstraintLayout>(
             R.id.edit_constraint_adapter_constraint,
         )
-        val contentsLayoutList = listOf(
-            R.id.button_frame_layout1,
-            R.id.button_frame_layout2,
-            R.id.button_frame_layout3,
-            R.id.button_frame_layout4,
-        ).map {
-            totalConstraintLayout.findViewById<FrameLayout>(it)
-        }
+//        val contentsLayoutList = listOf(
+//            R.id.button_frame_layout1,
+//            R.id.button_frame_layout2,
+//            R.id.button_frame_layout3,
+//            R.id.button_frame_layout4,
+//        ).map {
+//            totalConstraintLayout.findViewById<FrameLayout>(it)
+//        }
         private val keyPairListConMapUpdater = KeyPairListConMapUpdater()
         suspend fun updateKeyPairListConMap(
             tagKey: String,
@@ -404,9 +404,9 @@ class EditConstraintListAdapter(
                 withContext(Dispatchers.Main) {
                     val materialCardView = holder.materialCardView
                     val totalConstraintLayout = holder.totalConstraintLayout
-                    val contentsLayoutList = totalConstraintLayout.children.filter {
-                        it is FrameLayout
-                    }.toList() as List<FrameLayout>
+//                    val contentsLayoutList = totalConstraintLayout.children.filter {
+//                        it is FrameLayout
+//                    }.toList() as List<FrameLayout>
                     val cardViewSettingJob = async {
                         materialCardView.apply {
                             layoutElevation?.let {
@@ -422,19 +422,28 @@ class EditConstraintListAdapter(
                             }
                         }
                     }
-                    totalConstraintLayout.apply {
-                        innerPadding?.let {
-                            setPadding(it)
+//                    val hideContentsLayoutListJob = async {
+//                        contentsLayoutList.forEach {
+//                            it.visibility = View.GONE
+//                        }
+//                    }
+                    val removeAndSet2TotalConstraint = async {
+                        totalConstraintLayout.removeAllViews()
+                        totalConstraintLayout.apply {
+                            innerPadding?.let {
+                                setPadding(it)
+                            }
                         }
                     }
-                    val hideContentsLayoutListJob = async {
-                        contentsLayoutList.forEach {
-                            it.visibility = View.GONE
-                        }
+
+                    val removeAllViewFromBkFrameJob = async {
+                        holder.bkFrameLayout.removeAllViews()
                     }
                     listOf(
                         cardViewSettingJob,
-                        hideContentsLayoutListJob,
+                        removeAndSet2TotalConstraint,
+                        removeAllViewFromBkFrameJob
+//                        hideContentsLayoutListJob,
                     ).forEach { it.await() }
                 }
             }
@@ -648,8 +657,8 @@ class EditConstraintListAdapter(
             CoroutineScope(Dispatchers.IO).launch {
                 val totalConstraintLayout =
                     holder.totalConstraintLayout
-                val contentsLayoutList =
-                    holder.contentsLayoutList
+//                val contentsLayoutList =
+//                    holder.contentsLayoutList
                 for (contentsTagToKeyPairsList in contentsChannel) {
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "lcontentsTag.txt").absolutePath,
@@ -771,11 +780,15 @@ class EditConstraintListAdapter(
 //                                    ).joinToString("\n") + "\n\n============\n\n\n"
 //                                )
                                 val extractContentsFrameLayout =
-                                    contentsLayoutList.getOrNull(execSetContentsIndex)
-                                        ?: idInt?.let {
-                                            totalConstraintLayout
-                                                ?.findViewById<FrameLayout>(it)
-                                        }
+                                    idInt?.let {
+                                        totalConstraintLayout
+                                            ?.findViewById<FrameLayout>(it)
+                                    }
+//                                    contentsLayoutList.getOrNull(execSetContentsIndex)
+//                                        ?: idInt?.let {
+//                                            totalConstraintLayout
+//                                                ?.findViewById<FrameLayout>(it)
+//                                        }
                                 val contentsFrameLayout = let {
                                     extractContentsFrameLayout
                                         ?: withContext(Dispatchers.Main) {
