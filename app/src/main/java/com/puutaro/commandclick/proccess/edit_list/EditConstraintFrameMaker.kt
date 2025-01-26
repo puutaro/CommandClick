@@ -199,6 +199,7 @@ object EditConstraintFrameMaker {
         whereForErr: String,
         enableClick: Boolean,
         clickViewStrList: List<String>?,
+        outValue: TypedValue?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
     ): FrameLayout? {
@@ -219,7 +220,7 @@ object EditConstraintFrameMaker {
 
 
         CoroutineScope(Dispatchers.Main).launch {
-            val enableClickSetting = withContext(Dispatchers.IO) {
+            val enableImageViewClick = withContext(Dispatchers.IO) {
                 if(
                     !enableClick
                     || clickViewStrList.isNullOrEmpty()
@@ -268,6 +269,8 @@ object EditConstraintFrameMaker {
                         imageButtonView,
                         imageMap,
                         imagePropertyMap,
+                        enableImageViewClick,
+                        outValue,
                         whereForErr,
                         requestBuilderSrc,
                         density,
@@ -276,7 +279,7 @@ object EditConstraintFrameMaker {
 //                }
         }
         CoroutineScope(Dispatchers.Main).launch {
-            val enableClickSetting = withContext(Dispatchers.IO) {
+            val enableTextViewClick = withContext(Dispatchers.IO) {
                 if(
                     !enableClick
                     || clickViewStrList.isNullOrEmpty()
@@ -330,6 +333,8 @@ object EditConstraintFrameMaker {
                         captionTextView,
                         textMap,
                         textPropertyMap,
+                        enableTextViewClick,
+                        outValue,
                         whereForErr,
                         density,
                     )
@@ -1148,6 +1153,8 @@ object EditConstraintFrameMaker {
         imageView: AppCompatImageView,
         imageMap: Map<String, String>?,
         imagePropertyMap: Map<String, String>?,
+        enableImageViewClick: Boolean,
+        outValue: TypedValue?,
         where: String,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
@@ -1311,8 +1318,17 @@ object EditConstraintFrameMaker {
                             Color.parseColor(parsedColorStr)
                         }
                     }
-                    background = imageBkColor?.let {
-                        ColorDrawable(imageBkColor)
+                    isClickable = enableImageViewClick
+                    when(enableImageViewClick) {
+                        true -> outValue?.let {
+                            setBackgroundResource(it.resourceId)
+                        }
+                        else -> {
+                            setBackgroundResource(0)
+                            background = imageBkColor?.let {
+                                ColorDrawable(imageBkColor)
+                            }
+                        }
                     }
                     val imageAlpha = withContext(Dispatchers.IO) {
                         imagePropertyMap?.get(
@@ -1742,10 +1758,6 @@ object EditConstraintFrameMaker {
                 }
             }
         }
-    }
-
-    private enum class ImageMacro{
-        WALL_DIR
     }
 
     private suspend fun execSetSingleImage(
@@ -2491,6 +2503,8 @@ object EditConstraintFrameMaker {
         captionTextView: OutlineTextView,
         textMap: Map<String, String>?,
         textPropertyMap: Map<String, String>?,
+        enableTextViewClick: Boolean,
+        outValue: TypedValue?,
         where: String,
         density: Float,
     ) {
@@ -2661,10 +2675,20 @@ object EditConstraintFrameMaker {
 //                        }
                     }
                 }
-                background =
-                    textBkColor?.let {
-                        ColorDrawable(it)
+
+                isClickable = enableTextViewClick
+                when(enableTextViewClick) {
+                    true -> outValue?.let {
+                        setBackgroundResource(it.resourceId)
                     }
+                    else -> {
+                        setBackgroundResource(0)
+                        background =
+                            textBkColor?.let {
+                                ColorDrawable(it)
+                            }
+                    }
+                }
                 val strokeColorStr = withContext(Dispatchers.IO) {
                     textPropertyMap?.get(
                         strokeColorKey,

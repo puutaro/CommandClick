@@ -617,6 +617,7 @@ class EditConstraintListAdapter(
                         totalMapListElInfo,
                         false,
                         null,
+                        null,
                         requestBuilderSrc,
                         density,
                     )
@@ -875,6 +876,7 @@ class EditConstraintListAdapter(
                                         "contentsTag: ${contentsTag}, ${totalMapListElInfo}",
                                         enableClick,
                                         clickViewStrList,
+                                        outValue,
                                         requestBuilderSrc,
                                         density,
                                     )
@@ -1270,24 +1272,24 @@ class EditConstraintListAdapter(
             ) == EditComponent.Template.switchOn
         }
         clickViewList.forEach { clickView ->
-            withContext(Dispatchers.Main) {
-                clickView.isClickable = enableClick
-            }
-            CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.IO){
-                    delay(delayTime)
-                }
-                withContext(Dispatchers.Main){
-                    when(enableClick) {
-                        false -> clickView.setBackgroundResource(0)
-                        else -> clickView.setBackgroundResource(outValue.resourceId)
-                    }
-                }
-            }
+//            withContext(Dispatchers.Main) {
+//                clickView.isClickable = enableClick
+//            }
+//            CoroutineScope(Dispatchers.IO).launch {
+//                withContext(Dispatchers.IO){
+//                    delay(delayTime)
+//                }
+//                withContext(Dispatchers.Main){
+//                    when(enableClick) {
+//                        false -> clickView.setBackgroundResource(0)
+//                        else -> clickView.setBackgroundResource(outValue.resourceId)
+//                    }
+//                }
+//            }
             if(!enableClick) return@forEach
             withContext(Dispatchers.Main) {
-                clickView.setBackgroundResource(outValue.resourceId)
-                clickView.isClickable = true
+//                clickView.setBackgroundResource(outValue.resourceId)
+//                clickView.isClickable = true
                 when (isConsec) {
                     true ->
                         with(clickView) {

@@ -1121,6 +1121,7 @@ object WithEditConstraintListView{
                                         mapListElInfoForContentsTagWithReplace,
                                         enableClick,
                                         clickViewStrList,
+                                        outValue,
                                         requestBuilderSrc,
                                         density,
                                     )
@@ -1130,7 +1131,7 @@ object WithEditConstraintListView{
                         CoroutineScope(Dispatchers.IO).launch execClick@{
                             if(
                                 sceneType == SceneType.BK
-                                || outValue == null
+//                                || outValue == null
                             ) return@execClick
                             clickHandler(
                                 fragment,
@@ -1142,7 +1143,7 @@ object WithEditConstraintListView{
                                 contentsFrameLayout,
                                 enableClick,
                                 clickViewStrList,
-                                outValue,
+//                                outValue,
                             )
                         }
                     }
@@ -1230,7 +1231,7 @@ object WithEditConstraintListView{
         contentsFrameLayout: FrameLayout,
         enableClick: Boolean,
         clickViewStrList: List<String>,
-        outValue: TypedValue,
+//        outValue: TypedValue,
     ){
 
         if (
@@ -1253,20 +1254,20 @@ object WithEditConstraintListView{
                 ) == EditComponent.Template.switchOn
             clickViewList.forEachIndexed { index, clickView ->
 //                val enableClick = EditComponent.Template.ClickManager.isClickEnable(contentsKeyPairsList)
-                withContext(Dispatchers.Main) {
-                    clickView.isClickable = enableClick
-                }
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.IO){
-                        delay(delayTime)
-                    }
-                    withContext(Dispatchers.Main){
-                        when(enableClick) {
-                            false -> clickView.setBackgroundResource(0)
-                            else -> clickView.setBackgroundResource(outValue.resourceId)
-                        }
-                    }
-                }
+//                withContext(Dispatchers.Main) {
+//                    clickView.isClickable = enableClick
+//                }
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    withContext(Dispatchers.IO){
+//                        delay(delayTime)
+//                    }
+//                    withContext(Dispatchers.Main){
+//                        when(enableClick) {
+//                            false -> clickView.setBackgroundResource(0)
+//                            else -> clickView.setBackgroundResource(outValue.resourceId)
+//                        }
+//                    }
+//                }
                 if(!enableClick) return@execExecClick
                 if (!isConsec) {
                     withContext(Dispatchers.Main) {

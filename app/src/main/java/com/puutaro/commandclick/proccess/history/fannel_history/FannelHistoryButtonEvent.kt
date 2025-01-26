@@ -321,12 +321,19 @@ object FannelHistoryButtonEvent {
                         holder.pinImageView,
                         holder.pinImageCaption
                     )
-                    else -> pinFannelRemoveOrAdd(
+                    else -> {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            FileSystems.updateLastModified(
+                                File(cmdclickDefaultAppDirPath, fannelName).absolutePath
+                            )
+                        }
+                        pinFannelRemoveOrAdd(
                             fragment,
                             fannelName,
                             holder.pinImageView,
                             holder.pinImageCaption,
                         )
+                    }
                     }
                 }
             }
@@ -511,6 +518,11 @@ object FannelHistoryButtonEvent {
                             useFannelName,
                             String()
                         )
+                        CoroutineScope(Dispatchers.IO).launch {
+                            FileSystems.updateLastModified(
+                                File(cmdclickDefaultAppDirPath, useFannelName).absolutePath
+                            )
+                        }
                         terminalFragment.editListDialogForOrdinaryRevolver?.show(
                             useFannelInfoMap.map {
                                 "${it.key}=${it.value}"
