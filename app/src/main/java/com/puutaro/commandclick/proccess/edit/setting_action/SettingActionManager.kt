@@ -1262,7 +1262,6 @@ class SettingActionManager {
             private val escapeRunPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
             private val asyncRunPrefix = SettingActionKeyManager.VarPrefix.RUN_ASYNC.prefix
             private val asyncPrefix = SettingActionKeyManager.VarPrefix.ASYNC.prefix
-            private var isNext = true
             private val valueSeparator = SettingActionKeyManager.valueSeparator
             private val itPronoun = SettingActionKeyManager.ValueStrVar.itPronoun
 
@@ -1721,21 +1720,6 @@ class SettingActionManager {
                             ) {
                                 return@forEach
                             }
-//                            IfErrManager.makeLastIfProcNotMatchErr(
-//                                mainSubKey,
-//                                ifStackList.lastOrNull()?.ifProcName,
-//                                sIfProcName,
-//                            )?.let {
-//                                errMsg ->
-//                                SettingActionErrLogger.sendErrLog(
-//                                    context,
-//                                    SettingActionErrLogger.SettingActionErrType.S_IF,
-//                                    errMsg,
-//                                    keyToSubKeyConWhere
-//                                )
-//                                settingActionExitManager.setExit()
-//                                return@forEach
-//                            }
                             if(
                                 ifStackList.isNotEmpty()
                             ) {

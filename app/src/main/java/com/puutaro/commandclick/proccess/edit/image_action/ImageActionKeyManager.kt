@@ -6,10 +6,10 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
 
 object ImageActionKeyManager {
-    val landSeparator = ','
-    val mainKeySeparator = '|'
-    val subKeySepartor = '?'
-    val valueSeparator = '&'
+    const val landSeparator = ','
+    const val mainKeySeparator = '|'
+    const val subKeySepartor = '?'
+    const val valueSeparator = '&'
     val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
     const val awaitWaitTimes = 5//10
 
@@ -106,6 +106,7 @@ object ImageActionKeyManager {
         ARGS("args"),
         ON_RETURN("onReturn"),
         I_IF("iIf"),
+        I_IF_END("iIfEnd"),
 //        VALUE("value"),
         AWAIT("await"),
     }

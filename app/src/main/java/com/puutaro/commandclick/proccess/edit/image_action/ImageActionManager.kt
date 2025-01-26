@@ -6,11 +6,13 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionData
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionErrLogger
-import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionImport
+import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionImportManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionReturnErrManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionVarErrManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageFuncManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageReturnExecutor
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.IfErrManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionErrLogger
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -39,7 +41,7 @@ class ImageActionManager {
             ImageActionKeyManager.LoopKeyManager.mapRoopKeyUnit
 
         fun init(){
-            ImageActionImport.BeforeActionImportMapManager.init()
+            ImageActionImportManager.BeforeActionImportMapManager.init()
         }
 
         private fun makeSettingKeyToVarNameList(
@@ -230,6 +232,17 @@ class ImageActionManager {
                 keyToSubKeyConList.isNullOrEmpty()
             ) return null
             val isErr = withContext(Dispatchers.IO) {
+                val isIfHoldErrJob = async {
+                    IfErrManager.isIfHoldErr(
+                        context,
+                        keyToSubKeyConList,
+                        Pair(
+                            ImageActionKeyManager.ImageSubKey.I_IF.key,
+                            ImageActionKeyManager.ImageSubKey.I_IF_END.key,
+                        ),
+                        keyToSubKeyConWhere,
+                    )
+                }
                 val settingKeyAndAsyncVarNameToAwaitVarNameList =
                     ImageActionVarErrManager.makeSettingKeyAndAsyncVarNameToAwaitVarNameList(
                         keyToSubKeyConList
@@ -367,7 +380,8 @@ class ImageActionManager {
                             topAcIVarName,
                         )
                     }
-                isAwaitNotAsyncVarErrJob.await()
+                isIfHoldErrJob.await()
+                        || isAwaitNotAsyncVarErrJob.await()
                         || isAwaitDuplicateAsyncVarErrJob.await()
                         || isAwaitNotDefiniteVarErrJob.await()
                         || isNotAwaitAsyncVarErrOrAwaitInAsyncVarErrJob.await()
@@ -444,7 +458,7 @@ class ImageActionManager {
                 when (curImageActionKey) {
                     ImageActionKeyManager.ImageActionsKey.IMAGE_ACTION_VAR -> {
                         val importPathAndRenewalVarNameToImportConToVarNameBitmapMap =
-                            ImageActionImport.makeImportPathAndRenewalVarNameToImportCon(
+                            ImageActionImportManager.makeImportPathAndRenewalVarNameToImportCon(
                                 context,
                                 fannelInfoMap,
                                 setReplaceVariableMapSrc,
@@ -1125,6 +1139,7 @@ class ImageActionManager {
                 } ?: return@mapIndexed Pair(String(), emptyMap())
                 val innerSubKeyCon = subKeyToCon.second
                 when(innerSubKeyClass) {
+                    ImageActionKeyManager.ImageSubKey.I_IF_END,
                     ImageActionKeyManager.ImageSubKey.IMAGE_VAR,
                     ImageActionKeyManager.ImageSubKey.IMAGE_RETURN,
                     ImageActionKeyManager.ImageSubKey.AWAIT,
@@ -1171,7 +1186,7 @@ class ImageActionManager {
                     Bitmap?,
                     ImageActionKeyManager.BreakSignal?
                     >? = null
-            private var isNext = true
+//            private var isNext = true
             private val valueSeparator = ImageActionKeyManager.valueSeparator
             private val itPronoun = ImageActionKeyManager.BitmapVar.itPronoun
 
@@ -1192,6 +1207,8 @@ class ImageActionManager {
                 keyToSubKeyConWhere: String,
             ): Pair<Pair<String, Bitmap?>, ImageActionKeyManager.BreakSignal?>? {
                 val context = fragment.context
+                val ifStackList =
+                    mutableListOf<SettingIfManager.IfStack>()
                 mainSubKeyPairList.forEach {
                         mainSubKeyPair ->
                     val mainSubKey = mainSubKeyPair.first
@@ -1209,13 +1226,20 @@ class ImageActionManager {
                     val privateSubKeyClass = ImageActionKeyManager.ImageSubKey.entries.firstOrNull {
                         it.key == mainSubKey
                     } ?: return@forEach
+                    val isNext = ifStackList.lastOrNull().let {
+                            ifStack ->
+                        if(
+                            ifStack == null
+                        ) return@let true
+                        ifStack.bool
+                    }
                     when(privateSubKeyClass) {
                         ImageActionKeyManager.ImageSubKey.IMAGE_VAR,
                         ImageActionKeyManager.ImageSubKey.IMAGE_RETURN,
                         ImageActionKeyManager.ImageSubKey.ARGS -> {}
                         ImageActionKeyManager.ImageSubKey.AWAIT -> {
                             if(!isNext){
-                                isNext = true
+//                                isNext = true
                                 return@forEach
                             }
                             val awaitVarNameList = mainSubKeyMap.get(
@@ -1321,7 +1345,7 @@ class ImageActionManager {
                         }
                         ImageActionKeyManager.ImageSubKey.ON_RETURN -> {
                             if(!isNext) {
-                                isNext = true
+//                                isNext = true
                                 return@forEach
                             }
                             val varNameToBitmapMap =
@@ -1371,7 +1395,7 @@ class ImageActionManager {
                         }
                         ImageActionKeyManager.ImageSubKey.FUNC -> {
                             if(!isNext) {
-                                isNext = true
+//                                isNext = true
                                 return@forEach
                             }
                             val funcTypeDotMethod = mainSubKeyMap.get(mainSubKey)
@@ -1433,7 +1457,7 @@ class ImageActionManager {
                                     )
                                 }
                                 itPronounBitmapToBreakSignal = null
-                                isNext = false
+//                                isNext = false
                                 return@forEach
                             }
                             val resultBitmapToExitMacro = resultBitmapToExitMacroAndCheckErr?.first
@@ -1454,7 +1478,7 @@ class ImageActionManager {
                         }
                         ImageActionKeyManager.ImageSubKey.I_IF -> {
                             if(!isNext) {
-                                isNext = true
+//                                isNext = true
                                 return@forEach
                             }
 //                            val judgeTargetStr = mainSubKeyMap.get(mainSubKey)
@@ -1486,13 +1510,69 @@ class ImageActionManager {
                                 imageActionExitManager.setExit()
                                 return Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                             }
+                            val sIfProcName = IfErrManager.makeIfProcNameNotExistInRuntime(
+                                mainSubKey,
+                                mainSubKeyMap.get(mainSubKey)
+                            ).let {
+                                    (ifProcName, errMsg) ->
+                                if(
+                                    errMsg == null
+                                ) return@let ifProcName
+                                runBlocking {
+                                    SettingActionErrLogger.sendErrLog(
+                                        context,
+                                        SettingActionErrLogger.SettingActionErrType.S_IF,
+                                        errMsg,
+                                        keyToSubKeyConWhere
+                                    )
+                                }
+                                imageActionExitManager.setExit()
+                                return@forEach
+                            }
                             val isImport = isImportToErrType.first ?: false
-                            isNext = isImport
+                            ifStackList.add(
+                                SettingIfManager.IfStack(
+                                    sIfProcName,
+                                    isImport
+                                )
+                            )
+//                            isNext = isImport
+                        }
+                        ImageActionKeyManager.ImageSubKey.I_IF_END -> {
+                            val sIfProcName = IfErrManager.makeIfProcNameNotExistInRuntime(
+                                mainSubKey,
+                                mainSubKeyMap.get(mainSubKey)
+                            ).let {
+                                    (ifProcName, errMsg) ->
+                                if(
+                                    errMsg == null
+                                ) return@let ifProcName
+                                runBlocking {
+                                    SettingActionErrLogger.sendErrLog(
+                                        context,
+                                        SettingActionErrLogger.SettingActionErrType.S_IF,
+                                        errMsg,
+                                        keyToSubKeyConWhere
+                                    )
+                                }
+                                imageActionExitManager.setExit()
+                                return@forEach
+                            }
+                            if(
+                                ifStackList.lastOrNull()?.ifProcName != sIfProcName
+                            ) {
+                                return@forEach
+                            }
+                            if(
+                                ifStackList.isNotEmpty()
+                            ) {
+                                ifStackList.removeAt(ifStackList.lastIndex)
+                            }
                         }
                     }
-                    if(privateSubKeyClass != ImageActionKeyManager.ImageSubKey.I_IF){
-                        isNext = true
-                    }
+//                    if(privateSubKeyClass != ImageActionKeyManager.ImageSubKey.I_IF){
+//                        isNext = true
+//                    }
                 }
                 val isNoImageVar =
                     settingVarName.startsWith(escapeRunPrefix)

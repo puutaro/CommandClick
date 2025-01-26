@@ -8,7 +8,6 @@ import kotlinx.coroutines.runBlocking
 
 class SettingReturnExecutor {
 
-    private var isNext = true
     private val valueSeparator = SettingActionKeyManager.valueSeparator
     private val outputReturnSignal =
         SettingActionKeyManager.SettingReturnManager.OutputReturn.OUTPUT_RETURN

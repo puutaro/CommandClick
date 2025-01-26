@@ -111,14 +111,14 @@ object SettingIfManager {
                 ){
                 return null to argErr
             }
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "ljudge_match.txt").absolutePath,
-//                listOf(
-//                    "matchList: ${matchList}",
-//                    "argNameToSubKeyMapPairList: ${argNameToSubKeyMapPairList}",
-//                    "argErr: ${argErr}",
-//                ).joinToString("\n\n") + "\n\n==========\n\n"
-//            )
+            FileSystems.updateFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "ljudge_match.txt").absolutePath,
+                listOf(
+                    "matchList: ${matchList}",
+                    "argNameToSubKeyMapPairList: ${argNameToSubKeyMapPairList}",
+                    "argErr: ${argErr}",
+                ).joinToString("\n\n") + "\n\n==========\n\n"
+            )
             if(matchList.size == 1){
                 return matchList.first() to null
             }
@@ -218,13 +218,13 @@ object SettingIfManager {
             val ifKeyMapList = makeIfKeyMapList(
                 argsPairList,
             )
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "ljudge_makeMatchListToErr.txt").absolutePath,
-//                listOf(
-//                    "argsPairList: ${argsPairList}",
-//                    "ifKeyMapList: ${ifKeyMapList}",
-//                ).joinToString("\n\n") + "\n\n==========\n\n"
-//            )
+            FileSystems.updateFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "ljudge_makeMatchListToErr.txt").absolutePath,
+                listOf(
+                    "argsPairList: ${argsPairList}",
+                    "ifKeyMapList: ${ifKeyMapList}",
+                ).joinToString("\n\n") + "\n\n==========\n\n"
+            )
             let {
                 val requireIfKeyList = listOf(
                     listOf(targetKey),

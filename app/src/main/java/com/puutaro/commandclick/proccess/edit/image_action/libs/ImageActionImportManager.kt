@@ -7,7 +7,9 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.IfErrManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -23,7 +25,7 @@ import java.io.File
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.withLock
 
-object ImageActionImport {
+object ImageActionImportManager {
 
     private val iIfKeyName = ImageActionKeyManager.ImageSubKey.I_IF.key
     private val valueSeparator = ImageActionKeyManager.valueSeparator
@@ -118,11 +120,11 @@ object ImageActionImport {
                 null,
                 null,
             )
-
-        val actionImportMap = ImportMapMaker.comp(
+        val actionImportPairList = ImportMapMaker.comp(
             keyToSubKeyContents,
             "${imageActionVarKey}="
-        ).toMap()
+        )
+        val actionImportMap = actionImportPairList.toMap()
         val topIAcVarName = QuoteTool.trimBothEdgeQuote(
             actionImportMap.get(
                 imageActionVarKey
@@ -218,10 +220,40 @@ object ImageActionImport {
                 bitmap
             )
         }
-        val isIfJudge =
-            !actionImportMap.get(
-                ImageActionKeyManager.ActionImportManager.ActionImportKey.I_IF.key
-            ).isNullOrEmpty()
+        val blankReturnValue =
+            Triple(
+                String(),
+                Triple(
+                    String(),
+                    emptyList<Pair<String, String>>(),
+                    emptyMap<String, Bitmap?>(),
+                ),
+                null,
+            )
+        val iIfKey =
+            ImageActionKeyManager.ActionImportManager.ActionImportKey.I_IF.key
+        val ifMapList = actionImportPairList.filter {
+                mainSubKeyPair ->
+            val mainSubKey = mainSubKeyPair.first
+//            val mainSubKeyMapSrc = mainSubKeyPair.second
+            mainSubKey == iIfKey
+        }
+        IfErrManager.isMultipleSpecifyErr(
+            context,
+            ifMapList.size,
+            iIfKeyName,
+            keyToSubKeyConWhere,
+        ).let {
+                isMultipleSpecifyErr ->
+            if(
+                !isMultipleSpecifyErr
+            ) return@let
+            imageActionExitManager.setExit()
+            return blankReturnValue
+        }
+        val ifProcName = QuoteTool.trimBothEdgeQuote(
+            actionImportMap.get(iIfKey)
+        )
         val argsPairList = CmdClickMap.createMap(
             actionImportMap.get(
                 ImageActionKeyManager.ActionImportManager.ActionImportKey.ARGS.key
@@ -230,8 +262,16 @@ object ImageActionImport {
         ).filter {
             it.first.isNotEmpty()
         }
-        val isImportToErrType = when(isIfJudge) {
-            false -> true to null
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lsmakeImportPathAndRenewalVarNameToImportCon.txt").absolutePath,
+//            listOf(
+//                "actionImportMap: ${actionImportMap}",
+//                "ifProcName: ${ifProcName}",
+//                "argsPairList: ${argsPairList}",
+//            ).joinToString("\n\n")
+//        )
+        val isImportToErrType = when(ifProcName.isEmpty()) {
+            true -> true to null
             else -> SettingIfManager.handle(
                 iIfKeyName,
 //                judgeTargetStr,
@@ -239,16 +279,6 @@ object ImageActionImport {
                 null
             )
         }
-        val blankReturnValue =
-            Triple(
-            String(),
-            Triple(
-                String(),
-                emptyList<Pair<String, String>>(),
-                emptyMap<String, Bitmap?>(),
-            ),
-        null,
-            )
         val errType = isImportToErrType.second
         if(errType != null){
             ImageActionErrLogger.sendErrLog(
@@ -264,6 +294,7 @@ object ImageActionImport {
         if(
             !isImport
         ) return blankReturnValue
+
         val importPathSrc = QuoteTool.trimBothEdgeQuote(
             actionImportMap.get(
                 ImageActionKeyManager.ActionImportManager.ActionImportKey.IMPORT_PATH.key
