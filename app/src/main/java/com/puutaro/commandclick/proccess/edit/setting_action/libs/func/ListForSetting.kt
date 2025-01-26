@@ -1326,7 +1326,6 @@ object ListForSetting {
             val ifKeyPairsList = makeIfKeyPairsList(
                 argsPairListWithReplace
             )
-            val targetKey = args.targetToDefaultValueStr.first
             val boolToErrList = ifKeyPairsList.map {
                     ifKeyPairList ->
 //                val targetCon = PairListTool.getValue(
@@ -1341,10 +1340,7 @@ object ListForSetting {
 //            }
                 SettingIfManager.IfArgMatcher.match(
                     "${funcName}.${methodNameStr}",
-                    ifKeyPairList.filter{
-                            (ifKey, _) ->
-                        ifKey != targetKey
-                    },
+                    ifKeyPairList,
                     null,
                 )
             }
