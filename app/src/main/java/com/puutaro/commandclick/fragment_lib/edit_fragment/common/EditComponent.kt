@@ -200,32 +200,66 @@ object EditComponent {
                                 IMAGE("image"),
                         }
 
-                        fun makeClickViewList(
-                                children: Sequence<View>,
-                                clickViewsListStr: String?,
-                        ): Sequence<View> {
-                                if(
-                                        clickViewsListStr.isNullOrEmpty()
-                                ){
-                                        return children
-                                }
-                                val clickViewsList =
-                                        clickViewsListStr.split(valueSeparator).filter {
-                                                it.isNotEmpty()
-                                        }
+                        fun makeClickViewStrList(
+                                contentsKeyPairsList: List<Pair<String, String>>
+                        ): List<String> {
+                                val srcCon = PairListTool.getValue(
+                                        contentsKeyPairsList,
+                                        EditComponentKey.CLICK_VIEWS.key,
+                                )
                                 val clickTextViewStr = ClickViews.TEXT.str
                                 val clickImageViewStr = ClickViews.IMAGE.str
-                                val isClickViewsListEmpty = clickViewsList.isEmpty()
+                                return when(srcCon.isNullOrEmpty()){
+                                        true -> listOf(
+                                                clickTextViewStr,
+                                                clickImageViewStr
+                                        )
+                                        else -> srcCon.split(valueSeparator).filter {
+                                                it.isNotEmpty()
+                                        }
+                                }
+                        }
+                        fun containClickTextView(
+                                clickViewsStrList: List<String>,
+                        ): Boolean {
+                                return clickViewsStrList.contains(ClickViews.TEXT.str)
+                        }
+                        fun containClickImageView(
+                                clickViewsStrList: List<String>,
+                        ): Boolean {
+                                return clickViewsStrList.contains(ClickViews.IMAGE.str)
+                        }
+
+                        fun makeClickViewList(
+                                children: Sequence<View>,
+                                clickViewsStrList: List<String>,
+                        ): Sequence<View> {
+//                                if(
+//                                        clickViewsListStr.isNullOrEmpty()
+//                                ){
+//                                        return children
+//                                }
+//                                val clickViewsStrList =
+//                                        clickViewsListStr.split(valueSeparator).filter {
+//                                                it.isNotEmpty()
+//                                        }
+                                val clickTextViewStr = ClickViews.TEXT.str
+                                val clickImageViewStr = ClickViews.IMAGE.str
+//                                val isClickViewsListEmpty = clickViewsStrList.isEmpty()
                                 return children.filter {
                                         childView ->
                                         when(true) {
                                                 (childView is OutlineTextView) -> {
-                                                        isClickViewsListEmpty
-                                                                || clickViewsList.contains(clickTextViewStr)
+                                                        containClickTextView(clickViewsStrList,)
+//                                                        clickViewsStrList.contains(clickTextViewStr)
+//                                                        isClickViewsListEmpty
+//                                                                || clickViewsStrList.contains(clickTextViewStr)
                                                 }
                                                 (childView is AppCompatImageView) -> {
-                                                        isClickViewsListEmpty
-                                                                || clickViewsList.contains(clickImageViewStr)
+                                                        containClickImageView(clickViewsStrList)
+//                                                        clickViewsStrList.contains(clickImageViewStr)
+//                                                        isClickViewsListEmpty
+//                                                                || clickViewsStrList.contains(clickImageViewStr)
                                                 }
                                                 else -> false
                                         }

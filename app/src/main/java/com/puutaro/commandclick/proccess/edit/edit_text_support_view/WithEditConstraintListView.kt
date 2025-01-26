@@ -1025,6 +1025,17 @@ object WithEditConstraintListView{
                             execContentsTag,
                             contentsKeyPairsListCon
                         )
+                        val enableClick =
+                            withContext(Dispatchers.IO) {
+                                EditComponent.Template.ClickManager.isClickEnable(
+                                    contentsKeyPairsList
+                                )
+                            }
+                        val clickViewStrList = withContext(Dispatchers.IO) {
+                            EditComponent.Template.ClickViewManager.makeClickViewStrList(
+                                contentsKeyPairsList
+                            )
+                        }
                         val contentsFrameLayout =
                             withContext(Dispatchers.Main) setLinearFrameLayout@{
                                 withContext(Dispatchers.IO) {
@@ -1108,6 +1119,8 @@ object WithEditConstraintListView{
                                         execContentsTag,
                                         editConstraintListAdapter?.totalSettingValMap,
                                         mapListElInfoForContentsTagWithReplace,
+                                        enableClick,
+                                        clickViewStrList,
                                         requestBuilderSrc,
                                         density,
                                     )
@@ -1127,6 +1140,8 @@ object WithEditConstraintListView{
                                 contentsKeyPairsListCon,
                                 contentsKeyPairsList,
                                 contentsFrameLayout,
+                                enableClick,
+                                clickViewStrList,
                                 outValue,
                             )
                         }
@@ -1213,6 +1228,8 @@ object WithEditConstraintListView{
         contentsKeyPairsListCon: String,
         contentsKeyPairsList: List<Pair<String, String>>,
         contentsFrameLayout: FrameLayout,
+        enableClick: Boolean,
+        clickViewStrList: List<String>,
         outValue: TypedValue,
     ){
 
@@ -1223,10 +1240,11 @@ object WithEditConstraintListView{
             val clickViewList =
                 EditComponent.Template.ClickViewManager.makeClickViewList(
                     contentsFrameLayout.children,
-                    PairListTool.getValue(
-                        contentsKeyPairsList,
-                        onClickViewsKey,
-                    )
+                    clickViewStrList,
+//                    PairListTool.getValue(
+//                        contentsKeyPairsList,
+//                        onClickViewsKey,
+//                    )
                 )
             val isConsec =
                 PairListTool.getValue(
@@ -1234,7 +1252,7 @@ object WithEditConstraintListView{
                     onConsecKey,
                 ) == EditComponent.Template.switchOn
             clickViewList.forEachIndexed { index, clickView ->
-                val enableClick = EditComponent.Template.ClickManager.isClickEnable(contentsKeyPairsList)
+//                val enableClick = EditComponent.Template.ClickManager.isClickEnable(contentsKeyPairsList)
                 withContext(Dispatchers.Main) {
                     clickView.isClickable = enableClick
                 }

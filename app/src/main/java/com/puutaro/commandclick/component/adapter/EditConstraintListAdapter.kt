@@ -615,6 +615,8 @@ class EditConstraintListAdapter(
                         frameTag,
                         totalSettingValMap,
                         totalMapListElInfo,
+                        false,
+                        null,
                         requestBuilderSrc,
                         density,
                     )
@@ -826,6 +828,17 @@ class EditConstraintListAdapter(
                                         )
                                     }
                                 }
+                                val enableClick =
+                                    withContext(Dispatchers.IO) {
+                                        EditComponent.Template.ClickManager.isClickEnable(
+                                            contentsKeyPairsList
+                                        )
+                                    }
+                                val clickViewStrList = withContext(Dispatchers.IO) {
+                                    EditComponent.Template.ClickViewManager.makeClickViewStrList(
+                                        contentsKeyPairsList
+                                    )
+                                }
                                 CoroutineScope(Dispatchers.Main).launch {
 //                                    withContext(Dispatchers.IO) {
 //                                        if(idInt == 10100) {
@@ -860,11 +873,13 @@ class EditConstraintListAdapter(
                                         contentsTag,
                                         totalSettingValMap,
                                         "contentsTag: ${contentsTag}, ${totalMapListElInfo}",
+                                        enableClick,
+                                        clickViewStrList,
                                         requestBuilderSrc,
                                         density,
                                     )
                                 }
-                                CoroutineScope(Dispatchers.Main).launch {
+                                CoroutineScope(Dispatchers.Main).launch setClick@ {
                                     clickHandler(
                                         holder,
                                         editListPosition,
@@ -872,6 +887,8 @@ class EditConstraintListAdapter(
                                         contentsTag,
                                         contentsKeyPairsListCon,
                                         contentsFrameLayout,
+                                        enableClick,
+                                        clickViewStrList,
                                     )
                                 }
                             }
@@ -1211,12 +1228,14 @@ class EditConstraintListAdapter(
         contentsTag: String,
         contentsKeyPairsListCon: String?,
         contentsFrameLayout: FrameLayout,
+        enableClick: Boolean,
+        clickViewStrList: List<String>,
     ){
         if(
             context == null
         ) return
-        val enableClick =
-            EditComponent.Template.ClickManager.isClickEnable(contentsKeyPairsList)
+//        val enableClick =
+//            EditComponent.Template.ClickManager.isClickEnable(contentsKeyPairsList)
 
         CoroutineScope(Dispatchers.IO).launch {
             holder.updateKeyPairListConMap(
@@ -1237,10 +1256,11 @@ class EditConstraintListAdapter(
             withContext(Dispatchers.IO) {
                 EditComponent.Template.ClickViewManager.makeClickViewList(
                     contentsFrameLayout.children,
-                    PairListTool.getValue(
-                        contentsKeyPairsList,
-                        onClickViewsKey,
-                    )
+                    clickViewStrList
+//                    PairListTool.getValue(
+//                        contentsKeyPairsList,
+//                        onClickViewsKey,
+//                    )
                 )
             }
         val isConsec = withContext(Dispatchers.IO) {

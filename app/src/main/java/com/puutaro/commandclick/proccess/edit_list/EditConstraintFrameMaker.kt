@@ -197,6 +197,8 @@ object EditConstraintFrameMaker {
         overrideTag: String?,
         totalSettingValMap: Map<String, String>?,
         whereForErr: String,
+        enableClick: Boolean,
+        clickViewStrList: List<String>?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
     ): FrameLayout? {
@@ -217,6 +219,15 @@ object EditConstraintFrameMaker {
 
 
         CoroutineScope(Dispatchers.Main).launch {
+            val enableClickSetting = withContext(Dispatchers.IO) {
+                if(
+                    !enableClick
+                    || clickViewStrList.isNullOrEmpty()
+                ) return@withContext false
+                EditComponent.Template
+                    .ClickViewManager
+                    .containClickImageView(clickViewStrList)
+            }
             val imageButtonView = withContext(Dispatchers.Main) {
                 buttonLayout.children.firstOrNull {
                     it is AppCompatImageView
@@ -265,6 +276,15 @@ object EditConstraintFrameMaker {
 //                }
         }
         CoroutineScope(Dispatchers.Main).launch {
+            val enableClickSetting = withContext(Dispatchers.IO) {
+                if(
+                    !enableClick
+                    || clickViewStrList.isNullOrEmpty()
+                ) return@withContext false
+                EditComponent.Template
+                    .ClickViewManager
+                    .containClickTextView(clickViewStrList)
+            }
             val captionTextView = withContext(Dispatchers.Main) {
                 buttonLayout.children.firstOrNull {
                     it is OutlineTextView
