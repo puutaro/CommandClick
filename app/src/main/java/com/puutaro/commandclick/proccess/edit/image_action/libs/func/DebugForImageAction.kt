@@ -87,46 +87,6 @@ object DebugForImageAction {
                 ) to null
             }
         }
-
-//        ImageFuncCheckerForImageSetting.checkArgs(
-//            funcName,
-//            methodNameStr,
-//            methodNameClass.argsNameToTypeList,
-//            argsPairList,
-//            varNameToBitmapMap,
-//        )?.let {
-//                argsCheckErr ->
-//            return null to argsCheckErr
-//        }
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "settingCheck.txt").absolutePath,
-//            listOf(
-//                "isErr: ${isErr}",
-//            ).joinToString("\n")
-//        )
-//        val argsList = argsPairList.map {
-//            it.second
-//        }
-//        return when(methodNameClass){
-//            MethodNameClass.MAKE -> {
-//                val bitmapKey =
-//                    ImageActionKeyManager.BitmapVar.convertBitmapKey(
-//                        argsList.get(0)
-//                    )
-//                val bitmap = varNameToBitmapMap?.get(bitmapKey)
-//                    ?: return null
-//                Pair(
-//                    bitmap,
-//                    null
-//                ) to null
-//            }
-//            MethodNameClass.NULL -> {
-//                Pair(
-//                    null,
-//                    null
-//                ) to null
-//            }
-//        }
     }
 
     private enum class MethodNameClass(
@@ -136,10 +96,6 @@ object DebugForImageAction {
         MAKE("reflect", DebugMethodArgClass.ReflectArgs),
         NULL("null", DebugMethodArgClass.NullArgs)
     }
-
-//    private val makeArgsNameToTypeList = listOf(
-//        Pair("bitmapVarName", ImageFuncCheckerForImageSetting.ArgType.BITMAP_VAR_NAME),
-//    )
     private sealed interface ArgType {
         val entries: EnumEntries<*>
     }
