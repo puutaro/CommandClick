@@ -327,7 +327,7 @@ object FuncCheckerForSetting {
         fun getBitmapFromArgMapByName(
             mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
             argNameToDefaultValueStr: Pair<String, String?>,
-            varNameToBitmapMap: Map<String, Bitmap?>,
+            varNameToBitmapMap: Map<String, Bitmap?>?,
             where: String,
         ): Pair<Bitmap?, FuncCheckErr?> {
             val argKey = argNameToDefaultValueStr.first

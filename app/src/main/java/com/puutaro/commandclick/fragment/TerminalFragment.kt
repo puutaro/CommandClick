@@ -399,13 +399,25 @@ class TerminalFragment:
 
     interface OnImageViewUpdateListenerForTerm {
         fun onImageViewUpdateForTerm(
+            fannelPath: String,
+            fannelState: String,
             indexOrParentTagName: String,
             srcFragment: String,
             tagNameList: List<String>,
-            imageMap: Map<String, String>,
             imagePropertyMap: Map<String, String>,
+            imageAcCon: String,
         )
     }
+
+//    interface OnImageViewUpdateListenerForTermBk {
+//        fun onImageViewUpdateForTermBk(
+//            indexOrParentTagName: String,
+//            srcFragment: String,
+//            tagNameList: List<String>,
+//            imageMap: Map<String, String>,
+//            imagePropertyMap: Map<String, String>,
+//        )
+//    }
 
     interface OnFrameLayoutUpdateListenerForTerm {
         fun onFrameLayoutUpdateForTerm(

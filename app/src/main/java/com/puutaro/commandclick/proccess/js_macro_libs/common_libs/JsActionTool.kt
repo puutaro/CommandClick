@@ -19,7 +19,6 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -1999,9 +1998,9 @@ private object VarShortSyntaxToJsFunc {
     private val whenOnlySubKeyName =
         JsActionKeyManager.OnlySubKeyMapForShortSyntax.CommonOnlySubKey.WHEN.key
     private const val jsSubKeySeparator = '?'
-    private const val itPronoun = JsActionKeyManager.JsVarManager.itPronoun
-    private val itSuggerVarRegex = Regex("([^a-zA-Z0-9_])${itPronoun}([^a-zA-Z0-9_])")
-    private val itSuggerVarRegexEndVer = Regex("([^a-zA-Z0-9_])${itPronoun}$")
+    private const val tmpPronoun = JsActionKeyManager.JsVarManager.tmpPronoun
+    private val tmpSuggerVarRegex = Regex("([^a-zA-Z0-9_])${tmpPronoun}([^a-zA-Z0-9_])")
+    private val tmpSuggerVarRegexEndVer = Regex("([^a-zA-Z0-9_])${tmpPronoun}$")
     fun toJsFunc(
         varMapConSrc: String,
     ): Pair<String, Map<String, String>> {
@@ -2016,8 +2015,8 @@ private object VarShortSyntaxToJsFunc {
             ) return@mapIndexed varName
             subKeyCon
         }.joinToString(jsSubKeySeparator.toString())
-            .replace(itSuggerVarRegex, "$1${varName}$2")
-            .replace(itSuggerVarRegexEndVer, "$1${varName}")
+            .replace(tmpSuggerVarRegex, "$1${varName}$2")
+            .replace(tmpSuggerVarRegexEndVer, "$1${varName}")
         val varMapConPairListSrcBeforeFilter = CmdClickMap.createMap(
             "${jsVarMainKeyName}=${varMapCon}",
             jsSubKeySeparator

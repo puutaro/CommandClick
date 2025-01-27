@@ -90,7 +90,49 @@ object FileSystemsForImageAction {
                    savePath,
                    BitmapTool.convertBitmapToByteArray(bitmap)
                 )
+                Pair(
+                    bitmap,
+                    null,
+                ) to null
                 null
+            }
+            is FileMethodArgClass.ReadArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val path = FuncCheckerForSetting.Getter.getFileFromArgMapByIndex(
+                    mapArgMapList,
+                    args.pathStrKeyToIndex,
+                    where
+                ).let { pathToErr ->
+                    val funcErr = pathToErr.second
+                        ?: return@let pathToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val returnBitmap =
+                    BitmapTool.convertFileToBitmap(path)
+                Pair(
+                    returnBitmap,
+                    null,
+                ) to null
             }
         }
     }
@@ -100,6 +142,7 @@ object FileSystemsForImageAction {
         val args: FileMethodArgClass,
     ){
         SAVE("save", FileMethodArgClass.SaveArgs),
+        READ("read", FileMethodArgClass.ReadArgs),
     }
 
     private sealed interface ArgType {
@@ -123,8 +166,23 @@ object FileSystemsForImageAction {
                 val index: Int,
                 val type: FuncCheckerForSetting.ArgType,
             ){
-                SAVE_PATH("savePath", 0, FuncCheckerForSetting.ArgType.STRING),
+                SAVE_PATH("path", 0, FuncCheckerForSetting.ArgType.STRING),
                 BITMAP("bitmap", 1, FuncCheckerForSetting.ArgType.BITMAP),
+            }
+        }
+        data object ReadArgs : FileMethodArgClass(), ArgType {
+            override val entries = ReadEnumArgs.entries
+            val pathStrKeyToIndex = Pair(
+                ReadEnumArgs.READ_PATH.key,
+                ReadEnumArgs.READ_PATH.index
+            )
+
+            enum class ReadEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                READ_PATH("path", 0, FuncCheckerForSetting.ArgType.FILE),
             }
         }
     }

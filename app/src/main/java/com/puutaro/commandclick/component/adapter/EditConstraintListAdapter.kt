@@ -547,6 +547,7 @@ class EditConstraintListAdapter(
                     setReplaceVariableMap,
                     busyboxExecutor,
                     imageView,
+                    requestBuilderSrc,
                     imageActionAsyncCoroutine,
                     globalVarNameToBitmapMap.map {
                         it.key
@@ -827,6 +828,7 @@ class EditConstraintListAdapter(
                                             setReplaceVariableMap,
                                             busyboxExecutor,
                                             imageView,
+                                            requestBuilderSrc,
                                             imageActionAsyncCoroutine,
                                             topLevelVarNameToBitmapMap.map {
                                                 it.key

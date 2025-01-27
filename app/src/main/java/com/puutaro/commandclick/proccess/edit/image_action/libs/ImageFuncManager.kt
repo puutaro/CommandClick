@@ -1,14 +1,19 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystemsForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ViewForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.WallForImageAction
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 
@@ -21,9 +26,10 @@ object ImageFuncManager {
         funcTypeDotMethod: String,
         baseArgsPairList: List<Pair<String, String>>,
         busyboxExecutor: BusyboxExecutor?,
-        imageView: AppCompatImageView?,
         editConstraintListAdapter: EditConstraintListAdapter?,
         varNameToBitmapMap: Map<String, Bitmap?>,
+        imageView: AppCompatImageView?,
+        requestBuilder: RequestBuilder<Drawable>?,
     ): Pair<
             Pair<
                     Bitmap?,
@@ -67,6 +73,13 @@ object ImageFuncManager {
                     baseArgsPairList,
                     varNameToBitmapMap,
                 )
+            FuncType.WALL ->
+                WallForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
             FuncType.DEBUG ->
                 DebugForImageAction.handle(
                     fragment,
@@ -75,6 +88,25 @@ object ImageFuncManager {
                     baseArgsPairList,
                     varNameToBitmapMap,
                 )
+            FuncType.DELAY ->
+                DelayForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
+            FuncType.VIEW ->
+                ViewForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                    imageView,
+                    requestBuilder
+                )
+
         }
 
     }
@@ -84,7 +116,10 @@ object ImageFuncManager {
     ) {
         ICON("icon"),
         FILE("file"),
+        WALL("wall"),
         DEBUG("debug"),
+        VIEW("view"),
+        DELAY("delay"),
     }
 
 }

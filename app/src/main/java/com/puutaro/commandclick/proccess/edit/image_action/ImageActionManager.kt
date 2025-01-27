@@ -1,8 +1,10 @@
 package com.puutaro.commandclick.proccess.edit.image_action
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionData
@@ -79,6 +81,7 @@ class ImageActionManager {
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         imageView: AppCompatImageView?,
+        requestBuilder: RequestBuilder<Drawable>?,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         topLevelBitmapStrKeyList: List<String>?,
         topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
@@ -109,6 +112,7 @@ class ImageActionManager {
         )
         val loopClasses = imageActionExecutor.makeResultLoopKeyToVarNameValueMap(
             imageView,
+            requestBuilder,
             topVarNameToVarNameBitmapMap,
             imageActionAsyncCoroutine,
             editConstraintListAdapterArg,
@@ -204,6 +208,7 @@ class ImageActionManager {
 
         suspend fun makeResultLoopKeyToVarNameValueMap(
             imageView: AppCompatImageView?,
+            requestBuilder: RequestBuilder<Drawable>?,
             topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
             imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
             editConstraintListAdapterArg: EditConstraintListAdapter?,
@@ -552,6 +557,7 @@ class ImageActionManager {
 //                                        )
                                         val loopMapClasses = makeResultLoopKeyToVarNameValueMap(
                                             imageView,
+                                            requestBuilder,
                                             topVarNameToVarNameBitmapMap,
                                             imageActionAsyncCoroutine,
                                             editConstraintListAdapterArg,
@@ -618,6 +624,7 @@ class ImageActionManager {
                             }
                         val loopMapClasses = makeResultLoopKeyToVarNameValueMap(
                             imageView,
+                            requestBuilder,
                             topVarNameToVarNameBitmapMap,
                             imageActionAsyncCoroutine,
                             editConstraintListAdapterArg,
@@ -728,6 +735,7 @@ class ImageActionManager {
                                         mainSubKeyPairList,
                                         busyboxExecutor,
                                         imageView,
+                                        requestBuilder,
                                         editConstraintListAdapterArg,
                                         topVarNameToVarNameBitmapMap,
                                         curMapLoopKey,
@@ -851,6 +859,7 @@ class ImageActionManager {
                             mainSubKeyPairList,
                             busyboxExecutor,
                             imageView,
+                            requestBuilder,
                             editConstraintListAdapterArg,
                             topVarNameToVarNameBitmapMap,
                             curMapLoopKey,
@@ -1203,6 +1212,7 @@ class ImageActionManager {
                 mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
                 busyboxExecutor: BusyboxExecutor?,
                 imageView: AppCompatImageView?,
+                requestBuilder: RequestBuilder<Drawable>?,
                 editConstraintListAdapterArg: EditConstraintListAdapter?,
                 topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
                 curMapLoopKey: String,
@@ -1452,9 +1462,10 @@ class ImageActionManager {
                                 funcTypeDotMethod,
                                 argsPairList,
                                 busyboxExecutor,
-                                imageView,
                                 editConstraintListAdapterArg,
-                                varNameToBitmapMap
+                                varNameToBitmapMap,
+                                imageView,
+                                requestBuilder
                             )
                             val checkErr = resultBitmapToExitMacroAndCheckErr?.second
                             if(checkErr != null){

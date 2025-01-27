@@ -4,26 +4,39 @@ import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
+import com.bumptech.glide.Glide
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 object ImageViewAndFannelUpdaterForTerm {
+
+    private val objectName = this::class.java.name
+
     fun update(
         activity: MainActivity,
+        fannelPath: String,
+        fannelState: String,
         indexOrParentTagName: String,
         srcFragmentStr: String,
         tagNameList: List<String>,
-        imageMap: Map<String, String>,
-        imagePropertyMap: Map<String, String>
+        imagePropertyMap: Map<String, String>,
+        imageAcCon: String,
     ) {
         if(
             indexOrParentTagName.isEmpty()
@@ -76,9 +89,20 @@ object ImageViewAndFannelUpdaterForTerm {
                 CoroutineScope(Dispatchers.Main).launch {
                     EditConstraintFrameMaker.setImageViewForDynamic(
                         imageView,
-                        imageMap,
+//                        imageMap,
                         imagePropertyMap,
                         density,
+                    )
+                }
+                CoroutineScope(Dispatchers.IO).launch {
+                    execImageAction(
+                        activity,
+                        fannelPath,
+                        fannelState,
+                        terminalFragment,
+                        imageView,
+                        editListRecyclerView.adapter as EditConstraintListAdapter,
+                        imageAcCon,
                     )
                 }
             }
@@ -133,11 +157,72 @@ object ImageViewAndFannelUpdaterForTerm {
             CoroutineScope(Dispatchers.Main).launch {
                 EditConstraintFrameMaker.setImageViewForDynamic(
                     imageView,
-                    imageMap,
+//                    imageMap,
                     imagePropertyMap,
                     density,
                 )
             }
+            CoroutineScope(Dispatchers.IO).launch {
+                execImageAction(
+                    activity,
+                    fannelPath,
+                    fannelState,
+                    terminalFragment,
+                    imageView,
+                    editListRecyclerView.adapter as EditConstraintListAdapter,
+                    imageAcCon,
+                )
+            }
+        }
+    }
+
+    private suspend fun execImageAction(
+        activity: MainActivity,
+        fannelPath: String,
+        fannelState: String,
+        terminalFragment: TerminalFragment?,
+        imageView: AppCompatImageView,
+        editConstraintListAdapter: EditConstraintListAdapter,
+        imageAcCon: String,
+    ){
+        val setReplaceVariableMapSrc = withContext(Dispatchers.IO) {
+            SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+                activity,
+                fannelPath
+            )
+        }
+        val fannelInfoMap = withContext(Dispatchers.IO) {
+            FannelInfoTool.makeFannelInfoMapByString(
+                File(fannelPath).name,
+                fannelState,
+            )
+        }
+        val requestBuilder =  withContext(Dispatchers.IO) {
+            Glide.with(imageView.context)
+                .asDrawable()
+                .sizeMultiplier(0.1f)
+        }
+        val errWhere = withContext(Dispatchers.IO) {
+            listOf(
+                "objectName: ${objectName}",
+                fannelInfoMap.entries.joinToString(",")
+            ).joinToString(", ")
+        }
+        withContext(Dispatchers.IO) {
+            ImageActionManager().exec(
+                terminalFragment,
+                fannelInfoMap,
+                setReplaceVariableMapSrc,
+                terminalFragment?.busyboxExecutor,
+                imageView,
+                requestBuilder,
+                ImageActionAsyncCoroutine(),
+                null,
+                null,
+                imageAcCon,
+                errWhere,
+                editConstraintListAdapter
+            )
         }
     }
 }

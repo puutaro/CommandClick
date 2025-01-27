@@ -60,7 +60,6 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Lon
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.EditListDialog
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
@@ -71,7 +70,6 @@ import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -627,23 +625,46 @@ class MainActivity:
     }
 
     override fun onImageViewUpdateForTerm(
+        fannelPath: String,
+        fannelState: String,
         indexOrParentTagName: String,
         srcFragment: String,
         tagNameList: List<String>,
-        imageMap: Map<String, String>,
-        imagePropertyMap: Map<String, String>
+        imagePropertyMap: Map<String, String>,
+        imageAcCon: String
     ) {
         CoroutineScope(Dispatchers.Main).launch {
             ImageViewAndFannelUpdaterForTerm.update(
                 this@MainActivity,
+                fannelPath,
+                fannelState,
                 indexOrParentTagName,
                 srcFragment,
                 tagNameList,
-                imageMap,
-                imagePropertyMap
+                imagePropertyMap,
+                imageAcCon
             )
         }
     }
+
+//    override fun onImageViewUpdateForTermBk(
+//        indexOrParentTagName: String,
+//        srcFragment: String,
+//        tagNameList: List<String>,
+//        imageMap: Map<String, String>,
+//        imagePropertyMap: Map<String, String>
+//    ) {
+//        CoroutineScope(Dispatchers.Main).launch {
+//            ImageViewAndFannelUpdaterForTermBk.update(
+//                this@MainActivity,
+//                indexOrParentTagName,
+//                srcFragment,
+//                tagNameList,
+//                imageMap,
+//                imagePropertyMap
+//            )
+//        }
+//    }
 
     override fun onFrameLayoutUpdateForTerm(
         indexOrParentTagName: String,

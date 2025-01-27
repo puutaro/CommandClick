@@ -96,21 +96,23 @@ class JsEdit(
 
     @JavascriptInterface
     fun updateImageView_S(
+        fannelPath: String,
+        fannelState: String,
         indexOrParentTagName: String,
         srcFragment: String,
         tagNameListCon: String,
-        imageMapCon: String,
         imagePropertyMapCon: String,
+        imageAcCon: String,
     ){
         val terminalFragment = terminalFragmentRef.get()
             ?: return
         val context = terminalFragment.context
             ?: return
         val keySeparator = EditComponent.Template.keySeparator
-        val imageMap = CmdClickMap.createMap(
-            imageMapCon,
-            keySeparator
-        ).toMap()
+//        val imageMap = CmdClickMap.createMap(
+//            imageAcCon,
+//            keySeparator
+//        ).toMap()
         val imagePropertyMap = CmdClickMap.createMap(
             imagePropertyMapCon,
             keySeparator
@@ -118,13 +120,47 @@ class JsEdit(
         val listener = context as TerminalFragment.OnImageViewUpdateListenerForTerm
         val tagNameSeparator = '&'
         listener.onImageViewUpdateForTerm(
+            fannelPath,
+            fannelState,
             indexOrParentTagName,
             srcFragment,
             tagNameListCon.split(tagNameSeparator.toString()),
-            imageMap,
             imagePropertyMap,
+            imageAcCon
         )
     }
+
+//    @JavascriptInterface
+//    fun updateImageView_S_bk(
+//        indexOrParentTagName: String,
+//        srcFragment: String,
+//        tagNameListCon: String,
+//        imageMapCon: String,
+//        imagePropertyMapCon: String,
+//    ){
+//        val terminalFragment = terminalFragmentRef.get()
+//            ?: return
+//        val context = terminalFragment.context
+//            ?: return
+//        val keySeparator = EditComponent.Template.keySeparator
+//        val imageMap = CmdClickMap.createMap(
+//            imageMapCon,
+//            keySeparator
+//        ).toMap()
+//        val imagePropertyMap = CmdClickMap.createMap(
+//            imagePropertyMapCon,
+//            keySeparator
+//        ).toMap()
+//        val listener = context as TerminalFragment.OnImageViewUpdateListenerForTerm
+//        val tagNameSeparator = '&'
+//        listener.onImageViewUpdateForTerm(
+//            indexOrParentTagName,
+//            srcFragment,
+//            tagNameListCon.split(tagNameSeparator.toString()),
+//            imageMap,
+//            imagePropertyMap,
+//        )
+//    }
 
     @JavascriptInterface
     fun updateFrameLayout_S(

@@ -2704,8 +2704,8 @@ object CheckTool {
             val funcName = funcNameToDetail.first.trim()
             val loopMethod = funcName.split(".").lastOrNull()
                 ?: String()
-            val itPronoun = JsActionKeyManager.JsVarManager.itPronoun
-            val varItFuncDifinition = "${funcKey}=${itPronoun}.${loopMethod}"
+            val tmpPronoun = JsActionKeyManager.JsVarManager.tmpPronoun
+            val varTmpFuncDifinition = "${funcKey}=${tmpPronoun}.${loopMethod}"
             val varFuncDefinition = "${funcKey}=${funcName}"
             return curPutColorCon
                 .replace(
@@ -2716,7 +2716,7 @@ object CheckTool {
                     "<span style=\"color:${errRedCode};\">$1</span>",
                 )
                 .replace(
-                    Regex("(${varItFuncDifinition}[^\n<>]+)"),
+                    Regex("(${varTmpFuncDifinition}[^\n<>]+)"),
                     "<span style=\"color:${errRedCode};\">$1</span>",
                 )
         }
