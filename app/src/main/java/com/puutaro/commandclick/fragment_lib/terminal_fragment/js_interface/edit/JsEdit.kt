@@ -101,6 +101,7 @@ class JsEdit(
         indexOrParentTagName: String,
         srcFragment: String,
         tagNameListCon: String,
+        imageMapCon: String,
         imagePropertyMapCon: String,
         imageAcCon: String,
     ){
@@ -109,10 +110,10 @@ class JsEdit(
         val context = terminalFragment.context
             ?: return
         val keySeparator = EditComponent.Template.keySeparator
-//        val imageMap = CmdClickMap.createMap(
-//            imageAcCon,
-//            keySeparator
-//        ).toMap()
+        val imageMap = CmdClickMap.createMap(
+            imageAcCon,
+            keySeparator
+        ).toMap()
         val imagePropertyMap = CmdClickMap.createMap(
             imagePropertyMapCon,
             keySeparator
@@ -125,6 +126,7 @@ class JsEdit(
             indexOrParentTagName,
             srcFragment,
             tagNameListCon.split(tagNameSeparator.toString()),
+            imageMap,
             imagePropertyMap,
             imageAcCon
         )

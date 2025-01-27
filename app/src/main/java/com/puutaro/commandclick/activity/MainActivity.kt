@@ -630,6 +630,7 @@ class MainActivity:
         indexOrParentTagName: String,
         srcFragment: String,
         tagNameList: List<String>,
+        imageMap: Map<String, String>,
         imagePropertyMap: Map<String, String>,
         imageAcCon: String
     ) {
@@ -641,6 +642,7 @@ class MainActivity:
                 indexOrParentTagName,
                 srcFragment,
                 tagNameList,
+                imageMap,
                 imagePropertyMap,
                 imageAcCon
             )

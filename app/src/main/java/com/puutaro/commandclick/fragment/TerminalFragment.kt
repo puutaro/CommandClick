@@ -404,6 +404,7 @@ class TerminalFragment:
             indexOrParentTagName: String,
             srcFragment: String,
             tagNameList: List<String>,
+            imageMap: Map<String, String>,
             imagePropertyMap: Map<String, String>,
             imageAcCon: String,
         )

@@ -1180,241 +1180,246 @@ object EditConstraintFrameMaker {
 //            ).joinToString("\n") + "\n\n==========\n\n"
 //        )
 
-        when(
-            imagePathList.isNullOrEmpty()
-        ) {
-            true -> {
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "lBk_image.txt").absolutePath,
-//                    listOf(
-//                        "bk: ${bk}",
-//                        "imageMap: ${imageMap}",
-//                        "imagePropertyMap: ${imagePropertyMap}"
-//                    ).joinToString("\n") + "\n\n==========\n\n"
-//                )
-                imageView.setImageDrawable(null)
-            }
-            else -> {
-                imageView.apply {
-                    val visibilityValue = withContext(Dispatchers.IO) {
-                        imagePropertyMap?.get(
-                            imageVisibleKey,
-                        ).let { visibleStr ->
-                            EditComponent.Template.VisibleManager.getVisible(
-                                visibleStr
-                            )
-                        }
-                    }
-                    visibility = visibilityValue
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val matrixStormConfigMap = withContext(Dispatchers.IO){
-                            EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
-                                imageMap,
-                            )
-                        }
-                        val autoRndIconsConfigMap = withContext(Dispatchers.IO){
-                            EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
-                                imageMap,
-                            )
-                        }
-                        val autoRndStringsConfigMap = withContext(Dispatchers.IO){
-                            EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
-                                imageMap,
-                            )
-                        }
-                        when (imagePathList.size == 1) {
-                            false -> {
-                                val delay = withContext(Dispatchers.IO) {
-                                    imageMap?.get(
-                                        imageDelayKey,
-                                    )?.let {
-                                        try {
-                                            it.toInt()
-                                        } catch (e: Exception) {
-                                            null
-                                        }
-                                    } ?: 800
-                                }
-                                execSetMultipleImage(
-                                    imageView,
-                                    imagePathList,
-                                    delay,
-                                    matrixStormConfigMap,
-                                    autoRndIconsConfigMap,
-                                    autoRndStringsConfigMap,
-                                    where,
-                                )
-                            }
-
-                            else -> {
-                                val fadeInMilli = withContext(Dispatchers.IO) {
-                                    imageMap?.get(
-                                        imageFadeInMilliKey,
-                                    )?.let {
-                                        try {
-                                            it.toInt()
-                                        } catch (e: Exception){
-                                            null
-                                        }
-                                    }
-                                }
-                                val blurRadiusToSampling = withContext(Dispatchers.IO){
-                                    EditComponent.Template.ImagePropertyManager.BlurManager.getBlueRadiusToSampling(
-                                        imagePropertyMap
-                                    )
-                                }
-                                execSetSingleImage(
-                                    imageView,
-                                    imagePathList.firstOrNull(),
-                                    requestBuilderSrc,
-                                    fadeInMilli,
-                                    matrixStormConfigMap,
-                                    autoRndIconsConfigMap,
-                                    autoRndStringsConfigMap,
-                                    blurRadiusToSampling,
-                                    where,
-                                )
-                            }
-                        }
-                    }
-                    val overrideGravity = withContext(Dispatchers.IO) {
-                        imagePropertyMap?.get(
-                            imageGravityKey,
-                        )?.let { gravityStr ->
-                            EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                                it.key == gravityStr
-                            }?.gravity
-                        }
-                    }?: Gravity.CENTER
-                    foregroundGravity = overrideGravity
-                    val imageColor = withContext(Dispatchers.IO) {
-                        imagePropertyMap?.get(
-                            imageColorKey,
-                        )?.let {
-                                colorStr ->
-                            val parsedColorStr = ColorTool.parseColorStr(
-                                context,
-                                colorStr,
-                                imageColorKey,
-                                where,
-                            )
-                            Color.parseColor(parsedColorStr)
-                        }
-                    }
-                    imageTintList = imageColor?.let {
-                        ColorStateList.valueOf(it)
-                    }
-                    val imageBkColor = withContext(Dispatchers.IO) {
-                        imagePropertyMap?.get(
-                            imageBkColorKey,
-                        )?.let {
-                            colorStr ->
-                            val parsedColorStr = ColorTool.parseColorStr(
-                                context,
-                                colorStr,
-                                imageBkColorKey,
-                                where,
-                            )
-                            Color.parseColor(parsedColorStr)
-                        }
-                    }
-                    isClickable = enableImageViewClick
-                    when(enableImageViewClick) {
-                        true -> outValue?.let {
-                            setBackgroundResource(it.resourceId)
-                        }
-                        else -> {
-                            setBackgroundResource(0)
-                            background = imageBkColor?.let {
-                                ColorDrawable(imageBkColor)
-                            }
-                        }
-                    }
-                    val imageAlpha = withContext(Dispatchers.IO) {
-                        imagePropertyMap?.get(
-                            imageAlphaKey,
-                        )?.let {
-                            try {
-                                it.toFloat()
-                            } catch(e: Exception){
-                                null
-                            }
-                        }
-                    }
-                    alpha = imageAlpha ?: 1f
-                    val imageScale = withContext(Dispatchers.IO) {
-                        imagePropertyMap?.get(
-                            imageScaleKey,
-                        ).let {
-                                scale ->
-                            EditComponent.Template.ImagePropertyManager.ImageScale.entries.firstOrNull {
-                                it.str == scale
-                            } ?: EditComponent.Template.ImagePropertyManager.ImageScale.FIT_CENTER
-                        }
-                    }
-                    scaleType = imageScale.scale
-                    val rotateFloat = withContext(Dispatchers.IO) {
-                        imagePropertyMap?.get(
-                            imageRotateKey,
-                        )?.let {
-                            try {
-                                it.toFloat()
-                            } catch(e: Exception){
-                                null
-                            }
-                        } ?: 0f
-                    }
-                    rotation = rotateFloat
-                    val scaleXFloat = withContext(Dispatchers.IO) {
-                        imagePropertyMap?.get(
-                            imageScaleXKey,
-                        )?.let {
-                            try {
-                                it.toFloat()
-                            } catch(e: Exception){
-                                null
-                            }
-                        } ?: 1f
-                    }
-                    scaleX = scaleXFloat
-                    val scaleYFloat = withContext(Dispatchers.IO) {
-                        imagePropertyMap?.get(
-                            imageScaleYKey,
-                        )?.let {
-                            try {
-                                it.toFloat()
-                            } catch(e: Exception){
-                                null
-                            }
-                        } ?: scaleY
-                    }
-                    scaleY = scaleYFloat
-                    val paddingData = withContext(Dispatchers.IO) {
-                        EditComponent.Template.PaddingData(
-                            imagePropertyMap?.get(
-                                imagePaddingTopKey,
-                            ),
-                            imagePropertyMap?.get(
-                                imagePaddingBottomKey,
-                            ),
-                            imagePropertyMap?.get(
-                                imagePaddingStartKey,
-                            ),
-                            imagePropertyMap?.get(
-                                imagePaddingEndKey,
-                            ),
-                            density,
-                        )
-                    }
-                    setPadding(
-                        paddingData.paddingStart ?: 0,
-                        paddingData.paddingTop ?: 0,
-                        paddingData.paddingEnd ?: 0,
-                        paddingData.paddingBottom ?: 0,
+//        when(
+//            imagePathList.isNullOrEmpty()
+//        ) {
+//            true -> {
+////                FileSystems.updateFile(
+////                    File(UsePath.cmdclickDefaultAppDirPath, "lBk_image.txt").absolutePath,
+////                    listOf(
+////                        "bk: ${bk}",
+////                        "imageMap: ${imageMap}",
+////                        "imagePropertyMap: ${imagePropertyMap}"
+////                    ).joinToString("\n") + "\n\n==========\n\n"
+////                )
+//                imageView.setImageDrawable(null)
+//            }
+//            else -> {
+        imageView.apply {
+            val visibilityValue = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageVisibleKey,
+                ).let { visibleStr ->
+                    EditComponent.Template.VisibleManager.getVisible(
+                        visibleStr
                     )
                 }
             }
+            visibility = visibilityValue
+            CoroutineScope(Dispatchers.Main).launch {
+                if(
+                    imagePathList.isNullOrEmpty()
+                ) return@launch
+                val matrixStormConfigMap = withContext(Dispatchers.IO){
+                    EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
+                        imageMap,
+                    )
+                }
+                val autoRndIconsConfigMap = withContext(Dispatchers.IO){
+                    EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
+                        imageMap,
+                    )
+                }
+                val autoRndStringsConfigMap = withContext(Dispatchers.IO){
+                    EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
+                        imageMap,
+                    )
+                }
+                when (
+                   imagePathList.size == 1
+                ) {
+                    false -> {
+                        val delay = withContext(Dispatchers.IO) {
+                            imageMap?.get(
+                                imageDelayKey,
+                            )?.let {
+                                try {
+                                    it.toInt()
+                                } catch (e: Exception) {
+                                    null
+                                }
+                            } ?: 800
+                        }
+                        execSetMultipleImage(
+                            imageView,
+                            imagePathList,
+                            delay,
+                            matrixStormConfigMap,
+                            autoRndIconsConfigMap,
+                            autoRndStringsConfigMap,
+                            where,
+                        )
+                    }
+
+                    else -> {
+                        val fadeInMilli = withContext(Dispatchers.IO) {
+                            imageMap?.get(
+                                imageFadeInMilliKey,
+                            )?.let {
+                                try {
+                                    it.toInt()
+                                } catch (e: Exception){
+                                    null
+                                }
+                            }
+                        }
+                        val blurRadiusToSampling = withContext(Dispatchers.IO){
+                            EditComponent.Template.ImagePropertyManager.BlurManager.getBlueRadiusToSampling(
+                                imagePropertyMap
+                            )
+                        }
+                        execSetSingleImage(
+                            imageView,
+                            imagePathList.firstOrNull(),
+                            requestBuilderSrc,
+                            fadeInMilli,
+                            matrixStormConfigMap,
+                            autoRndIconsConfigMap,
+                            autoRndStringsConfigMap,
+                            blurRadiusToSampling,
+                            where,
+                        )
+                    }
+                }
+            }
+            val overrideGravity = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageGravityKey,
+                )?.let { gravityStr ->
+                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                        it.key == gravityStr
+                    }?.gravity
+                }
+            }?: Gravity.CENTER
+            foregroundGravity = overrideGravity
+            val imageColor = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageColorKey,
+                )?.let {
+                        colorStr ->
+                    val parsedColorStr = ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        imageColorKey,
+                        where,
+                    )
+                    Color.parseColor(parsedColorStr)
+                }
+            }
+            imageTintList = imageColor?.let {
+                ColorStateList.valueOf(it)
+            }
+            val imageBkColor = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageBkColorKey,
+                )?.let {
+                    colorStr ->
+                    val parsedColorStr = ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        imageBkColorKey,
+                        where,
+                    )
+                    Color.parseColor(parsedColorStr)
+                }
+            }
+            isClickable = enableImageViewClick
+            when(enableImageViewClick) {
+                true -> outValue?.let {
+                    setBackgroundResource(it.resourceId)
+                }
+                else -> {
+                    setBackgroundResource(0)
+                    background = imageBkColor?.let {
+                        ColorDrawable(imageBkColor)
+                    }
+                }
+            }
+            val imageAlpha = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageAlphaKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    } catch(e: Exception){
+                        null
+                    }
+                }
+            }
+            alpha = imageAlpha ?: 1f
+            val imageScale = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageScaleKey,
+                ).let {
+                        scale ->
+                    EditComponent.Template.ImagePropertyManager.ImageScale.entries.firstOrNull {
+                        it.str == scale
+                    } ?: EditComponent.Template.ImagePropertyManager.ImageScale.FIT_CENTER
+                }
+            }
+            scaleType = imageScale.scale
+            val rotateFloat = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageRotateKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    } catch(e: Exception){
+                        null
+                    }
+                } ?: 0f
+            }
+            rotation = rotateFloat
+            val scaleXFloat = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageScaleXKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    } catch(e: Exception){
+                        null
+                    }
+                } ?: 1f
+            }
+            scaleX = scaleXFloat
+            val scaleYFloat = withContext(Dispatchers.IO) {
+                imagePropertyMap?.get(
+                    imageScaleYKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    } catch(e: Exception){
+                        null
+                    }
+                } ?: scaleY
+            }
+            scaleY = scaleYFloat
+            val paddingData = withContext(Dispatchers.IO) {
+                EditComponent.Template.PaddingData(
+                    imagePropertyMap?.get(
+                        imagePaddingTopKey,
+                    ),
+                    imagePropertyMap?.get(
+                        imagePaddingBottomKey,
+                    ),
+                    imagePropertyMap?.get(
+                        imagePaddingStartKey,
+                    ),
+                    imagePropertyMap?.get(
+                        imagePaddingEndKey,
+                    ),
+                    density,
+                )
+            }
+            setPadding(
+                paddingData.paddingStart ?: 0,
+                paddingData.paddingTop ?: 0,
+                paddingData.paddingEnd ?: 0,
+                paddingData.paddingBottom ?: 0,
+            )
         }
+//            }
+//        }
         imageView.layoutParams = imageView.layoutParams.apply {
             val curLayoutParams = this as FrameLayout.LayoutParams
             curLayoutParams.apply setParam@ {
@@ -1496,7 +1501,7 @@ object EditConstraintFrameMaker {
 
     suspend fun setImageViewForDynamic(
         imageView: AppCompatImageView,
-//        imageMap: Map<String, String>?,
+        imageMap: Map<String, String>?,
         imagePropertyMap: Map<String, String>?,
         density: Float,
     ) {
@@ -1681,81 +1686,85 @@ object EditConstraintFrameMaker {
                 scaleY = it
             }
         }
+        val imagePathList = withContext(Dispatchers.IO) {
+            imageMap?.get(
+                imagePathsKey,
+            )?.split(valueSeparator)
+        }
+        if(
+            imagePathList.isNullOrEmpty()
+            ) return
+        CoroutineScope(Dispatchers.Main).launch {
+            val matrixStormConfigMap = withContext(Dispatchers.IO){
+                EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
+                    imageMap,
+                )
+            }
+            val autoRndIconsConfigMap = withContext(Dispatchers.IO){
+                EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
+                    imageMap,
+                )
+            }
+            val autoRndStringsConfigMap = withContext(Dispatchers.IO){
+                EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
+                    imageMap,
+                )
+            }
+            when (imagePathList.size == 1) {
+                false -> {
+                    val delay = withContext(Dispatchers.IO) {
+                        imageMap?.get(
+                            imageDelayKey,
+                        )?.let {
+                            try {
+                                it.toInt()
+                            } catch (e: Exception) {
+                                null
+                            }
+                        } ?: 800
+                    }
+                    execSetMultipleImage(
+                        imageView,
+                        imagePathList,
+                        delay,
+                        matrixStormConfigMap,
+                        autoRndIconsConfigMap,
+                        autoRndStringsConfigMap,
+                        where,
+                    )
+                }
 
-//        if(
-//            imagePathList.isNullOrEmpty()
-//            ) return
-//        CoroutineScope(Dispatchers.Main).launch {
-//            val matrixStormConfigMap = withContext(Dispatchers.IO){
-//                EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
-//                    imageMap,
-//                )
-//            }
-//            val autoRndIconsConfigMap = withContext(Dispatchers.IO){
-//                EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
-//                    imageMap,
-//                )
-//            }
-//            val autoRndStringsConfigMap = withContext(Dispatchers.IO){
-//                EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
-//                    imageMap,
-//                )
-//            }
-//            when (imagePathList.size == 1) {
-//                false -> {
-//                    val delay = withContext(Dispatchers.IO) {
-//                        imageMap?.get(
-//                            imageDelayKey,
-//                        )?.let {
-//                            try {
-//                                it.toInt()
-//                            } catch (e: Exception) {
-//                                null
-//                            }
-//                        } ?: 800
-//                    }
-//                    execSetMultipleImage(
-//                        imageView,
-//                        imagePathList,
-//                        delay,
-//                        matrixStormConfigMap,
-//                        autoRndIconsConfigMap,
-//                        autoRndStringsConfigMap,
-//                        where,
-//                    )
-//                }
-//
-//                else -> {
-//                    val fadeInMilli = withContext(Dispatchers.IO) {
-//                        imageMap?.get(
-//                            imageFadeInMilliKey,
-//                        )?.let {
-//                            try {
-//                                it.toInt()
-//                            } catch (e: Exception){
-//                                null
-//                            }
-//                        }
-//                    }
-//                    val blurRadiusToSampling = withContext(Dispatchers.IO){
-//                        EditComponent.Template.ImagePropertyManager.BlurManager.getBlueRadiusToSampling(
-//                            imagePropertyMap
-//                        )
-//                    }
-//                    execSetSingleImage(
-//                        imageView,
-//                        imagePathList.firstOrNull(),
-//                        null,
-//                        fadeInMilli,
-//                        matrixStormConfigMap,
-//                        autoRndIconsConfigMap,
-//                        autoRndStringsConfigMap,
-//                        blurRadiusToSampling,
-//                        where,
-//                    )
-//                }
-//            }
-//        }
+                else -> {
+                    val fadeInMilli = withContext(Dispatchers.IO) {
+                        imageMap?.get(
+                            imageFadeInMilliKey,
+                        )?.let {
+                            try {
+                                it.toInt()
+                            } catch (e: Exception){
+                                null
+                            }
+                        }
+                    }
+                    val blurRadiusToSampling = withContext(Dispatchers.IO){
+                        EditComponent.Template.ImagePropertyManager.BlurManager.getBlueRadiusToSampling(
+                            imagePropertyMap
+                        )
+                    }
+                    execSetSingleImage(
+                        imageView,
+                        imagePathList.firstOrNull(),
+                        null,
+                        fadeInMilli,
+                        matrixStormConfigMap,
+                        autoRndIconsConfigMap,
+                        autoRndStringsConfigMap,
+                        blurRadiusToSampling,
+                        where,
+                    )
+                }
+            }
+        }
     }
 
     private suspend fun execSetSingleImage(
@@ -1842,10 +1851,10 @@ object EditConstraintFrameMaker {
                 .thumbnail(requestBuilder)
                 .into(imageView)
         }
-        if(bitmap == null){
-            imageView.isVisible = false
-            return
-        }
+//        if(bitmap == null){
+//            imageView.isVisible = false
+//            return
+//        }
     }
 
     private object ImageCreator {
