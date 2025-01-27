@@ -464,7 +464,9 @@ object FannelHistoryButtonEvent {
                 val fannelName =
                     fannelManageListAdapter.fannelNameList.getOrNull(position)
                         ?: return
-                exitDialog(fannelManageListView)
+                CoroutineScope(Dispatchers.Main).launch {
+                    exitDialog(fannelManageListView)
+                }
                 if(
                     !FactFannel.isFactFannel(fannelName)
                 ){
@@ -477,59 +479,74 @@ object FannelHistoryButtonEvent {
                         fragment.activity
                     )
                 } ?: return
-                val useFannelName = when(fannelName == SystemFannel.home) {
-                    true -> SystemFannel.preference
-                    else -> fannelName
-                }
-                when(fannelName == SystemFannel.home) {
-                    true -> preferenceEdit(fragment)
-                    false -> {
-                        val editListConfigPath = let {
-                            val useFannelPath =  File(
-                                UsePath.cmdclickDefaultAppDirPath,
-                                useFannelName
-                            ).absolutePath
-                            val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-                                fragment.context,
-                                useFannelPath
-                            )
-                            val settingVariableList = CommandClickVariables.extractValListFromHolder(
-                                ReadText(useFannelPath).textToList(),
-                                settingSectionStart,
-                                settingSectionEnd
-                            )?.joinToString("\n")?.let {
-                                SetReplaceVariabler.execReplaceByReplaceVariables(
-                                    it,
-                                    setReplaceVariableMap,
-                                    useFannelName,
-                                )
-                            }?.split("\n")
-                            val editListConfigPathSrc = SettingVariableReader.getStrValue(
-                                settingVariableList,
-                                CommandClickScriptVariable.EDIT_LIST_CONFIG,
-                                String()
-                            )
-                            when(editListConfigPathSrc.startsWith(filePrefix)){
-                                false -> null
-                                else -> editListConfigPathSrc.removePrefix(filePrefix)
-                            }
-                        } ?: return
-                        val useFannelInfoMap = FannelInfoTool.makeFannelInfoMapByString(
-                            useFannelName,
-                            String()
-                        )
-                        CoroutineScope(Dispatchers.IO).launch {
-                            FileSystems.updateLastModified(
-                                File(cmdclickDefaultAppDirPath, useFannelName).absolutePath
-                            )
+                CoroutineScope(Dispatchers.Main).launch {
+                    val useFannelName = withContext(Dispatchers.IO) {
+                        when (fannelName == SystemFannel.home) {
+                            true -> SystemFannel.preference
+                            else -> fannelName
                         }
-                        terminalFragment.editListDialogForOrdinaryRevolver?.show(
-                            useFannelInfoMap.map {
-                                "${it.key}=${it.value}"
-                            }.joinToString(JsFannelInfo.fannelInfoMapSeparator.toString()),
-                            editListConfigPath
-                        )
-                        return
+                    }
+                    when (fannelName == SystemFannel.home) {
+                        true -> preferenceEdit(fragment)
+                        false -> {
+                            val editListConfigPath = withContext(Dispatchers.IO) {
+                                val useFannelPath = File(
+                                    UsePath.cmdclickDefaultAppDirPath,
+                                    useFannelName
+                                ).absolutePath
+                                val settingVariableListBeforeReplace =
+                                    CommandClickVariables.extractValListFromHolder(
+                                        ReadText(useFannelPath).textToList(),
+                                        settingSectionStart,
+                                        settingSectionEnd
+                                    )
+                                val setReplaceVariableMap =
+                                    SetReplaceVariabler.makeSetReplaceVariableMap(
+                                        fragment.context,
+                                        settingVariableListBeforeReplace,
+                                        useFannelName
+                                    )
+                                val settingVariableList =
+                                    settingVariableListBeforeReplace
+                                        ?.joinToString("\n")
+                                        ?.let {
+                                            SetReplaceVariabler.execReplaceByReplaceVariables(
+                                                it,
+                                                setReplaceVariableMap,
+                                                useFannelName,
+                                            )
+                                        }?.split("\n")
+                                val editListConfigPathSrc = SettingVariableReader.getStrValue(
+                                    settingVariableList,
+                                    CommandClickScriptVariable.EDIT_LIST_CONFIG,
+                                    String()
+                                )
+                                when (editListConfigPathSrc.startsWith(filePrefix)) {
+                                    false -> null
+                                    else -> editListConfigPathSrc.removePrefix(filePrefix)
+                                }
+                            } ?: return@launch
+                            val useFannelInfoMap = withContext(Dispatchers.IO) {
+                                FannelInfoTool.makeFannelInfoMapByString(
+                                    useFannelName,
+                                    String()
+                                )
+                            }
+                            CoroutineScope(Dispatchers.IO).launch {
+                                FileSystems.updateLastModified(
+                                    File(cmdclickDefaultAppDirPath, useFannelName).absolutePath
+                                )
+                            }
+                            withContext(Dispatchers.Main) {
+                                terminalFragment.editListDialogForOrdinaryRevolver?.show(
+                                    useFannelInfoMap.map {
+                                        "${it.key}=${it.value}"
+                                    }.joinToString(JsFannelInfo.fannelInfoMapSeparator.toString()),
+                                    editListConfigPath
+                                )
+                            }
+                        }
+                    }
 //                        when(fannelName == SystemFannel.home) {
 //                            true -> {
 //                                preferenceEdit(fragment)
@@ -542,7 +559,6 @@ object FannelHistoryButtonEvent {
 //                                )
 //                            }
 //                        }
-                    }
                 }
             }
         }
