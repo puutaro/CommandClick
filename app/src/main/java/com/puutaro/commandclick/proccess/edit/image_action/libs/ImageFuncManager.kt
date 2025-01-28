@@ -8,6 +8,7 @@ import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystemsForImageAction
@@ -80,6 +81,13 @@ object ImageFuncManager {
                     methodName,
                     baseArgsPairList,
                 )
+            FuncType.ARB ->
+                ArbForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
             FuncType.DEBUG ->
                 DebugForImageAction.handle(
                     fragment,
@@ -120,6 +128,7 @@ object ImageFuncManager {
         DEBUG("debug"),
         VIEW("view"),
         DELAY("delay"),
+        ARB("arb"),
     }
 
 }

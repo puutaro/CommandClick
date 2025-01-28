@@ -52,7 +52,7 @@ object EditComponent {
         }
 
         enum class IconType{
-                IMAGE,
+                IMG,
                 SVG,
         }
 
@@ -570,7 +570,7 @@ object EditComponent {
                                                 IconType.entries.firstOrNull {
                                                         it.name == iconTypeStr
                                                 }
-                                        } ?: IconType.IMAGE
+                                        } ?: IconType.IMG
                                 }
 
                                 fun getWidth(

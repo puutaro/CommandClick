@@ -2192,7 +2192,7 @@ object EditConstraintFrameMaker {
                     it.str == shapeStr
                 } ?: CmdClickIcons.RECT
                 return@let when(iconType){
-                    EditComponent.IconType.IMAGE -> {
+                    EditComponent.IconType.IMG -> {
                         val iconFile = ExecSetToolbarButtonImage.getImageFile(
                             shape.assetsPath
                         )
@@ -2420,7 +2420,7 @@ object EditConstraintFrameMaker {
                 imagePathToIconType.second.let { iconTypeStr ->
                     EditComponent.IconType.entries.firstOrNull {
                         it.name == iconTypeStr
-                    } ?: EditComponent.IconType.IMAGE
+                    } ?: EditComponent.IconType.IMG
                 }
             }
             val assetsPath = withContext(Dispatchers.IO) {
@@ -2430,7 +2430,7 @@ object EditConstraintFrameMaker {
             }?: return null
             return withContext(Dispatchers.IO) {
                 when (iconType) {
-                    EditComponent.IconType.IMAGE -> {
+                    EditComponent.IconType.IMG -> {
                         val iconFile = ExecSetToolbarButtonImage.getImageFile(
                             assetsPath
                         )
