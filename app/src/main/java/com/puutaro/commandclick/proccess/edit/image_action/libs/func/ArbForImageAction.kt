@@ -3,16 +3,20 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Typeface
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.Font
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.IconType
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
@@ -20,6 +24,8 @@ import java.io.File
 import kotlin.enums.EnumEntries
 
 object ArbForImageAction {
+
+    private const val transparentColorStr = "#00000000"
     suspend fun handle(
         fragment: Fragment,
         funcName: String,
@@ -159,6 +165,14 @@ object ArbForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
+                }.let {
+                        colorStr ->
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        args.iconColorKeyToDefaultValueStr.first,
+                        where,
+                    )
                 }
                 val returnBitmap = MatrixStorm.make(
                     context,
@@ -175,6 +189,619 @@ object ArbForImageAction {
                     null,
                 ) to null
             }
+            is ArbMethodArgClass.IconsArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.widthKeyToDefaultValueStr,
+                    where
+                ).let { widthStrToErr ->
+                    val funcErr = widthStrToErr.second
+                        ?: return@let widthStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.heightKeyToDefaultValueStr,
+                    where
+                ).let { heightToErr ->
+                    val funcErr = heightToErr.second
+                        ?: return@let heightToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val pieceOneSide = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.pieceOneSideKeyToDefaultValueStr,
+                    where
+                ).let { pieceOneSideToErr ->
+                    val funcErr = pieceOneSideToErr.second
+                        ?: return@let pieceOneSideToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.timesKeyToDefaultValueStr,
+                    where
+                ).let { timesToErr ->
+                    val funcErr = timesToErr.second
+                        ?: return@let timesToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val shapeStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.shapeKeyToDefaultValueStr,
+                    where
+                ).let { shapeStrToErr ->
+                    val funcErr = shapeStrToErr.second
+                        ?: return@let shapeStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val iconType = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.iconTypeKeyToDefaultValueStr,
+                    where
+                ).let { iconTypeStrToErr ->
+                    val funcErr = iconTypeStrToErr.second
+                        ?: return@let iconTypeStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                        iconTypeStr ->
+                    IconType.entries.firstOrNull {
+                        it.name == iconTypeStr
+                    }?: IconType.SVG
+                }
+                val iconColorStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.iconColorKeyToDefaultValueStr,
+                    where
+                ).let {
+                        colorStrToErr ->
+                    val funcErr = colorStrToErr.second
+                        ?: return@let colorStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                        colorStr ->
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        args.iconColorKeyToDefaultValueStr.first,
+                        where,
+                    )
+                }
+                val bkColorStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.bkColorKeyToDefaultValueStr,
+                    where
+                ).let {
+                        colorStrToErr ->
+                    val funcErr = colorStrToErr.second
+                        ?: return@let colorStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                        colorStr ->
+                    if(
+                        colorStr == transparentColorStr
+                    ) return@let transparentColorStr
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        args.bkColorKeyToDefaultValueStr.first,
+                        where,
+                    )
+                }
+                val layout = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.layoutKeyToDefaultValueStr,
+                    where
+                ).let { layoutStrToErr ->
+                    val funcErr = layoutStrToErr.second
+                        ?: return@let layoutStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    layoutStr ->
+                    ArbMethodArgClass.IconsArgs.Layout.entries.firstOrNull {
+                        it.name == layoutStr
+                    }?: ArbMethodArgClass.IconsArgs.Layout.LEFT
+                }
+                val returnBitmap = RndIcons.make(
+                    context,
+                    width,
+                    height,
+                    pieceOneSide,
+                    times,
+                    shapeStr,
+                    iconType,
+                    iconColorStr,
+                    bkColorStr,
+                    layout,
+                )
+                Pair(
+                    returnBitmap,
+                    null,
+                ) to null
+            }
+            is ArbMethodArgClass.StringsArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.widthKeyToDefaultValueStr,
+                    where
+                ).let { widthStrToErr ->
+                    val funcErr = widthStrToErr.second
+                        ?: return@let widthStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.heightKeyToDefaultValueStr,
+                    where
+                ).let { heightToErr ->
+                    val funcErr = heightToErr.second
+                        ?: return@let heightToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val pieceWidthFloat = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.pieceWidthKeyToDefaultValueStr,
+                    where
+                ).let { pieceWidthToErr ->
+                    val funcErr = pieceWidthToErr.second
+                        ?: return@let pieceWidthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.toFloat()
+                val pieceHeightFloat = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.pieceHeightKeyToDefaultValueStr,
+                    where
+                ).let { pieceHeightToErr ->
+                    val funcErr = pieceHeightToErr.second
+                        ?: return@let pieceHeightToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.toFloat()
+                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.timesKeyToDefaultValueStr,
+                    where
+                ).let { timesToErr ->
+                    val funcErr = timesToErr.second
+                        ?: return@let timesToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val string = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.stringKeyToDefaultValueStr,
+                    where
+                ).let { stringToErr ->
+                    val funcErr = stringToErr.second
+                        ?: return@let stringToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val fontSizeFloat = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.fontSizeKeyToDefaultValueStr,
+                    where
+                ).let { fontSizeToErr ->
+                    val funcErr = fontSizeToErr.second
+                        ?: return@let fontSizeToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.toFloat()
+                val fontType = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.fontTypeKeyToDefaultValueStr,
+                    where
+                ).let { fontTypeToErr ->
+                    val funcErr = fontTypeToErr.second
+                        ?: return@let fontTypeToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    fontTypeStr ->
+                    EditComponent.Font.entries.firstOrNull {
+                        it.key == fontTypeStr
+                    }?.typeface ?: EditComponent.Font.SANS_SERIF.typeface
+                }
+                val fontStyle = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.fontStyleKeyToDefaultValueStr,
+                    where
+                ).let { fontStyleToErr ->
+                    val funcErr = fontStyleToErr.second
+                        ?: return@let fontStyleToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    fontStyleStr ->
+                    EditComponent.Template.TextPropertyManager.TextStyle.entries.firstOrNull {
+                        it.key == fontStyleStr
+                    }?.style ?: EditComponent.Template.TextPropertyManager.TextStyle.NORMAL.style
+                }
+                val fontColor = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.fontColorKeyToDefaultValueStr,
+                    where
+                ).let { colorStrToErr ->
+                    val funcErr = colorStrToErr.second
+                        ?: return@let colorStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                        colorStr ->
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        args.fontColorKeyToDefaultValueStr.first,
+                        where,
+                    )
+                }.let {
+                    Color.parseColor(it)
+                }
+                val bkColorStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.bkColorKeyToDefaultValueStr,
+                    where
+                ).let { colorStrToErr ->
+                    val funcErr = colorStrToErr.second
+                        ?: return@let colorStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    colorStr ->
+                    if(
+                        colorStr == transparentColorStr
+                    ) return@let transparentColorStr
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        args.bkColorKeyToDefaultValueStr.first,
+                        where,
+                    )
+                }
+                val strokeWidthFloat = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.strokeWidthKeyToDefaultValueStr,
+                    where
+                ).let { strokeWidthToErr ->
+                    val funcErr = strokeWidthToErr.second
+                        ?: return@let strokeWidthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.toFloat()
+                val strokeColor = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.strokeColorKeyToDefaultValueStr,
+                    where
+                ).let { colorStrToErr ->
+                    val funcErr = colorStrToErr.second
+                        ?: return@let colorStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                        colorStr ->
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        args.strokeColorKeyToDefaultValueStr.first,
+                        where,
+                    )
+                }.let {
+                    Color.parseColor(it)
+                }
+                val letterSpacingFloat = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.letterSpacingKeyToDefaultValueStr,
+                    where
+                ).let { letterSpacingToErr ->
+                    val funcErr = letterSpacingToErr.second
+                        ?: return@let letterSpacingToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.toFloat()
+                val layout = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.layoutKeyToDefaultValueStr,
+                    where
+                ).let { layoutToErr ->
+                    val funcErr = layoutToErr.second
+                        ?: return@let layoutToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    layoutStr ->
+                    ArbMethodArgClass.StringsArgs.Layout.entries.firstOrNull {
+                        it.name == layoutStr
+                    } ?: ArbMethodArgClass.StringsArgs.Layout.LEFT
+                }
+
+                val returnBitmap = RndStrings.make(
+                    context,
+                    width,
+                    height,
+                    pieceWidthFloat,
+                    pieceHeightFloat,
+                    times,
+                    string,
+                    fontSizeFloat,
+                    fontType,
+                    fontStyle,
+                    fontColor,
+                    bkColorStr,
+                    strokeColor,
+                    strokeWidthFloat,
+                    letterSpacingFloat,
+                    layout,
+                )
+                Pair(
+                    returnBitmap,
+                    null,
+                ) to null
+            }
+        }
+    }
+
+    private object RndStrings {
+        fun make(
+            context: Context,
+            baseWidth: Int,
+            baseHeight: Int,
+            pieceWidthFloat: Float,
+            pieceHeightFloat: Float,
+            times: Int,
+            string: String,
+            fontSizeFloat: Float,
+            fontType: Typeface,
+            fontStyle: Int,
+            fontColor: Int,
+            bkColorStr: String,
+            strokeColor: Int,
+            strokeWidthFloat: Float,
+            letterSpacingFloat: Float,
+            layout: ArbMethodArgClass.StringsArgs.Layout,
+        ): Bitmap {
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lstringsp.txt").absolutePath,
+//                listOf(
+//                    "string: $string",
+//                    "pieceWidthFloat: $pieceWidthFloat",
+//                    "pieceHeightFloat: $pieceHeightFloat",
+//                    null,
+//                    "fontSizeFloat: $fontSizeFloat",
+//                    "fontColor: $fontColor",
+//                    "strokeColor: $strokeColor",
+//                    "strokeWidthFloat: $strokeWidthFloat",
+//                    null,
+//                    "letterSpacingFloat: $letterSpacingFloat",
+//                    "fontType: $fontType",
+//                    "fontStyle: $fontStyle",
+//                    "baseWidth: $baseWidth",
+//                    "baseHeight: $baseHeight",
+//                    "bkColorStr: $bkColorStr",
+//                    "times: $times",
+//                    "layout: ${layout}",
+//                ).joinToString("\n"),
+//            )
+            val stringBitmap = BitmapTool.DrawText.drawTextToBitmap(
+                string,
+                pieceWidthFloat,
+                pieceHeightFloat,
+                null,
+                fontSizeFloat,
+                fontColor,
+                strokeColor,
+                strokeWidthFloat,
+                null,
+                letterSpacingFloat,
+                font = Typeface.create(
+                    fontType,
+                    fontStyle
+                ),
+                isAntiAlias = true,
+            ).let {
+                val cutWidth = (pieceWidthFloat * 0.8).toInt()
+                val cutHeight = (pieceHeightFloat * 0.8).toInt()
+                BitmapTool.ImageTransformer.cutCenter2(
+                    it,
+                    cutWidth,
+                    cutHeight
+                )
+            }
+            FileSystems.writeFromByteArray(
+                File(UsePath.cmdclickDefaultAppDirPath, "lstring.png").absolutePath,
+                BitmapTool.convertBitmapToByteArray(
+                    stringBitmap
+                )
+            )
+            val autoRndStringsBitmap = when(layout) {
+                ArbMethodArgClass.StringsArgs.Layout.LEFT -> {
+                    CcDotArt.MistMaker.makeLeftRndBitmaps(
+                        baseWidth,
+                        baseHeight,
+                        stringBitmap,
+                        times
+                    ).let {
+                        val cutWidth = (baseWidth * 0.8).toInt()
+                        val cutHeight = (baseHeight * 0.8).toInt()
+                        BitmapTool.ImageTransformer.cutByTarget(
+                            it,
+                            cutWidth,
+                            cutHeight,
+                            it.width - cutWidth,
+                            (it.height - cutHeight) / 2
+                        )
+                    }
+                }
+
+                ArbMethodArgClass.StringsArgs.Layout.RND -> {
+                    CcDotArt.MistMaker.makeRndBitmap(
+                        baseWidth,
+                        baseHeight,
+                        bkColorStr,
+                        stringBitmap,
+                        times
+                    )
+//                        .let {
+//                        val cutWidth = (baseWidth * 0.8).toInt()
+//                        val cutHeight = (baseHeight * 0.8).toInt()
+//                        BitmapTool.ImageTransformer.cutCenter2(
+//                            it,
+//                            cutWidth,
+//                            cutHeight,
+//                        )
+                }
+            }
+            return autoRndStringsBitmap
+        }
+    }
+
+    private object RndIcons {
+        fun make(
+            context: Context,
+            width: Int,
+            height: Int,
+            pieceOneSide: Int,
+            times: Int,
+            shapeStr: String,
+            iconType: IconType,
+            iconColorStr: String,
+            bkColorStr: String,
+            layout: ArbMethodArgClass.IconsArgs.Layout,
+        ): Bitmap {
+            val pieceBitmap = makePieceBitmap(
+                context,
+                pieceOneSide,
+                pieceOneSide,
+                shapeStr,
+                iconType,
+                iconColorStr,
+            )
+            val autoRndIcons = when(layout) {
+                ArbForImageAction.ArbMethodArgClass.IconsArgs.Layout.LEFT -> {
+                    CcDotArt.MistMaker.makeLeftRndBitmaps(
+                        width,
+                        height,
+                        pieceBitmap,
+                        times
+                    ).let {
+                        val cutWidth = (width * 0.8).toInt()
+                        val cutHeight = (height * 0.8).toInt()
+                        BitmapTool.ImageTransformer.cutByTarget(
+                            it,
+                            cutWidth,
+                            cutHeight,
+                            it.width - cutWidth,
+                            (it.height - cutHeight) / 2
+                        )
+                    }
+                }
+
+                ArbForImageAction.ArbMethodArgClass.IconsArgs.Layout.RND -> {
+                    CcDotArt.MistMaker.makeRndBitmap(
+                        width,
+                        height,
+                        bkColorStr,
+                        pieceBitmap,
+                        times
+                    )
+                }
+            }
+            return autoRndIcons
         }
     }
 
@@ -206,65 +833,66 @@ object ArbForImageAction {
                 yMulti,
             )
         }
+    }
 
-        private fun makePieceBitmap(
-            context: Context,
-            pieceWidth: Int,
-            pieceHeight: Int,
-            shapeStr: String,
-            iconType: EditComponent.IconType,
-            iconColorStr: String,
-        ): Bitmap {
-            return let {
-                if(
-                    File(shapeStr).isFile
-                ) return@let BitmapTool.convertFileToBitmap(shapeStr)?.let {
-                    Bitmap.createScaledBitmap(
-                        it,
-                        pieceWidth,
-                        pieceHeight,
-                        true,
+
+    private fun makePieceBitmap(
+        context: Context,
+        pieceWidth: Int,
+        pieceHeight: Int,
+        shapeStr: String,
+        iconType: EditComponent.IconType,
+        iconColorStr: String,
+    ): Bitmap {
+        return let {
+            if(
+                File(shapeStr).isFile
+            ) return@let BitmapTool.convertFileToBitmap(shapeStr)?.let {
+                Bitmap.createScaledBitmap(
+                    it,
+                    pieceWidth,
+                    pieceHeight,
+                    true,
+                )
+            }
+            val shape = CmdClickIcons.entries.firstOrNull {
+                it.str == shapeStr
+            } ?: CmdClickIcons.RECT
+            return@let when(iconType){
+                EditComponent.IconType.IMG -> {
+                    val iconFile = ExecSetToolbarButtonImage.getImageFile(
+                        shape.assetsPath
                     )
-                }
-                val shape = CmdClickIcons.entries.firstOrNull {
-                    it.str == shapeStr
-                } ?: CmdClickIcons.RECT
-                return@let when(iconType){
-                    EditComponent.IconType.IMG -> {
-                        val iconFile = ExecSetToolbarButtonImage.getImageFile(
-                            shape.assetsPath
-                        )
-                        BitmapTool.convertFileToBitmap(iconFile.absolutePath)?.let {
-                            Bitmap.createScaledBitmap(
-                                it,
-                                pieceWidth,
-                                pieceHeight,
-                                true,
-                            )
-                        }
-                    }
-                    EditComponent.IconType.SVG -> {
-                        AppCompatResources.getDrawable(
-                            context,
-                            shape.id,
-                        )?.toBitmap(
+                    BitmapTool.convertFileToBitmap(iconFile.absolutePath)?.let {
+                        Bitmap.createScaledBitmap(
+                            it,
                             pieceWidth,
-                            pieceHeight
-                        )?.let convertBlack@ {
-                            val bitmap = BitmapTool.ImageTransformer.convertBlackToColor(
-                                it,
-                                iconColorStr
-                            )
-                            bitmap
-                        }
+                            pieceHeight,
+                            true,
+                        )
                     }
                 }
-            } ?: BitmapTool.ImageTransformer.makeRect(
-                iconColorStr,
-                pieceWidth,
-                pieceHeight
-            )
-        }
+                EditComponent.IconType.SVG -> {
+                    AppCompatResources.getDrawable(
+                        context,
+                        shape.id,
+                    )?.toBitmap(
+                        pieceWidth,
+                        pieceHeight
+                    )?.let convertBlack@ {
+                        val bitmap = BitmapTool.ImageTransformer.convertBlackToColor(
+                            it,
+                            iconColorStr
+                        )
+                        bitmap
+                    }
+                }
+            }
+        } ?: BitmapTool.ImageTransformer.makeRect(
+            iconColorStr,
+            pieceWidth,
+            pieceHeight
+        )
     }
 
     private enum class MethodNameClass(
@@ -272,6 +900,8 @@ object ArbForImageAction {
         val args: ArbMethodArgClass,
     ){
         MATRIX_STORM("matrixStorm", ArbMethodArgClass.MatrixStormArgs),
+        ICONS("icons", ArbMethodArgClass.IconsArgs),
+        STRINGS("strings", ArbMethodArgClass.StringsArgs),
     }
 
     private sealed interface ArgType {
@@ -325,6 +955,159 @@ object ArbForImageAction {
                 SHAPE("shape", CmdClickIcons.RECT.str, FuncCheckerForSetting.ArgType.STRING),
                 ICON_TYPE("iconType", IconType.SVG.name, FuncCheckerForSetting.ArgType.STRING),
                 ICON_COLOR("iconColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
+            }
+        }
+        data object IconsArgs : ArbMethodArgClass(), ArgType {
+            override val entries = IconsEnumArgs.entries
+            val widthKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.WIDTH.key,
+                IconsEnumArgs.WIDTH.defaultValueStr
+            )
+            val heightKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.HEIGHT.key,
+                IconsEnumArgs.HEIGHT.defaultValueStr
+            )
+            val pieceOneSideKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.PIECE_ONE_SIDE.key,
+                IconsEnumArgs.PIECE_ONE_SIDE.defaultValueStr
+            )
+            val timesKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.TIMES.key,
+                IconsEnumArgs.TIMES.defaultValueStr
+            )
+            val shapeKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.SHAPE.key,
+                IconsEnumArgs.SHAPE.defaultValueStr
+            )
+            val iconColorKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.ICON_COLOR.key,
+                IconsEnumArgs.ICON_COLOR.defaultValueStr
+            )
+            val iconTypeKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.ICON_TYPE.key,
+                IconsEnumArgs.ICON_TYPE.defaultValueStr
+            )
+            val bkColorKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.BK_COLOR.key,
+                IconsEnumArgs.BK_COLOR.defaultValueStr
+            )
+            val layoutKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.LAYOUT.key,
+                IconsEnumArgs.LAYOUT.defaultValueStr
+            )
+            enum class Layout {
+                LEFT,
+                RND,
+            }
+            private const val widthSrc = 300
+            private const val heightSrc = widthSrc * 2
+            private const val pieceOneSide = 100
+            enum class IconsEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                WIDTH("width", widthSrc.toString(), FuncCheckerForSetting.ArgType.INT),
+                HEIGHT("height", heightSrc.toString(), FuncCheckerForSetting.ArgType.INT),
+                PIECE_ONE_SIDE("pieceOneSide", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
+                TIMES("times", 10.toString(), FuncCheckerForSetting.ArgType.INT),
+                SHAPE("shape", CmdClickIcons.RECT.str, FuncCheckerForSetting.ArgType.STRING),
+                ICON_TYPE("iconType", IconType.SVG.name, FuncCheckerForSetting.ArgType.STRING),
+                ICON_COLOR("iconColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
+                BK_COLOR("bkColor", transparentColorStr, FuncCheckerForSetting.ArgType.STRING),
+                LAYOUT("layout", Layout.LEFT.name, FuncCheckerForSetting.ArgType.STRING),
+            }
+        }
+        data object StringsArgs : ArbMethodArgClass(), ArgType {
+            override val entries = StringsEnumArgs.entries
+            val widthKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.WIDTH.key,
+                StringsEnumArgs.WIDTH.defaultValueStr
+            )
+            val heightKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.HEIGHT.key,
+                StringsEnumArgs.HEIGHT.defaultValueStr
+            )
+            val pieceWidthKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.PIECE_WIDTH.key,
+                StringsEnumArgs.PIECE_WIDTH.defaultValueStr
+            )
+            val pieceHeightKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.PIECE_HEIGHT.key,
+                StringsEnumArgs.PIECE_HEIGHT.defaultValueStr
+            )
+            val timesKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.TIMES.key,
+                StringsEnumArgs.TIMES.defaultValueStr
+            )
+            val stringKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.STRING.key,
+                StringsEnumArgs.STRING.defaultValueStr
+            )
+            val fontSizeKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.FONT_SIZE.key,
+                StringsEnumArgs.FONT_SIZE.defaultValueStr
+            )
+            val fontTypeKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.FONT_TYPE.key,
+                StringsEnumArgs.FONT_TYPE.defaultValueStr
+            )
+            val fontStyleKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.FONT_STYLE.key,
+                StringsEnumArgs.FONT_STYLE.defaultValueStr
+            )
+            val fontColorKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.FONT_COLOR.key,
+                StringsEnumArgs.FONT_COLOR.defaultValueStr
+            )
+            val bkColorKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.BK_COLOR.key,
+                StringsEnumArgs.BK_COLOR.defaultValueStr
+            )
+            val strokeColorKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.STROKE_COLOR.key,
+                StringsEnumArgs.STROKE_COLOR.defaultValueStr
+            )
+           val strokeWidthKeyToDefaultValueStr = Pair(
+               StringsEnumArgs.STROKE_WIDTH.key,
+               StringsEnumArgs.STROKE_WIDTH.defaultValueStr
+           )
+            val letterSpacingKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.LETTER_SPACING.key,
+                StringsEnumArgs.LETTER_SPACING.defaultValueStr
+            )
+            val layoutKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.LAYOUT.key,
+                StringsEnumArgs.LAYOUT.defaultValueStr
+            )
+
+            private const val widthSrc = 300
+            private const val heightSrc = widthSrc * 2
+            private const val pieceOneSide = 40
+            enum class Layout {
+                LEFT,
+                RND,
+            }
+            enum class StringsEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                WIDTH("width", widthSrc.toString(), FuncCheckerForSetting.ArgType.INT),
+                HEIGHT("height", heightSrc.toString(), FuncCheckerForSetting.ArgType.INT),
+                PIECE_WIDTH("pieceWidth", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
+                PIECE_HEIGHT("pieceHeight", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
+                TIMES("times", 10.toString(), FuncCheckerForSetting.ArgType.INT),
+                STRING("string", "C", FuncCheckerForSetting.ArgType.STRING),
+                FONT_SIZE("fontSize", 20.toString(), FuncCheckerForSetting.ArgType.STRING),
+                FONT_TYPE("fontType", Font.SANS_SERIF.key, FuncCheckerForSetting.ArgType.STRING),
+                FONT_STYLE("fontStyle", EditComponent.Template.TextPropertyManager.TextStyle.NORMAL.key, FuncCheckerForSetting.ArgType.STRING),
+                FONT_COLOR("fontColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
+                BK_COLOR("bkColor", transparentColorStr, FuncCheckerForSetting.ArgType.STRING),
+                STROKE_COLOR("strokeColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
+                STROKE_WIDTH("strokeWidth", 0.toString(), FuncCheckerForSetting.ArgType.INT),
+                LETTER_SPACING("letterSpacing", 0.toString(), FuncCheckerForSetting.ArgType.INT),
+                LAYOUT("layout", Layout.LEFT.name, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

@@ -25,6 +25,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickBkImageInfo
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -1210,21 +1211,21 @@ object EditConstraintFrameMaker {
                 if(
                     imagePathList.isNullOrEmpty()
                 ) return@launch
-                val matrixStormConfigMap = withContext(Dispatchers.IO){
-                    EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
-                        imageMap,
-                    )
-                }
-                val autoRndIconsConfigMap = withContext(Dispatchers.IO){
-                    EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
-                        imageMap,
-                    )
-                }
-                val autoRndStringsConfigMap = withContext(Dispatchers.IO){
-                    EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
-                        imageMap,
-                    )
-                }
+//                val matrixStormConfigMap = withContext(Dispatchers.IO){
+//                    EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
+//                        imageMap,
+//                    )
+//                }
+//                val autoRndIconsConfigMap = withContext(Dispatchers.IO){
+//                    EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
+//                        imageMap,
+//                    )
+//                }
+//                val autoRndStringsConfigMap = withContext(Dispatchers.IO){
+//                    EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
+//                        imageMap,
+//                    )
+//                }
                 when (
                    imagePathList.size == 1
                 ) {
@@ -1244,10 +1245,10 @@ object EditConstraintFrameMaker {
                             imageView,
                             imagePathList,
                             delay,
-                            matrixStormConfigMap,
-                            autoRndIconsConfigMap,
-                            autoRndStringsConfigMap,
-                            where,
+//                            matrixStormConfigMap,
+//                            autoRndIconsConfigMap,
+//                            autoRndStringsConfigMap,
+//                            where,
                         )
                     }
 
@@ -1273,11 +1274,11 @@ object EditConstraintFrameMaker {
                             imagePathList.firstOrNull(),
                             requestBuilderSrc,
                             fadeInMilli,
-                            matrixStormConfigMap,
-                            autoRndIconsConfigMap,
-                            autoRndStringsConfigMap,
+//                            matrixStormConfigMap,
+//                            autoRndIconsConfigMap,
+//                            autoRndStringsConfigMap,
                             blurRadiusToSampling,
-                            where,
+//                            where,
                         )
                     }
                 }
@@ -1695,21 +1696,21 @@ object EditConstraintFrameMaker {
             imagePathList.isNullOrEmpty()
             ) return
         CoroutineScope(Dispatchers.Main).launch {
-            val matrixStormConfigMap = withContext(Dispatchers.IO){
-                EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
-                    imageMap,
-                )
-            }
-            val autoRndIconsConfigMap = withContext(Dispatchers.IO){
-                EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
-                    imageMap,
-                )
-            }
-            val autoRndStringsConfigMap = withContext(Dispatchers.IO){
-                EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
-                    imageMap,
-                )
-            }
+//            val matrixStormConfigMap = withContext(Dispatchers.IO){
+//                EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
+//                    imageMap,
+//                )
+//            }
+//            val autoRndIconsConfigMap = withContext(Dispatchers.IO){
+//                EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
+//                    imageMap,
+//                )
+//            }
+//            val autoRndStringsConfigMap = withContext(Dispatchers.IO){
+//                EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
+//                    imageMap,
+//                )
+//            }
             when (imagePathList.size == 1) {
                 false -> {
                     val delay = withContext(Dispatchers.IO) {
@@ -1727,10 +1728,10 @@ object EditConstraintFrameMaker {
                         imageView,
                         imagePathList,
                         delay,
-                        matrixStormConfigMap,
-                        autoRndIconsConfigMap,
-                        autoRndStringsConfigMap,
-                        where,
+//                        matrixStormConfigMap,
+//                        autoRndIconsConfigMap,
+//                        autoRndStringsConfigMap,
+//                        where,
                     )
                 }
 
@@ -1756,11 +1757,11 @@ object EditConstraintFrameMaker {
                         imagePathList.firstOrNull(),
                         null,
                         fadeInMilli,
-                        matrixStormConfigMap,
-                        autoRndIconsConfigMap,
-                        autoRndStringsConfigMap,
+//                        matrixStormConfigMap,
+//                        autoRndIconsConfigMap,
+//                        autoRndStringsConfigMap,
                         blurRadiusToSampling,
-                        where,
+//                        where,
                     )
                 }
             }
@@ -1772,11 +1773,11 @@ object EditConstraintFrameMaker {
         imagePathSrc: String?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         fadeInMilli: Int?,
-        matrixStormConfigMap: Map<String, String>,
-        autoRndIconsConfigMap: Map<String, String>,
-        autoRndStringsConfigMap: Map<String, String>,
+//        matrixStormConfigMap: Map<String, String>,
+//        autoRndIconsConfigMap: Map<String, String>,
+//        autoRndStringsConfigMap: Map<String, String>,
         blurRadiusAndSamplingPair: Pair<Int, Int>?,
-        where: String,
+//        where: String,
     ){
         if(
             imagePathSrc.isNullOrEmpty()
@@ -1803,17 +1804,18 @@ object EditConstraintFrameMaker {
         val bitmap = ImageCreator.byFilePath(imagePathSrc)
             ?: ImageCreator.byWallMacro(
             imagePathSrc
-        ) ?: ImageCreator.byAutoCreateImage(
-                imageViewContext,
-                imagePathSrc,
-                matrixStormConfigMap,
-                autoRndIconsConfigMap,
-                autoRndStringsConfigMap,
-                where,
-            ) ?: ImageCreator.byIconMacro(
+        ) ?: ImageCreator.byIconMacro(
             imageViewContext,
             imagePathToIconType
         )
+//         ?: ImageCreator.byAutoCreateImage(
+//                imageViewContext,
+//                imagePathSrc,
+//                matrixStormConfigMap,
+//                autoRndIconsConfigMap,
+//                autoRndStringsConfigMap,
+//                where,
+//            )
         if(blurRadiusAndSamplingPair != null){
             val blurRadius = blurRadiusAndSamplingPair.first
             val blurSampling = blurRadiusAndSamplingPair.second
@@ -2324,6 +2326,28 @@ object EditConstraintFrameMaker {
 //                ).joinToString("\n")
 //            )
 //            Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD),
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lstringspf.txt").absolutePath,
+//                listOf(
+//                    "string: $string",
+//                    "pieceWidthFloat: $pieceWidth",
+//                    "pieceHeightFloat: $pieceHeight",
+//                    null,
+//                    "fontSizeFloat: $fontSize",
+//                    "fontColor: $color",
+//                    "strokeColor: $strokeColor",
+//                    "strokeWidthFloat: $strokeWidthInt",
+//                    null,
+//                    "letterSpacingFloat: $letterSpacingFloat",
+//                    "fontType: $fontType",
+//                    "fontStyle: $fontStyle",
+//                    "baseWidth: $baseWidth",
+//                    "baseHeight: $baseHeight",
+//                    "bkColorStr: $bkColorStr",
+//                    "times: $times",
+//                    "layout: ${layout}",
+//                ).joinToString("\n"),
+//            )
             val stringBitmap = BitmapTool.DrawText.drawTextToBitmap(
                 string,
                 pieceWidth,
@@ -2455,10 +2479,10 @@ object EditConstraintFrameMaker {
         imageView: AppCompatImageView,
         imagePathList: List<String>,
         delay: Int,
-        matrixStormConfigMap: Map<String, String>,
-        autoRndIconsConfigMap: Map<String, String>,
-        autoRndStringsConfigMap: Map<String, String>,
-        where: String,
+//        matrixStormConfigMap: Map<String, String>,
+//        autoRndIconsConfigMap: Map<String, String>,
+//        autoRndStringsConfigMap: Map<String, String>,
+//        where: String,
     ){
         val imageViewContext = imageView.context
         val animationDrawable = AnimationDrawable()
@@ -2472,17 +2496,18 @@ object EditConstraintFrameMaker {
                     val bitmap = ImageCreator.byFilePath(imagePathSrc)
                         ?: ImageCreator.byWallMacro(
                             imagePathSrc
-                        ) ?: ImageCreator.byAutoCreateImage(
-                            imageViewContext,
-                            imagePathSrc,
-                            matrixStormConfigMap,
-                            autoRndIconsConfigMap,
-                            autoRndStringsConfigMap,
-                            where,
                         ) ?: ImageCreator.byIconMacro(
                             imageViewContext,
                             imagePathToIconType
                         )
+//                    ?: ImageCreator.byAutoCreateImage(
+//                            imageViewContext,
+//                            imagePathSrc,
+//                            matrixStormConfigMap,
+//                            autoRndIconsConfigMap,
+//                            autoRndStringsConfigMap,
+//                            where,
+//                        )
                     index to bitmap
                 }
             }
