@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import kotlinx.coroutines.Dispatchers
@@ -121,8 +122,36 @@ object RndForSetting {
                         null,
                     ) to null
                 }
+                is RndMethodArgClass.IconArgs -> {
+                    Pair(
+                        CmdClickIcons.entries.random().str,
+                        null,
+                    ) to null
+                }
+                is RndMethodArgClass.BkIconArgs -> {
+                    Pair(
+                        makeBkIconStr(),
+                        null,
+                    ) to null
+                }
             }
         }
+    }
+
+    private fun makeBkIconStr(): String{
+        return listOf(
+            CmdClickIcons.ROUND_RECT,
+            CmdClickIcons.DEBUG,
+            CmdClickIcons.FILE,
+            CmdClickIcons.EXTRA,
+            CmdClickIcons.JS,
+            CmdClickIcons.LIST,
+            CmdClickIcons.PIN_LOCATION,
+            CmdClickIcons.PREF,
+            CmdClickIcons.STAR,
+            CmdClickIcons.SPIDER,
+            CmdClickIcons.BLACK_HISTORY,
+        ).random().str
     }
 
 
@@ -133,6 +162,14 @@ object RndForSetting {
         RANGE(
             "range",
             RndMethodArgClass.RangeArgs,
+        ),
+        ICON(
+            "icon",
+            RndMethodArgClass.IconArgs,
+        ),
+        BK_ICON(
+            "bkIcon",
+            RndMethodArgClass.BkIconArgs,
         ),
     }
 
@@ -162,5 +199,7 @@ object RndForSetting {
                 MAX_INT("maxInt", 0, FuncCheckerForSetting.ArgType.INT),
             }
         }
+        data object IconArgs : RndMethodArgClass()
+        data object BkIconArgs : RndMethodArgClass()
     }
 }

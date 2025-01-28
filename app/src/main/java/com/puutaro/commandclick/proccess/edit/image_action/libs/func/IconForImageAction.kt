@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlin.enums.EnumEntries
 
 object IconForImageAction {
@@ -68,7 +70,7 @@ object IconForImageAction {
                 )
                 val iconMacroStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
-                    args.typeStrKeyToIndex,
+                    args.typeStrKeyToDefaultValueStr,
                     where
                 ).let { iconMacroStrToErr ->
                     val funcErr = iconMacroStrToErr.second
@@ -78,13 +80,25 @@ object IconForImageAction {
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-                val oneSide = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
-                    args.oneSideKeyToIndex,
+                    args.widthKeyToDefaultValueStr,
                     where
-                ).let { oneSideToErr ->
-                    val funcErr = oneSideToErr.second
-                        ?: return@let oneSideToErr.first
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.heightKeyToDefaultValueStr,
+                    where,
+                ).let { heightToErr ->
+                    val funcErr = heightToErr.second
+                        ?: return@let heightToErr.first
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
@@ -97,11 +111,14 @@ object IconForImageAction {
                        context,
                        it.id,
                    )?.let {
-                       when(oneSide == intDefaultNullMacroStr.toInt()){
+                       when(
+                           width == intDefaultNullMacroStr.toInt()
+                                   || height == intDefaultNullMacroStr.toInt()
+                       ){
                            true -> it.toBitmap()
                            false -> it.toBitmap(
-                               oneSide,
-                               oneSide
+                               width,
+                               height
                            )
                        }
                    }
@@ -171,13 +188,17 @@ object IconForImageAction {
     private sealed class IconMethodArgClass {
         data object SvgArgs : IconMethodArgClass(), ArgType {
             override val entries = SvgEnumArgs.entries
-            val typeStrKeyToIndex = Pair(
+            val typeStrKeyToDefaultValueStr = Pair(
                 SvgEnumArgs.TYPE.key,
                 SvgEnumArgs.TYPE.defaultValueStr
             )
-            val oneSideKeyToIndex = Pair(
-                SvgEnumArgs.ONE_SIDE.key,
-                SvgEnumArgs.ONE_SIDE.defaultValueStr
+            val widthKeyToDefaultValueStr = Pair(
+                SvgEnumArgs.WIDTH.key,
+                SvgEnumArgs.WIDTH.defaultValueStr
+            )
+            val heightKeyToDefaultValueStr = Pair(
+                SvgEnumArgs.HEIGHT.key,
+                SvgEnumArgs.HEIGHT.defaultValueStr
             )
 
             enum class SvgEnumArgs(
@@ -186,7 +207,9 @@ object IconForImageAction {
                 val type: FuncCheckerForSetting.ArgType,
             ){
                 TYPE("type", null, FuncCheckerForSetting.ArgType.STRING),
-                ONE_SIDE("oneSide", intDefaultNullMacroStr, FuncCheckerForSetting.ArgType.INT),
+                WIDTH("width", intDefaultNullMacroStr, FuncCheckerForSetting.ArgType.INT),
+                HEIGHT("height", intDefaultNullMacroStr, FuncCheckerForSetting.ArgType.INT),
+                COLOR("color", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.INT),
             }
         }
         data object ImgArgs : IconMethodArgClass(), ArgType {

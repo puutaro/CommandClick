@@ -702,12 +702,12 @@ object ArbForImageAction {
                     cutHeight
                 )
             }
-            FileSystems.writeFromByteArray(
-                File(UsePath.cmdclickDefaultAppDirPath, "lstring.png").absolutePath,
-                BitmapTool.convertBitmapToByteArray(
-                    stringBitmap
-                )
-            )
+//            FileSystems.writeFromByteArray(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lstring.png").absolutePath,
+//                BitmapTool.convertBitmapToByteArray(
+//                    stringBitmap
+//                )
+//            )
             val autoRndStringsBitmap = when(layout) {
                 ArbMethodArgClass.StringsArgs.Layout.LEFT -> {
                     CcDotArt.MistMaker.makeLeftRndBitmaps(

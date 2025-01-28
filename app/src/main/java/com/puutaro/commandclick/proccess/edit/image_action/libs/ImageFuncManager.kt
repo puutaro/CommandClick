@@ -9,6 +9,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.CutForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystemsForImageAction
@@ -114,7 +115,14 @@ object ImageFuncManager {
                     imageView,
                     requestBuilder
                 )
-
+            FuncType.CUT ->
+                CutForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
         }
 
     }
@@ -129,6 +137,7 @@ object ImageFuncManager {
         VIEW("view"),
         DELAY("delay"),
         ARB("arb"),
+        CUT("cut"),
     }
 
 }
