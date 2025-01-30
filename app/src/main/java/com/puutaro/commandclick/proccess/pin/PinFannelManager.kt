@@ -124,16 +124,16 @@ object PinFannelManager {
         val updatePinInfoMapConList = updatePinInfoMapList.map {
             convertMapToCon(it)
         }.joinToString("\n")
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "pin.txt").absolutePath,
-            listOf(
-                "addEntryPinInfoMapList: ${addEntryPinInfoMapList}",
-                "pinFannelMapInfoList: ${pinFannelMapInfoList}",
-                "pinFannelMapInfoListByFilter: ${pinFannelMapInfoListByFilter}",
-                "updatePinInfoMapList: ${updatePinInfoMapList}",
-                "updatePinInfoMapConList: ${updatePinInfoMapConList}",
-            ).joinToString("\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "pin.txt").absolutePath,
+//            listOf(
+//                "addEntryPinInfoMapList: ${addEntryPinInfoMapList}",
+//                "pinFannelMapInfoList: ${pinFannelMapInfoList}",
+//                "pinFannelMapInfoListByFilter: ${pinFannelMapInfoListByFilter}",
+//                "updatePinInfoMapList: ${updatePinInfoMapList}",
+//                "updatePinInfoMapConList: ${updatePinInfoMapConList}",
+//            ).joinToString("\n")
+//        )
         FileSystems.writeFile(
             pinFannelTxtPath,
             updatePinInfoMapConList,
