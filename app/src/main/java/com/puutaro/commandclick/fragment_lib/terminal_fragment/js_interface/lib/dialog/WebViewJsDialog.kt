@@ -371,7 +371,7 @@ class WebViewJsDialog(
                 )
             }
             else -> pocketWebView?.loadUrl(
-//                    "https://www.google.co.id/search?q=%20"
+//                    "https://www.google.com/search?q=%20"
                 trimUrlCon
             )
         }

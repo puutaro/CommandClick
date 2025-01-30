@@ -12,7 +12,7 @@ val versionPatch = 2
 
 android {
     namespace = "com.puutaro.commandclick"
-    compileSdk = 33
+    compileSdk = 35
 
     packagingOptions {
         resources.excludes.add("META-INF/INDEX.LIST")
@@ -27,7 +27,7 @@ android {
         applicationId = "com.puutaro.commandclick"
         minSdk = 27
         targetSdk = 33
-        versionCode = 83
+        versionCode = 84
         versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -60,11 +60,14 @@ android {
 
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        //JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_17
+        //JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
+        //"1.8"
     }
 //    buildFeatures.compose = true
     dataBinding {
@@ -96,9 +99,6 @@ extra["libDir"] = "${project.projectDir}/src/main/jniLibs"
 dependencies {
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-
-
-
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.test:core-ktx:1.5.0")
     implementation("androidx.fragment:fragment-ktx:1.6.2")

@@ -33,7 +33,7 @@ class OutlineTextView : AppCompatTextView {
     fun setFillColor(id: Int){
         fillColor = context.getColor(id)
     }
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
 //        val strokeColor = when(
 //            isRevOutLine
 //        ){

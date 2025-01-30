@@ -380,7 +380,11 @@ object ButtonImageCreator {
         val marginLeft = (bitmapBackground.width * 0.5 - bitmap2Width * 0.5).toFloat()
         val marginTop = (bitmapBackground.height * 0.5 - bitmap2Height * 0.5).toFloat()
         val overlayBitmap =
-            Bitmap.createBitmap(bitmap2Width, bitmap2Height, bitmapBackground.config)
+            Bitmap.createBitmap(
+                bitmap2Width,
+                bitmap2Height,
+                bitmapBackground.config as Bitmap.Config
+            )
         val canvas = Canvas(overlayBitmap)
         canvas.drawBitmap(bitmapBackground, Matrix(), null)
         canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)

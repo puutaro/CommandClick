@@ -8,7 +8,7 @@ import java.io.File
 object WebUrlVariables {
 
     val googleSearchIndexPage = "https://www.google.com/webhp"
-    val queryUrlBase = "https://www.google.co.id/search?"
+    val queryUrlBase = "https://www.google.com/search?"
     val queryUrl = "${queryUrlBase}q="
     val blankEncodeQuery = "%20"
     val autoFocusGgleSearchUrl = "${queryUrl}${blankEncodeQuery}"

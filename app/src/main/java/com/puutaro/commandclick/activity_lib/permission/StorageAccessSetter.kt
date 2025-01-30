@@ -189,7 +189,7 @@ object StorageAccessSetter {
     ): ActivityResultLauncher<Intent> {
         return activity.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
-            ActivityResultCallback<ActivityResult?> {
+            ActivityResultCallback<ActivityResult> {
                 if (
                     Environment.isExternalStorageManager()
                 ) {

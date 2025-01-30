@@ -203,7 +203,10 @@ class MagicTextView : androidx.appcompat.widget.AppCompatTextView {
             && foregroundDrawable is BitmapDrawable
         ) {
             generateTempCanvas()
-            super.onDraw(tempCanvas)
+            val tmpCanvas = tempCanvas
+            tmpCanvas?.let {
+                super.onDraw(tmpCanvas)
+            }
             val paint = (foregroundDrawable as BitmapDrawable).paint
             paint.xfermode = porterDuffXferModeSrcTop
             foregroundDrawable?.bounds = canvas.clipBounds
@@ -238,13 +241,18 @@ class MagicTextView : androidx.appcompat.widget.AppCompatTextView {
             val paint = this.paint
             for (shadow in innerShadowList) {
                 this.setTextColor(shadow.color)
-                super.onDraw(tempCanvas)
+                val tmpCanvas = tempCanvas
+                tmpCanvas?.let {
+                    super.onDraw(tmpCanvas)
+                }
                 this.setTextColor(-0x1000000)
                 paint.xfermode = porterDuffXfermodeDstTop
                 paint.maskFilter = BlurMaskFilter(shadow.r, BlurMaskFilter.Blur.NORMAL)
                 tempCanvas?.save()
                 tempCanvas?.translate(shadow.dx, shadow.dy)
-                super.onDraw(tempCanvas)
+                tmpCanvas?.let {
+                    super.onDraw(tmpCanvas)
+                }
                 tempCanvas?.restore()
                 tempBitmap?.let {
                     canvas.drawBitmap(it, 0f, 0f, null)
