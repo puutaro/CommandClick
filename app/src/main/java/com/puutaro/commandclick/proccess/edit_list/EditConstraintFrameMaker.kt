@@ -2546,6 +2546,15 @@ object EditConstraintFrameMaker {
 //            ) != switchOn
 //        }
         val textViewContext = captionTextView.context
+        if(
+            textMap.isNullOrEmpty()
+            && textPropertyMap.isNullOrEmpty()
+            ){
+            withContext(Dispatchers.Main){
+                captionTextView.isVisible = false
+            }
+            return
+        }
         withContext(Dispatchers.Main) {
             captionTextView.apply {
                 textPropertyMap?.get(
