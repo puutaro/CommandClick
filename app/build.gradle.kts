@@ -8,7 +8,7 @@ plugins {
 val applicationName = "CommandClick"
 val versionMajor = 1
 val versionMinor = 4
-val versionPatch = 2
+val versionPatch = 3
 
 android {
     namespace = "com.puutaro.commandclick"
