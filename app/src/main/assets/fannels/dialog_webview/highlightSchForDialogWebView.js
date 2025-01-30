@@ -5,7 +5,7 @@
 /// LABELING_SECTION_END
 
 
-const ggleSearchBase = "https://www.google.co.id/search?";
+const ggleSearchBase = "https://www.google.com/search?";
 const googleSearchUrl = `${ggleSearchBase}q=`;
 
 
