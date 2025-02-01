@@ -26,13 +26,13 @@ import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListView
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.Template
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionData
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
@@ -934,25 +934,53 @@ object WithEditConstraintListView{
                             ).joinToString(", ")
                         val varNameToValueMap =
                             withContext(Dispatchers.IO) updateLinearKeyParsListCon@{
-                                EditComponent.AdapterSetter.makeFrameVarNameToValueMap(
-                                    fragment,
-                                    fannelInfoMap,
-                                    setReplaceVariableMap,
-                                    busyboxExecutor,
-                                    settingActionAsyncCoroutine,
-                                    editConstraintListAdapter,
-                                    ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap).map{
-                                        it.key
-                                    },
-                                    globalVarNameToValueMap,
-                                    frameVarNameValueMap,
-                                    mapListElInfoForExecContents,
+                                Template.ReplaceHolder.replaceHolder(
                                     contentsKeyPairsListConSrc,
                                     frameTag,
                                     frameTag,
                                     frameTag,
                                     noIndexSign,
-                                )
+                                ).let {
+                                        contentsKeyPairsListConSrcWithReplace ->
+                                    if(
+                                        contentsKeyPairsListConSrcWithReplace.isNullOrEmpty()
+                                    ) return@let emptyMap()
+                                    val topVarNameToValueMapForContents =
+                                        ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap)
+                                    SettingActionManager().exec(
+                                        fragment,
+                                        fannelInfoMap,
+                                        setReplaceVariableMap,
+                                        busyboxExecutor,
+                                        settingActionAsyncCoroutine,
+                                        topVarNameToValueMapForContents.map{
+                                            it.key
+                                        },
+                                        topVarNameToValueMapForContents,
+                                        contentsKeyPairsListConSrcWithReplace,
+                                        mapListElInfoForExecContents,
+                                        editConstraintListAdapterArg = editConstraintListAdapter,
+                                    )
+                                }
+//                                EditComponent.AdapterSetter.makeFrameVarNameToValueMap(
+//                                    fragment,
+//                                    fannelInfoMap,
+//                                    setReplaceVariableMap,
+//                                    busyboxExecutor,
+//                                    settingActionAsyncCoroutine,
+//                                    editConstraintListAdapter,
+//                                    ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap).map{
+//                                        it.key
+//                                    },
+//                                    globalVarNameToValueMap,
+//                                    frameVarNameValueMap,
+//                                    mapListElInfoForExecContents,
+//                                    contentsKeyPairsListConSrc,
+//                                    frameTag,
+//                                    frameTag,
+//                                    frameTag,
+//                                    noIndexSign,
+//                                )
                             }
                         val contentsVarNameToValueMap = frameVarNameValueMap + varNameToValueMap
                         val contentsKeyPairsListCon = CmdClickMap.replace(

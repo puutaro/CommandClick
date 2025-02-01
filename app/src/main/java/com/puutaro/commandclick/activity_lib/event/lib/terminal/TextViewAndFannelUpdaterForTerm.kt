@@ -203,7 +203,7 @@ object TextViewAndFannelUpdaterForTerm {
                 srcImage,
                 editListIndex,
             )
-            val linearFrameKeyPairsList = EditConstraintListAdapter.makeLinearFrameKeyPairsList(
+            val linearFrameKeyPairsList = EditComponent.AdapterSetter.makeLinearFrameKeyPairsList(
                 linearFrameKeyPairsListCon,
             )
             val textMap = PairListTool.getValue(

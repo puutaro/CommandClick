@@ -27,6 +27,8 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.Template
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.AdapterSetter
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
@@ -52,7 +54,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -321,14 +322,6 @@ class EditConstraintListAdapter(
         private val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
         private val onClickViewsKey =
             EditComponent.Template.EditComponentKey.CLICK_VIEWS.key
-        fun makeLinearFrameKeyPairsList(
-            linearFrameKeyPairsListCon: String?
-        ): List<Pair<String, String>> {
-            return CmdClickMap.createMap(
-                linearFrameKeyPairsListCon,
-                typeSeparator
-            )
-        }
     }
 
     private val switchOn = EditComponent.Template.switchOn
@@ -567,7 +560,7 @@ class EditConstraintListAdapter(
 //                ).joinToString("\n") + "\n\n============\n\n\n"
 //            )
             val frameKeyPairsList = withContext(Dispatchers.IO) {
-                makeLinearFrameKeyPairsList(
+                EditComponent.AdapterSetter.makeLinearFrameKeyPairsList(
                     frameKeyPairsCon,
                 )
             }
@@ -688,27 +681,82 @@ class EditConstraintListAdapter(
                             val contentsTagSrc = contentsTagToKeyPairs.first
                             val contentsKeyPairsListConSrc =
                                 contentsTagToKeyPairs.second
+                            val topVarNameToValueMapForContents =
+                                ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap)
+                            let {
+                                val contentsKeyPairsListForEnable = EditComponent.AdapterSetter.makeLinearFrameKeyPairsList(
+                                    contentsKeyPairsListConSrc?.let {
+                                        CmdClickMap.replace(
+                                            it,
+                                            topVarNameToValueMapForContents,
+                                        )
+                                    }
+                                )
+                                PairListTool.getValue(
+                                    contentsKeyPairsListForEnable,
+                                    enableKey,
+                                ).let { enableStr ->
+                                    if (
+                                        enableStr == switchOff
+                                    ) return@async
+                                }
+                            }
+//                            FileSystems.updateFile(
+//                                    File(
+//                                        UsePath.cmdclickDefaultSDebugAppDirPath,
+//                                        "ltagIdMap_idInt${editListPosition}.txt"
+//                                    ).absolutePath,
+//                                    listOf(
+//                                        "contentsTag: ${contentsTagSrc}",
+//                                    ).joinToString("\n") + "\n\n============\n\n\n"
+//                                )
                             val varNameToValueMap =
                                 withContext(Dispatchers.IO) updateLinearKeyParsListCon@{
-                                    EditComponent.AdapterSetter.makeFrameVarNameToValueMap(
-                                        fragment,
-                                        fannelInfoMap,
-                                        setReplaceVariableMap,
-                                        busyboxExecutor,
-                                        settingActionAsyncCoroutine,
-                                        this@EditConstraintListAdapter,
-                                        ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap).map{
-                                            it.key
-                                        },
-                                        globalVarNameToValueMap,
-                                        frameVarNameValueMap,
-                                        "contentsTagSrc: ${contentsTagSrc}, ${totalMapListElInfo}",
+                                    Template.ReplaceHolder.replaceHolder(
                                         contentsKeyPairsListConSrc,
                                         holder.srcTitle,
                                         holder.srcCon,
                                         holder.srcImage,
                                         holder.bindingAdapterPosition,
-                                    )
+                                    ).let {
+                                            contentsKeyPairsListConSrcWithReplace ->
+                                        if(
+                                            contentsKeyPairsListConSrcWithReplace.isNullOrEmpty()
+                                        ) return@let emptyMap()
+                                        SettingActionManager().exec(
+                                            fragment,
+                                            fannelInfoMap,
+                                            setReplaceVariableMap,
+                                            busyboxExecutor,
+                                            settingActionAsyncCoroutine,
+                                            topVarNameToValueMapForContents.map {
+                                                it.key
+                                            },
+                                            topVarNameToValueMapForContents,
+                                            contentsKeyPairsListConSrcWithReplace,
+                                            "contentsTagSrc: ${contentsTagSrc}, ${totalMapListElInfo}",
+                                            editConstraintListAdapterArg = this@EditConstraintListAdapter
+                                        )
+                                    }
+//                                    EditComponent.AdapterSetter.makeFrameVarNameToValueMap(
+//                                        fragment,
+//                                        fannelInfoMap,
+//                                        setReplaceVariableMap,
+//                                        busyboxExecutor,
+//                                        settingActionAsyncCoroutine,
+//                                        this@EditConstraintListAdapter,
+//                                        topVarNameToValueMapForContents.map{
+//                                            it.key
+//                                        },
+//                                        globalVarNameToValueMap,
+//                                        frameVarNameValueMap,
+//                                        "contentsTagSrc: ${contentsTagSrc}, ${totalMapListElInfo}",
+//                                        contentsKeyPairsListConSrc,
+//                                        holder.srcTitle,
+//                                        holder.srcCon,
+//                                        holder.srcImage,
+//                                        holder.bindingAdapterPosition,
+//                                    )
                                 }
                             val contentsVarNameToValueMap =
                                 frameVarNameValueMap + varNameToValueMap
@@ -757,23 +805,21 @@ class EditConstraintListAdapter(
                                 }
                             val contentsKeyPairsList =
                                 withContext(Dispatchers.IO) {
-                                    makeLinearFrameKeyPairsList(
+                                    EditComponent.AdapterSetter.makeLinearFrameKeyPairsList(
                                         contentsKeyPairsListCon
                                     )
                                 }
                             if(
                                 isContentsTagErrJob.await()
                             ) return@async
-                            withContext(Dispatchers.Main) setLinearFrameLayout@{
-                                withContext(Dispatchers.IO) {
-                                    PairListTool.getValue(
-                                        contentsKeyPairsList,
-                                        enableKey,
-                                    )
-                                }.let { enableStr ->
+                            withContext(Dispatchers.IO) setLinearFrameLayout@{
+                                PairListTool.getValue(
+                                    contentsKeyPairsList,
+                                    enableKey,
+                                ).let { enableStr ->
                                     if (
                                         enableStr == switchOff
-                                    ) return@setLinearFrameLayout null
+                                    ) return@setLinearFrameLayout
                                 }
                                 val idInt = withContext(Dispatchers.IO){
                                         tagIdMap.get(
@@ -782,8 +828,8 @@ class EditConstraintListAdapter(
                                 }
 //                                FileSystems.updateFile(
 //                                    File(
-//                                        UsePath.cmdclickDefaultAppDirPath,
-//                                        "ltagIdMap_idInt.txt"
+//                                        UsePath.cmdclickDefaultSDebugAppDirPath,
+//                                        "ltagIdMap_idInt${editListPosition}.txt"
 //                                    ).absolutePath,
 //                                    listOf(
 //                                        "tagIdMap: ${tagIdMap}",
@@ -813,7 +859,7 @@ class EditConstraintListAdapter(
                                     }
                                 CoroutineScope(Dispatchers.IO).launch {
 //                                    val varNameToBitmapMapInContents =
-                                    val imageView = withContext(Dispatchers.IO){
+                                    val contentsImageView = withContext(Dispatchers.IO){
                                         contentsFrameLayout.children.firstOrNull {
                                             view ->
                                             view is AppCompatImageView
@@ -827,7 +873,7 @@ class EditConstraintListAdapter(
                                             fannelInfoMap,
                                             setReplaceVariableMap,
                                             busyboxExecutor,
-                                            imageView,
+                                            contentsImageView,
                                             requestBuilderSrc,
                                             imageActionAsyncCoroutine,
                                             topLevelVarNameToBitmapMap.map {
@@ -1359,7 +1405,7 @@ class EditConstraintListAdapter(
                 saveFannelConList.isNullOrEmpty()
             ) return
             val isSave = PairListTool.getValue(
-                makeLinearFrameKeyPairsList(
+                EditComponent.AdapterSetter.makeLinearFrameKeyPairsList(
                     frameOrLinearCon,
                 ),
                 EditComponent.Template.EditComponentKey.ON_SAVE.key,

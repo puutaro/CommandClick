@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -1461,60 +1460,69 @@ object EditComponent {
                         return null
                 }
 
-                suspend fun makeFrameVarNameToValueMap(
-                        fragment: Fragment?,
-                        fannelInfoMap: Map<String, String>,
-                        setReplaceVariableMap: Map<String, String>?,
-                        busyboxExecutor: BusyboxExecutor?,
-                        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
-                        editConstraintListAdapter: EditConstraintListAdapter?,
-                        topLevelVarStrKeyNameList: List<String>?,
-                        topVarNameToValueStrMap: Map<String, String?>?,
-                        frameVarNameValueMap: Map<String, String>,
-                        keyToSubKeyConWhere: String,
-                        linearFrameKeyPairsListConSrc: String?,
-                        srcTitle: String,
-                        srcCon: String,
-                        srcImage: String,
-                        srcPosition: Int,
-                ):  Map<String, String> {
-                        if (
-                                linearFrameKeyPairsListConSrc.isNullOrEmpty()
-                        ) return emptyMap()
-                        return Template.ReplaceHolder.replaceHolder(
-                                linearFrameKeyPairsListConSrc,
-                                srcTitle,
-                                srcCon,
-                                srcImage,
-                                srcPosition,
-                        ).let {
-                                        linearFrameKeyPairsListConSrcWithReplace ->
-                                if(
-                                        linearFrameKeyPairsListConSrcWithReplace.isNullOrEmpty()
-                                ) return@let emptyMap()
-                                val settingActionManager = SettingActionManager()
-                                settingActionManager.exec(
-                                        fragment,
-                                        fannelInfoMap,
-                                        setReplaceVariableMap,
-                                        busyboxExecutor,
-                                        settingActionAsyncCoroutine,
-                                        topLevelVarStrKeyNameList,
-                                        (topVarNameToValueStrMap ?: emptyMap()) + frameVarNameValueMap,
-                                        linearFrameKeyPairsListConSrcWithReplace,
-//                                        CmdClickMap.replace(
-//                                                linearFrameKeyPairsListConSrcWithReplace,
-//                                                frameVarNameValueMap,
-//                                        )
-                                        keyToSubKeyConWhere,
-                                        editConstraintListAdapterArg = editConstraintListAdapter
-                                ).let updateVarNameToValueMap@ {
-                                        if(
-                                                it.isEmpty()
-                                        ) return@updateVarNameToValueMap emptyMap()
-                                        it
-                                }
-                        }
+//                suspend fun makeFrameVarNameToValueMap(
+//                        fragment: Fragment?,
+//                        fannelInfoMap: Map<String, String>,
+//                        setReplaceVariableMap: Map<String, String>?,
+//                        busyboxExecutor: BusyboxExecutor?,
+//                        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+//                        editConstraintListAdapter: EditConstraintListAdapter?,
+//                        topLevelVarStrKeyNameList: List<String>?,
+//                        topVarNameToValueStrMap: Map<String, String?>?,
+//                        frameVarNameValueMap: Map<String, String>,
+//                        keyToSubKeyConWhere: String,
+//                        linearFrameKeyPairsListConSrc: String?,
+//                        srcTitle: String,
+//                        srcCon: String,
+//                        srcImage: String,
+//                        srcPosition: Int,
+//                ):  Map<String, String> {
+//                        if (
+//                                linearFrameKeyPairsListConSrc.isNullOrEmpty()
+//                        ) return emptyMap()
+//                        return Template.ReplaceHolder.replaceHolder(
+//                                linearFrameKeyPairsListConSrc,
+//                                srcTitle,
+//                                srcCon,
+//                                srcImage,
+//                                srcPosition,
+//                        ).let {
+//                                        linearFrameKeyPairsListConSrcWithReplace ->
+//                                if(
+//                                        linearFrameKeyPairsListConSrcWithReplace.isNullOrEmpty()
+//                                ) return@let emptyMap()
+//                                val settingActionManager = SettingActionManager()
+//                                settingActionManager.exec(
+//                                        fragment,
+//                                        fannelInfoMap,
+//                                        setReplaceVariableMap,
+//                                        busyboxExecutor,
+//                                        settingActionAsyncCoroutine,
+//                                        topLevelVarStrKeyNameList,
+//                                        (topVarNameToValueStrMap ?: emptyMap()) + frameVarNameValueMap,
+//                                        linearFrameKeyPairsListConSrcWithReplace,
+////                                        CmdClickMap.replace(
+////                                                linearFrameKeyPairsListConSrcWithReplace,
+////                                                frameVarNameValueMap,
+////                                        )
+//                                        keyToSubKeyConWhere,
+//                                        editConstraintListAdapterArg = editConstraintListAdapter
+//                                ).let updateVarNameToValueMap@ {
+//                                        if(
+//                                                it.isEmpty()
+//                                        ) return@updateVarNameToValueMap emptyMap()
+//                                        it
+//                                }
+//                        }
+//                }
+
+                fun makeLinearFrameKeyPairsList(
+                        linearFrameKeyPairsListCon: String?
+                ): List<Pair<String, String>> {
+                        return CmdClickMap.createMap(
+                                linearFrameKeyPairsListCon,
+                                Template.typeSeparator
+                        )
                 }
 
                 suspend fun makeContentsTagToKeyPairsList(
@@ -1552,7 +1560,7 @@ object EditComponent {
                                                                 )
                                                         }
                                                 val linearFrameKeyPairsList =
-                                                        EditConstraintListAdapter.makeLinearFrameKeyPairsList(
+                                                        makeLinearFrameKeyPairsList(
                                                                 contentsKeyPairsListCon,
                                                         )
                                                 val contentsTag =
