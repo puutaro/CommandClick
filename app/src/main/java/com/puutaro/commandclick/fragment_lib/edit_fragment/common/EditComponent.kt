@@ -9,15 +9,12 @@ import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.text.libs.FilterAndMapModule
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList.LogErrLabel
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
@@ -30,6 +27,7 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.PairListTool
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.RandomStr
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -37,6 +35,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import java.lang.ref.WeakReference
+import java.time.LocalDateTime
 
 object EditComponent {
 
@@ -123,9 +123,9 @@ object EditComponent {
                 enum class EditComponentKey(val key: String){
                         TAG("tag"),
                         TEXT("text"),
-                        TEXT_PROPERTY("textProperty"),
+//                        TEXT_PROPERTY("textProperty"),
                         IMAGE("image"),
-                        IMAGE_PROPERTY("imageProperty"),
+//                        IMAGE_PROPERTY("imageProperty"),
                         ON_CLICK("onClick"),
                         ON_SAVE("onSave"),
                         ON_CONSEC("onConsec"),
@@ -359,6 +359,85 @@ object EditComponent {
                                AUTO_RND_STRINGS_CONFIG_MAP_CON("autoRndStringsConfigMapCon"),
                        }
 
+                        enum class PropertyKey(val key: String) {
+                                TAG("tag"),
+                                ALPHA("alpha"),
+                                SCALE("scale"),
+                                COLOR("color"),
+                                BK_COLOR("bkColor"),
+                                BK_TINT_COLOR("bkTintColor"),
+                                HEIGHT("height"),
+                                WIDTH("width"),
+                                LAYOUT_GRAVITY("layoutGravity"),
+                                GRAVITI("gravity"),
+                                PADDING_TOP("paddingTop"),
+                                PADDING_BOTTOM("paddingBottom"),
+                                PADDING_START("paddingStart"),
+                                PADDING_END("paddingEnd"),
+                                MARGIN_TOP("marginTop"),
+                                MARGIN_BOTTOM("marginBottom"),
+                                MARGIN_START("marginStart"),
+                                MARGIN_END("marginEnd"),
+                                VISIBLE("visible"),
+                                BLUR_MAP_CON("blurMapCon"),
+                                ROTATE("rotate"),
+                                SCALE_X("scaleX"),
+                                SCALE_Y("scaleY"),
+
+                        }
+
+                        object BlurManager {
+
+                                private const val keySeparator = '|'
+
+                                enum class BlurKey(
+                                        val key: String,
+                                ) {
+                                        RADIUS("radius"),
+                                        SAMPLING("sampling"),
+                                }
+                                fun getBlueRadiusToSampling(
+                                        imagePropertyMap: Map<String, String>?
+                                ): Pair<Int, Int>? {
+                                        if(
+                                                imagePropertyMap.isNullOrEmpty()
+                                        ) return null
+                                        val blurMap = imagePropertyMap.get(
+                                                PropertyKey.BLUR_MAP_CON.key
+                                        ).let {
+                                                CmdClickMap.createMap(
+                                                        it,
+                                                        keySeparator,
+                                                ).toMap()
+                                        }
+                                        val radius =
+                                                blurMap.get(
+                                                        BlurKey.RADIUS.key
+                                                )?.let {
+                                                        toInt(it)
+                                                } ?: return null
+                                        val sampling = blurMap.get(
+                                                BlurKey.SAMPLING.key
+                                        )?.let {
+                                                toInt(it)
+                                        } ?: return null
+                                        return Pair(
+                                                radius,
+                                                sampling,
+                                        )
+
+                                }
+                        }
+
+                        enum class ImageScale(
+                                val str: String,
+                                val scale:  ImageView.ScaleType
+                        ){
+                                FIT_CENTER("fitCenter", ImageView.ScaleType.FIT_CENTER),
+                                FIT_XY("fitXy", ImageView.ScaleType.FIT_XY),
+                                CENTER_CROP("centerCrop", ImageView.ScaleType.CENTER_CROP),
+                        }
+
                         object MatrixStormManager {
 
                                 private const val keySeparator = '|'
@@ -372,7 +451,6 @@ object EditComponent {
                                         SHAPE("shape"),
                                         COLOR("color"),
                                         ICON_TYPE("iconType"),
-                                        LAYOUT("layout")
 
                                 }
 
@@ -877,10 +955,10 @@ object EditComponent {
                                                         AutoRndStringsKey.FONT_STYLE.key,
                                                 )?.let {
                                                                 fontStyleStr ->
-                                                        EditComponent.Template.TextPropertyManager.TextStyle.entries.firstOrNull {
+                                                        EditComponent.Template.TextManager.TextStyle.entries.firstOrNull {
                                                                 it.key == fontStyleStr
                                                         }
-                                                }?.style ?: EditComponent.Template.TextPropertyManager.TextStyle.NORMAL.style
+                                                }?.style ?: EditComponent.Template.TextManager.TextStyle.NORMAL.style
                                 }
 
                                 fun makeConfigMap(
@@ -908,131 +986,14 @@ object EditComponent {
                         }
                 }
 
-                object ImagePropertyManager {
+//                object ImagePropertyManager {
+//
+//
+//                }
 
-                        enum class PropertyKey(val key: String) {
-                                TAG("tag"),
-                                ALPHA("alpha"),
-                                SCALE("scale"),
-                                COLOR("color"),
-                                BK_COLOR("bkColor"),
-                                BK_TINT_COLOR("bkTintColor"),
-                                HEIGHT("height"),
-                                WIDTH("width"),
-                                LAYOUT_GRAVITY("layoutGravity"),
-                                GRAVITI("gravity"),
-                                PADDING_TOP("paddingTop"),
-                                PADDING_BOTTOM("paddingBottom"),
-                                PADDING_START("paddingStart"),
-                                PADDING_END("paddingEnd"),
-                                MARGIN_TOP("marginTop"),
-                                MARGIN_BOTTOM("marginBottom"),
-                                MARGIN_START("marginStart"),
-                                MARGIN_END("marginEnd"),
-                                VISIBLE("visible"),
-                                BLUR_MAP_CON("blurMapCon"),
-                                ROTATE("rotate"),
-                                SCALE_X("scaleX"),
-                                SCALE_Y("scaleY"),
-
-                        }
-
-                        object BlurManager {
-
-                                private val keySeparator = '|'
-
-                                enum class BlurKey(
-                                        val key: String,
-                                ) {
-                                        RADIUS("radius"),
-                                        SAMPLING("sampling"),
-                                }
-                                fun getBlueRadiusToSampling(
-                                        imagePropertyMap: Map<String, String>?
-                                ): Pair<Int, Int>? {
-                                        if(
-                                                imagePropertyMap.isNullOrEmpty()
-                                        ) return null
-                                        val blurMap = imagePropertyMap.get(
-                                                PropertyKey.BLUR_MAP_CON.key
-                                        ).let {
-                                                CmdClickMap.createMap(
-                                                        it,
-                                                        keySeparator,
-                                                ).toMap()
-                                        }
-                                        val radius =
-                                                blurMap.get(
-                                                        BlurKey.RADIUS.key
-                                                )?.let {
-                                                        toInt(it)
-                                                } ?: return null
-                                        val sampling = blurMap.get(
-                                                BlurKey.SAMPLING.key
-                                        )?.let {
-                                                toInt(it)
-                                        } ?: return null
-                                        return Pair(
-                                                radius,
-                                                sampling,
-                                                )
-
-                                }
-                        }
-
-                        enum class ImageScale(
-                                val str: String,
-                                val scale:  ImageView.ScaleType
-                        ){
-                                FIT_CENTER("fitCenter", ImageView.ScaleType.FIT_CENTER),
-                                FIT_XY("fitXy", ImageView.ScaleType.FIT_XY),
-                                CENTER_CROP("centerCrop", ImageView.ScaleType.CENTER_CROP),
-                        }
-                }
-
-                object TextPropertyManager {
-                        enum class Property(val key: String){
-                                TAG("tag"),
-                                MAX_LINES("maxLines"),
-                                SIZE("size"),
-                                STYLE("style"),
-                                FONT("font"),
-                                COLOR("color"),
-                                STROKE_COLOR("strokeColor"),
-                                STROKE_WIDTH("strokeWidth"),
-                                ALPHA("alpha"),
-                                HEIGHT("height"),
-                                WIDTH("width"),
-                                LAYOUT_GRAVITY("layoutGravity"),
-                                GRAVITI("gravity"),
-                                PADDING_TOP("paddingTop"),
-                                PADDING_BOTTOM("paddingBottom"),
-                                PADDING_START("paddingStart"),
-                                PADDING_END("paddingEnd"),
-                                MARGIN_TOP("marginTop"),
-                                MARGIN_BOTTOM("marginBottom"),
-                                MARGIN_START("marginStart"),
-                                MARGIN_END("marginEnd"),
-                                BK_COLOR("bkColor"),
-                                VISIBLE("visible"),
-                                LETTER_SPACING("letterSpacing"),
-                                SHADOW_RADIUS("shadowRadius"),
-                                SHADOW_COLOR("shadowColor"),
-                                SHADOW_X("shadowX"),
-                                SHADOW_Y("shadowY"),
-//                                DISABLE_TEXT_SELECT("disableTextSelect"),
-                        }
-
-                        enum class TextStyle(
-                                val key: String,
-                                val style: Int,
-                        ){
-                                NORMAL("normal", Typeface.NORMAL),
-                                BOLD("bold", Typeface.BOLD),
-                                BOLD_ITALIC("boldItalic", Typeface.BOLD_ITALIC),
-                                ITALIC("bold", Typeface.ITALIC),
-                        }
-                }
+//                object TextPropertyManager {
+//
+//                }
 
                 class MarginData(
                         marginTopStr: String?,
@@ -1085,6 +1046,7 @@ object EditComponent {
                                 VERTICAL_TAG("verticalTag"),
                                 HORIZON_TAG("horizonTag"),
                                 CONTENTS_TAG("contentsTag"),
+                                TEXT_OR_IMAGE_TAG("textOrImageTag"),
                         }
 
                         fun makeVerticalTag(
@@ -1226,14 +1188,54 @@ object EditComponent {
 
                 object TextManager {
                         enum class TextKey(val key: String) {
-                                REMOVE_REGEX("removeRegex"),
-                                REPLACE_STR("replaceStr"),
                                 FILTER_SHELL_PATH("filterShellPath"),
                                 DISPLAY_TEXT("displayText"),
                                 SRC_STR("srcStr"),
                                 SETTING_VALUE("settingValue"),
                                 LENGTH("length"),
                                 ON_UPDATE("onUpdate"),
+                        }
+
+                        enum class PropertyKey(val key: String){
+                                TAG("tag"),
+                                MAX_LINES("maxLines"),
+                                SIZE("size"),
+                                STYLE("style"),
+                                FONT("font"),
+                                COLOR("color"),
+                                STROKE_COLOR("strokeColor"),
+                                STROKE_WIDTH("strokeWidth"),
+                                ALPHA("alpha"),
+                                HEIGHT("height"),
+                                WIDTH("width"),
+                                LAYOUT_GRAVITY("layoutGravity"),
+                                GRAVITI("gravity"),
+                                PADDING_TOP("paddingTop"),
+                                PADDING_BOTTOM("paddingBottom"),
+                                PADDING_START("paddingStart"),
+                                PADDING_END("paddingEnd"),
+                                MARGIN_TOP("marginTop"),
+                                MARGIN_BOTTOM("marginBottom"),
+                                MARGIN_START("marginStart"),
+                                MARGIN_END("marginEnd"),
+                                BK_COLOR("bkColor"),
+                                VISIBLE("visible"),
+                                LETTER_SPACING("letterSpacing"),
+                                SHADOW_RADIUS("shadowRadius"),
+                                SHADOW_COLOR("shadowColor"),
+                                SHADOW_X("shadowX"),
+                                SHADOW_Y("shadowY"),
+//                                DISABLE_TEXT_SELECT("disableTextSelect"),
+                        }
+
+                        enum class TextStyle(
+                                val key: String,
+                                val style: Int,
+                        ){
+                                NORMAL("normal", Typeface.NORMAL),
+                                BOLD("bold", Typeface.BOLD),
+                                BOLD_ITALIC("boldItalic", Typeface.BOLD_ITALIC),
+                                ITALIC("bold", Typeface.ITALIC),
                         }
 
                         fun createTextMap(
@@ -1608,39 +1610,133 @@ object EditComponent {
                         }
                 }
 
-                fun makeContentsFrameLayout(
+                fun makeTextTagToMap(
+                        contentsKeyPairsList: List<Pair<String, String>>,
+                        frameTag: String,
+                        totalSettingValMap: Map<String, String>?,
+                ):  Map<String, Map<String, String>> {
+                        val textKey = EditComponent.Template.EditComponentKey.TEXT.key
+                        val tagKey = EditComponent.Template.TextManager.PropertyKey.TAG.key
+                        val textTagToMap = contentsKeyPairsList.filter {
+                                        (contentsKey, _) ->
+                                contentsKey == textKey
+                        }.map {
+                                        (_, mapCon) ->
+                                val textMap = Template.TextManager.createTextMap(
+                                        mapCon,
+                                        totalSettingValMap?.get(
+                                                frameTag
+                                        )
+                                )
+                                val tagName = textMap.get(tagKey) ?: let {
+                                        val prefix = RandomStr.make(10)
+                                        listOf(
+                                                prefix,
+                                                LocalDateTime.now().toString()
+                                        ).joinToString("___")
+                                }
+                                tagName to textMap
+                        }.toMap()
+                        return textTagToMap
+                }
+
+                fun makeImageTagToMap(
+                        contentsKeyPairsList: List<Pair<String, String>>,
+                ): Map<String, Map<String, String>> {
+                        val imageKey = EditComponent.Template.EditComponentKey.IMAGE.key
+                        val tagKey = EditComponent.Template.ImageManager.PropertyKey.TAG.key
+                        val imageTagToMap = contentsKeyPairsList.filter {
+                                        (contentsKey, _) ->
+                                contentsKey == imageKey
+                        }.map {
+                                        (_, mapCon) ->
+                                val imageMap = Template.makeKeyMap(mapCon)
+                                        ?: emptyMap()
+                                val tagName = imageMap.get(tagKey) ?: let {
+                                        val prefix = RandomStr.make(10)
+                                        listOf(
+                                                prefix,
+                                                LocalDateTime.now().toString()
+                                        ).joinToString("___")
+                                }
+                                tagName to imageMap
+                        }.toMap()
+                        return imageTagToMap
+                }
+
+                data class ReturnContentsLayout(
+                        val frameLayoutRef: WeakReference<FrameLayout>,
+                        val tagToTextViewListRef: WeakReference<List<Pair<String, OutlineTextView>>>,
+                        val tagToImageViewListRef: WeakReference<List<Pair<String, AppCompatImageView>>>,
+                )
+
+                suspend fun makeContentsFrameLayout(
                         context: Context,
-                ): FrameLayout {
+                        contentsTag: String,
+                        textTagToMap: Map<String, Map<String, String>?>,
+                        imageTagToMap: Map<String, Map<String, String>>,
+                        bkFrameLayout: FrameLayout?,
+                ): ReturnContentsLayout {
                         val dp50 =
                                 context.resources.getDimension(R.dimen.toolbar_layout_height)
                         val contentsLayout =
-                                FrameLayout(context).apply {
+                                bkFrameLayout ?: FrameLayout(context).apply {
+                                        tag = contentsTag
                                         layoutParams =
                                                 ConstraintLayout.LayoutParams(
                                                         0,
                                                         dp50.toInt()
                                                 )
                                 }
-                        val imageView =
-                                AppCompatImageView(context).apply {
-                                        layoutParams =
-                                                FrameLayout.LayoutParams(
-                                                        FrameLayout.LayoutParams.MATCH_PARENT,
-                                                        FrameLayout.LayoutParams.MATCH_PARENT
-                                                )
+                        val tagToImageViewList =
+                                withContext(Dispatchers.IO) {
+                                        imageTagToMap.map { (tagName, _) ->
+                                                val imageView = AppCompatImageView(context).apply {
+                                                        tag = tagName
+                                                        layoutParams =
+                                                                FrameLayout.LayoutParams(
+                                                                        FrameLayout.LayoutParams.MATCH_PARENT,
+                                                                        FrameLayout.LayoutParams.MATCH_PARENT
+                                                                )
+                                                }
+                                                tagName to imageView
+                                        }
                                 }
-                        val textView =
-                                OutlineTextView(context).apply {
-                                        layoutParams =
-                                                FrameLayout.LayoutParams(
-                                                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                        FrameLayout.LayoutParams.WRAP_CONTENT
-                                                )
-                                }
-                        return contentsLayout.apply {
-                                addView(imageView)
-                                addView(textView)
+                        tagToImageViewList.forEach {
+                                (_, imageView) ->
+                                contentsLayout.addView(imageView)
                         }
+                        val tagToTextViewList = withContext(Dispatchers.IO) {
+                                textTagToMap.map { (tagName, _) ->
+                                        val textView = OutlineTextView(context).apply {
+                                                tag = tagName
+                                                layoutParams =
+                                                        FrameLayout.LayoutParams(
+                                                                FrameLayout.LayoutParams.WRAP_CONTENT,
+                                                                FrameLayout.LayoutParams.WRAP_CONTENT
+                                                        )
+                                        }
+                                        tagName to textView
+                                }
+                        }
+                        tagToTextViewList.forEach {
+                                (_, textView) ->
+                                contentsLayout.addView(textView)
+                        }
+//                        val textView =
+//                                OutlineTextView(context).apply {
+//                                        layoutParams =
+//                                                FrameLayout.LayoutParams(
+//                                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+//                                                        FrameLayout.LayoutParams.WRAP_CONTENT
+//                                                )
+//                                }
+                        return ReturnContentsLayout(
+                                WeakReference(contentsLayout),
+                                WeakReference(tagToTextViewList),
+                                WeakReference(tagToImageViewList),
+                        )
+//                        return contentsLayout
                 }
         }
 

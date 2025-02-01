@@ -29,7 +29,7 @@ object TextViewAndFannelUpdaterForTerm {
         tagNameList: List<String>,
         updateText: String,
         overrideTextMap: Map<String, String>?,
-        textPropertyMap: Map< String, String>?,
+//        textPropertyMap: Map< String, String>?,
         isSave: Boolean,
     ) {
         if(
@@ -106,7 +106,7 @@ object TextViewAndFannelUpdaterForTerm {
                     editListIndex,
                     updateText,
                     overrideTextMap,
-                    textPropertyMap,
+//                    textPropertyMap,
                     textView,
                     isSave,
                 )
@@ -171,7 +171,7 @@ object TextViewAndFannelUpdaterForTerm {
                 noSignIndex,
                 updateText,
                 overrideTextMap,
-                textPropertyMap,
+//                textPropertyMap,
                 textView,
                 isSave,
             )
@@ -189,7 +189,7 @@ object TextViewAndFannelUpdaterForTerm {
             editListIndex: Int,
             updateText: String,
             overrideTextMap: Map<String, String>?,
-            textPropertyMap: Map< String, String>?,
+//            textPropertyMap: Map< String, String>?,
             textView: OutlineTextView?,
             isSave: Boolean,
         ) {
@@ -239,10 +239,10 @@ object TextViewAndFannelUpdaterForTerm {
 //            )
             textView?.let {
                 CoroutineScope(Dispatchers.Main).launch {
-                    EditConstraintFrameMaker.setCaptionByDynamic(
+                    EditConstraintFrameMaker.setTextViewByDynamic(
                         it,
                         overrideTextMap,
-                        textPropertyMap,
+//                        textPropertyMap,
                         text,
                     )
                 }

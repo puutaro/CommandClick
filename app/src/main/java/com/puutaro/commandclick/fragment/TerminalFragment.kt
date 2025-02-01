@@ -392,7 +392,7 @@ class TerminalFragment:
             tagNameList: List<String>,
             updateText: String,
             overrideTextMap: Map<String, String>?,
-            textPropertyMap: Map< String, String>?,
+//            textPropertyMap: Map< String, String>?,
             isSave: Boolean,
         )
     }
@@ -405,7 +405,7 @@ class TerminalFragment:
             srcFragment: String,
             tagNameList: List<String>,
             imageMap: Map<String, String>,
-            imagePropertyMap: Map<String, String>,
+//            imagePropertyMap: Map<String, String>,
             imageAcCon: String,
         )
     }

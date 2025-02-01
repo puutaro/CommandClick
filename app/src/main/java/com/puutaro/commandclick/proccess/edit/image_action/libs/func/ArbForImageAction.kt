@@ -497,9 +497,9 @@ object ArbForImageAction {
                     ) to funcErr
                 }.let {
                     fontStyleStr ->
-                    EditComponent.Template.TextPropertyManager.TextStyle.entries.firstOrNull {
+                    EditComponent.Template.TextManager.TextStyle.entries.firstOrNull {
                         it.key == fontStyleStr
-                    }?.style ?: EditComponent.Template.TextPropertyManager.TextStyle.NORMAL.style
+                    }?.style ?: EditComponent.Template.TextManager.TextStyle.NORMAL.style
                 }
                 val fontColor = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
@@ -1101,7 +1101,7 @@ object ArbForImageAction {
                 STRING("string", "C", FuncCheckerForSetting.ArgType.STRING),
                 FONT_SIZE("fontSize", 20.toString(), FuncCheckerForSetting.ArgType.STRING),
                 FONT_TYPE("fontType", Font.SANS_SERIF.key, FuncCheckerForSetting.ArgType.STRING),
-                FONT_STYLE("fontStyle", EditComponent.Template.TextPropertyManager.TextStyle.NORMAL.key, FuncCheckerForSetting.ArgType.STRING),
+                FONT_STYLE("fontStyle", EditComponent.Template.TextManager.TextStyle.NORMAL.key, FuncCheckerForSetting.ArgType.STRING),
                 FONT_COLOR("fontColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
                 BK_COLOR("bkColor", transparentColorStr, FuncCheckerForSetting.ArgType.STRING),
                 STROKE_COLOR("strokeColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),

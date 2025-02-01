@@ -36,7 +36,7 @@ object ImageViewAndFannelUpdaterForTerm {
         srcFragmentStr: String,
         tagNameList: List<String>,
         imageMap: Map<String, String>,
-        imagePropertyMap: Map<String, String>,
+//        imagePropertyMap: Map<String, String>,
         imageAcCon: String,
     ) {
         if(
@@ -91,7 +91,7 @@ object ImageViewAndFannelUpdaterForTerm {
                     EditConstraintFrameMaker.setImageViewForDynamic(
                         imageView,
                         imageMap,
-                        imagePropertyMap,
+//                        imagePropertyMap,
                         density,
                     )
                 }
@@ -159,7 +159,7 @@ object ImageViewAndFannelUpdaterForTerm {
                 EditConstraintFrameMaker.setImageViewForDynamic(
                     imageView,
                     imageMap,
-                    imagePropertyMap,
+//                    imagePropertyMap,
                     density,
                 )
             }

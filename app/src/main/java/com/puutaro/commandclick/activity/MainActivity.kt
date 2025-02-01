@@ -607,7 +607,7 @@ class MainActivity:
         tagNameList: List<String>,
         updateText: String,
         overrideTextMap: Map<String, String>?,
-        textPropertyMap: Map< String, String>?,
+//        textPropertyMap: Map< String, String>?,
         isSave: Boolean,
     ) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -618,7 +618,7 @@ class MainActivity:
                 tagNameList,
                 updateText,
                 overrideTextMap,
-                textPropertyMap,
+//                textPropertyMap,
                 isSave
             )
         }
@@ -631,7 +631,7 @@ class MainActivity:
         srcFragment: String,
         tagNameList: List<String>,
         imageMap: Map<String, String>,
-        imagePropertyMap: Map<String, String>,
+//        imagePropertyMap: Map<String, String>,
         imageAcCon: String
     ) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -643,7 +643,7 @@ class MainActivity:
                 srcFragment,
                 tagNameList,
                 imageMap,
-                imagePropertyMap,
+//                imagePropertyMap,
                 imageAcCon
             )
         }

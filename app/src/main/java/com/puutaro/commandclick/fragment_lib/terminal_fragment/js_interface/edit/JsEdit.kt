@@ -66,7 +66,7 @@ class JsEdit(
         tagNameListCon: String,
         updateText: String,
         overrideTextMapCon: String,
-        textPropertyMapCon: String,
+//        textPropertyMapCon: String,
         isSave: Boolean,
     ){
         val tagNameSeparator = '&'
@@ -78,10 +78,10 @@ class JsEdit(
             overrideTextMapCon,
             keySeparator
         ).toMap()
-        val textPropertyMap = CmdClickMap.createMap(
-            textPropertyMapCon,
-            keySeparator
-        ).toMap()
+//        val textPropertyMap = CmdClickMap.createMap(
+//            textPropertyMapCon,
+//            keySeparator
+//        ).toMap()
         val listener = context as TerminalFragment.OnTextViewAndFannelUpdateListenerForTerm
         listener.onTextViewAndFannelForTermFragment(
             indexOrParentTagName,
@@ -89,7 +89,7 @@ class JsEdit(
             tagNameListCon.split(tagNameSeparator.toString()),
             updateText,
             overrideTextMap,
-            textPropertyMap,
+//            textPropertyMap,
             isSave,
         )
     }
@@ -102,7 +102,7 @@ class JsEdit(
         srcFragment: String,
         tagNameListCon: String,
         imageMapCon: String,
-        imagePropertyMapCon: String,
+//        imagePropertyMapCon: String,
         imageAcCon: String,
     ){
         val terminalFragment = terminalFragmentRef.get()
@@ -111,13 +111,13 @@ class JsEdit(
             ?: return
         val keySeparator = EditComponent.Template.keySeparator
         val imageMap = CmdClickMap.createMap(
-            imageAcCon,
+            imageMapCon,
             keySeparator
         ).toMap()
-        val imagePropertyMap = CmdClickMap.createMap(
-            imagePropertyMapCon,
-            keySeparator
-        ).toMap()
+//        val imagePropertyMap = CmdClickMap.createMap(
+//            imagePropertyMapCon,
+//            keySeparator
+//        ).toMap()
         val listener = context as TerminalFragment.OnImageViewUpdateListenerForTerm
         val tagNameSeparator = '&'
         listener.onImageViewUpdateForTerm(
@@ -127,7 +127,7 @@ class JsEdit(
             srcFragment,
             tagNameListCon.split(tagNameSeparator.toString()),
             imageMap,
-            imagePropertyMap,
+//            imagePropertyMap,
             imageAcCon
         )
     }
