@@ -22,14 +22,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
@@ -295,7 +293,16 @@ object EditConstraintFrameMaker {
                         busyboxExecutor,
                         textView,
                         textMap,
-//                        textPropertyMap,
+                        Gravity.CENTER,
+                        Gravity.CENTER,
+                        1,
+                        R.color.fill_gray,
+                        R.color.white,
+                        2,
+                        context.resources.getDimension(R.dimen.text_size_16),
+                        0f,
+                        EditComponent.Template.TextManager.TextStyle.NORMAL,
+                        EditComponent.Font.SANS_SERIF,
                         enableTextViewClick,
                         outValue,
                         whereForErr,
@@ -620,7 +627,6 @@ object EditConstraintFrameMaker {
                 }
             }
         }
-
     }
 
     private suspend fun setImageView(
@@ -643,6 +649,10 @@ object EditConstraintFrameMaker {
             imageView.isVisible = false
             return
         }
+        ImageViewTool.setVisibility(
+            imageView,
+            imageMap,
+        )
         execSetImageView(
             imageView,
             imageMap,
@@ -665,6 +675,10 @@ object EditConstraintFrameMaker {
         density: Float,
     ) {
         val context = imageView.context
+        ImageViewTool.setVisibility(
+            imageView,
+            imageMap,
+        )
         val where = "EditConstraintFrameMaker.setImageViewForDynamic"
         val outValue = withContext(Dispatchers.IO) {
             val outValueSrc = TypedValue()
@@ -712,433 +726,39 @@ object EditConstraintFrameMaker {
             imageMap.isNullOrEmpty()
         ) return
         val context = imageView.context
-        val imagePathList = withContext(Dispatchers.IO) {
-            imageMap.get(
-                imagePathsKey,
-            )?.split(valueSeparator)
-        }
-        imageView.apply {
-            withContext(Dispatchers.IO) {
-                imageMap.get(
-                    imageVisibleKey,
-                )?.let { visibleStr ->
-                    EditComponent.Template.VisibleManager.getVisible(
-                        visibleStr
-                    )
-                }
-            }?.let {
-                withContext(Dispatchers.Main) {
-                    visibility = it
-                }
-            }
-            CoroutineScope(Dispatchers.Main).launch {
-                if(
-                    imagePathList.isNullOrEmpty()
-                ) return@launch
-                when (
-                    imagePathList.size == 1
-                ) {
-                    false -> {
-                        val delay = withContext(Dispatchers.IO) {
-                            imageMap.get(
-                                imageDelayKey,
-                            )?.let {
-                                try {
-                                    it.toInt()
-                                } catch (e: Exception) {
-                                    null
-                                }
-                            } ?: 800
-                        }
-                        execSetMultipleImage(
-                            imageView,
-                            imagePathList,
-                            delay,
-                        )
-                    }
-
-                    else -> {
-                        val fadeInMilli = withContext(Dispatchers.IO) {
-                            imageMap.get(
-                                imageFadeInMilliKey,
-                            )?.let {
-                                try {
-                                    it.toInt()
-                                } catch (e: Exception){
-                                    null
-                                }
-                            }
-                        }
-                        val blurRadiusToSampling = withContext(Dispatchers.IO){
-                            EditComponent.Template.ImageManager.BlurManager.getBlueRadiusToSampling(
-                                imageMap
-                            )
-                        }
-                        execSetSingleImage(
-                            imageView,
-                            imagePathList.firstOrNull(),
-                            requestBuilderSrc,
-                            fadeInMilli,
-                            blurRadiusToSampling,
-                        )
-                    }
-                }
-            }
-            withContext(Dispatchers.IO) {
-                imageMap.get(
-                    imageGravityKey,
-                )?.let { gravityStr ->
-                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                        it.key == gravityStr
-                    }?.gravity
-                } ?: defaultGravity
-            }?.let {
-                withContext(Dispatchers.Main) {
-                    foregroundGravity = it
-                }
-            }
-            withContext(Dispatchers.IO) {
-                imageMap.get(
-                    imageColorKey,
-                )?.let {
-                        colorStr ->
-                    val parsedColorStr = ColorTool.parseColorStr(
-                        context,
-                        colorStr,
-                        imageColorKey,
-                        where,
-                    )
-                    Color.parseColor(parsedColorStr)
-                }
-            }?.let {
-                withContext(Dispatchers.Main) {
-                    imageTintList = ColorStateList.valueOf(it)
-                }
-            }
-            val imageBkColor = withContext(Dispatchers.IO) {
-                imageMap.get(
-                    imageBkColorKey,
-                )?.let {
-                        colorStr ->
-                    val parsedColorStr = ColorTool.parseColorStr(
-                        context,
-                        colorStr,
-                        imageBkColorKey,
-                        where,
-                    )
-                    Color.parseColor(parsedColorStr)
-                }
-            }
-            enableImageViewClick?.let {
-                withContext(Dispatchers.Main) {
-                    isClickable = it
-                }
-            }
-            withContext(Dispatchers.Main) {
-                when (enableImageViewClick) {
-                    true -> outValue?.let {
-                        setBackgroundResource(it.resourceId)
-                    }
-
-                    else -> {
-                        imageBkColor?.let {
-                            setBackgroundResource(0)
-                            background = ColorDrawable(imageBkColor)
-                        }
-                    }
-                }
-            }
-            withContext(Dispatchers.IO) {
-                imageMap.get(
-                    imageAlphaKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-            }?.let {
-                withContext(Dispatchers.Main) {
-                    alpha = it
-                }
-//                    imageAlpha ?: 1f
-            }
-            withContext(Dispatchers.IO) {
-                imageMap.get(
-                    imageScaleKey,
-                ).let {
-                        scale ->
-                    EditComponent.Template.ImageManager.ImageScale.entries.firstOrNull {
-                        it.str == scale
-                    }?.scale ?: defaultScale
-//                        ?: EditComponent.Template.ImageManager.ImageScale.FIT_CENTER
-                }
-            }?.let {
-                withContext(Dispatchers.Main) {
-                    scaleType = it
-                }
-            }
-//            scaleType = imageScale.scale
-            withContext(Dispatchers.IO) {
-                imageMap.get(
-                    imageRotateKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-//                    ?: 0f
-            }?.let {
-                withContext(Dispatchers.Main) {
-                    rotation = it
-                }
-            }
-            withContext(Dispatchers.IO) {
-                imageMap.get(
-                    imageScaleXKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-//                    ?: 1f
-            }?.let {
-                withContext(Dispatchers.Main) {
-                    scaleX = it
-                }
-            }
-            withContext(Dispatchers.IO) {
-                imageMap.get(
-                    imageScaleYKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-//                    ?: scaleY
-            }?.let {
-                withContext(Dispatchers.Main) {
-                    scaleY = it
-                }
-            }
-            val paddingData = withContext(Dispatchers.IO) {
-                EditComponent.Template.PaddingData(
-                    imageMap.get(
-                        imagePaddingTopKey,
-                    ),
-                    imageMap.get(
-                        imagePaddingBottomKey,
-                    ),
-                    imageMap.get(
-                        imagePaddingStartKey,
-                    ),
-                    imageMap.get(
-                        imagePaddingEndKey,
-                    ),
-                    density,
-                )
-            }
-            withContext(Dispatchers.Main) {
-                setPadding(
-                    paddingData.paddingStart ?: paddingStart,
-                    paddingData.paddingTop ?: paddingTop,
-                    paddingData.paddingEnd ?: paddingEnd,
-                    paddingData.paddingBottom ?: paddingBottom,
-                )
-            }
-        }
-        imageView.layoutParams = FrameLayoutTool.setParam(
-            imageView.layoutParams as FrameLayout.LayoutParams,
-            imageMap,
-            density,
-            defaultWidth,
-            defaultHeight,
-            defaultLayoutGravity,
-        ).let {
-                param ->
-            LayoutSetterTool.setMargin(
-                param,
+        CoroutineScope(Dispatchers.IO).launch {
+            FrameLayoutTool.setParam(
+                imageView.layoutParams as FrameLayout.LayoutParams,
                 imageMap,
-                density
-            )
-            param
+                density,
+                defaultWidth,
+                defaultHeight,
+                defaultLayoutGravity,
+            ).let { param ->
+                LayoutSetterTool.setMargin(
+                    param,
+                    imageMap,
+                    density
+                )
+                param
+            }.let {
+                withContext(Dispatchers.Main) {
+                    imageView.layoutParams = it
+                }
+            }
         }
-    }
-
-    private suspend fun execSetSingleImage(
-        imageView: AppCompatImageView,
-        imagePathSrc: String?,
-        requestBuilderSrc: RequestBuilder<Drawable>?,
-        fadeInMilli: Int?,
-        blurRadiusAndSamplingPair: Pair<Int, Int>?,
-    ){
-        if(
-            imagePathSrc.isNullOrEmpty()
-        ) return
-        val imageViewContext = imageView.context
-        val requestBuilder: RequestBuilder<Drawable> =
-            requestBuilderSrc ?: Glide.with(imageViewContext)
-                .asDrawable()
-                .sizeMultiplier(0.1f)
-        val imagePathToIconType = withContext(Dispatchers.IO) {
-            EditComponent.Template.ImageManager.makeIconAndTypePair(
-                imagePathSrc
-            )
-        }
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "licon.txt").absolutePath,
-//            listOf(
-//                "imagePath: ${imagePathSrc}",
-//                "icon: ${icon?.str}",
-//            ).joinToString("\n\n")
-//        )
-
-
-        val bitmap = ImageCreator.byFilePath(imagePathSrc)
-            ?: ImageCreator.byIconMacro(
-            imageViewContext,
-            imagePathToIconType
+        ImageViewTool.set(
+            imageView,
+            imageMap,
+            defaultGravity,
+            defaultScale,
+            enableImageViewClick,
+            outValue,
+            requestBuilderSrc,
+            density,
+            where,
         )
-        if(blurRadiusAndSamplingPair != null){
-            val blurRadius = blurRadiusAndSamplingPair.first
-            val blurSampling = blurRadiusAndSamplingPair.second
-            when(fadeInMilli != null) {
-                true -> Blurry.with(imageViewContext)
-                    .radius(blurRadius)
-                    .sampling(blurSampling)
-                    .async()
-                    .animate(fadeInMilli)
-                    .from(bitmap)
-                    .into(imageView)
-                else ->  Blurry.with(imageViewContext)
-                    .radius(blurRadius)
-                    .sampling(blurSampling)
-                    .async()
-                    .from(bitmap)
-                    .into( imageView)
-            }
-            return
-        }
-        when(fadeInMilli != null) {
-            true -> Glide.with(imageViewContext)
-                .load(bitmap)
-                .transition(DrawableTransitionOptions.withCrossFade(fadeInMilli))
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .dontAnimate()
-                .thumbnail(requestBuilder)
-                .into(imageView)
-            else -> Glide.with(imageViewContext)
-                .load(bitmap)
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .dontAnimate()
-                .thumbnail(requestBuilder)
-                .into(imageView)
-        }
-//        if(bitmap == null){
-//            imageView.isVisible = false
-//            return
-//        }
     }
-
-    private object ImageCreator {
-
-        fun byFilePath(
-            imagePathSrc: String,
-        ): Bitmap? {
-            if(
-                !File(imagePathSrc).isFile
-            ) return null
-            return BitmapTool.convertFileToBitmap(imagePathSrc)
-        }
-
-        suspend fun byIconMacro(
-            context: Context?,
-            imagePathToIconType: Pair<String, String>,
-        ): Bitmap? {
-            val imagePath =
-                imagePathToIconType.first
-            val iconType = withContext(Dispatchers.IO) {
-                imagePathToIconType.second.let { iconTypeStr ->
-                    EditComponent.IconType.entries.firstOrNull {
-                        it.name == iconTypeStr
-                    } ?: EditComponent.IconType.IMG
-                }
-            }
-            val assetsPath = withContext(Dispatchers.IO) {
-                CmdClickIcons.entries.firstOrNull {
-                    it.str == imagePath
-                }?.assetsPath
-            }?: return null
-            return withContext(Dispatchers.IO) {
-                when (iconType) {
-                    EditComponent.IconType.IMG -> {
-                        val iconFile = ExecSetToolbarButtonImage.getImageFile(
-                            assetsPath
-                        )
-                        BitmapTool.convertFileToBitmap(iconFile.absolutePath)
-                    }
-
-                    EditComponent.IconType.SVG -> {
-                        AssetsFileManager.assetsByteArray(
-                            context,
-                            assetsPath,
-                        )?.let {
-                            BitmapFactory.decodeByteArray(it, 0, it.size)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    private suspend fun execSetMultipleImage(
-        imageView: AppCompatImageView,
-        imagePathList: List<String>,
-        delay: Int,
-    ){
-        val imageViewContext = imageView.context
-        val animationDrawable = AnimationDrawable()
-        val bitmapList = withContext(Dispatchers.IO) {
-            val bitmapIndexToListJob = imagePathList.mapIndexed { index, imagePathSrc ->
-                async {
-                    val imagePathToIconType =
-                        EditComponent.Template.ImageManager.makeIconAndTypePair(
-                            imagePathSrc
-                        )
-                    val bitmap = ImageCreator.byFilePath(imagePathSrc)
-                        ?: ImageCreator.byIconMacro(
-                            imageViewContext,
-                            imagePathToIconType
-                        )
-                    index to bitmap
-                }
-            }
-            bitmapIndexToListJob.awaitAll().sortedBy { it.first }.map {
-                it.second
-            }
-        }
-        bitmapList.forEach {
-            if(it == null) return@forEach
-            animationDrawable.addFrame(
-                BitmapDrawable(imageViewContext.resources, it),
-                delay
-            )
-        }
-        animationDrawable.isOneShot = false
-        imageView.setImageDrawable(animationDrawable)
-        animationDrawable.start()
-    }
-
 
     private suspend fun setTextView(
         fannelInfoMap: Map<String, String>,
@@ -1146,8 +766,17 @@ object EditConstraintFrameMaker {
         busyboxExecutor: BusyboxExecutor?,
         captionTextView: OutlineTextView,
         textMap: Map<String, String>?,
-//        textPropertyMap: Map<String, String>?,
-        enableTextViewClick: Boolean,
+        defaultLayoutGravity: Int?,
+        defaultGravity: Int?,
+        defaultMaxLen: Int?,
+        defaultTextColorResId: Int?,
+        defaultStrokeColorResId: Int?,
+        defaultStrokeWidth: Int?,
+        defaultTextSize: Float?,
+        defaultLetterSpacing: Float?,
+        defaultTextStyle: EditComponent.Template.TextManager.TextStyle?,
+        defaultFont: EditComponent.Font?,
+        enableTextViewClick: Boolean?,
         outValue: TypedValue?,
         where: String,
         density: Float,
@@ -1160,311 +789,58 @@ object EditConstraintFrameMaker {
         val textViewContext = captionTextView.context
         if(
             textMap.isNullOrEmpty()
-//            && textPropertyMap.isNullOrEmpty()
             ){
             withContext(Dispatchers.Main){
                 captionTextView.isVisible = false
             }
             return
         }
-        withContext(Dispatchers.Main) {
-            captionTextView.apply {
-                textMap.get(
-                    textVisibleKey,
-                ).let {
-                        visibleStr ->
-                    visibility = EditComponent.Template.VisibleManager.getVisible(
-                        visibleStr
-                    )
-                }
-                val lp = layoutParams as FrameLayout.LayoutParams
-                layoutParams = FrameLayoutTool.setParam(
-                    lp,
-                    textMap,
-                    density,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER,
-                ).let {
-                        param ->
-                    LayoutSetterTool.setMargin(
-                        param,
-                        textMap,
-                        density
-                    )
-                    param
-                }
-                val overrideGravity = textMap.get(
-                    textGravityKey,
-                )?.let {
-                        gravityStr ->
-                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                        it.key == gravityStr
-                    }?.gravity
-                } ?: Gravity.CENTER
-                gravity = overrideGravity
-                val paddingData = EditComponent.Template.PaddingData(
-                    textMap.get(
-                        textPaddingTopKey,
-                    ),
-                    textMap.get(
-                        textPaddingBottomKey,
-                    ),
-                    textMap.get(
-                        textPaddingStartKey,
-                    ),
-                    textMap.get(
-                        textPaddingEndKey,
-                    ),
-                    density,
-                )
-                setPadding(
-                    paddingData.paddingStart ?: 0,
-                    paddingData.paddingTop ?: 0,
-                    paddingData.paddingEnd ?: 0,
-                    paddingData.paddingBottom ?: 0,
-                )
-//                val textTag = withContext(Dispatchers.IO) {
-//                    textMap?.get(
-//                        textTagKey,
-//                    )
-//                }
-//                tag = textTag
-                val settingValue = textMap.get(
-                    EditComponent.Template.TextManager.TextKey.SETTING_VALUE.key
-                )
-                setAutofillHints(settingValue)
-                val overrideText = withContext(Dispatchers.IO) {
-                    EditComponent.Template.TextManager.makeText(
-                        fannelInfoMap,
-                        setReplaceVariableMap,
-                        busyboxExecutor,
-                        textMap,
-                        settingValue
-                    )
-                }
-                text = overrideText
-//        captionTextView.autofillHints?.firstOrNull(0)
-//        captionTextView.hint = settingValue
-                val overrideMaxLines = withContext(Dispatchers.IO){
-                    textMap.get(
-                        textMaxLinesKey
-                    )?.let {
-                        try {
-                            it.toInt()
-                        }catch (e: Exception){
-                            null
-                        }
-                    } ?: 1
-                }
-                maxLines = overrideMaxLines
-                val textColor = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        textColorKey,
-                    )?.let {
-                            colorStr ->
-                        val parsedColorStr = ColorTool.parseColorStr(
-                            context,
-                            colorStr,
-                            textColorKey,
-                            where,
-                        )
-                        Color.parseColor(parsedColorStr)
-                    }
-                }
-                setFillColor(textColor ?: R.color.fill_gray)
-                val textBkColor = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        textBkColorKey,
-                    )?.let {
-                            colorStr ->
-                        val parsedColorStr = ColorTool.parseColorStr(
-                            context,
-                            colorStr,
-                            textBkColorKey,
-                            where,
-                        )
-                        Color.parseColor(parsedColorStr)
-//                        CmdClickColor.entries.firstOrNull {
-//                            it.str == colorStr
-//                        }
-                    }
-                }
-
-                isClickable = enableTextViewClick
-                when(enableTextViewClick) {
-                    true -> outValue?.let {
-                        setBackgroundResource(it.resourceId)
-                    }
-                    else -> {
-                        setBackgroundResource(0)
-                        background =
-                            textBkColor?.let {
-                                ColorDrawable(it)
-                            }
-                    }
-                }
-                val strokeColorStr = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        strokeColorKey,
-                    )
-                }
-                CmdClickColor.entries.firstOrNull {
-                    it.str == strokeColorStr
-                }.let {
-                    setStrokeColor(it?.id ?: R.color.white)
-                }
-                val strokeWidth = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        strokeWidthKey,
-                    )?.let {
-                        try {
-                            it.toInt()
-                        } catch(e: Exception){
-                            null
-                        }
-                    }
-                }
-                strokeWidthSrc = strokeWidth ?: 2
-                val overrideTextSize = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        textSizeKey,
-                    )?.let {
-                        try {
-                            it.toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    }
-                }
-                overrideTextSize?.let {
-                    textSize = it
-                } ?: let {
-                    setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.text_size_16))
-                }
-                val letterSpacingFloat = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        letterSpacingKey,
-                    )?.let {
-                        try {
-                            it.toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    } ?: 0f
-                }
-                letterSpacing = letterSpacingFloat
-                val textAlpha = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        textAlphaKey,
-                    )?.let {
-                        try {
-                            it.toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    }
-                }
-                alpha = textAlpha ?: 1f
-                val textShadowXFloat = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        textShadowXKey,
-                    )?.let {
-                        try {
-                            ScreenSizeCalculator.toDpByDensity(
-                                it.toFloat(),
-                                density
-                            ).toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    } ?: 0f
-                }
-                val textShadowYFloat = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        textShadowYKey,
-                    )?.let {
-                        try {
-                            ScreenSizeCalculator.toDpByDensity(
-                                it.toFloat(),
-                                density
-                            ).toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    } ?: 0f
-                }
-                val textShadowRadiusFloat = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        textShadowRadiusKey,
-                    )?.let {
-                        try {
-                            ScreenSizeCalculator.toDpByDensity(
-                                it.toFloat(),
-                                density
-                            ).toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    } ?: 0f
-                }
-                val textShadowColor = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        textShadowColorKey,
-                    )?.let {
-                        val colorStr = ColorTool.parseColorStr(
-                            context,
-                            it,
-                            textShadowColorKey,
-                            where
-                        )
-                        Color.parseColor(colorStr)
-                    } ?: Color.TRANSPARENT
-                }
-                setShadowLayer(
-                    textShadowRadiusFloat,
-                    textShadowXFloat,
-                    textShadowYFloat,
-                    textShadowColor
-                )
-                val overrideTextStyle = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        textStyleKey,
-                    )?.let {
-                            textStyleStr ->
-                        EditComponent.Template.TextManager.TextStyle.entries.firstOrNull {
-                            it.key == textStyleStr
-                        }
-                    }
-                } ?: EditComponent.Template.TextManager.TextStyle.NORMAL
-                val overrideFont = withContext(Dispatchers.IO) {
-                    textMap.get(
-                        textFontKey,
-                    )?.let {
-                            textFontStr ->
-                        EditComponent.Font.entries.firstOrNull {
-                            it.key == textFontStr
-                        }
-                    }
-                } ?: EditComponent.Font.SANS_SERIF
-                setTypeface(overrideFont.typeface, overrideTextStyle.style)
-            }
+        val settingValue = withContext(Dispatchers.IO) {
+            textMap.get(
+                EditComponent.Template.TextManager.TextKey.SETTING_VALUE.key
+            )
         }
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lcapt.txt").absolutePath,
-//            listOf(
-//                "textMap: ${textMap}",
-//                "textPropertyMap: ${textPropertyMap}",
-//                "strokeWidth: ${strokeWidth}",
-//                "captionTextView.outlineWidthSrc: ${captionTextView.outlineWidthSrc}",
-//
-//            ).joinToString("\n")
-//        )
+        val overrideText = withContext(Dispatchers.IO) {
+            EditComponent.Template.TextManager.makeText(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                textMap,
+                settingValue
+            )
+        }
+        withContext(Dispatchers.IO) {
+            TextViewTool.setVisibility(
+                captionTextView,
+                textMap,
+            )
+        }
+        execSetTextView(
+            captionTextView,
+            textMap,
+            settingValue,
+            overrideText,
+            defaultLayoutGravity,
+            defaultGravity,
+            defaultMaxLen,
+            defaultTextColorResId,
+            defaultStrokeColorResId,
+            defaultStrokeWidth,
+            defaultTextSize,
+            defaultLetterSpacing,
+            defaultTextStyle,
+            defaultFont,
+            enableTextViewClick,
+            outValue,
+            where,
+            density,
+        )
     }
 
     suspend fun setTextViewByDynamic(
         captionTextView: OutlineTextView,
         textMap: Map<String, String>?,
+        settingValue: String?,
         overrideText: String?,
     ) {
         val where = "EditConstraintFrameMaker.setCaptionByDynamic"
@@ -1474,235 +850,117 @@ object EditConstraintFrameMaker {
 //            ) != switchOn
 //        }
         val textViewContext = captionTextView.context
-        withContext(Dispatchers.Main) {
-            captionTextView.apply {
-                val lp = layoutParams as FrameLayout.LayoutParams
-                lp.apply {
-                    val overrideLayoutGravity = textMap?.get(
-                        textLayoutGravityKey,
-                    )?.let {
-                            gravityStr ->
-                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                            it.key == gravityStr
-                        }?.gravity
-                    }
-                    overrideLayoutGravity?.let {
-                        gravity = it
-                    }
-                }
-                val overrideGravity = textMap?.get(
-                    textGravityKey,
-                )?.let {
-                        gravityStr ->
-                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                        it.key == gravityStr
-                    }?.gravity
+        TextViewTool.setVisibility(
+            captionTextView,
+            textMap,
+        )
+        val outValue = withContext(Dispatchers.IO) {
+            val outValueSrc = TypedValue()
+            textViewContext.theme?.resolveAttribute(
+                android.R.attr.selectableItemBackground,
+                outValueSrc,
+                true
+            )
+            outValueSrc
+        }
+        val density = withContext(Dispatchers.Main) {
+            ScreenSizeCalculator.getDensity(
+                textViewContext
+            )
+        }
+        execSetTextView(
+            captionTextView,
+            textMap,
+            settingValue,
+            overrideText,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            outValue,
+            where,
+            density,
+        )
+    }
 
-                }
-                overrideGravity?.let {
-                    gravity
-                }
-                val isUpdate = textMap?.get(
-                    onUpdateKey
-                ) != switchOff
-                if(isUpdate) {
-                    overrideText?.let {
-                        text = it
-                    }
-                }
-                val overrideMaxLines = withContext(Dispatchers.IO){
-                    textMap?.get(
-                        textMaxLinesKey
-                    )?.let {
-                        try {
-                            it.toInt()
-                        }catch (e: Exception){
-                            null
-                        }
-                    }
-                }
-                overrideMaxLines?.let {
-                    maxLines = it
-                }
-                val textColor = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        textColorKey,
-                    )?.let {
-                            colorStr ->
-                        CmdClickColor.entries.firstOrNull {
-                            it.str == colorStr
-                        }
-                    }
-                }
-                textColor?.let {
-                    setFillColor(it.id)
-                }
-                withContext(Dispatchers.Main) {
-                    textMap?.get(
-                        textBkColorKey,
-                    )?.let {
-                            colorStr ->
-                        val parsedColorStr = ColorTool.parseColorStr(
-                            context,
-                            colorStr,
-                            textBkColorKey,
-                            where,
-                        )
-                        Color.parseColor(parsedColorStr)
-                    }?.let {
-                        background =
-                            ColorDrawable(it)
-                    }
-                }
-                val strokeColorStr = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        strokeColorKey,
-                    )
-                }
-                CmdClickColor.entries.firstOrNull {
-                    it.str == strokeColorStr
-                }?.let {
-                    setStrokeColor(it.id)
-                }
-                val strokeWidth = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        strokeWidthKey,
-                    )?.let {
-                        try {
-                            it.toInt()
-                        } catch(e: Exception){
-                            null
-                        }
-                    }
-                }
-                strokeWidth?.let {
-                    strokeWidthSrc = it
-                }
-                val overrideTextSize = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        textSizeKey,
-                    )?.let {
-                        try {
-                            it.toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    }
-                }
-                overrideTextSize?.let {
-                    textSize = it
-                }
-                withContext(Dispatchers.Main) {
-                    textMap?.get(
-                        letterSpacingKey,
-                    )?.let {
-                        try {
-                            it.toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    }?.let {
-                        letterSpacing = it
-                    }
-                }
-                val textAlpha = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        textAlphaKey,
-                    )?.let {
-                        try {
-                            it.toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    }
-                }
-                val textShadowXFloat = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        textShadowXKey,
-                    )?.let {
-                        try {
-                            ScreenSizeCalculator.toDp(
-                                context,
-                                it.toFloat(),
-                            ).toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    } ?: shadowDx
-                }
-                val textShadowYFloat = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        textShadowYKey,
-                    )?.let {
-                        try {
-                            ScreenSizeCalculator.toDp(
-                                context,
-                                it.toFloat(),
-                            ).toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    } ?: shadowDy
-                }
-                val textShadowRadiusFloat = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        textShadowRadiusKey,
-                    )?.let {
-                        try {
-                            ScreenSizeCalculator.toDp(
-                                context,
-                                it.toFloat(),
-                            ).toFloat()
-                        } catch(e: Exception){
-                            null
-                        }
-                    } ?: shadowRadius
-                }
-                val textShadowColor = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        textShadowColorKey,
-                    )?.let {
-                        val colorStr = ColorTool.parseColorStr(
-                            context,
-                            it,
-                            textShadowColorKey,
-                            where
-                        )
-                        Color.parseColor(colorStr)
-                    } ?: shadowColor
-                }
-                setShadowLayer(
-                    textShadowRadiusFloat,
-                    textShadowXFloat,
-                    textShadowYFloat,
-                    textShadowColor
+    private suspend fun execSetTextView(
+        captionTextView: OutlineTextView,
+        textMap: Map<String, String>?,
+        settingValue: String?,
+        overrideText: String?,
+        defaultLayoutGravity: Int?,
+        defaultGravity: Int?,
+        defaultMaxLen: Int?,
+        defaultTextColorResId: Int?,
+        defaultStrokeColorResId: Int?,
+        defaultStrokeWidth: Int?,
+        defaultTextSize: Float?,
+        defaultLetterSpacing: Float?,
+        defaultTextStyle: EditComponent.Template.TextManager.TextStyle?,
+        defaultFont: EditComponent.Font?,
+        enableTextViewClick: Boolean?,
+        outValue: TypedValue?,
+        where: String,
+        density: Float,
+    ) {
+//        val enableTextSelect = withContext(Dispatchers.IO){
+//            textMap?.get(
+//                disableTextSelectKey
+//            ) != switchOn
+//        }
+        val textViewContext = captionTextView.context
+        if(
+            textMap.isNullOrEmpty()
+        ){
+            return
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            FrameLayoutTool.setParam(
+                captionTextView.layoutParams as FrameLayout.LayoutParams,
+                textMap,
+                density,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                defaultLayoutGravity,
+            ).let { param ->
+                LayoutSetterTool.setMargin(
+                    param,
+                    textMap,
+                    density
                 )
-                textAlpha?.let {
-                    alpha = it
+                param
+            }.let {
+                withContext(Dispatchers.Main) {
+                    captionTextView.layoutParams = it
                 }
-                val overrideTextStyle = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        textStyleKey,
-                    )?.let {
-                            textStyleStr ->
-                        EditComponent.Template.TextManager.TextStyle.entries.firstOrNull {
-                            it.key == textStyleStr
-                        }?.style
-                    }
-                } ?: typeface.style
-                val overrideFont = withContext(Dispatchers.IO) {
-                    textMap?.get(
-                        textFontKey,
-                    )?.let {
-                            textFontStr ->
-                        EditComponent.Font.entries.firstOrNull {
-                            it.key == textFontStr
-                        }?.typeface
-                    }
-                } ?: typeface
-                setTypeface(overrideFont, overrideTextStyle)
             }
         }
+        TextViewTool.set(
+            captionTextView,
+            textMap,
+            settingValue,
+            overrideText,
+            defaultGravity,
+            defaultMaxLen,
+            defaultTextColorResId,
+            defaultStrokeColorResId,
+            defaultStrokeWidth,
+            defaultTextSize,
+            defaultLetterSpacing,
+            defaultTextStyle,
+            defaultFont,
+            enableTextViewClick,
+            outValue,
+            where,
+            density,
+        )
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "lcapt.txt").absolutePath,
 //            listOf(

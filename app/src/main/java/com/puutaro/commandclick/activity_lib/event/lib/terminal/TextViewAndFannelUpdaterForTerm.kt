@@ -242,12 +242,11 @@ object TextViewAndFannelUpdaterForTerm {
                     EditConstraintFrameMaker.setTextViewByDynamic(
                         it,
                         overrideTextMap,
-//                        textPropertyMap,
+                        updateText,
                         text,
                     )
                 }
             }
-//            textView?.text = text
             execUpdateAndSave(
                 textView,
                 editConstraintListAdapter,
