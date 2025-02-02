@@ -1,14 +1,12 @@
 package com.puutaro.commandclick.proccess.edit_list
 
-import android.view.View
-import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-object ConstraintView {
+object ConstraintTool {
 
     private val topToTopKey = EditComponent.Template.EditComponentKey.TOP_TO_TOP.key
     private val topToBottomKey = EditComponent.Template.EditComponentKey.TOP_TO_BOTTOM.key
@@ -29,40 +27,44 @@ object ConstraintView {
     private val verticalChainStyleKey =
         EditComponent.Template.EditComponentKey.VERTICAL_CHAIN_STYLE.key
 
-    suspend fun set(
-        view: View,
+//    suspend fun set(
+//        view: View,
+//        tagIdMap: Map<String, Int>?,
+//        frameKeyPairList: List<Pair<String, String>>?,
+//        overrideWidth: Int,
+//        height: Int,
+//        density: Float,
+//    ){
+//        val param = setConstraintParam(
+//            tagIdMap,
+//            frameKeyPairList,
+//            overrideWidth,
+//            height,
+//        ).let {
+//            paramSrc ->
+//            LayoutSetterTool.setMargin(
+//                paramSrc,
+//                frameKeyPairList?.toMap(),
+//                density,
+//            )
+//        }
+//
+//    }
+
+    suspend fun setConstraintParam(
+        param: ConstraintLayout.LayoutParams,
         tagIdMap: Map<String, Int>?,
         frameKeyPairList: List<Pair<String, String>>?,
-        overrideWidth: Int,
-        height: Int,
-        density: Float,
-    ){
-        val param = makeConstraintParam(
-            tagIdMap,
-            frameKeyPairList,
-            overrideWidth,
-            height,
-        ).let {
-            paramSrc ->
-            LayoutSetterTool.setMargin(
-                paramSrc,
-                frameKeyPairList,
-                density,
-            )
-        }
-
-    }
-
-    suspend fun makeConstraintParam(
-        tagIdMap: Map<String, Int>?,
-        frameKeyPairList: List<Pair<String, String>>?,
-        overrideWidth: Int,
-        height: Int,
-    ): ConstraintLayout. LayoutParams{
-        return ConstraintLayout.LayoutParams(
-            overrideWidth,
-            height,
-        ).apply {
+        overrideWidth: Int?,
+        overrideHeight: Int?,
+    ): ConstraintLayout. LayoutParams {
+        return param.apply {
+            overrideWidth?.let {
+                width = it
+            }
+            overrideHeight?.let {
+                height = it
+            }
             val unsetInt =
                 EditComponent.Template.ConstraintManager.ConstraintParameter.UNSET.int
             val topToTopInt = withContext(Dispatchers.IO){
