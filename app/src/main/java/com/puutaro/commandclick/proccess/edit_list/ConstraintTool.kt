@@ -65,9 +65,9 @@ object ConstraintTool {
             overrideHeight?.let {
                 height = it
             }
-            val unsetInt =
-                EditComponent.Template.ConstraintManager.ConstraintParameter.UNSET.int
-            val topToTopInt = withContext(Dispatchers.IO){
+//            val unsetInt =
+//                EditComponent.Template.ConstraintManager.ConstraintParameter.UNSET.int
+           withContext(Dispatchers.IO){
                 val topToTopStr = PairListTool.getValue(
                     frameKeyPairList,
                     topToTopKey
@@ -75,13 +75,16 @@ object ConstraintTool {
                 ParentReplace.makeReplaceParentInt(
                     topToTopStr,
                     tagIdMap,
-                ) ?: unsetInt
+                )
+//                    ?: unsetInt
 //                        EditComponent.Template.ConstraintManager.makePosition(
 //                            topToTopStr
 //                        ) ?: unsetInt
+            }?.let {
+                topToTop = it
             }
-            topToTop = topToTopInt
-            val topToBottomInt = withContext(Dispatchers.IO){
+//            topToTop = topToTopInt
+            withContext(Dispatchers.IO){
                 val topToBottomStr = PairListTool.getValue(
                     frameKeyPairList,
                     topToBottomKey
@@ -89,7 +92,8 @@ object ConstraintTool {
                 val topToBottomId = ParentReplace.makeReplaceParentInt(
                     topToBottomStr,
                     tagIdMap,
-                ) ?: unsetInt
+                )
+//                    ?: unsetInt
 //                        if(
 //                            overrideTag == "ok"
 //                            || overrideTag == "firstTag"
@@ -111,6 +115,8 @@ object ConstraintTool {
 //                            )
 //                        }
                 topToBottomId
+            }?.let {
+                topToBottom = it
             }
 //                    if(scene == ParentReplace.Scene.EDIT_LIST_DIALOG) {
 //                        FileSystems.updateFile(
@@ -132,9 +138,9 @@ object ConstraintTool {
 //                            ).joinToString("\n") + "\n\n============\n\n\n"
 //                        )
 //                    }
-            topToBottom = topToBottomInt
+//            topToBottom = topToBottomInt
 
-            val startToStartInt = withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO){
                 val startToStartStr = PairListTool.getValue(
                     frameKeyPairList,
                     startToStartKey
@@ -142,13 +148,16 @@ object ConstraintTool {
                 ParentReplace.makeReplaceParentInt(
                     startToStartStr,
                     tagIdMap,
-                ) ?: unsetInt
+                )
+//                    ?: unsetInt
 //                        ?: EditComponent.Template.ConstraintManager.makePosition(
 //                            startToStartStr
 //                        ) ?: unsetInt
+            }?.let {
+                startToStart = it
             }
-            startToStart = startToStartInt
-            val startToEndInt = withContext(Dispatchers.IO){
+//            startToStart = startToStartInt
+            withContext(Dispatchers.IO){
                 val startToEndStr = PairListTool.getValue(
                     frameKeyPairList,
                     startToEndKey
@@ -156,7 +165,8 @@ object ConstraintTool {
                 val startToEndId = ParentReplace.makeReplaceParentInt(
                     startToEndStr,
                     tagIdMap,
-                ) ?: unsetInt
+                )
+//                    ?: unsetInt
 //                        if(
 //                            overrideTag == "ok"
 //                            || overrideTag == "firstTag"
@@ -177,9 +187,11 @@ object ConstraintTool {
 //                            )
 //                        }
                 startToEndId
+            }?.let {
+                startToEnd = it
             }
-            startToEnd = startToEndInt
-            val endToEndInt = withContext(Dispatchers.IO){
+//            startToEnd = startToEndInt
+            withContext(Dispatchers.IO){
                 val endToEndStr = PairListTool.getValue(
                     frameKeyPairList,
                     endToEndKey
@@ -187,7 +199,8 @@ object ConstraintTool {
                 val endToEndId = ParentReplace.makeReplaceParentInt(
                     endToEndStr,
                     tagIdMap,
-                ) ?: unsetInt
+                )
+//                    ?: unsetInt
 //                        if(
 //                            overrideTag == "ok"
 //                            || overrideTag == "firstTag"
@@ -211,9 +224,11 @@ object ConstraintTool {
 //                        ?: EditComponent.Template.ConstraintManager.makePosition(
 //                            endToEndStr
 //                        ) ?: unsetInt
+            }?.let {
+                endToEnd = it
             }
-            endToEnd = endToEndInt
-            val endToStartInt = withContext(Dispatchers.IO){
+//            endToEnd = endToEndInt
+            withContext(Dispatchers.IO){
                 val endToStartStr = PairListTool.getValue(
                     frameKeyPairList,
                     endToStartKey
@@ -221,13 +236,16 @@ object ConstraintTool {
                 ParentReplace.makeReplaceParentInt(
                     endToStartStr,
                     tagIdMap,
-                ) ?: unsetInt
+                )
+//                    ?: unsetInt
 //                        ?: EditComponent.Template.ConstraintManager.makePosition(
 //                            endToStartStr
 //                        ) ?: unsetInt
+            }?.let {
+                endToStart = it
             }
-            endToStart = endToStartInt
-            val bottomToBottomInt = withContext(Dispatchers.IO){
+//            endToStart = endToStartInt
+            withContext(Dispatchers.IO){
                 val bottomToBottomStr = PairListTool.getValue(
                     frameKeyPairList,
                     bottomToBottomKey
@@ -235,7 +253,8 @@ object ConstraintTool {
                 val bottomToBottomId = ParentReplace.makeReplaceParentInt(
                     bottomToBottomStr,
                     tagIdMap,
-                ) ?: unsetInt
+                )
+//                    ?: unsetInt
 //                        if(
 //                            overrideTag == "ok"
 //                            || overrideTag == "firstTag"
@@ -256,9 +275,11 @@ object ConstraintTool {
 //                            )
 //                        }
                 bottomToBottomId
+            }?.let {
+                bottomToBottom = it
             }
-            bottomToBottom = bottomToBottomInt
-            val bottomToTopInt = withContext(Dispatchers.IO){
+//            bottomToBottom = bottomToBottomInt
+            withContext(Dispatchers.IO){
                 val bottomToTopStr = PairListTool.getValue(
                     frameKeyPairList,
                     bottomToTopKey
@@ -266,7 +287,8 @@ object ConstraintTool {
                 val bottomToTopId = ParentReplace.makeReplaceParentInt(
                     bottomToTopStr,
                     tagIdMap,
-                ) ?: unsetInt
+                )
+//                    ?: unsetInt
 //                        if(
 //                            overrideTag == "bk2"
 //                            || overrideTag == "firstTag"
@@ -288,62 +310,81 @@ object ConstraintTool {
 //                            )
 //                        }
                 bottomToTopId
+            }?.let {
+                bottomToTop = it
             }
-            bottomToTop = bottomToTopInt
-            val horizontalBiasFloat = withContext(Dispatchers.IO){
+//            bottomToTop = bottomToTopInt
+            withContext(Dispatchers.IO){
                 EditComponent.Template.ConstraintManager.makeFloat(
                     PairListTool.getValue(
                         frameKeyPairList,
                         horizontalBiasKey
                     )
-                ) ?: horizontalBias
+                )
+//                    ?: horizontalBias
+            }?.let {
+                horizontalBias = it
             }
-            horizontalBias = horizontalBiasFloat
-            val horizontalWeightFloat = withContext(Dispatchers.IO){
+//            horizontalBias = horizontalBiasFloat
+            withContext(Dispatchers.IO){
                 EditComponent.Template.ConstraintManager.makeFloat(
                     PairListTool.getValue(
                         frameKeyPairList,
                         horizontalWeightKey
                     )
-                ) ?: horizontalWeight
+                )
+//                    ?: horizontalWeight
+            }?.let {
+                horizontalWeight = it
             }
-            horizontalWeight = horizontalWeightFloat
-            val verticalWeightFloat = withContext(Dispatchers.IO){
+//            horizontalWeight = horizontalWeightFloat
+            withContext(Dispatchers.IO){
                 EditComponent.Template.ConstraintManager.makeFloat(
                     PairListTool.getValue(
                         frameKeyPairList,
                         verticalWeightKey
                     )
-                ) ?: verticalWeight
+                )
+//                    ?: verticalWeight
+            }?.let {
+                verticalWeight = it
             }
-            verticalWeight = verticalWeightFloat
-            val percentageWidthFloat = withContext(Dispatchers.IO){
+//            verticalWeight = verticalWeightFloat
+            withContext(Dispatchers.IO){
                 EditComponent.Template.ConstraintManager.makeFloat(
                     PairListTool.getValue(
                         frameKeyPairList,
                         percentageWidthKey
                     )
-                ) ?: matchConstraintPercentWidth
+                )
+//                    ?: matchConstraintPercentWidth
+            }?.let {
+                matchConstraintPercentWidth = it
             }
-            matchConstraintPercentWidth = percentageWidthFloat
-            val percentageHeightFloat = withContext(Dispatchers.IO){
+//            matchConstraintPercentWidth = percentageWidthFloat
+            withContext(Dispatchers.IO){
                 EditComponent.Template.ConstraintManager.makeFloat(
                     PairListTool.getValue(
                         frameKeyPairList,
                         percentageHeightKey
                     )
-                ) ?: matchConstraintPercentHeight
+                )
+//                    ?: matchConstraintPercentHeight
+            }?.let {
+                matchConstraintPercentHeight = it
             }
-            matchConstraintPercentHeight = percentageHeightFloat
-            val dimensionRatioStr = withContext(Dispatchers.IO){
+//            matchConstraintPercentHeight = percentageHeightFloat
+            withContext(Dispatchers.IO){
                 PairListTool.getValue(
                     frameKeyPairList,
                     dimensionRatioKey
                 )
+            }?.let {
+                dimensionRatio = it
             }
-            dimensionRatio = dimensionRatioStr
-                ?: dimensionRatio
-            val horizontalChainStyleInt = withContext(Dispatchers.IO){
+//            dimensionRatio = dimensionRatioStr
+//                ?: dimensionRatio
+            withContext(Dispatchers.IO){
                 PairListTool.getValue(
                     frameKeyPairList,
                     horizontalChainStyleKey
@@ -351,9 +392,12 @@ object ConstraintTool {
                     EditComponent.Template.ConstraintManager.getChainStyleInt(
                         it,
                     )
-                } ?: ConstraintLayout.LayoutParams.UNSET
+                }
+//                    ?: ConstraintLayout.LayoutParams.UNSET
+            }?.let {
+                horizontalChainStyle = it
             }
-            horizontalChainStyle = horizontalChainStyleInt
+//            horizontalChainStyle = horizontalChainStyleInt
 //                    if(overrideTag == "backstackCountRect"){
 //                        FileSystems.updateFile(
 //                            File(UsePath.cmdclickDefaultAppDirPath, "lhorizontalChainStyle.txt").absolutePath,
@@ -364,7 +408,7 @@ object ConstraintTool {
 //                            ).joinToString("\n")
 //                        )
 //                    }
-            val verticalChainStyleInt = withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO){
                 PairListTool.getValue(
                     frameKeyPairList,
                     verticalChainStyleKey
@@ -372,9 +416,12 @@ object ConstraintTool {
                     EditComponent.Template.ConstraintManager.getChainStyleInt(
                         it,
                     )
-                } ?: ConstraintLayout.LayoutParams.UNSET
+                }
+//                    ?: ConstraintLayout.LayoutParams.UNSET
+            }?.let {
+                verticalChainStyle = it
             }
-            verticalChainStyle = verticalChainStyleInt
+//            verticalChainStyle = verticalChainStyleInt
 
         }
     }
