@@ -986,14 +986,14 @@ class EditConstraintListAdapter(
                                     ?: return@setLinearFrameLayout
                                 val tagToImageViewListForContents = returnContentsFrameLayout.tagToImageViewListRef.get()
                                     ?: return@setLinearFrameLayout
-                                FileSystems.updateFile(
-                                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "lcontents_${editListPosition}.txt").absolutePath,
-                                    listOf(
-                                        "textTagToMapForContents: ${textTagToMapForContents}",
-                                        "imageTagToMapForContents: ${imageTagToMapForContents}",
-                                        "contentsFrameLayout: ${contentsFrameLayout}",
-                                    ).joinToString("\n")
-                                )
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "lcontents_${editListPosition}.txt").absolutePath,
+//                                    listOf(
+//                                        "textTagToMapForContents: ${textTagToMapForContents}",
+//                                        "imageTagToMapForContents: ${imageTagToMapForContents}",
+//                                        "contentsFrameLayout: ${contentsFrameLayout}",
+//                                    ).joinToString("\n")
+//                                )
                                 CoroutineScope(Dispatchers.IO).launch {
 //                                    val varNameToBitmapMapInContents =
                                     val contentsImageView = withContext(Dispatchers.IO){

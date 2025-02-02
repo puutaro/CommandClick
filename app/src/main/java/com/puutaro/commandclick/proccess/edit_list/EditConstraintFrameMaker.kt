@@ -24,6 +24,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickBkImageInfo
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -43,6 +44,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -217,6 +219,16 @@ object EditConstraintFrameMaker {
                     (tagName, imageView) ->
                 val imageMap = imageTagToMap.get(tagName)
                     ?: return@forEach
+//                if(frameLayout.tag == "initButtonBottomShaddow") {
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lImage.txt").absolutePath,
+//                        listOf(
+//                            "frameTag: ${frameLayout.tag}",
+//                            "tag: ${imageView.tag}",
+//                            "imageMap: ${imageMap}",
+//                        ).joinToString("\n")
+//                    )
+//                }
                 withContext(Dispatchers.Main) {
                     setImageView(
                         imageView,
@@ -390,34 +402,51 @@ object EditConstraintFrameMaker {
         }
 
         val param = withContext(Dispatchers.IO) {
-            val overrideLayoutGravity = PairListTool.getValue(
-                frameKeyPairList,
-                layoutGravityKey
-            )?.let { gravityStr ->
-                EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                    it.key == gravityStr
-                }?.gravity
-            } ?: Gravity.CENTER
             val isFrameLayoutParam = tagIdMap.isNullOrEmpty()
             when (isFrameLayoutParam) {
                 true -> FrameLayout.LayoutParams(
                     overrideWidth,
                     height,
                 ).apply {
+                    val overrideLayoutGravity = PairListTool.getValue(
+                        frameKeyPairList,
+                        layoutGravityKey
+                    )?.let { gravityStr ->
+                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+                            it.key == gravityStr
+                        }?.gravity
+                    } ?: Gravity.CENTER
                     gravity = overrideLayoutGravity
                 }
-                else -> ConstraintView.makeConstraintParam(
-                    tagIdMap,
-                    frameKeyPairList,
-                    overrideWidth,
-                    height,
-                )
+                else -> {
+                    val constraintParam = ConstraintLayout.LayoutParams(
+                        overrideWidth,
+                        height,
+                    )
+//                    if(buttonLayout?.tag == "initButtonBottomShaddow") {
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "lFrame.txt").absolutePath,
+//                            listOf(
+//                                "frameTag: ${buttonLayout?.tag}",
+//                                "frameKeyPairList: ${frameKeyPairList}",
+//                            ).joinToString("\n")
+//                        )
+//                    }
+                    withContext(Dispatchers.Main) {
+                        ConstraintTool.setConstraintParam(
+                            constraintParam,
+                            tagIdMap,
+                            frameKeyPairList,
+                        )
+                    }
+                    constraintParam
+                }
             }
         }
         withContext(Dispatchers.IO) {
             LayoutSetterTool.setMargin(
                 param,
-                frameKeyPairList,
+                frameKeyPairList?.toMap(),
                 density,
             )
         }
@@ -491,7 +520,7 @@ object EditConstraintFrameMaker {
                     bkColorStr,
                     bkColorKey,
                     whereForErr,
-                )?.let {
+                ).let {
                     ColorDrawable(Color.parseColor(it))
                 }
             }
@@ -819,7 +848,7 @@ object EditConstraintFrameMaker {
         }
         val context = imageView.context
         val imagePathList = withContext(Dispatchers.IO) {
-            imageMap?.get(
+            imageMap.get(
                 imagePathsKey,
             )?.split(valueSeparator)
         }
@@ -848,7 +877,7 @@ object EditConstraintFrameMaker {
 //            else -> {
         imageView.apply {
             val visibilityValue = withContext(Dispatchers.IO) {
-                imageMap?.get(
+                imageMap.get(
                     imageVisibleKey,
                 ).let { visibleStr ->
                     EditComponent.Template.VisibleManager.getVisible(
@@ -881,7 +910,7 @@ object EditConstraintFrameMaker {
                 ) {
                     false -> {
                         val delay = withContext(Dispatchers.IO) {
-                            imageMap?.get(
+                            imageMap.get(
                                 imageDelayKey,
                             )?.let {
                                 try {
@@ -904,7 +933,7 @@ object EditConstraintFrameMaker {
 
                     else -> {
                         val fadeInMilli = withContext(Dispatchers.IO) {
-                            imageMap?.get(
+                            imageMap.get(
                                 imageFadeInMilliKey,
                             )?.let {
                                 try {
@@ -934,7 +963,7 @@ object EditConstraintFrameMaker {
                 }
             }
             val overrideGravity = withContext(Dispatchers.IO) {
-                imageMap?.get(
+                imageMap.get(
                     imageGravityKey,
                 )?.let { gravityStr ->
                     EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
@@ -944,7 +973,7 @@ object EditConstraintFrameMaker {
             }?: Gravity.CENTER
             foregroundGravity = overrideGravity
             val imageColor = withContext(Dispatchers.IO) {
-                imageMap?.get(
+                imageMap.get(
                     imageColorKey,
                 )?.let {
                         colorStr ->
@@ -961,7 +990,7 @@ object EditConstraintFrameMaker {
                 ColorStateList.valueOf(it)
             }
             val imageBkColor = withContext(Dispatchers.IO) {
-                imageMap?.get(
+                imageMap.get(
                     imageBkColorKey,
                 )?.let {
                     colorStr ->
@@ -987,7 +1016,7 @@ object EditConstraintFrameMaker {
                 }
             }
             val imageAlpha = withContext(Dispatchers.IO) {
-                imageMap?.get(
+                imageMap.get(
                     imageAlphaKey,
                 )?.let {
                     try {
@@ -999,7 +1028,7 @@ object EditConstraintFrameMaker {
             }
             alpha = imageAlpha ?: 1f
             val imageScale = withContext(Dispatchers.IO) {
-                imageMap?.get(
+                imageMap.get(
                     imageScaleKey,
                 ).let {
                         scale ->
@@ -1010,7 +1039,7 @@ object EditConstraintFrameMaker {
             }
             scaleType = imageScale.scale
             val rotateFloat = withContext(Dispatchers.IO) {
-                imageMap?.get(
+                imageMap.get(
                     imageRotateKey,
                 )?.let {
                     try {
@@ -1022,7 +1051,7 @@ object EditConstraintFrameMaker {
             }
             rotation = rotateFloat
             val scaleXFloat = withContext(Dispatchers.IO) {
-                imageMap?.get(
+                imageMap.get(
                     imageScaleXKey,
                 )?.let {
                     try {
@@ -1034,7 +1063,7 @@ object EditConstraintFrameMaker {
             }
             scaleX = scaleXFloat
             val scaleYFloat = withContext(Dispatchers.IO) {
-                imageMap?.get(
+                imageMap.get(
                     imageScaleYKey,
                 )?.let {
                     try {
@@ -1047,16 +1076,16 @@ object EditConstraintFrameMaker {
             scaleY = scaleYFloat
             val paddingData = withContext(Dispatchers.IO) {
                 EditComponent.Template.PaddingData(
-                    imageMap?.get(
+                    imageMap.get(
                         imagePaddingTopKey,
                     ),
-                    imageMap?.get(
+                    imageMap.get(
                         imagePaddingBottomKey,
                     ),
-                    imageMap?.get(
+                    imageMap.get(
                         imagePaddingStartKey,
                     ),
-                    imageMap?.get(
+                    imageMap.get(
                         imagePaddingEndKey,
                     ),
                     density,
@@ -1071,83 +1100,97 @@ object EditConstraintFrameMaker {
         }
 //            }
 //        }
-        imageView.layoutParams = imageView.layoutParams.apply {
-            val curLayoutParams = this as FrameLayout.LayoutParams
-            curLayoutParams.apply setParam@ {
-                val overrideWidth = withContext(Dispatchers.IO) {
-                    imageMap?.get(
-                        imageWidthKey,
-                    ).let {
-                        EditComponent.Template.LinearLayoutUpdater.convertWidth(
-                            it,
-                            FrameLayout.LayoutParams.MATCH_PARENT,
-                            density,
-                        )
-                    }
-                }
-                width = overrideWidth
-                val overrideHeight = withContext(Dispatchers.IO) {
-                    imageMap?.get(
-                        imageHeightKey,
-                    ).let {
-                        EditComponent.Template.LinearLayoutUpdater.convertHeight(
-                            it,
-                            FrameLayout.LayoutParams.MATCH_PARENT,
-                            density,
-                        )
-                    }
-                }
-                height = overrideHeight
-                val overrideLayoutGravity = withContext(Dispatchers.IO) {
-                    imageMap?.get(
-                        imageLayoutGravity,
-                    )?.let { gravityStr ->
-                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                            it.key == gravityStr
-                        }?.gravity
-                    }
-                }?: Gravity.CENTER
-                gravity = overrideLayoutGravity
-                val marginData = withContext(Dispatchers.IO) {
-                    EditComponent.Template.MarginData(
-                        imageMap?.get(
-                            imageMarginTopKey,
-                        ),
-                        imageMap?.get(
-                            imageMarginBottomKey,
-                        ),
-                        imageMap?.get(
-                            imageMarginStartKey,
-                        ),
-                        imageMap?.get(
-                            imageMarginEndKey,
-                        ),
-                        density,
-                    )
-                }
-                marginData.marginTop?.let {
-                    topMargin = it
-                }
-                marginData.marginBottom?.let {
-                    bottomMargin = it
-                }
-                marginData.marginStart?.let {
-                    marginStart = it
-                }
-                marginData.marginEnd?.let {
-                    marginEnd = it
-                }
-            }
+//        withContext(Dispatchers.IO){
+//            delay(1000)
+//        }
+        imageView.layoutParams = FrameLayoutTool.setParam(
+            imageView.layoutParams as FrameLayout.LayoutParams,
+            imageMap,
+            density,
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT,
+        ).let {
+            param ->
+            LayoutSetterTool.setMargin(
+                param,
+                imageMap,
+                density
+            )
+            param
         }
-
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lImage.txt").absolutePath,
-//            listOf(
-//                "width: ${width}",
-//                "height: ${height}",
-//            ).joinToString("\n")
-//        )
-
+//        imageView.layoutParams = imageView.layoutParams.apply {
+//            val curLayoutParams = this as FrameLayout.LayoutParams
+//            curLayoutParams.apply setParam@ {
+//                val overrideWidth = withContext(Dispatchers.IO) {
+//                    imageMap?.get(
+//                        imageWidthKey,
+//                    ).let {
+//                        EditComponent.Template.LinearLayoutUpdater.convertWidth(
+//                            it,
+//                            FrameLayout.LayoutParams.MATCH_PARENT,
+//                            density,
+//                        )
+//                    }
+//                }
+//                width = overrideWidth
+//                val overrideHeight = withContext(Dispatchers.IO) {
+//                    imageMap?.get(
+//                        imageHeightKey,
+//                    ).let {
+//                        EditComponent.Template.LinearLayoutUpdater.convertHeight(
+//                            it,
+//                            FrameLayout.LayoutParams.MATCH_PARENT,
+//                            density,
+//                        )
+//                    }
+//                }
+//                height = overrideHeight
+//                val overrideLayoutGravity = withContext(Dispatchers.IO) {
+//                    imageMap?.get(
+//                        imageLayoutGravity,
+//                    )?.let { gravityStr ->
+//                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
+//                            it.key == gravityStr
+//                        }?.gravity
+//                    }
+//                }?: Gravity.CENTER
+//                gravity = overrideLayoutGravity
+//                val marginData = withContext(Dispatchers.IO) {
+//                    EditComponent.Template.MarginData(
+//                        imageMap?.get(
+//                            imageMarginTopKey,
+//                        ),
+//                        imageMap?.get(
+//                            imageMarginBottomKey,
+//                        ),
+//                        imageMap?.get(
+//                            imageMarginStartKey,
+//                        ),
+//                        imageMap?.get(
+//                            imageMarginEndKey,
+//                        ),
+//                        density,
+//                    )
+//                }
+//                marginData.marginTop?.let {
+//                    topMargin = it
+//                }
+//                marginData.marginBottom?.let {
+//                    bottomMargin = it
+//                }
+//                marginData.marginStart?.let {
+//                    marginStart = it
+//                }
+//                marginData.marginEnd?.let {
+//                    marginEnd = it
+//                }
+//            }
+//            LayoutSetterTool.setMargin(
+//                imageView.layoutParams as FrameLayout.LayoutParams,
+//                imageMap,
+//                density,
+//            )
+//        }
     }
 
     suspend fun setImageViewForDynamic(
@@ -2207,7 +2250,7 @@ object EditConstraintFrameMaker {
         }
         withContext(Dispatchers.Main) {
             captionTextView.apply {
-                textMap?.get(
+                textMap.get(
                     textVisibleKey,
                 ).let {
                         visibleStr ->
@@ -2216,61 +2259,22 @@ object EditConstraintFrameMaker {
                     )
                 }
                 val lp = layoutParams as FrameLayout.LayoutParams
-                lp.apply {
-                    val overrideLayoutGravity = textMap?.get(
-                        textLayoutGravityKey,
-                    )?.let {
-                            gravityStr ->
-                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                            it.key == gravityStr
-                        }?.gravity
-                    } ?: Gravity.CENTER
-                    gravity = overrideLayoutGravity
-                    val overrideWidth = withContext(Dispatchers.IO) {
-                        textMap?.get(
-                            textWidthKey,
-                        ).let {
-                            EditComponent.Template.LinearLayoutUpdater.convertWidth(
-                                it,
-                                FrameLayout.LayoutParams.WRAP_CONTENT,
-                                density,
-                            )
-                        }
-                    }
-                    width = overrideWidth
-                    val overrideHeight = withContext(Dispatchers.IO) {
-                        textMap?.get(
-                            textHeightKey,
-                        ).let {
-                            EditComponent.Template.LinearLayoutUpdater.convertHeight(
-                                it,
-                                FrameLayout.LayoutParams.WRAP_CONTENT,
-                                density,
-                            )
-                        }
-                    }
-                    height = overrideHeight
-                    val marginData = EditComponent.Template.MarginData(
-                        textMap?.get(
-                            textMarginTopKey,
-                        ),
-                        textMap?.get(
-                            textMarginBottomKey,
-                        ),
-                        textMap?.get(
-                            textMarginStartKey,
-                        ),
-                        textMap?.get(
-                            textMarginEndKey,
-                        ),
-                        density,
+                layoutParams = FrameLayoutTool.setParam(
+                    lp,
+                    textMap,
+                    density,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                ).let {
+                        param ->
+                    LayoutSetterTool.setMargin(
+                        param,
+                        textMap,
+                        density
                     )
-                    topMargin = marginData.marginTop ?: 0
-                    bottomMargin = marginData.marginBottom ?: 0
-                    marginStart = marginData.marginStart ?: 0
-                    marginEnd = marginData.marginEnd ?: 0
+                    param
                 }
-                val overrideGravity = textMap?.get(
+                val overrideGravity = textMap.get(
                     textGravityKey,
                 )?.let {
                         gravityStr ->
@@ -2280,16 +2284,16 @@ object EditConstraintFrameMaker {
                 } ?: Gravity.CENTER
                 gravity = overrideGravity
                 val paddingData = EditComponent.Template.PaddingData(
-                    textMap?.get(
+                    textMap.get(
                         textPaddingTopKey,
                     ),
-                    textMap?.get(
+                    textMap.get(
                         textPaddingBottomKey,
                     ),
-                    textMap?.get(
+                    textMap.get(
                         textPaddingStartKey,
                     ),
-                    textMap?.get(
+                    textMap.get(
                         textPaddingEndKey,
                     ),
                     density,
@@ -2306,7 +2310,7 @@ object EditConstraintFrameMaker {
 //                    )
 //                }
 //                tag = textTag
-                val settingValue = textMap?.get(
+                val settingValue = textMap.get(
                     EditComponent.Template.TextManager.TextKey.SETTING_VALUE.key
                 )
                 setAutofillHints(settingValue)
@@ -2323,7 +2327,7 @@ object EditConstraintFrameMaker {
 //        captionTextView.autofillHints?.firstOrNull(0)
 //        captionTextView.hint = settingValue
                 val overrideMaxLines = withContext(Dispatchers.IO){
-                    textMap?.get(
+                    textMap.get(
                         textMaxLinesKey
                     )?.let {
                         try {
@@ -2335,7 +2339,7 @@ object EditConstraintFrameMaker {
                 }
                 maxLines = overrideMaxLines
                 val textColor = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         textColorKey,
                     )?.let {
                             colorStr ->
@@ -2350,7 +2354,7 @@ object EditConstraintFrameMaker {
                 }
                 setFillColor(textColor ?: R.color.fill_gray)
                 val textBkColor = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         textBkColorKey,
                     )?.let {
                             colorStr ->
@@ -2381,7 +2385,7 @@ object EditConstraintFrameMaker {
                     }
                 }
                 val strokeColorStr = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         strokeColorKey,
                     )
                 }
@@ -2391,7 +2395,7 @@ object EditConstraintFrameMaker {
                     setStrokeColor(it?.id ?: R.color.white)
                 }
                 val strokeWidth = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         strokeWidthKey,
                     )?.let {
                         try {
@@ -2403,7 +2407,7 @@ object EditConstraintFrameMaker {
                 }
                 strokeWidthSrc = strokeWidth ?: 2
                 val overrideTextSize = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         textSizeKey,
                     )?.let {
                         try {
@@ -2419,7 +2423,7 @@ object EditConstraintFrameMaker {
                     setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.text_size_16))
                 }
                 val letterSpacingFloat = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         letterSpacingKey,
                     )?.let {
                         try {
@@ -2431,7 +2435,7 @@ object EditConstraintFrameMaker {
                 }
                 letterSpacing = letterSpacingFloat
                 val textAlpha = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         textAlphaKey,
                     )?.let {
                         try {
@@ -2443,7 +2447,7 @@ object EditConstraintFrameMaker {
                 }
                 alpha = textAlpha ?: 1f
                 val textShadowXFloat = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         textShadowXKey,
                     )?.let {
                         try {
@@ -2457,7 +2461,7 @@ object EditConstraintFrameMaker {
                     } ?: 0f
                 }
                 val textShadowYFloat = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         textShadowYKey,
                     )?.let {
                         try {
@@ -2471,7 +2475,7 @@ object EditConstraintFrameMaker {
                     } ?: 0f
                 }
                 val textShadowRadiusFloat = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         textShadowRadiusKey,
                     )?.let {
                         try {
@@ -2485,7 +2489,7 @@ object EditConstraintFrameMaker {
                     } ?: 0f
                 }
                 val textShadowColor = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         textShadowColorKey,
                     )?.let {
                         val colorStr = ColorTool.parseColorStr(
@@ -2504,7 +2508,7 @@ object EditConstraintFrameMaker {
                     textShadowColor
                 )
                 val overrideTextStyle = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         textStyleKey,
                     )?.let {
                             textStyleStr ->
@@ -2514,7 +2518,7 @@ object EditConstraintFrameMaker {
                     }
                 } ?: EditComponent.Template.TextManager.TextStyle.NORMAL
                 val overrideFont = withContext(Dispatchers.IO) {
-                    textMap?.get(
+                    textMap.get(
                         textFontKey,
                     )?.let {
                             textFontStr ->

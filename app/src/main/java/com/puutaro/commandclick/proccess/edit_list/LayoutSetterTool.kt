@@ -13,27 +13,15 @@ object LayoutSetterTool {
 
     fun setMargin(
         param: ViewGroup.MarginLayoutParams,
-        frameKeyPairList: List<Pair<String, String>>?,
+        paramMap: Map<String, String>?,
         density: Float,
     ){
         param.apply {
             val marginData = EditComponent.Template.MarginData(
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    marginTopKey
-                ),
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    marginBottomKey
-                ),
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    marginStartKey
-                ),
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    marginEndKey
-                ),
+                paramMap?.get(marginTopKey),
+                paramMap?.get(marginBottomKey),
+                paramMap?.get(marginStartKey),
+                paramMap?.get(marginEndKey),
                 density,
             )
             topMargin = marginData.marginTop ?: 0
