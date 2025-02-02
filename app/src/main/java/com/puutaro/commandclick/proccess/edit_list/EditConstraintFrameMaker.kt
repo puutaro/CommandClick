@@ -1,12 +1,7 @@
 package com.puutaro.commandclick.proccess.edit_list
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.AnimationDrawable
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
@@ -18,33 +13,20 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
-import com.puutaro.commandclick.common.variable.res.CmdClickColor
-import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.file.AssetsFileManager
-import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.str.PairListTool
-import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
 object EditConstraintFrameMaker {
-
-
-    private val valueSeparator = EditComponent.Template.valueSeparator
 
     private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
     private val paddingTopKey = EditComponent.Template.EditComponentKey.PADDING_TOP.key
@@ -162,8 +144,6 @@ object EditConstraintFrameMaker {
         imageTagToMap: Map<String, Map<String, String>>,
         tagToImageViewListForContents: List<Pair<String, AppCompatImageView>>,
         width: Int,
-//        overrideTag: String?,
-//        totalSettingValMap: Map<String, String>?,
         whereForErr: String,
         enableClick: Boolean,
         clickViewStrList: List<String>?,
@@ -234,28 +214,6 @@ object EditConstraintFrameMaker {
                     )
                 }
             }
-//                val imageMap = withContext(Dispatchers.IO) {
-//                    PairListTool.getValue(
-//                        frameKeyPairList,
-//                        imageKey,
-//                    )?.let {
-//                        EditComponent.Template.makeKeyMap(
-//                            it,
-//                        )
-//                    }
-//                }
-//                val imageMap = withContext(Dispatchers.IO) {
-//                    PairListTool.getValue(
-//                        frameKeyPairList,
-//                        imagePropertyKey,
-//                    )?.let {
-//                        EditComponent.Template.makeKeyMap(
-//                            it,
-//                        )
-//                    }
-//                }
-
-//                }
         }
         CoroutineScope(Dispatchers.Main).launch {
             val enableTextViewClick = withContext(Dispatchers.IO) {
@@ -267,14 +225,6 @@ object EditConstraintFrameMaker {
                     .ClickViewManager
                     .containClickTextView(clickViewStrList)
             }
-//            val captionTextView = withContext(Dispatchers.Main) {
-//                frameLayout.children.firstOrNull {
-//                    it is OutlineTextView
-//                } as? OutlineTextView
-//            }?: return@launch
-//            buttonLayout.findViewById<OutlineTextView>(R.id.icon_caption_for_edit_caption)
-//                ?.let { captionTextView ->
-
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "sGet_frameMaker.txt").absolutePath,
 //                listOf(
