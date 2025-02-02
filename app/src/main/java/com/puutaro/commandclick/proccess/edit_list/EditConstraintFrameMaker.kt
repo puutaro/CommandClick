@@ -55,10 +55,6 @@ object EditConstraintFrameMaker {
     private val valueSeparator = EditComponent.Template.valueSeparator
 
     private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
-    private val marginTopKey = EditComponent.Template.EditComponentKey.MARGIN_TOP.key
-    private val marginBottomKey = EditComponent.Template.EditComponentKey.MARGIN_BOTTOM.key
-    private val marginStartKey = EditComponent.Template.EditComponentKey.MARGIN_START.key
-    private val marginEndKey = EditComponent.Template.EditComponentKey.MARGIN_END.key
     private val paddingTopKey = EditComponent.Template.EditComponentKey.PADDING_TOP.key
     private val paddingBottomKey = EditComponent.Template.EditComponentKey.PADDING_BOTTOM.key
     private val paddingStartKey = EditComponent.Template.EditComponentKey.PADDING_START.key
@@ -443,144 +439,43 @@ object EditConstraintFrameMaker {
                     }
                     constraintParam
                 }
-            }
-        }
-        withContext(Dispatchers.IO) {
-            LayoutSetterTool.setMargin(
-                param,
-                frameKeyPairList?.toMap(),
-                density,
-            )
-        }
-        buttonLayout?.apply {
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "soverrideTag.txt").absolutePath,
-//                listOf(
-//                    "overrideTag: ${overrideTag}"
-//                ).joinToString("\n")
-//            )
-//            val idInt = withContext(Dispatchers.IO){
-//                EditComponent.Template.ConstraintManager.makeId(
-//                    PairListTool.getValue(
-//                        frameKeyPairList,
-//                        idKey
-//                    )
-//                ) ?: id
-//            }
-            layoutParams = param
-//            tag = overrideTag
-            val overrideGravity = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    gravityKey
-                )?.let { gravityStr ->
-                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                        it.key == gravityStr
-                    }?.gravity
-                }
-            }?: Gravity.CENTER
-            foregroundGravity = overrideGravity
-            val paddingData = withContext(Dispatchers.IO) {
-                EditComponent.Template.PaddingData(
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        paddingTopKey
-                    ),
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        paddingBottomKey
-                    ),
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        paddingStartKey
-                    ),
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        paddingEndKey
-                    ),
+            }.let {
+                param ->
+                LayoutSetterTool.setMargin(
+                    param,
+                    frameKeyPairList?.toMap(),
                     density,
                 )
+                param
             }
-            setPadding(
-                paddingData.paddingStart ?: 0,
-                paddingData.paddingTop ?: 0,
-                paddingData.paddingEnd ?: 0,
-                paddingData.paddingBottom ?: 0,
-            )
-            val bkColorStr = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    bkColorKey,
-                )
-            }
-            val bkColorDrawable = withContext(Dispatchers.IO) {
-                if(
-                    bkColorStr.isNullOrEmpty()
-                ) return@withContext null
-                ColorTool.parseColorStr(
-                    context,
-                    bkColorStr,
-                    bkColorKey,
-                    whereForErr,
-                ).let {
-                    ColorDrawable(Color.parseColor(it))
-                }
-            }
-
-//            bkColorStr?.let {
-//                    ColorStateList.valueOf(Color.parseColor(it))
-//                }
-            background = bkColorDrawable
-            val elevationFloat = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    elevationKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    }catch (e: Exception){
-                        null
-                    }
-                }
-            } ?: elevation
-            elevation = elevationFloat
-            val alphaFloat = withContext(Dispatchers.IO) {
-                PairListTool.getValue(
-                    frameKeyPairList,
-                    alphaKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    }catch (e: Exception){
-                        null
-                    }
-                }
-            } ?: alpha
-            alpha = alphaFloat
-//            val paramConst = try {
-//                param as ConstraintLayout.LayoutParams
-//            } catch (e: Exception){
-//                return@apply
-//            }
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "ledtConstarintFramel.txt").absolutePath,
-//                listOf(
-//                    "unsetInt: ${EditComponent.Template.ConstraintManager.ConstraintParameter.UNSET.int}",
-//                    "PARENT_ID: ${EditComponent.Template.ConstraintManager.ConstraintParameter.PARENT_ID.int}",
-//                    "id: ${id}",
-//                    "tag: ${tag}",
-//                    "this.topToTop: ${paramConst.topToTop}",
-//                    "this.topToBottom: ${paramConst.topToBottom}",
-//                    "this.startToEnd: ${paramConst.startToEnd}",
-//                    "this.startToStart: ${paramConst.startToStart}",
-//                    "this.endToEnd: ${paramConst.endToEnd}",
-//                    "this.endToStart: ${paramConst.endToStart}",
-//                    "this.bottomToTop: ${paramConst.bottomToTop}",
-//                    "this.bottomToBottom: ${paramConst.bottomToBottom}",
-//                    "this.horizontalBias: ${paramConst.horizontalBias}",
-//                ).joinToString("\n")
-//            )
         }
+        buttonLayout?.apply {
+            layoutParams = param
+////            FileSystems.updateFile(
+////                File(UsePath.cmdclickDefaultAppDirPath, "ledtConstarintFramel.txt").absolutePath,
+////                listOf(
+////                    "unsetInt: ${EditComponent.Template.ConstraintManager.ConstraintParameter.UNSET.int}",
+////                    "PARENT_ID: ${EditComponent.Template.ConstraintManager.ConstraintParameter.PARENT_ID.int}",
+////                    "id: ${id}",
+////                    "tag: ${tag}",
+////                    "this.topToTop: ${paramConst.topToTop}",
+////                    "this.topToBottom: ${paramConst.topToBottom}",
+////                    "this.startToEnd: ${paramConst.startToEnd}",
+////                    "this.startToStart: ${paramConst.startToStart}",
+////                    "this.endToEnd: ${paramConst.endToEnd}",
+////                    "this.endToStart: ${paramConst.endToStart}",
+////                    "this.bottomToTop: ${paramConst.bottomToTop}",
+////                    "this.bottomToBottom: ${paramConst.bottomToBottom}",
+////                    "this.horizontalBias: ${paramConst.horizontalBias}",
+////                ).joinToString("\n")
+////            )
+        }
+        setFrameLayout(
+            buttonLayout,
+            frameKeyPairList,
+            density,
+            whereForErr,
+        )
         return buttonLayout
     }
 
@@ -604,142 +499,61 @@ object EditConstraintFrameMaker {
             !isEnable
         ) return
         buttonFrameLayout?.apply {
-           withContext(Dispatchers.Main) {
+           withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     visibleKey,
-                )?.let { visibleStr ->
+                )
+            }?.let { visibleStr ->
+                withContext(Dispatchers.Main) {
                     visibility = EditComponent.Template.VisibleManager.getVisible(
                         visibleStr
                     )
                 }
-            }
+           }
         }
 
         val param = withContext(Dispatchers.IO) {
-            (buttonFrameLayout?.layoutParams as? ConstraintLayout.LayoutParams)?.apply {
-                withContext(Dispatchers.Main){
-                    EditComponent.Template.ConstraintManager.makeFloat(
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            horizontalBiasKey
-                        )
-                    )?.let {
-                        horizontalBias = it
-                    }
-                }
-                withContext(Dispatchers.Main){
-                    EditComponent.Template.ConstraintManager.makeFloat(
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            percentageWidthKey
-                        )
-                    )?.let {
-                        matchConstraintPercentWidth = it
-                    }
-                }
-                withContext(Dispatchers.Main){
-                    EditComponent.Template.ConstraintManager.makeFloat(
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            percentageHeightKey
-                        )
-                    )?.let {
-                        matchConstraintPercentHeight = it
-                    }
-                }
-                withContext(Dispatchers.Main){
-                    EditComponent.Template.ConstraintManager.makeFloat(
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            horizontalWeightKey
-                        )
-                    )?.let {
-                        horizontalWeight = it
-                    }
-                }
-                withContext(Dispatchers.Main){
-                    EditComponent.Template.ConstraintManager.makeFloat(
-                        PairListTool.getValue(
-                            frameKeyPairList,
-                            verticalWeightKey
-                        )
-                    )?.let {
-                        verticalWeight = it
-                    }
-                }
-
-                withContext(Dispatchers.Main){
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        dimensionRatioKey
-                    )?.let {
-                        dimensionRatio = it
-                    }
-                }
-                withContext(Dispatchers.Main){
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        horizontalChainStyleKey
-                    )?.let {
-                        EditComponent.Template.ConstraintManager.getChainStyleInt(
-                            it,
-                        )
-                    }?.let {
-                        horizontalChainStyle = it
-                    }
-                }
-                withContext(Dispatchers.Main){
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        verticalChainStyleKey
-                    )?.let {
-                        EditComponent.Template.ConstraintManager.getChainStyleInt(
-                            it,
-                        )
-                    }?.let {
-                        verticalChainStyle = it
-                    }
-                }
-                val marginData = EditComponent.Template.MarginData(
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        marginTopKey
-                    ),
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        marginBottomKey
-                    ),
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        marginStartKey
-                    ),
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        marginEndKey
-                    ),
+            if(
+                buttonFrameLayout == null
+            ) return@withContext null
+            ConstraintTool.setConstraintParam(
+                buttonFrameLayout.layoutParams as ConstraintLayout.LayoutParams,
+                null,
+                frameKeyPairList,
+                null,
+                null,
+            ).let {
+                    param ->
+                LayoutSetterTool.setMargin(
+                    param,
+                    frameKeyPairList?.toMap(),
                     density,
                 )
-                withContext(Dispatchers.Main) {
-                    marginData.marginTop?.let {
-                        topMargin = it
-                    }
-                    marginData.marginStart?.let {
-                        marginStart = 0
-                    }
-                    marginData.marginEnd?.let {
-                        marginEnd = it
-                    }
-                    marginData.marginBottom?.let {
-                        bottomMargin = it
-                    }
-                }
+                param
             }
         }
-
         buttonFrameLayout?.apply {
-            layoutParams = param
             withContext(Dispatchers.Main) {
+                layoutParams = param
+            }
+        }
+        setFrameLayout(
+            buttonFrameLayout,
+            frameKeyPairList,
+            density,
+            where,
+        )
+    }
+
+    private suspend fun setFrameLayout(
+        frameLayout: FrameLayout?,
+        frameKeyPairList: List<Pair<String, String>>?,
+        density: Float,
+        where: String,
+    ){
+        frameLayout?.apply {
+            withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     gravityKey
@@ -747,7 +561,9 @@ object EditConstraintFrameMaker {
                     EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
                         it.key == gravityStr
                     }?.gravity
-                }?.let {
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
                     foregroundGravity = it
                 }
             }
@@ -780,7 +596,7 @@ object EditConstraintFrameMaker {
                     paddingData.paddingBottom ?: paddingBottom,
                 )
             }
-            withContext(Dispatchers.Main) {
+            withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     bkColorKey,
@@ -796,11 +612,13 @@ object EditConstraintFrameMaker {
 //                    CmdClickColor.entries.firstOrNull {
 //                        it.str == colorStr
 //                    }
-                }?.let {
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
                     background = ColorDrawable(it)
                 }
             }
-            withContext(Dispatchers.Main) {
+            withContext(Dispatchers.IO) {
                 PairListTool.getValue(
                     frameKeyPairList,
                     elevationKey,
@@ -812,7 +630,9 @@ object EditConstraintFrameMaker {
                     }
                 }
             }?.let {
-                elevation = it
+                withContext(Dispatchers.Main) {
+                    elevation = it
+                }
             }
             withContext(Dispatchers.IO) {
                 PairListTool.getValue(
@@ -826,9 +646,12 @@ object EditConstraintFrameMaker {
                     }
                 }
             }?.let {
-                alpha = it
+                withContext(Dispatchers.Main) {
+                    alpha = it
+                }
             }
         }
+
     }
 
     private suspend fun setImageView(

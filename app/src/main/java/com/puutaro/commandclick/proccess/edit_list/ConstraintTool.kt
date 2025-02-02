@@ -57,7 +57,7 @@ object ConstraintTool {
         frameKeyPairList: List<Pair<String, String>>?,
         overrideWidth: Int?,
         overrideHeight: Int?,
-    ): ConstraintLayout. LayoutParams {
+    ): ConstraintLayout.LayoutParams {
         return param.apply {
             overrideWidth?.let {
                 width = it
