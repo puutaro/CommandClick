@@ -5,7 +5,6 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
@@ -13,10 +12,9 @@ import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.FrameLayout
-import androidx.appcompat.content.res.AppCompatResources
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -25,17 +23,14 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.res.CmdClickBkImageInfo
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.custom_view.OutlineTextView
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.UrlImageDownloader
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
-import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.str.PairListTool
@@ -44,7 +39,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -229,7 +223,11 @@ object EditConstraintFrameMaker {
                     setImageView(
                         imageView,
                         imageMap,
-//                        imageMap,
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER,
+                        Gravity.CENTER,
+                        EditComponent.Template.ImageManager.ImageScale.FIT_CENTER.scale,
                         enableImageViewClick,
                         outValue,
                         whereForErr,
@@ -286,34 +284,10 @@ object EditConstraintFrameMaker {
 //                    "textMap: ${textMap}",
 //                ).joinToString("\n")
 //            )
-//                val textPropertyMap = withContext(Dispatchers.IO) {
-//                    PairListTool.getPair(
-//                        frameKeyPairList,
-//                        textKey
-////                        textPropertyKey,
-//                    )?.let {
-//                        EditComponent.Template.makeKeyMap(
-//                            it.second,
-//                        )
-//                    }
-//                }
             tagToTextViewList.forEach {
                 (tagName, textView) ->
                 val textMap = textTagToMap.get(tagName)
                     ?: return@forEach
-//                val textMap = withContext(Dispatchers.IO) {
-//                    PairListTool.getPair(
-//                        frameKeyPairList,
-//                        textKey,
-//                    )?.let {
-//                        EditComponent.Template.TextManager.createTextMap(
-//                            it.second,
-//                            totalSettingValMap?.get(
-//                                overrideTag
-//                            )
-//                        )
-//                    }
-//                }
                 withContext(Dispatchers.Main) {
                     setTextView(
                         fannelInfoMap,
@@ -341,7 +315,6 @@ object EditConstraintFrameMaker {
         frameKeyPairList: List<Pair<String, String>>?,
         whereForErr: String,
         width: Int,
-//        overrideTag: String?,
         density: Float,
     ):  FrameLayout? {
         if(
@@ -380,9 +353,8 @@ object EditConstraintFrameMaker {
                     it,
                     0,
                     density,
-                )
+                ) ?: 0
             }
-//                ,ScreenSizeCalculator.toDp(context, 50)
         }
         val overrideWidth = withContext(Dispatchers.IO) {
             PairListTool.getValue(
@@ -393,7 +365,7 @@ object EditConstraintFrameMaker {
                     it,
                     width,
                     density,
-                )
+                ) ?: width
             }
         }
 
@@ -609,9 +581,6 @@ object EditConstraintFrameMaker {
                         where,
                     )
                     Color.parseColor(parsedColorStr)
-//                    CmdClickColor.entries.firstOrNull {
-//                        it.str == colorStr
-//                    }
                 }
             }?.let {
                 withContext(Dispatchers.Main) {
@@ -657,8 +626,12 @@ object EditConstraintFrameMaker {
     private suspend fun setImageView(
         imageView: AppCompatImageView,
         imageMap: Map<String, String>?,
-//        imageMap: Map<String, String>?,
-        enableImageViewClick: Boolean,
+        defaultWidth: Int?,
+        defaultHeight: Int?,
+        defaultLayoutGravity: Int?,
+        defaultGravity: Int?,
+        defaultScale: ImageView.ScaleType?,
+        enableImageViewClick: Boolean?,
         outValue: TypedValue?,
         where: String,
         requestBuilderSrc: RequestBuilder<Drawable>?,
@@ -666,72 +639,104 @@ object EditConstraintFrameMaker {
     ) {
         if(
             imageMap.isNullOrEmpty()
-//            && imageMap.isNullOrEmpty()
         ){
             imageView.isVisible = false
             return
         }
+        execSetImageView(
+            imageView,
+            imageMap,
+            defaultWidth,
+            defaultHeight,
+            defaultLayoutGravity,
+            defaultGravity,
+            defaultScale,
+            enableImageViewClick,
+            outValue,
+            where,
+            requestBuilderSrc,
+            density,
+        )
+    }
+
+    suspend fun setImageViewForDynamic(
+        imageView: AppCompatImageView,
+        imageMap: Map<String, String>?,
+        density: Float,
+    ) {
+        val context = imageView.context
+        val where = "EditConstraintFrameMaker.setImageViewForDynamic"
+        val outValue = withContext(Dispatchers.IO) {
+            val outValueSrc = TypedValue()
+            context.theme?.resolveAttribute(
+                android.R.attr.selectableItemBackground,
+                outValueSrc,
+                true
+            )
+            outValueSrc
+        }
+        val requestBuilder = Glide.with(context)
+            .asDrawable()
+            .sizeMultiplier(0.1f)
+        execSetImageView(
+            imageView,
+            imageMap,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            outValue,
+            where,
+            requestBuilder,
+            density
+        )
+    }
+
+    private suspend fun execSetImageView(
+        imageView: AppCompatImageView,
+        imageMap: Map<String, String>?,
+        defaultWidth: Int?,
+        defaultHeight: Int?,
+        defaultLayoutGravity: Int?,
+        defaultGravity: Int?,
+        defaultScale: ImageView.ScaleType?,
+        enableImageViewClick: Boolean?,
+        outValue: TypedValue?,
+        where: String,
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
+    ) {
+        if(
+            imageMap.isNullOrEmpty()
+        ) return
         val context = imageView.context
         val imagePathList = withContext(Dispatchers.IO) {
             imageMap.get(
                 imagePathsKey,
             )?.split(valueSeparator)
         }
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lBk_image.txt").absolutePath,
-//            listOf(
-//                "imageMap: ${imageMap}",
-//                "imageMap: ${imageMap}"
-//            ).joinToString("\n") + "\n\n==========\n\n"
-//        )
-
-//        when(
-//            imagePathList.isNullOrEmpty()
-//        ) {
-//            true -> {
-////                FileSystems.updateFile(
-////                    File(UsePath.cmdclickDefaultAppDirPath, "lBk_image.txt").absolutePath,
-////                    listOf(
-////                        "bk: ${bk}",
-////                        "imageMap: ${imageMap}",
-////                        "imageMap: ${imageMap}"
-////                    ).joinToString("\n") + "\n\n==========\n\n"
-////                )
-//                imageView.setImageDrawable(null)
-//            }
-//            else -> {
         imageView.apply {
-            val visibilityValue = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 imageMap.get(
                     imageVisibleKey,
-                ).let { visibleStr ->
+                )?.let { visibleStr ->
                     EditComponent.Template.VisibleManager.getVisible(
                         visibleStr
                     )
                 }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    visibility = it
+                }
             }
-            visibility = visibilityValue
             CoroutineScope(Dispatchers.Main).launch {
                 if(
                     imagePathList.isNullOrEmpty()
                 ) return@launch
-//                val matrixStormConfigMap = withContext(Dispatchers.IO){
-//                    EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
-//                        imageMap,
-//                    )
-//                }
-//                val autoRndIconsConfigMap = withContext(Dispatchers.IO){
-//                    EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
-//                        imageMap,
-//                    )
-//                }
-//                val autoRndStringsConfigMap = withContext(Dispatchers.IO){
-//                    EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
-//                        imageMap,
-//                    )
-//                }
                 when (
-                   imagePathList.size == 1
+                    imagePathList.size == 1
                 ) {
                     false -> {
                         val delay = withContext(Dispatchers.IO) {
@@ -749,10 +754,6 @@ object EditConstraintFrameMaker {
                             imageView,
                             imagePathList,
                             delay,
-//                            matrixStormConfigMap,
-//                            autoRndIconsConfigMap,
-//                            autoRndStringsConfigMap,
-//                            where,
                         )
                     }
 
@@ -778,26 +779,25 @@ object EditConstraintFrameMaker {
                             imagePathList.firstOrNull(),
                             requestBuilderSrc,
                             fadeInMilli,
-//                            matrixStormConfigMap,
-//                            autoRndIconsConfigMap,
-//                            autoRndStringsConfigMap,
                             blurRadiusToSampling,
-//                            where,
                         )
                     }
                 }
             }
-            val overrideGravity = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 imageMap.get(
                     imageGravityKey,
                 )?.let { gravityStr ->
                     EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
                         it.key == gravityStr
                     }?.gravity
+                } ?: defaultGravity
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    foregroundGravity = it
                 }
-            }?: Gravity.CENTER
-            foregroundGravity = overrideGravity
-            val imageColor = withContext(Dispatchers.IO) {
+            }
+            withContext(Dispatchers.IO) {
                 imageMap.get(
                     imageColorKey,
                 )?.let {
@@ -810,15 +810,16 @@ object EditConstraintFrameMaker {
                     )
                     Color.parseColor(parsedColorStr)
                 }
-            }
-            imageTintList = imageColor?.let {
-                ColorStateList.valueOf(it)
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    imageTintList = ColorStateList.valueOf(it)
+                }
             }
             val imageBkColor = withContext(Dispatchers.IO) {
                 imageMap.get(
                     imageBkColorKey,
                 )?.let {
-                    colorStr ->
+                        colorStr ->
                     val parsedColorStr = ColorTool.parseColorStr(
                         context,
                         colorStr,
@@ -828,19 +829,26 @@ object EditConstraintFrameMaker {
                     Color.parseColor(parsedColorStr)
                 }
             }
-            isClickable = enableImageViewClick
-            when(enableImageViewClick) {
-                true -> outValue?.let {
-                    setBackgroundResource(it.resourceId)
+            enableImageViewClick?.let {
+                withContext(Dispatchers.Main) {
+                    isClickable = it
                 }
-                else -> {
-                    setBackgroundResource(0)
-                    background = imageBkColor?.let {
-                        ColorDrawable(imageBkColor)
+            }
+            withContext(Dispatchers.Main) {
+                when (enableImageViewClick) {
+                    true -> outValue?.let {
+                        setBackgroundResource(it.resourceId)
+                    }
+
+                    else -> {
+                        imageBkColor?.let {
+                            setBackgroundResource(0)
+                            background = ColorDrawable(imageBkColor)
+                        }
                     }
                 }
             }
-            val imageAlpha = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 imageMap.get(
                     imageAlphaKey,
                 )?.let {
@@ -850,20 +858,29 @@ object EditConstraintFrameMaker {
                         null
                     }
                 }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    alpha = it
+                }
+//                    imageAlpha ?: 1f
             }
-            alpha = imageAlpha ?: 1f
-            val imageScale = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 imageMap.get(
                     imageScaleKey,
                 ).let {
                         scale ->
                     EditComponent.Template.ImageManager.ImageScale.entries.firstOrNull {
                         it.str == scale
-                    } ?: EditComponent.Template.ImageManager.ImageScale.FIT_CENTER
+                    }?.scale ?: defaultScale
+//                        ?: EditComponent.Template.ImageManager.ImageScale.FIT_CENTER
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    scaleType = it
                 }
             }
-            scaleType = imageScale.scale
-            val rotateFloat = withContext(Dispatchers.IO) {
+//            scaleType = imageScale.scale
+            withContext(Dispatchers.IO) {
                 imageMap.get(
                     imageRotateKey,
                 )?.let {
@@ -872,10 +889,14 @@ object EditConstraintFrameMaker {
                     } catch(e: Exception){
                         null
                     }
-                } ?: 0f
+                }
+//                    ?: 0f
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    rotation = it
+                }
             }
-            rotation = rotateFloat
-            val scaleXFloat = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 imageMap.get(
                     imageScaleXKey,
                 )?.let {
@@ -884,10 +905,14 @@ object EditConstraintFrameMaker {
                     } catch(e: Exception){
                         null
                     }
-                } ?: 1f
+                }
+//                    ?: 1f
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    scaleX = it
+                }
             }
-            scaleX = scaleXFloat
-            val scaleYFloat = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 imageMap.get(
                     imageScaleYKey,
                 )?.let {
@@ -896,9 +921,13 @@ object EditConstraintFrameMaker {
                     } catch(e: Exception){
                         null
                     }
-                } ?: scaleY
+                }
+//                    ?: scaleY
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    scaleY = it
+                }
             }
-            scaleY = scaleYFloat
             val paddingData = withContext(Dispatchers.IO) {
                 EditComponent.Template.PaddingData(
                     imageMap.get(
@@ -916,373 +945,30 @@ object EditConstraintFrameMaker {
                     density,
                 )
             }
-            setPadding(
-                paddingData.paddingStart ?: 0,
-                paddingData.paddingTop ?: 0,
-                paddingData.paddingEnd ?: 0,
-                paddingData.paddingBottom ?: 0,
-            )
+            withContext(Dispatchers.Main) {
+                setPadding(
+                    paddingData.paddingStart ?: paddingStart,
+                    paddingData.paddingTop ?: paddingTop,
+                    paddingData.paddingEnd ?: paddingEnd,
+                    paddingData.paddingBottom ?: paddingBottom,
+                )
+            }
         }
-//            }
-//        }
-//        withContext(Dispatchers.IO){
-//            delay(1000)
-//        }
         imageView.layoutParams = FrameLayoutTool.setParam(
             imageView.layoutParams as FrameLayout.LayoutParams,
             imageMap,
             density,
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT,
+            defaultWidth,
+            defaultHeight,
+            defaultLayoutGravity,
         ).let {
-            param ->
+                param ->
             LayoutSetterTool.setMargin(
                 param,
                 imageMap,
                 density
             )
             param
-        }
-//        imageView.layoutParams = imageView.layoutParams.apply {
-//            val curLayoutParams = this as FrameLayout.LayoutParams
-//            curLayoutParams.apply setParam@ {
-//                val overrideWidth = withContext(Dispatchers.IO) {
-//                    imageMap?.get(
-//                        imageWidthKey,
-//                    ).let {
-//                        EditComponent.Template.LinearLayoutUpdater.convertWidth(
-//                            it,
-//                            FrameLayout.LayoutParams.MATCH_PARENT,
-//                            density,
-//                        )
-//                    }
-//                }
-//                width = overrideWidth
-//                val overrideHeight = withContext(Dispatchers.IO) {
-//                    imageMap?.get(
-//                        imageHeightKey,
-//                    ).let {
-//                        EditComponent.Template.LinearLayoutUpdater.convertHeight(
-//                            it,
-//                            FrameLayout.LayoutParams.MATCH_PARENT,
-//                            density,
-//                        )
-//                    }
-//                }
-//                height = overrideHeight
-//                val overrideLayoutGravity = withContext(Dispatchers.IO) {
-//                    imageMap?.get(
-//                        imageLayoutGravity,
-//                    )?.let { gravityStr ->
-//                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-//                            it.key == gravityStr
-//                        }?.gravity
-//                    }
-//                }?: Gravity.CENTER
-//                gravity = overrideLayoutGravity
-//                val marginData = withContext(Dispatchers.IO) {
-//                    EditComponent.Template.MarginData(
-//                        imageMap?.get(
-//                            imageMarginTopKey,
-//                        ),
-//                        imageMap?.get(
-//                            imageMarginBottomKey,
-//                        ),
-//                        imageMap?.get(
-//                            imageMarginStartKey,
-//                        ),
-//                        imageMap?.get(
-//                            imageMarginEndKey,
-//                        ),
-//                        density,
-//                    )
-//                }
-//                marginData.marginTop?.let {
-//                    topMargin = it
-//                }
-//                marginData.marginBottom?.let {
-//                    bottomMargin = it
-//                }
-//                marginData.marginStart?.let {
-//                    marginStart = it
-//                }
-//                marginData.marginEnd?.let {
-//                    marginEnd = it
-//                }
-//            }
-//            LayoutSetterTool.setMargin(
-//                imageView.layoutParams as FrameLayout.LayoutParams,
-//                imageMap,
-//                density,
-//            )
-//        }
-    }
-
-    suspend fun setImageViewForDynamic(
-        imageView: AppCompatImageView,
-        imageMap: Map<String, String>?,
-//        imageMap: Map<String, String>?,
-        density: Float,
-    ) {
-        val context = imageView.context
-        val where = "EditConstraintFrameMaker.setImageViewForDynamic"
-        imageView.layoutParams = imageView.layoutParams.apply {
-            val curLayoutParams = this as FrameLayout.LayoutParams
-            curLayoutParams.apply setParam@ {
-                val overrideWidth = withContext(Dispatchers.IO) {
-                    imageMap?.get(
-                        imageWidthKey,
-                    )?.let {
-                        EditComponent.Template.LinearLayoutUpdater.convertWidth(
-                            it,
-                            FrameLayout.LayoutParams.MATCH_PARENT,
-                            density,
-                        )
-                    }
-                }
-                overrideWidth?.let {
-                    width = it
-                }
-                val overrideHeight = withContext(Dispatchers.IO) {
-                    imageMap?.get(
-                        imageHeightKey,
-                    )?.let {
-                        EditComponent.Template.LinearLayoutUpdater.convertHeight(
-                            it,
-                            FrameLayout.LayoutParams.MATCH_PARENT,
-                            density,
-                        )
-                    }
-                }
-                overrideHeight?.let {
-                    height = it
-                }
-                withContext(Dispatchers.IO) {
-                    imageMap?.get(
-                        imageLayoutGravity,
-                    )?.let { gravityStr ->
-                        EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                            it.key == gravityStr
-                        }?.gravity
-                    }
-                }?.let {
-                    gravity = it
-                }
-            }
-        }
-
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lImage.txt").absolutePath,
-//            listOf(
-//                "width: ${width}",
-//                "height: ${height}",
-//            ).joinToString("\n")
-//        )
-//        val imagePathList = withContext(Dispatchers.IO) {
-//            imageMap?.get(
-//                imagePathsKey,
-//            )?.split(valueSeparator)
-//        }
-        imageView.apply {
-            withContext(Dispatchers.Main) {
-                imageMap?.get(
-                    imageVisibleKey,
-                )?.let { visibleStr ->
-                    EditComponent.Template.VisibleManager.getVisible(
-                        visibleStr
-                    )
-                }
-            }?.let {
-                visibility = it
-            }
-            withContext(Dispatchers.IO) {
-                imageMap?.get(
-                    imageGravityKey,
-                )?.let { gravityStr ->
-                    EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
-                        it.key == gravityStr
-                    }?.gravity
-                }
-            }?.let {
-                foregroundGravity = it
-            }
-            withContext(Dispatchers.IO) {
-                imageMap?.get(
-                    imageColorKey,
-                )?.let {
-                        colorStr ->
-                    val parsedColorStr = ColorTool.parseColorStr(
-                        context,
-                        colorStr,
-                        imageColorKey,
-                        where,
-                    )
-                    Color.parseColor(parsedColorStr)
-                }
-            }?.let {
-                imageTintList = ColorStateList.valueOf(it)
-            }
-            withContext(Dispatchers.IO) {
-                imageMap?.get(
-                    imageBkColorKey,
-                )?.let { colorStr ->
-                    val parsedColorStr = ColorTool.parseColorStr(
-                        context,
-                        colorStr,
-                        imageBkColorKey,
-                        where,
-                    )
-                    Color.parseColor(parsedColorStr)
-                }
-            }?.let {
-                background = ColorDrawable(it)
-            }
-
-
-            withContext(Dispatchers.IO) {
-                imageMap?.get(
-                    imageAlphaKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-            }?.let {
-                alpha = it
-            }
-            withContext(Dispatchers.IO) {
-                imageMap?.get(
-                    imageScaleKey,
-                ).let {
-                        scale ->
-                    EditComponent.Template.ImageManager.ImageScale.entries.firstOrNull {
-                        it.str == scale
-                    }
-                }
-            }?.let {
-                scaleType = it.scale
-            }
-
-            withContext(Dispatchers.IO) {
-                imageMap?.get(
-                    imageRotateKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-            }?.let {
-                rotation = it
-            }
-           withContext(Dispatchers.IO) {
-                imageMap?.get(
-                    imageScaleXKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-            }?.let {
-               scaleX = it
-           }
-            withContext(Dispatchers.IO) {
-                imageMap?.get(
-                    imageScaleYKey,
-                )?.let {
-                    try {
-                        it.toFloat()
-                    } catch(e: Exception){
-                        null
-                    }
-                }
-            }?.let {
-                scaleY = it
-            }
-        }
-        val imagePathList = withContext(Dispatchers.IO) {
-            imageMap?.get(
-                imagePathsKey,
-            )?.split(valueSeparator)
-        }
-        if(
-            imagePathList.isNullOrEmpty()
-            ) return
-        CoroutineScope(Dispatchers.Main).launch {
-//            val matrixStormConfigMap = withContext(Dispatchers.IO){
-//                EditComponent.Template.ImageManager.MatrixStormManager.makeConfigMap(
-//                    imageMap,
-//                )
-//            }
-//            val autoRndIconsConfigMap = withContext(Dispatchers.IO){
-//                EditComponent.Template.ImageManager.AutoRndIconsManager.makeConfigMap(
-//                    imageMap,
-//                )
-//            }
-//            val autoRndStringsConfigMap = withContext(Dispatchers.IO){
-//                EditComponent.Template.ImageManager.AutoRndStringsManager.makeConfigMap(
-//                    imageMap,
-//                )
-//            }
-            when (imagePathList.size == 1) {
-                false -> {
-                    val delay = withContext(Dispatchers.IO) {
-                        imageMap?.get(
-                            imageDelayKey,
-                        )?.let {
-                            try {
-                                it.toInt()
-                            } catch (e: Exception) {
-                                null
-                            }
-                        } ?: 800
-                    }
-                    execSetMultipleImage(
-                        imageView,
-                        imagePathList,
-                        delay,
-//                        matrixStormConfigMap,
-//                        autoRndIconsConfigMap,
-//                        autoRndStringsConfigMap,
-//                        where,
-                    )
-                }
-
-                else -> {
-                    val fadeInMilli = withContext(Dispatchers.IO) {
-                        imageMap?.get(
-                            imageFadeInMilliKey,
-                        )?.let {
-                            try {
-                                it.toInt()
-                            } catch (e: Exception){
-                                null
-                            }
-                        }
-                    }
-                    val blurRadiusToSampling = withContext(Dispatchers.IO){
-                        EditComponent.Template.ImageManager.BlurManager.getBlueRadiusToSampling(
-                            imageMap
-                        )
-                    }
-                    execSetSingleImage(
-                        imageView,
-                        imagePathList.firstOrNull(),
-                        null,
-                        fadeInMilli,
-//                        matrixStormConfigMap,
-//                        autoRndIconsConfigMap,
-//                        autoRndStringsConfigMap,
-                        blurRadiusToSampling,
-//                        where,
-                    )
-                }
-            }
         }
     }
 
@@ -1291,11 +977,7 @@ object EditConstraintFrameMaker {
         imagePathSrc: String?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         fadeInMilli: Int?,
-//        matrixStormConfigMap: Map<String, String>,
-//        autoRndIconsConfigMap: Map<String, String>,
-//        autoRndStringsConfigMap: Map<String, String>,
         blurRadiusAndSamplingPair: Pair<Int, Int>?,
-//        where: String,
     ){
         if(
             imagePathSrc.isNullOrEmpty()
@@ -1320,20 +1002,10 @@ object EditConstraintFrameMaker {
 
 
         val bitmap = ImageCreator.byFilePath(imagePathSrc)
-            ?: ImageCreator.byWallMacro(
-            imagePathSrc
-        ) ?: ImageCreator.byIconMacro(
+            ?: ImageCreator.byIconMacro(
             imageViewContext,
             imagePathToIconType
         )
-//         ?: ImageCreator.byAutoCreateImage(
-//                imageViewContext,
-//                imagePathSrc,
-//                matrixStormConfigMap,
-//                autoRndIconsConfigMap,
-//                autoRndStringsConfigMap,
-//                where,
-//            )
         if(blurRadiusAndSamplingPair != null){
             val blurRadius = blurRadiusAndSamplingPair.first
             val blurSampling = blurRadiusAndSamplingPair.second
@@ -1387,570 +1059,6 @@ object EditConstraintFrameMaker {
             ) return null
             return BitmapTool.convertFileToBitmap(imagePathSrc)
         }
-        suspend fun byWallMacro(
-            imageMacro: String,
-        ): Bitmap? {
-            val cmdClickBkImageFilePath = BkWallPath.get(
-                imageMacro
-            ) ?: return null
-            return withContext(Dispatchers.IO) {
-                BitmapTool.convertFileToBitmap(cmdClickBkImageFilePath)?.let {
-                    BitmapTool.ImageTransformer.cutCenter(
-                        it,
-                        400,
-                        800
-                    )
-                }
-            }
-        }
-
-        private object BkWallPath {
-
-            fun get(
-                wallRelativePath: String,
-            ): String? {
-                val fannelWallDirPath = UrlImageDownloader.fannelWallDirPath
-                val fannelWallDirName = File(fannelWallDirPath).name
-                if(
-                    !wallRelativePath
-                        .startsWith(fannelWallDirName)
-                ) return null
-                val wallPathObj = File(
-                    UrlImageDownloader.imageDirObj.absolutePath,
-                    wallRelativePath
-                )
-                val wallPathOrDirPath = wallPathObj.absolutePath
-                return when(true){
-                    wallPathObj.isFile -> {
-                        if(
-                            !isImageFile(wallPathOrDirPath)
-                        ) return null
-                        wallPathOrDirPath
-                    }
-                    else -> {
-                        File(fannelWallDirPath).walk().filter {
-                                wallImageFileEntry ->
-                            if(
-                                !wallImageFileEntry.isFile
-                            ) return@filter false
-                            val wallImageFilePath =
-                                wallImageFileEntry.absolutePath
-                            wallImageFilePath.startsWith(
-                                wallPathOrDirPath
-                            ) && isImageFile(
-                                wallImageFilePath
-                            )
-                        }.shuffled().firstOrNull()?.absolutePath
-                            ?: return null
-                    }
-                }
-            }
-
-            private fun isImageFile(
-                wallImageFilePath: String
-            ): Boolean {
-                val imageFileExtendList = listOf(".jpeg", ".jpg", ".png")
-                return imageFileExtendList.any {
-                        imageFileExtend ->
-                    wallImageFilePath.endsWith(imageFileExtend)
-                }
-            }
-
-            private fun getBkImageFilePathFromDirPath(
-                bkImageDirPath: String,
-            ): String {
-                return FileSystems.sortedFiles(
-                    bkImageDirPath
-                ).random().let {
-                    File(bkImageDirPath, it).absolutePath
-                }
-            }
-        }
-
-        suspend fun byAutoCreateImage(
-            context: Context,
-            autoCreateMacroStr: String,
-            matrixStormConfigMap: Map<String, String>,
-            autoRndIconsConfigMap: Map<String, String>,
-            autoRndStringsConfigMap: Map<String, String>,
-            where: String,
-        ): Bitmap? {
-            val autoCreateMacro = CmdClickBkImageInfo.CmdClickAutoCreateImage.entries.firstOrNull {
-                it.name == autoCreateMacroStr
-            }
-            if (
-                autoCreateMacro == null
-            ) return null
-            val cmdClickAutoCreateBitmap = withContext(Dispatchers.IO) {
-                when (autoCreateMacro) {
-                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_MATRIX_STORM
-                        -> makeMatrixStorm(
-                        context,
-                        matrixStormConfigMap,
-                        where
-                        )
-                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_RND_ICONS
-                        -> makeAutoRndIcons(
-                            context,
-                            autoRndIconsConfigMap,
-                            where,
-                        )
-                    CmdClickBkImageInfo.CmdClickAutoCreateImage.AUTO_RND_STRINGS
-                        ->  makeAutoRndStrings(
-                        context,
-                        autoRndStringsConfigMap,
-                        where
-                        )
-                }
-            }
-//            FileSystems.writeFromByteArray(
-//                File(
-//                    UsePath.cmdclickDefaultAppDirPath,
-//                    "lCREATE_OVERLAY_RECT00.png"
-//                ).absolutePath,
-//                BitmapTool.convertBitmapToByteArray(cmdClickAutoCreateBitmap)
-//            )
-            return cmdClickAutoCreateBitmap
-        }
-
-        suspend fun makeMatrixStorm(
-            context: Context,
-            matrixStormConfigMap: Map<String, String>,
-            where: String,
-        ): Bitmap? {
-            val goalWidth =
-                EditComponent.Template.ImageManager.MatrixStormManager.getWidth(
-                    matrixStormConfigMap
-                ) ?: 300
-            val widthMulti = EditComponent.Template.ImageManager.MatrixStormManager.getXMulti(
-                matrixStormConfigMap
-            ) ?: 60
-            val pieceWidth = goalWidth / widthMulti
-            val goalHeight =
-                EditComponent.Template.ImageManager.MatrixStormManager.getHeight(
-                    matrixStormConfigMap
-                ) ?: 600
-            val heightMulti = EditComponent.Template.ImageManager.MatrixStormManager.getYMulti(
-                matrixStormConfigMap
-            ) ?: 120
-            val iconType = EditComponent.Template.ImageManager.MatrixStormManager.getIconType(
-                matrixStormConfigMap
-            )
-            val iconColorStr = EditComponent.Template.ImageManager.MatrixStormManager.getColor(
-                context,
-                matrixStormConfigMap,
-                where
-            ) ?: ColorTool.convertColorToHex(
-                Color.BLACK
-            )
-            val shapeStr = EditComponent.Template.ImageManager.MatrixStormManager.getShape(
-                matrixStormConfigMap
-            )
-            //            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lRndRext.txt").absolutePath,
-//                listOf(
-//                    "leftRectsConfigMap: ${autoRndIconsConfigMap}",
-//                    "baseWidth: ${baseWidth}",
-//                    "baseHeight: ${baseHeight}",
-//                    "pieceWidth: ${pieceWidth}",
-//                    "pieceHeight: ${pieceHeight}",
-//                    "times: ${times}",
-//                    "shapeType: $shapeType",
-//                ).joinToString("\n")
-//            )
-            val pieceHeight = goalHeight / heightMulti
-            val pieceBitmap = makePieceBitmap(
-                context,
-                pieceWidth,
-                pieceHeight,
-                shapeStr,
-                iconType,
-                iconColorStr,
-            )
-            return CcDotArt.makeMatrixStorm(
-                pieceBitmap,
-                widthMulti,
-                heightMulti,
-            )
-        }
-
-        private fun makeAutoRndIcons(
-            context: Context,
-            autoRndIconsConfigMap: Map<String, String>,
-            where: String,
-        ): Bitmap {
-            val baseWidth =
-                EditComponent.Template.ImageManager.AutoRndIconsManager.getWidth(
-                    autoRndIconsConfigMap
-                ) ?: 300
-            val baseHeight =
-                EditComponent.Template.ImageManager.AutoRndIconsManager.getHeight(
-                    autoRndIconsConfigMap
-                ) ?: 600
-            val pieceWidth = EditComponent.Template.ImageManager.AutoRndIconsManager.getPieceWidth(
-                autoRndIconsConfigMap
-            ) ?: 100
-            val pieceHeight = EditComponent.Template.ImageManager.AutoRndIconsManager.getPieceHeight(
-                autoRndIconsConfigMap
-            ) ?: 100
-            val times = EditComponent.Template.ImageManager.AutoRndIconsManager.getTimes(
-                autoRndIconsConfigMap
-            ) ?: 10
-            val iconType = EditComponent.Template.ImageManager.AutoRndIconsManager.getIconType(
-                autoRndIconsConfigMap
-            )
-            val blackHexStr = ColorTool.convertColorToHex(
-                Color.BLACK
-            )
-            val iconColorStr = EditComponent.Template.ImageManager.AutoRndIconsManager.getColor(
-                context,
-                autoRndIconsConfigMap,
-                where
-            ) ?: blackHexStr
-            val bkColorStr = EditComponent.Template.ImageManager.AutoRndIconsManager.getBkColor(
-                context,
-                autoRndIconsConfigMap,
-                where
-            ) ?: "#00000000"
-            val shapeStr = EditComponent.Template.ImageManager.AutoRndIconsManager.getShape(
-                autoRndIconsConfigMap
-            )
-            val pieceBitmap = makePieceBitmap(
-                context,
-                pieceWidth,
-                pieceHeight,
-                shapeStr,
-                iconType,
-                iconColorStr,
-            )
-            val layout = EditComponent.Template.ImageManager.AutoRndIconsManager.getLayout(
-                autoRndIconsConfigMap
-            )
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lRndRext.txt").absolutePath,
-//                listOf(
-//                    "leftRectsConfigMap: ${autoRndIconsConfigMap}",
-//                    "baseWidth: ${baseWidth}",
-//                    "baseHeight: ${baseHeight}",
-//                    "pieceWidth: ${pieceWidth}",
-//                    "pieceHeight: ${pieceHeight}",
-//                    "times: ${times}",
-//                    "iconType: $iconType",
-//                    "shapeStr: ${shapeStr}"
-//                ).joinToString("\n")
-//            )
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lpieceBitmap.png").absolutePath,
-//                BitmapTool.convertBitmapToByteArray(pieceBitmap)
-//            )
-            val autoRndIcons = when(layout){
-                EditComponent.Template.ImageManager.AutoRndIconsManager.Layout.LEFT -> {
-                   CcDotArt.MistMaker.makeLeftRndBitmaps(
-                        baseWidth,
-                        baseHeight,
-                        pieceBitmap,
-                        times
-                    ).let {
-                       val cutWidth = (baseWidth * 0.8).toInt()
-                       val cutHeight = (baseHeight * 0.8).toInt()
-                       BitmapTool.ImageTransformer.cutByTarget(
-                           it,
-                           cutWidth,
-                           cutHeight,
-                           it.width - cutWidth,
-                           (it.height - cutHeight) / 2
-                       )
-                   }
-                }
-                EditComponent.Template.ImageManager.AutoRndIconsManager.Layout.RND -> {
-                    CcDotArt.MistMaker.makeRndBitmap(
-                        baseWidth,
-                        baseHeight,
-                        bkColorStr,
-                        pieceBitmap,
-                        times
-                    )
-//                        .let {
-//                        val cutWidth = (baseWidth * 0.8).toInt()
-//                        val cutHeight = (baseHeight * 0.8).toInt()
-//                        BitmapTool.ImageTransformer.cutCenter2(
-//                            it,
-//                            cutWidth,
-//                            cutHeight,
-//                        )
-//                    }
-                }
-            }
-
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lrndRect.png").absolutePath,
-//                BitmapTool.convertBitmapToByteArray(autoRndBitmap)
-//            )
-            return autoRndIcons
-        }
-
-        private fun makePieceBitmap(
-            context: Context,
-            pieceWidth: Int,
-            pieceHeight: Int,
-            shapeStr: String,
-            iconType: EditComponent.IconType,
-            iconColorStr: String,
-        ): Bitmap {
-            return let {
-                if(
-                    File(shapeStr).isFile
-                ) return@let BitmapTool.convertFileToBitmap(shapeStr)?.let {
-                    Bitmap.createScaledBitmap(
-                        it,
-                        pieceWidth,
-                        pieceHeight,
-                        true,
-                    )
-                }
-                val shape = CmdClickIcons.entries.firstOrNull {
-                    it.str == shapeStr
-                } ?: CmdClickIcons.RECT
-                return@let when(iconType){
-                    EditComponent.IconType.IMG -> {
-                        val iconFile = ExecSetToolbarButtonImage.getImageFile(
-                            shape.assetsPath
-                        )
-                        BitmapTool.convertFileToBitmap(iconFile.absolutePath)?.let {
-                            Bitmap.createScaledBitmap(
-                                it,
-                                pieceWidth,
-                                pieceHeight,
-                                true,
-                            )
-                        }
-                    }
-                    EditComponent.IconType.SVG -> {
-                        AppCompatResources.getDrawable(
-                            context,
-                            shape.id,
-                        )?.toBitmap(
-                            pieceWidth,
-                            pieceHeight
-                        )?.let convertBlack@ {
-                            val bitmap = BitmapTool.ImageTransformer.convertBlackToColor(
-                                it,
-                                iconColorStr
-                            )
-//                            FileSystems.writeFile(
-//                                File(UsePath.cmdclickDefaultAppDirPath, "lRndRext_shape.txt").absolutePath,
-//                                listOf(
-//                                    "shape: ${shape}",
-//                                    "pieceWidth: ${pieceWidth}",
-//                                    "pieceHeight: ${pieceHeight}",
-//                                    "iconType: $iconType",
-//                                    "shapeStr: ${shapeStr}",
-//                                    "bitmap: ${bitmap == null}"
-//                                ).joinToString("\n")
-//                            )
-//                            FileSystems.writeFromByteArray(
-//                                File(UsePath.cmdclickDefaultAppDirPath, "lbitmap_it.png").absolutePath,
-//                                BitmapTool.convertBitmapToByteArray(it)
-//                            )
-//                            FileSystems.writeFromByteArray(
-//                                File(UsePath.cmdclickDefaultAppDirPath, "lbitmap.png").absolutePath,
-//                                BitmapTool.convertBitmapToByteArray(bitmap)
-//                            )
-                            bitmap
-                        }
-                    }
-                }
-            } ?: BitmapTool.ImageTransformer.makeRect(
-                iconColorStr,
-                pieceWidth,
-                pieceHeight
-            )
-        }
-
-        private fun makeAutoRndStrings(
-            context: Context,
-            autoRndStringsConfigMap: Map<String, String>,
-            where: String,
-        ): Bitmap {
-            val baseWidth =
-                EditComponent.Template.ImageManager.AutoRndStringsManager.getWidth(
-                    autoRndStringsConfigMap
-                ) ?: 300
-            val baseHeight =
-                EditComponent.Template.ImageManager.AutoRndStringsManager.getHeight(
-                    autoRndStringsConfigMap
-                ) ?: 600
-            val bkColorStr = EditComponent.Template.ImageManager.AutoRndStringsManager.getBkColor(
-                context,
-                autoRndStringsConfigMap,
-                where
-            ) ?: "#00000000"
-            val pieceWidth = EditComponent.Template.ImageManager.AutoRndStringsManager.getPieceWidth(
-                autoRndStringsConfigMap
-            ) ?: 40f
-            val pieceHeight = EditComponent.Template.ImageManager.AutoRndStringsManager.getPieceHeight(
-                autoRndStringsConfigMap
-            ) ?: 40f
-            val times = EditComponent.Template.ImageManager.AutoRndStringsManager.getTimes(
-                autoRndStringsConfigMap
-            ) ?: 10
-            val string = EditComponent.Template.ImageManager.AutoRndStringsManager.getString(
-                autoRndStringsConfigMap
-            ) ?: "C"
-            val fontSize = EditComponent.Template.ImageManager.AutoRndStringsManager.getFontSize(
-                autoRndStringsConfigMap
-            ) ?: 20f
-            val fontType = EditComponent.Template.ImageManager.AutoRndStringsManager.getFontType(
-                autoRndStringsConfigMap
-            )
-            val fontStyle = EditComponent.Template.ImageManager.AutoRndStringsManager.getFontStyle(
-                autoRndStringsConfigMap
-            )
-            val color = EditComponent.Template.ImageManager.AutoRndStringsManager.getColor(
-                context,
-                autoRndStringsConfigMap,
-                where
-            )?.let {
-                Color.parseColor(it)
-            } ?: Color.BLACK
-            val strokeColor = EditComponent.Template.ImageManager.AutoRndStringsManager.getStrokeColor(
-                context,
-                autoRndStringsConfigMap,
-                where
-            )?.let {
-                Color.parseColor(it)
-            } ?: Color.BLACK
-            val strokeWidthInt = EditComponent.Template.ImageManager.AutoRndStringsManager.getStrokeWidth(
-                autoRndStringsConfigMap,
-            ) ?: 0f
-            val letterSpacingFloat = EditComponent.Template.ImageManager.AutoRndStringsManager.getLetterSpacing(
-                autoRndStringsConfigMap,
-            ) ?: 0f
-            val layout = EditComponent.Template.ImageManager.AutoRndStringsManager.getLayout(
-                autoRndStringsConfigMap
-            )
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lstringsBk.txt").absolutePath,
-//                listOf(
-//                    "baseWidth: ${baseWidth}",
-//                    "baseHeight: ${baseHeight}",
-//                    "pieceWidth: ${pieceWidth}",
-//                    "pieceHeight: ${pieceHeight}",
-//                    "times: ${times}",
-//                    "string: ${string}",
-//                    "fontSize: ${fontSize}",
-//                    "fontType: ${fontType}",
-//                    "fontStyle: ${fontStyle}",
-//                ).joinToString("\n")
-//            )
-//            Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD),
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lstringspf.txt").absolutePath,
-//                listOf(
-//                    "string: $string",
-//                    "pieceWidthFloat: $pieceWidth",
-//                    "pieceHeightFloat: $pieceHeight",
-//                    null,
-//                    "fontSizeFloat: $fontSize",
-//                    "fontColor: $color",
-//                    "strokeColor: $strokeColor",
-//                    "strokeWidthFloat: $strokeWidthInt",
-//                    null,
-//                    "letterSpacingFloat: $letterSpacingFloat",
-//                    "fontType: $fontType",
-//                    "fontStyle: $fontStyle",
-//                    "baseWidth: $baseWidth",
-//                    "baseHeight: $baseHeight",
-//                    "bkColorStr: $bkColorStr",
-//                    "times: $times",
-//                    "layout: ${layout}",
-//                ).joinToString("\n"),
-//            )
-            val stringBitmap = BitmapTool.DrawText.drawTextToBitmap(
-                string,
-                pieceWidth,
-                pieceHeight,
-                null,
-                fontSize,
-                color,
-                strokeColor,
-                strokeWidthInt,
-                null,
-                letterSpacingFloat,
-                font = Typeface.create(
-                    fontType,
-                    fontStyle
-                ),
-                isAntiAlias = true,
-            ).let {
-                val cutWidth = (pieceWidth * 0.8).toInt()
-                val cutHeight = (pieceHeight * 0.8).toInt()
-                BitmapTool.ImageTransformer.cutCenter2(
-                    it,
-                    cutWidth,
-                    cutHeight
-                )
-            }
-            val autoRndStringsBitmap = when(layout){
-                EditComponent.Template.ImageManager.AutoRndStringsManager.Layout.LEFT -> {
-                    CcDotArt.MistMaker.makeLeftRndBitmaps(
-                        baseWidth,
-                        baseHeight,
-                        stringBitmap,
-                        times
-                    ).let {
-                        val cutWidth = (baseWidth * 0.8).toInt()
-                        val cutHeight = (baseHeight * 0.8).toInt()
-                        BitmapTool.ImageTransformer.cutByTarget(
-                            it,
-                            cutWidth,
-                            cutHeight,
-                            it.width - cutWidth,
-                            (it.height - cutHeight) / 2
-                        )
-                    }
-                }
-                EditComponent.Template.ImageManager.AutoRndStringsManager.Layout.RND -> {
-                    CcDotArt.MistMaker.makeRndBitmap(
-                        baseWidth,
-                        baseHeight,
-                        bkColorStr,
-                        stringBitmap,
-                        times
-                    )
-//                        .let {
-//                        val cutWidth = (baseWidth * 0.8).toInt()
-//                        val cutHeight = (baseHeight * 0.8).toInt()
-//                        BitmapTool.ImageTransformer.cutCenter2(
-//                            it,
-//                            cutWidth,
-//                            cutHeight,
-//                        )
-//                    }
-                }
-            }
-
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lstringBitmap.png").absolutePath,
-//               BitmapTool.convertBitmapToByteArray(stringBitmap)
-//            )
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lRndRext.txt").absolutePath,
-//                listOf(
-//                    "leftRectsConfigMap: ${leftRectsConfigMap}",
-//                    "baseWidth: ${baseWidth}",
-//                    "baseHeight: ${baseHeight}",
-//                    "pieceWidth: ${pieceWidth}",
-//                    "pieceHeight: ${pieceHeight}",
-//                    "times: ${times}",
-//                ).joinToString("\n")
-//            )
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lstringsBitmap.png").absolutePath,
-//                BitmapTool.convertBitmapToByteArray(stringsBitmap)
-//            )
-            return autoRndStringsBitmap
-        }
 
         suspend fun byIconMacro(
             context: Context?,
@@ -1997,10 +1105,6 @@ object EditConstraintFrameMaker {
         imageView: AppCompatImageView,
         imagePathList: List<String>,
         delay: Int,
-//        matrixStormConfigMap: Map<String, String>,
-//        autoRndIconsConfigMap: Map<String, String>,
-//        autoRndStringsConfigMap: Map<String, String>,
-//        where: String,
     ){
         val imageViewContext = imageView.context
         val animationDrawable = AnimationDrawable()
@@ -2012,20 +1116,10 @@ object EditConstraintFrameMaker {
                             imagePathSrc
                         )
                     val bitmap = ImageCreator.byFilePath(imagePathSrc)
-                        ?: ImageCreator.byWallMacro(
-                            imagePathSrc
-                        ) ?: ImageCreator.byIconMacro(
+                        ?: ImageCreator.byIconMacro(
                             imageViewContext,
                             imagePathToIconType
                         )
-//                    ?: ImageCreator.byAutoCreateImage(
-//                            imageViewContext,
-//                            imagePathSrc,
-//                            matrixStormConfigMap,
-//                            autoRndIconsConfigMap,
-//                            autoRndStringsConfigMap,
-//                            where,
-//                        )
                     index to bitmap
                 }
             }
@@ -2090,6 +1184,7 @@ object EditConstraintFrameMaker {
                     density,
                     FrameLayout.LayoutParams.WRAP_CONTENT,
                     FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER,
                 ).let {
                         param ->
                     LayoutSetterTool.setMargin(
@@ -2370,7 +1465,6 @@ object EditConstraintFrameMaker {
     suspend fun setTextViewByDynamic(
         captionTextView: OutlineTextView,
         textMap: Map<String, String>?,
-//        textPropertyMap: Map<String, String>?,
         overrideText: String?,
     ) {
         val where = "EditConstraintFrameMaker.setCaptionByDynamic"
@@ -2408,8 +1502,6 @@ object EditConstraintFrameMaker {
                 overrideGravity?.let {
                     gravity
                 }
-//        captionTextView.autofillHints?.firstOrNull(0)
-//        captionTextView.hint = settingValue
                 val isUpdate = textMap?.get(
                     onUpdateKey
                 ) != switchOff

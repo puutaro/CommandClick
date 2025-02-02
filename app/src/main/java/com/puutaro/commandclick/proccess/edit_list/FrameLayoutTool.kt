@@ -118,31 +118,10 @@ object FrameLayoutTool {
         layoutParam: FrameLayout.LayoutParams,
         paramMap: Map<String, String>?,
         density: Float,
-        defaultWidth: Int,
-        defaultHeight: Int,
+        defaultWidth: Int?,
+        defaultHeight: Int?,
+        layoutGravity: Int?,
     ): FrameLayout.LayoutParams {
-        val overrideWidth = withContext(Dispatchers.IO) {
-            paramMap?.get(
-                widthKey,
-            ).let {
-                EditComponent.Template.LinearLayoutUpdater.convertWidth(
-                    it,
-                    defaultWidth,
-                    density,
-                )
-            }
-        }
-        val overrideHeight = withContext(Dispatchers.IO) {
-            paramMap?.get(
-                heightKey,
-            ).let {
-                EditComponent.Template.LinearLayoutUpdater.convertHeight(
-                    it,
-                    defaultHeight,
-                    density,
-                )
-            }
-        }
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath,"lparm.txt").absolutePath,
 //            listOf(
@@ -154,18 +133,44 @@ object FrameLayoutTool {
 //            ).joinToString("\n\n") + "\n===========\n\n"
 //        )
         layoutParam.apply setParam@ {
-            width = overrideWidth
-            height = overrideHeight
+            withContext(Dispatchers.IO) {
+                paramMap?.get(
+                    widthKey,
+                ).let {
+                    EditComponent.Template.LinearLayoutUpdater.convertWidth(
+                        it,
+                        defaultWidth,
+                        density,
+                    )
+                }
+            }?.let {
+                width = it
+            }
+            withContext(Dispatchers.IO) {
+                paramMap?.get(
+                    heightKey,
+                ).let {
+                    EditComponent.Template.LinearLayoutUpdater.convertHeight(
+                        it,
+                        defaultHeight,
+                        density,
+                    )
+                }
+            }?.let {
+                height = it
+            }
             val overrideLayoutGravity = withContext(Dispatchers.IO) {
                 paramMap?.get(
-                    layoutGravity,
+                    layoutGravityKey,
                 )?.let { gravityStr ->
                     EditComponent.Template.GravityManager.Graviti.entries.firstOrNull {
                         it.key == gravityStr
                     }?.gravity
-                }
-            } ?: Gravity.CENTER
-            gravity = overrideLayoutGravity
+                } ?: layoutGravity
+                //            Gravity.CENTER
+            }?.let {
+                gravity = it
+            }
         }
         return layoutParam
     }

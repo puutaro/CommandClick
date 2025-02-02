@@ -1146,9 +1146,9 @@ object EditComponent {
 
                         fun convertWidth(
                                 widthSrcStr: String?,
-                                defaultWidth: Int,
+                                defaultWidth: Int?,
                                 density: Float,
-                        ): Int {
+                        ): Int? {
                                 return widthSrcStr?.let {
                                                 widthStr ->
                                         EditComponent.Template.WidthManager.WidthMacro.entries.firstOrNull {
@@ -1166,9 +1166,9 @@ object EditComponent {
 
                         fun convertHeight(
                                 heightSrcStr: String?,
-                                defaultHeight: Int,
+                                defaultHeight: Int?,
                                 density: Float,
-                        ): Int {
+                        ): Int? {
                                 return heightSrcStr?.let {
                                                 heightStr ->
                                         EditComponent.Template.HeightManager.HeightMacro.entries.firstOrNull {
