@@ -122,6 +122,7 @@ object EditComponent {
 
                 enum class EditComponentKey(val key: String){
                         TAG("tag"),
+                        VIEW_TYPE("viewType"),
                         TEXT("text"),
 //                        TEXT_PROPERTY("textProperty"),
                         IMAGE("image"),
