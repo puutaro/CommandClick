@@ -468,7 +468,7 @@ object EditListConfig {
         private val paddingStartKey = EditComponent.Template.EditComponentKey.PADDING_START.key
         private val paddingEndKey = EditComponent.Template.EditComponentKey.PADDING_END.key
         private val onSaveKey = EditComponent.Template.EditComponentKey.ON_SAVE.key
-        private val onClickViewsKey = EditComponent.Template.EditComponentKey.CLICK_VIEWS.key
+//        private val onClickViewsKey = EditComponent.Template.EditComponentKey.CLICK_VIEWS.key
         private val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
         private val gravityKey = EditComponent.Template.EditComponentKey.GRAVITI.key
         private val topToTopKey = EditComponent.Template.EditComponentKey.TOP_TO_TOP.key
@@ -548,8 +548,7 @@ object EditListConfig {
         ${typeSeparator}${endToEndKey}=${parentIdStr}
         ${typeSeparator}${bottomToBottomKey}=${parentIdStr}
         ${typeSeparator}${widthKey}=MATCH
-        ${typeSeparator}${heightKey}=50
-        ${typeSeparator}${onClickViewsKey}=${constClickImageViewStr}
+        ${typeSeparator}${heightKey}=50 
         ${typeSeparator}${textKey}=
             ${displayTextKey}=`${srcStrHolder}`
             ${keySeparator}${srcStrKey}=`OK`

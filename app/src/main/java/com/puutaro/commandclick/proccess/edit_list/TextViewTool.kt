@@ -61,7 +61,7 @@ object TextViewTool {
     suspend fun set(
         textView: OutlineTextView,
         textMap: Map<String, String>?,
-        settingValue: String?,
+//        settingValue: String?,
         overrideText: String?,
         defaultGravity: Int?,
         defaultMaxLen: Int?,
@@ -79,8 +79,31 @@ object TextViewTool {
     ){
         if(
             textMap.isNullOrEmpty()
+            && overrideText.isNullOrEmpty()
         ) return
         textView.apply {
+//            settingValue?.let {
+//                withContext(Dispatchers.Main) {
+//                    setAutofillHints(it)
+//                }
+//            }
+//                withContext(Dispatchers.IO) {
+//                    EditComponent.Template.TextManager.makeText(
+//                        fannelInfoMap,
+//                        setReplaceVariableMap,
+//                        busyboxExecutor,
+//                        textMap,
+//                        settingValue
+//                    )
+//                }
+            overrideText?.let {
+                withContext(Dispatchers.Main) {
+                    text = it
+                }
+            }
+            if(
+                textMap.isNullOrEmpty()
+            ) return@apply
             withContext(Dispatchers.IO) {
                 textMap.get(
                     textGravityKey,
@@ -154,25 +177,6 @@ object TextViewTool {
 //                        EditComponent.Template.TextManager.TextKey.SETTING_VALUE.key
 //                    )
 //                }
-            settingValue?.let {
-                withContext(Dispatchers.Main) {
-                    setAutofillHints(it)
-                }
-            }
-//                withContext(Dispatchers.IO) {
-//                    EditComponent.Template.TextManager.makeText(
-//                        fannelInfoMap,
-//                        setReplaceVariableMap,
-//                        busyboxExecutor,
-//                        textMap,
-//                        settingValue
-//                    )
-//                }
-            overrideText?.let {
-                withContext(Dispatchers.Main) {
-                    text = it
-                }
-            }
             withContext(Dispatchers.IO) {
                 textMap.get(
                     textMaxLinesKey

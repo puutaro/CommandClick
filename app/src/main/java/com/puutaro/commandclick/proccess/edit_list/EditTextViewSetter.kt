@@ -24,7 +24,7 @@ object EditTextViewSetter {
         contentsKeyPairList: List<Pair<String, String>>?,
         contentsKeyPairsListCon: String?,
         settingValue: String?,
-        width: Int,
+        width: Int?,
         enableClick: Boolean,
         outValue: TypedValue?,
         density: Float,
@@ -41,7 +41,6 @@ object EditTextViewSetter {
                 EditComponent.Template.typeSeparator,
             )
         }
-            contentsKeyPairList?.toMap()
         textView.layoutParams = ConstraintTool.setConstraintParam(
             textView.layoutParams as ConstraintLayout.LayoutParams,
             tagIdMap,
@@ -128,7 +127,7 @@ object EditTextViewSetter {
         TextViewTool.set(
             textView,
             textMap,
-            settingValue,
+//            settingValue,
             overrideText,
             null,
             1,

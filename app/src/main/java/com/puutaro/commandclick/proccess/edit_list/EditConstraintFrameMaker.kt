@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
@@ -146,8 +147,7 @@ object EditConstraintFrameMaker {
         tagToImageViewListForContents: List<Pair<String, AppCompatImageView>>,
         width: Int,
         whereForErr: String,
-        enableClick: Boolean,
-        clickViewStrList: List<String>?,
+        clickViewTagList: List<String>?,
         outValue: TypedValue?,
         requestBuilderSrc: RequestBuilder<Drawable>?,
         density: Float,
@@ -169,15 +169,16 @@ object EditConstraintFrameMaker {
 
 
         CoroutineScope(Dispatchers.Main).launch {
-            val enableImageViewClick = withContext(Dispatchers.IO) {
-                if(
-                    !enableClick
-                    || clickViewStrList.isNullOrEmpty()
-                ) return@withContext false
-                EditComponent.Template
-                    .ClickViewManager
-                    .containClickImageView(clickViewStrList)
-            }
+//            val enableImageViewClick = withContext(Dispatchers.IO) {
+//                if(
+//                    clickViewTagList.contains()
+////                    !enableClick
+////                    || clickViewStrList.isNullOrEmpty()
+//                ) return@withContext false
+//                EditComponent.Template
+//                    .ClickViewManager
+//                    .containClickImageView(clickViewStrList)
+//            }
 //            val imageButtonView = withContext(Dispatchers.Main) {
 //                frameLayout.children.firstOrNull {
 //                    it is AppCompatImageView
@@ -207,7 +208,8 @@ object EditConstraintFrameMaker {
                         Gravity.CENTER,
                         Gravity.CENTER,
                         EditComponent.Template.ImageManager.ImageScale.FIT_CENTER.scale,
-                        enableImageViewClick,
+                        clickViewTagList?.contains(imageView.tag),
+//                        enableImageViewClick,
                         outValue,
                         whereForErr,
                         requestBuilderSrc,
@@ -217,15 +219,15 @@ object EditConstraintFrameMaker {
             }
         }
         CoroutineScope(Dispatchers.Main).launch {
-            val enableTextViewClick = withContext(Dispatchers.IO) {
-                if(
-                    !enableClick
-                    || clickViewStrList.isNullOrEmpty()
-                ) return@withContext false
-                EditComponent.Template
-                    .ClickViewManager
-                    .containClickTextView(clickViewStrList)
-            }
+//            val enableTextViewClick = withContext(Dispatchers.IO) {
+//                if(
+//                    !enableClick
+//                    || clickViewStrList.isNullOrEmpty()
+//                ) return@withContext false
+//                EditComponent.Template
+//                    .ClickViewManager
+//                    .containClickTextView(clickViewStrList)
+//            }
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "sGet_frameMaker.txt").absolutePath,
 //                listOf(
@@ -254,7 +256,8 @@ object EditConstraintFrameMaker {
                         0f,
                         EditComponent.Template.TextManager.TextStyle.NORMAL,
                         EditComponent.Font.SANS_SERIF,
-                        enableTextViewClick,
+                        clickViewTagList?.contains(textView.tag),
+//                        enableTextViewClick,
                         outValue,
                         whereForErr,
                         density,
@@ -780,7 +783,7 @@ object EditConstraintFrameMaker {
         execSetTextView(
             captionTextView,
             textMap,
-            settingValue,
+//            settingValue,
             overrideText,
             defaultLayoutGravity,
             defaultGravity,
@@ -802,7 +805,7 @@ object EditConstraintFrameMaker {
     suspend fun setTextViewByDynamic(
         captionTextView: OutlineTextView,
         textMap: Map<String, String>?,
-        settingValue: String?,
+//        settingValue: String?,
         overrideText: String?,
     ) {
         val where = "EditConstraintFrameMaker.setCaptionByDynamic"
@@ -833,7 +836,7 @@ object EditConstraintFrameMaker {
         execSetTextView(
             captionTextView,
             textMap,
-            settingValue,
+//            settingValue,
             overrideText,
             null,
             null,
@@ -855,7 +858,7 @@ object EditConstraintFrameMaker {
     private suspend fun execSetTextView(
         captionTextView: OutlineTextView,
         textMap: Map<String, String>?,
-        settingValue: String?,
+//        settingValue: String?,
         overrideText: String?,
         defaultLayoutGravity: Int?,
         defaultGravity: Int?,
@@ -880,6 +883,7 @@ object EditConstraintFrameMaker {
         val textViewContext = captionTextView.context
         if(
             textMap.isNullOrEmpty()
+            && overrideText.isNullOrEmpty()
         ){
             return
         }
@@ -907,7 +911,7 @@ object EditConstraintFrameMaker {
         TextViewTool.set(
             captionTextView,
             textMap,
-            settingValue,
+//            settingValue,
             overrideText,
             defaultGravity,
             defaultMaxLen,

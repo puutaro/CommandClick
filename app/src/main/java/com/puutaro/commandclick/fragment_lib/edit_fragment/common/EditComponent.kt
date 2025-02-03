@@ -160,7 +160,7 @@ object EditComponent {
                         VISIBLE("visible"),
                         ENABLE("enable"),
                         ELEVATION("elevation"),
-                        CLICK_VIEWS("clickViews"),
+//                        CLICK_VIEWS("clickViews"),
 
                         TOP_TO_TOP("topToTop"),
                         TOP_TO_BOTTOM("topToBottom"),
@@ -207,20 +207,25 @@ object EditComponent {
                                 it.key
                         }
                         fun isClickEnable(
-                                frameKeyPairsList: List<Pair<String, String>>
+                                frameMap: Map<String, String>,
+//                                frameKeyPairsList: List<Pair<String, String>>
                         ): Boolean {
                                 val isJsAcForFrame =
                                         jsActionKeyList.any {
-                                                !PairListTool.getValue(
-                                                        frameKeyPairsList,
-                                                        it,
-                                                ).isNullOrEmpty()
+                                                !frameMap.get(it).isNullOrEmpty()
+//                                                !PairListTool.getValue(
+//                                                        frameKeyPairsList,
+//                                                        it,
+//                                                ).isNullOrEmpty()
                                         }
                                 val onClickForFrame =
-                                        PairListTool.getValue(
-                                                frameKeyPairsList,
-                                                EditComponentKey.ON_CLICK.key,
+                                        frameMap.get(
+                                                EditComponentKey.ON_CLICK.key
                                         ) != switchOff
+//                                        PairListTool.getValue(
+//                                                frameKeyPairsList,
+//                                                EditComponentKey.ON_CLICK.key,
+//                                        ) != switchOff
                                 return isJsAcForFrame
                                         && onClickForFrame
                         }
@@ -234,25 +239,25 @@ object EditComponent {
                                 IMAGE("image"),
                         }
 
-                        fun makeClickViewStrList(
-                                contentsKeyPairsList: List<Pair<String, String>>
-                        ): List<String> {
-                                val srcCon = PairListTool.getValue(
-                                        contentsKeyPairsList,
-                                        EditComponentKey.CLICK_VIEWS.key,
-                                )
-                                val clickTextViewStr = ClickViews.TEXT.str
-                                val clickImageViewStr = ClickViews.IMAGE.str
-                                return when(srcCon.isNullOrEmpty()){
-                                        true -> listOf(
-                                                clickTextViewStr,
-                                                clickImageViewStr
-                                        )
-                                        else -> srcCon.split(valueSeparator).filter {
-                                                it.isNotEmpty()
-                                        }
-                                }
-                        }
+//                        fun makeClickViewStrList(
+//                                contentsKeyPairsList: List<Pair<String, String>>
+//                        ): List<String> {
+//                                val srcCon = PairListTool.getValue(
+//                                        contentsKeyPairsList,
+//                                        EditComponentKey.CLICK_VIEWS.key,
+//                                )
+//                                val clickTextViewStr = ClickViews.TEXT.str
+//                                val clickImageViewStr = ClickViews.IMAGE.str
+//                                return when(srcCon.isNullOrEmpty()){
+//                                        true -> listOf(
+//                                                clickTextViewStr,
+//                                                clickImageViewStr
+//                                        )
+//                                        else -> srcCon.split(valueSeparator).filter {
+//                                                it.isNotEmpty()
+//                                        }
+//                                }
+//                        }
                         fun containClickTextView(
                                 clickViewsStrList: List<String>,
                         ): Boolean {
@@ -1742,6 +1747,7 @@ object EditComponent {
                         val frameLayoutRef: WeakReference<FrameLayout>,
                         val tagToTextViewListRef: WeakReference<List<Pair<String, OutlineTextView>>>,
                         val tagToImageViewListRef: WeakReference<List<Pair<String, AppCompatImageView>>>,
+                        val clickTagToViewListRef: WeakReference<List<Pair<String, View>>>,
                 )
 
 
@@ -1807,6 +1813,7 @@ object EditComponent {
                         context: Context,
                         idInt: Int?,
                         contentsTag: String,
+                        contentsKeyPairsList: List<Pair<String, String>>?,
                         textTagToMap: Map<String, Map<String, String>?>,
                         imageTagToMap: Map<String, Map<String, String>>,
                         bkFrameLayout: FrameLayout?,
@@ -1858,6 +1865,32 @@ object EditComponent {
                                 (_, textView) ->
                                 contentsLayout.addView(textView)
                         }
+                        val contentsMap = contentsKeyPairsList?.toMap() ?: emptyMap()
+                        val clickTagToViewList = when(contentsMap.isEmpty()) {
+                                true -> emptyList()
+                                else -> (tagToTextViewList + tagToImageViewList).filter { (tagName, view) ->
+                                        val mapForClick = when (view) {
+                                                is OutlineTextView -> {
+                                                        contentsMap + (textTagToMap.get(tagName)
+                                                                ?: emptyMap())
+                                                }
+
+                                                is AppCompatImageView -> {
+                                                        contentsMap + (imageTagToMap.get(tagName)
+                                                                ?: emptyMap())
+                                                }
+
+                                                else -> emptyMap()
+                                        }
+                                        Template.ClickManager.isClickEnable(
+                                                mapForClick
+                                        )
+//                                EditComponent.Template.ClickManager.isClickEnable(
+//                                        contentsKeyPairsList
+//                                )
+
+                                }
+                        }
 //                        val textView =
 //                                OutlineTextView(context).apply {
 //                                        layoutParams =
@@ -1870,6 +1903,7 @@ object EditComponent {
                                 WeakReference(contentsLayout),
                                 WeakReference(tagToTextViewList),
                                 WeakReference(tagToImageViewList),
+                                WeakReference(clickTagToViewList)
                         )
 //                        return contentsLayout
                 }

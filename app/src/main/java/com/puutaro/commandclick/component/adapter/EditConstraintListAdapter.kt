@@ -24,7 +24,6 @@ import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntent
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
@@ -88,18 +87,29 @@ class EditConstraintListAdapter(
 {
     private val context = fragmentRef.get()?.context
     private val listLimitSize = 300
-    private val initSettingValMap = RecordNumToMapNameValueInHolder.parse(
+    private var initSettingValMap = RecordNumToMapNameValueInHolder.parse(
         fannelContentsList,
         CommandClickScriptVariable.SETTING_SEC_START,
         CommandClickScriptVariable.SETTING_SEC_END,
     )
-    private val initCmdValMap = RecordNumToMapNameValueInHolder.parse(
+    private var initCmdValMap = RecordNumToMapNameValueInHolder.parse(
         fannelContentsList,
         CommandClickScriptVariable.CMD_SEC_START,
         CommandClickScriptVariable.CMD_SEC_END,
     )
-    val totalSettingValMap =
-        (initSettingValMap ?: emptyMap()) + (initCmdValMap ?: emptyMap())
+    private var totalSettingValMap = makeTotalSettingValMap(
+        initSettingValMap,
+        initCmdValMap,
+        )
+    private fun makeTotalSettingValMap(
+        initSettingValMap: Map<String, String>?,
+        initCmdValMap: Map<String, String>?,
+    ): Map<String, String> {
+        return (initSettingValMap ?: emptyMap()) + (initCmdValMap ?: emptyMap())
+    }
+    fun getTotalSettingValMap(): Map<String, String> {
+        return totalSettingValMap
+    }
     val footerKeyPairListConMap: MutableMap<String, String> = mutableMapOf()
     private val layoutConfigMap = LayoutSettingsForEditList.getLayoutConfigMap(
         editListConfigMap,
@@ -322,8 +332,8 @@ class EditConstraintListAdapter(
 
         private val typeSeparator = EditComponent.Template.typeSeparator
         private val onConsecKey = EditComponent.Template.EditComponentKey.ON_CONSEC.key
-        private val onClickViewsKey =
-            EditComponent.Template.EditComponentKey.CLICK_VIEWS.key
+//        private val onClickViewsKey =
+//            EditComponent.Template.EditComponentKey.CLICK_VIEWS.key
     }
 
     private val switchOn = EditComponent.Template.switchOn
@@ -633,6 +643,7 @@ class EditConstraintListAdapter(
                     context,
                     null,
                     frameTag,
+                    null,
                     textTagToMapForFrame,
                     imageTagToMapForFrame,
                     holder.bkFrameLayout
@@ -644,8 +655,9 @@ class EditConstraintListAdapter(
                 ?: return@launch
             val tagToImageViewListForFrame = returnFrameLayout.tagToImageViewListRef.get()
                 ?: return@launch
+//            val clickTagToViewList = returnFrameLayout.clickTagToViewListRef.get()
             val isClickEnable = withContext(Dispatchers.IO) {
-                EditComponent.Template.ClickManager.isClickEnable(frameKeyPairsList)
+                EditComponent.Template.ClickManager.isClickEnable(frameKeyPairsList.toMap())
             }
             CoroutineScope(Dispatchers.IO).launch{
                 withContext(Dispatchers.IO) {
@@ -691,14 +703,16 @@ class EditConstraintListAdapter(
 //                        frameTag,
 //                        totalSettingValMap,
                         totalMapListElInfo,
-                        false,
                         null,
+//                        false,
                         null,
+//                        null,
                         requestBuilderSrc,
                         density,
                     )
                 }
                 frameClickHandle(
+                    frameTag,
                     holder,
                     editListPosition,
                     holder.materialCardView,
@@ -959,6 +973,7 @@ class EditConstraintListAdapter(
     interface OnEditAdapterClickListener {
         fun onEditAdapterClick(
             itemView: View,
+            frameTag: String?,
             holder: EditListViewHolder,
             editListPosition: Int,
         )
@@ -968,6 +983,7 @@ class EditConstraintListAdapter(
     interface OnEditAdapterTouchDownListener {
         fun onEditAdapterTouchDown(
             itemView: View,
+            frameTag: String?,
             holder: EditListViewHolder,
             editListPosition: Int,
         )
@@ -977,6 +993,7 @@ class EditConstraintListAdapter(
     interface OnEditAdapterTouchUpListener {
         fun onEditAdapterTouchUp(
             itemView: View,
+            frameTag: String?,
             holder: EditListViewHolder,
             editListPosition: Int,
         )
@@ -994,6 +1011,9 @@ class EditConstraintListAdapter(
             tag,
             settingValue,
             frameOrLinearCon,
+        )
+        updateCmdSettingTotalMap(
+            fannelContentsList
         )
         MapListUpdater.updateLineMapList(
             fragment,
@@ -1069,7 +1089,7 @@ class EditConstraintListAdapter(
         val enableClick =
             withContext(Dispatchers.IO) {
                 EditComponent.Template.ClickManager.isClickEnable(
-                    contentsKeyPairsList
+                    contentsKeyPairsList.toMap()
                 )
             }
 //        val clickViewStrList = withContext(Dispatchers.IO) {
@@ -1111,18 +1131,18 @@ class EditConstraintListAdapter(
                 "contentsTag: ${contentsTag}, ${totalMapListElInfo}",
             )
         }
-//        CoroutineScope(Dispatchers.Main).launch setClick@ {
-//            clickHandler(
-//                holder,
-//                editListPosition,
-//                contentsKeyPairsList,
-//                contentsTag,
-//                contentsKeyPairsListCon,
-//                contentsFrameLayout,
+        CoroutineScope(Dispatchers.Main).launch setClick@ {
+            clickHandler(
+                holder,
+                editListPosition,
+                contentsKeyPairsList,
+                imageView.tag?.toString(),
+                contentsKeyPairsListCon,
+                listOf(imageView),
 //                enableClick,
 //                clickViewStrList,
-//            )
-//        }
+            )
+        }
     }
 
     private suspend fun setTextView(
@@ -1167,7 +1187,7 @@ class EditConstraintListAdapter(
         val enableClick =
             withContext(Dispatchers.IO) {
                 EditComponent.Template.ClickManager.isClickEnable(
-                    contentsKeyPairsList
+                    contentsKeyPairsList.toMap()
                 )
             }
 //        val clickViewStrList = withContext(Dispatchers.IO) {
@@ -1216,18 +1236,18 @@ class EditConstraintListAdapter(
                 "contentsTag: ${contentsTag}, ${totalMapListElInfo}",
             )
         }
-//        CoroutineScope(Dispatchers.Main).launch setClick@ {
-//            clickHandler(
-//                holder,
-//                editListPosition,
-//                contentsKeyPairsList,
-//                contentsTag,
-//                contentsKeyPairsListCon,
-//                contentsFrameLayout,
+        CoroutineScope(Dispatchers.Main).launch setClick@ {
+            clickHandler(
+                holder,
+                editListPosition,
+                contentsKeyPairsList,
+                contentsTag,
+                contentsKeyPairsListCon,
+                listOf(textView),
 //                enableClick,
 //                clickViewStrList,
-//            )
-//        }
+            )
+        }
     }
 
     private suspend fun setFrameLayout(
@@ -1304,6 +1324,7 @@ class EditConstraintListAdapter(
                 context,
                 idInt,
                 contentsTag,
+                contentsKeyPairsList,
                 textTagToMapForContents,
                 imageTagToMapForContents,
                 null,
@@ -1319,6 +1340,7 @@ class EditConstraintListAdapter(
             ?: return
         val tagToImageViewListForContents = returnContentsFrameLayout.tagToImageViewListRef.get()
             ?: return
+        val clickTagToViewListForContents = returnContentsFrameLayout.clickTagToViewListRef.get()
 //                                FileSystems.updateFile(
 //                                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "lcontents_${editListPosition}.txt").absolutePath,
 //                                    listOf(
@@ -1362,17 +1384,17 @@ class EditConstraintListAdapter(
             )
         }
 //                                }
-        val enableClick =
-            withContext(Dispatchers.IO) {
-                EditComponent.Template.ClickManager.isClickEnable(
-                    contentsKeyPairsList
-                )
-            }
-        val clickViewStrList = withContext(Dispatchers.IO) {
-            EditComponent.Template.ClickViewManager.makeClickViewStrList(
-                contentsKeyPairsList
-            )
-        }
+//        val enableClick =
+//            withContext(Dispatchers.IO) {
+//                EditComponent.Template.ClickManager.isClickEnable(
+//                    contentsKeyPairsList
+//                )
+//            }
+//        val clickViewStrList = withContext(Dispatchers.IO) {
+//            EditComponent.Template.ClickViewManager.makeClickViewStrList(
+//                contentsKeyPairsList
+//            )
+//        }
         CoroutineScope(Dispatchers.Main).launch {
 //                                    withContext(Dispatchers.IO) {
 //                                        if(idInt == 10100) {
@@ -1394,6 +1416,10 @@ class EditConstraintListAdapter(
 //                                            )
 //                                        }
 //                                    }
+            val clickViewTagList = clickTagToViewListForContents?.map {
+                (tagName, _) ->
+                tagName
+            }
             EditConstraintFrameMaker.make(
                 context,
                 idInt,
@@ -1408,16 +1434,20 @@ class EditConstraintListAdapter(
                 imageTagToMapForContents,
                 tagToImageViewListForContents,
                 0,
-//                                        contentsTag,
-//                                        totalSettingValMap,
                 "contentsTag: ${contentsTag}, ${totalMapListElInfo}",
-                enableClick,
-                clickViewStrList,
+                clickViewTagList,
                 outValue,
                 requestBuilderSrc,
                 density,
             )
         }
+        val clickViewList = clickTagToViewListForContents?.map {
+            (_, view) ->
+            view
+        }
+        if(
+            clickViewList.isNullOrEmpty()
+        ) return
         CoroutineScope(Dispatchers.Main).launch setClick@ {
             clickHandler(
                 holder,
@@ -1425,9 +1455,9 @@ class EditConstraintListAdapter(
                 contentsKeyPairsList,
                 contentsTag,
                 contentsKeyPairsListCon,
-                contentsFrameLayout,
-                enableClick,
-                clickViewStrList,
+                clickViewList,
+//                enableClick,
+//                    clickViewStrList,
             )
         }
     }
@@ -1575,6 +1605,26 @@ class EditConstraintListAdapter(
                 fannelContentsList = updateFannelList
             }
         }
+
+    }
+
+    private fun updateCmdSettingTotalMap(
+        fannelContentsList: List<String>?
+    ){
+        initSettingValMap = RecordNumToMapNameValueInHolder.parse(
+            fannelContentsList,
+            CommandClickScriptVariable.SETTING_SEC_START,
+            CommandClickScriptVariable.SETTING_SEC_END,
+        )
+        initCmdValMap = RecordNumToMapNameValueInHolder.parse(
+            fannelContentsList,
+            CommandClickScriptVariable.CMD_SEC_START,
+            CommandClickScriptVariable.CMD_SEC_END,
+        )
+        totalSettingValMap =  makeTotalSettingValMap(
+            initSettingValMap,
+            initCmdValMap,
+        )
     }
 
     fun saveFannelCon() {
@@ -1585,6 +1635,7 @@ class EditConstraintListAdapter(
     }
 
     private suspend fun frameClickHandle(
+        frameTag: String,
         holder: EditListViewHolder,
         editListPosition: Int,
         materialCardView: MaterialCardView?,
@@ -1616,6 +1667,7 @@ class EditConstraintListAdapter(
                             android.view.MotionEvent.ACTION_DOWN -> {
                                 editAdapterTouchDownListener?.onEditAdapterTouchDown(
                                     materialCardView,
+                                    frameTag,
                                     holder,
                                     editListPosition
                                 )
@@ -1626,6 +1678,7 @@ class EditConstraintListAdapter(
                                 -> {
                                 editAdapterTouchUpListener?.onEditAdapterTouchUp(
                                     materialCardView,
+                                    frameTag,
                                     holder,
                                     editListPosition
                                 )
@@ -1639,6 +1692,7 @@ class EditConstraintListAdapter(
                 else -> materialCardView.setOnClickListener {
                     editAdapterClickListener?.onEditAdapterClick(
                         materialCardView,
+                        frameTag,
                         holder,
                         editListPosition,
                     )
@@ -1701,19 +1755,23 @@ class EditConstraintListAdapter(
         holder: EditListViewHolder,
         editListPosition: Int,
         contentsKeyPairsList: List<Pair<String, String>>,
-        contentsTag: String,
+        contentsTag: String?,
         contentsKeyPairsListCon: String?,
-        contentsFrameLayout: FrameLayout,
-        enableClick: Boolean,
-        clickViewStrList: List<String>,
+        clickViewList: List<View>,
+//        enableClick: Boolean,
+//        clickViewStrList: List<String>,
     ){
         if(
             context == null
+//            || !enableClick
         ) return
 //        val enableClick =
 //            EditComponent.Template.ClickManager.isClickEnable(contentsKeyPairsList)
 
         CoroutineScope(Dispatchers.IO).launch {
+            if(
+                contentsTag.isNullOrEmpty()
+            ) return@launch
             holder.updateKeyPairListConMap(
                 contentsTag,
                 contentsKeyPairsListCon
@@ -1728,17 +1786,17 @@ class EditConstraintListAdapter(
 //                "contentsKeyPairsListCon: ${contentsKeyPairsListCon}"
 //            ).joinToString("\n") + "\n==========\n\n"
 //        )
-        val clickViewList =
-            withContext(Dispatchers.IO) {
-                EditComponent.Template.ClickViewManager.makeClickViewList(
-                    contentsFrameLayout.children,
-                    clickViewStrList
-//                    PairListTool.getValue(
-//                        contentsKeyPairsList,
-//                        onClickViewsKey,
-//                    )
-                )
-            }
+//        val clickViewList =
+//            withContext(Dispatchers.IO) {
+//                EditComponent.Template.ClickViewManager.makeClickViewList(
+//                    contentsFrameLayout.children,
+//                    clickViewStrList
+////                    PairListTool.getValue(
+////                        contentsKeyPairsList,
+////                        onClickViewsKey,
+////                    )
+//                )
+//            }
         val isConsec = withContext(Dispatchers.IO) {
             PairListTool.getValue(
                 contentsKeyPairsList,
@@ -1760,7 +1818,6 @@ class EditConstraintListAdapter(
 //                    }
 //                }
 //            }
-            if(!enableClick) return@forEach
             withContext(Dispatchers.Main) {
 //                clickView.setBackgroundResource(outValue.resourceId)
 //                clickView.isClickable = true
@@ -1771,7 +1828,8 @@ class EditConstraintListAdapter(
                                 when (event.action) {
                                     android.view.MotionEvent.ACTION_DOWN -> {
                                         editAdapterTouchDownListener?.onEditAdapterTouchDown(
-                                            contentsFrameLayout,
+                                            clickView,
+                                            null,
                                             holder,
                                             editListPosition
                                         )
@@ -1781,7 +1839,8 @@ class EditConstraintListAdapter(
                                     android.view.MotionEvent.ACTION_CANCEL,
                                         -> {
                                         editAdapterTouchUpListener?.onEditAdapterTouchUp(
-                                            contentsFrameLayout,
+                                            clickView,
+                                            null,
                                             holder,
                                             editListPosition
                                         )
@@ -1794,7 +1853,8 @@ class EditConstraintListAdapter(
 
                     else -> clickView.setOnClickListener {
                         editAdapterClickListener?.onEditAdapterClick(
-                            contentsFrameLayout,
+                            clickView,
+                            null,
                             holder,
                             editListPosition,
                         )

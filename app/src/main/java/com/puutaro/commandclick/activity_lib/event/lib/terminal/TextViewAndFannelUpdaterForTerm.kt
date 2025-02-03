@@ -1,18 +1,24 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
+import android.util.TypedValue
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EditListRecyclerViewGetter
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
+import com.puutaro.commandclick.proccess.edit_list.TextViewTool
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.str.PairListTool
@@ -20,6 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import java.io.File
 
 object TextViewAndFannelUpdaterForTerm {
     fun update(
@@ -59,58 +67,62 @@ object TextViewAndFannelUpdaterForTerm {
                 editListIndex
             ) as EditConstraintListAdapter.EditListViewHolder
             val materialCardView = holder.materialCardView
-            val tagNameToFrameLayoutList = tagNameList.map {
-                tagName ->
-                tagName to materialCardView.findViewWithTag<FrameLayout>(
-                    tagName
-                )
-            }
-            tagNameToFrameLayoutList.forEach {
-                    tagNameToFrameLayout ->
-                val tagName = tagNameToFrameLayout.first
-                val frameLayout = tagNameToFrameLayout.second
-                    ?: return@forEach
-                val textView = frameLayout.children.firstOrNull { view ->
-                    view is OutlineTextView
-                } as? OutlineTextView
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lupdateText.txt").absolutePath,
+//                listOf(
+////                    "tagName: ${tagName}",
+////                    "tag: ${textView.tag}",
+////                    "textView.text: ${textView.text}",
+//                    "updateText: ${updateText}",
+//                    "overrideTextMap: ${overrideTextMap}",
+//                ).joinToString("\n")
+//            )
+            val directTagToTextView = getTextView(
+                tagNameList,
+                materialCardView,
+            )?: return
 
-                val lineMap = editConstraintListAdapter.lineMapList.get(editListIndex)
-                holder.srcTitle = lineMap.get(
-                    ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
-                ) ?: String()
-                holder.srcCon = lineMap.get(
-                    ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
-                ) ?: String()
-                holder.srcImage = lineMap.get(
-                    ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
-                ) ?: String()
+            val tagName = directTagToTextView.first
+            val textView = directTagToTextView.second
+                ?: return
+
+
+            val lineMap = editConstraintListAdapter.lineMapList.get(editListIndex)
+            holder.srcTitle = lineMap.get(
+                ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
+            ) ?: String()
+            holder.srcCon = lineMap.get(
+                ListSettingsForEditList.MapListPathManager.Key.SRC_CON.key
+            ) ?: String()
+            holder.srcImage = lineMap.get(
+                ListSettingsForEditList.MapListPathManager.Key.SRC_IMAGE.key
+            ) ?: String()
+            val keyPairListConMap = runBlocking {
+                holder.getKeyPairListConMap()
+            }
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "editListIndex.txt").absolutePath,
 //                listOf(
 //                    "textView: ${textView?.text}",
 //                    "updateText: ${updateText}",
-//                    "holder.keyPairListConMap: ${holder.keyPairListConMap}",
+//                    "holder.keyPairListConMap: ${keyPairListConMap}",
 //                    "",
 //                ).joinToString("\n")
 //            )
-                val keyPairListConMap = runBlocking {
-                    holder.getKeyPairListConMap()
-                }
-                UpdateAndSaveMainFannel.updateAndSave(
-                    editConstraintListAdapter,
-                    keyPairListConMap,
-                    tagName,
-                    holder.srcTitle,
-                    holder.srcCon,
-                    holder.srcImage,
-                    editListIndex,
-                    updateText,
-                    overrideTextMap,
+            UpdateAndSaveMainFannel.updateAndSave(
+                editConstraintListAdapter,
+                keyPairListConMap,
+                tagName,
+                holder.srcTitle,
+                holder.srcCon,
+                holder.srcImage,
+                editListIndex,
+                updateText,
+                overrideTextMap,
 //                    textPropertyMap,
-                    textView,
-                    isSave,
-                )
-            }
+                textView,
+                isSave,
+            )
             return
         }
 
@@ -149,33 +161,74 @@ object TextViewAndFannelUpdaterForTerm {
             }
         }
         val noSignIndex = -1
-        val frameLayoutList = tagNameList.map {
-            tagName ->
-            constraintLayout?.findViewWithTag<FrameLayout>(
-                tagName
-            )
+        val tagToTextView = getTextView(
+            tagNameList,
+            constraintLayout,
+        )?: return
+        UpdateAndSaveMainFannel.updateAndSave(
+            editConstraintListAdapter,
+            editConstraintListAdapter.footerKeyPairListConMap,
+            String(),
+            String(),
+            String(),
+            String(),
+            noSignIndex,
+            updateText,
+            overrideTextMap,
+//                textPropertyMap,
+            tagToTextView.second,
+            isSave,
+        )
+    }
+
+    private fun getTextView(
+        tagNameList: List<String>,
+        viewGroup: ViewGroup?,
+    ): Pair<String, OutlineTextView?>? {
+        if (
+            viewGroup == null
+        ) return null
+        tagNameList.forEach { tagName ->
+            val textViewEntry = try {
+                viewGroup.findViewWithTag<OutlineTextView>(
+                    tagName
+                )
+            } catch (e: Exception) {
+                null
+            } ?: return@forEach
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lupdateText_get00.txt").absolutePath,
+//                listOf(
+//                    "tagName: ${tagName}",
+//                    "textViewEntry: ${textViewEntry}",
+//                ).joinToString("\n")
+//            )
+            return tagName to textViewEntry
         }
-        frameLayoutList.forEach {
-            frameLayout ->
-            if(frameLayout == null) return@forEach
-            val textView = frameLayout.children.firstOrNull { view ->
+        tagNameList.forEach { tagName ->
+            val frameLayoutEntry = try {
+                viewGroup.findViewWithTag<FrameLayout>(
+                    tagName
+                )
+            } catch (e: Exception) {
+                null
+            } ?: return@forEach
+            val textView = frameLayoutEntry.children.firstOrNull { view ->
                 view is OutlineTextView
             } as? OutlineTextView
-            UpdateAndSaveMainFannel.updateAndSave(
-                editConstraintListAdapter,
-                editConstraintListAdapter.footerKeyPairListConMap,
-                String(),
-                String(),
-                String(),
-                String(),
-                noSignIndex,
-                updateText,
-                overrideTextMap,
-//                textPropertyMap,
-                textView,
-                isSave,
-            )
+                ?: return@forEach
+            return tagName to textView
         }
+        return null
+
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lupdateTextGet00.txt").absolutePath,
+//                    listOf(
+//                    "tagName: ${tagName}",
+//                    "pair: ${pair}",
+//                    ).joinToString("\n")
+//                )
+//                pair
     }
 
     object UpdateAndSaveMainFannel {
@@ -215,36 +268,75 @@ object TextViewAndFannelUpdaterForTerm {
                     EditComponent.Template.keySeparator,
                 ).toMap()
             }
-            val text = EditComponent.Template.TextManager.makeText(
-                editConstraintListAdapter.fannelInfoMap,
-                editConstraintListAdapter.setReplaceVariableMap,
-                editConstraintListAdapter.busyboxExecutor,
-                textMap,
-                updateText
-            )
+//            val text = EditComponent.Template.TextManager.makeText(
+//                editConstraintListAdapter.fannelInfoMap,
+//                editConstraintListAdapter.setReplaceVariableMap,
+//                editConstraintListAdapter.busyboxExecutor,
+//                textMap,
+//                updateText
+//            ).let {
+//                if(
+//                    it.isNullOrEmpty()
+//                ) return@let updateText
+//                it
+//            }
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "editListIndex_updateAndSave.txt").absolutePath,
 //                listOf(
 //                    "textView: ${textView?.text}",
 //                    "updateText: ${updateText}",
-//                    "text: ${text}",
 //                    "tagName: ${tagName}",
 //                    "keyPairListConMap: ${keyPairListConMap}",
 //                    "linearFrameKeyPairsListCon: ${linearFrameKeyPairsListCon}",
 //                    "linearFrameKeyPairsList: ${linearFrameKeyPairsList}",
 //                    "textMap: ${textMap}",
-//                    "textPropertyMap: ${textPropertyMap}",
 //                    "overrideTextMap: ${overrideTextMap}"
 //                ).joinToString("\n\n")
 //            )
+
             textView?.let {
                 CoroutineScope(Dispatchers.Main).launch {
-                    EditConstraintFrameMaker.setTextViewByDynamic(
-                        it,
-                        overrideTextMap,
-                        updateText,
-                        text,
+                    val context = textView.context
+                    val density = withContext(Dispatchers.Main){
+                        ScreenSizeCalculator.getDensity(context)
+                    }
+                    val outValue = withContext(Dispatchers.IO) {
+                        val outValueSrc = TypedValue()
+                        context.theme?.resolveAttribute(
+                            android.R.attr.selectableItemBackground,
+                            outValueSrc,
+                            true
+                        )
+                        outValueSrc
+                    }
+                    TextViewTool.setVisibility(
+                        textView,
+                        textMap,
                     )
+                    TextViewTool.set(
+                        textView,
+                        textMap,
+                        updateText,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        outValue,
+                        "UpdateAndSaveMainFannel.updateAndSave",
+                        density,
+                    )
+//                    EditConstraintFrameMaker.setTextViewByDynamic(
+//                        it,
+//                        overrideTextMap,
+//                        updateText,
+////                        text,
+//                    )
                 }
             }
             execUpdateAndSave(
@@ -264,7 +356,7 @@ object TextViewAndFannelUpdaterForTerm {
             isSave: Boolean,
         ) {
             val isNotUpdate =
-                editConstraintListAdapter.totalSettingValMap.get(tagName).isNullOrEmpty()
+                editConstraintListAdapter.getTotalSettingValMap().get(tagName).isNullOrEmpty()
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lUpdatetextView.txt").absolutePath,
 //                listOf(
@@ -280,9 +372,9 @@ object TextViewAndFannelUpdaterForTerm {
                 tagName,
                 updateText
             )
-            editConstraintListAdapter.totalSettingValMap.get(tagName).let {
-                textView?.setAutofillHints(updateText)
-            }
+//            editConstraintListAdapter.getTotalSettingValMap().get(tagName).let {
+//                textView?.setAutofillHints(updateText)
+//            }
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lUpdatetextView_saved00.txt").absolutePath,
 //                listOf(
