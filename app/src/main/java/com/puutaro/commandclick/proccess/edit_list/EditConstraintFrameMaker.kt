@@ -29,6 +29,7 @@ import java.io.File
 object EditConstraintFrameMaker {
 
     private val tagKey = EditComponent.Template.EditComponentKey.TAG.key
+    private val paddingKey = EditComponent.Template.EditComponentKey.PADDING.key
     private val paddingTopKey = EditComponent.Template.EditComponentKey.PADDING_TOP.key
     private val paddingBottomKey = EditComponent.Template.EditComponentKey.PADDING_BOTTOM.key
     private val paddingStartKey = EditComponent.Template.EditComponentKey.PADDING_START.key
@@ -364,6 +365,7 @@ object EditConstraintFrameMaker {
                             frameKeyPairList,
                             null,
                             null,
+                            density,
                         )
                     }
                     constraintParam
@@ -452,6 +454,7 @@ object EditConstraintFrameMaker {
                 frameKeyPairList,
                 null,
                 null,
+                density,
             ).let {
                     param ->
                 LayoutSetterTool.setMargin(
@@ -497,23 +500,27 @@ object EditConstraintFrameMaker {
                 }
             }
             val paddingData = withContext(Dispatchers.IO) {
+                val padding = PairListTool.getValue(
+                    frameKeyPairList,
+                    paddingKey
+                )
                 EditComponent.Template.PaddingData(
                     PairListTool.getValue(
                         frameKeyPairList,
                         paddingTopKey
-                    ),
+                    ) ?: padding,
                     PairListTool.getValue(
                         frameKeyPairList,
                         paddingBottomKey
-                    ),
+                    ) ?: padding,
                     PairListTool.getValue(
                         frameKeyPairList,
                         paddingStartKey
-                    ),
+                    ) ?: padding,
                     PairListTool.getValue(
                         frameKeyPairList,
                         paddingEndKey
-                    ),
+                    )?: padding,
                     density,
                 )
             }

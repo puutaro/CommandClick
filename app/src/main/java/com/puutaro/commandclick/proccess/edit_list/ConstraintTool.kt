@@ -8,6 +8,8 @@ import kotlinx.coroutines.withContext
 
 object ConstraintTool {
 
+    private val widthKey = EditComponent.Template.EditComponentKey.WIDTH.key
+    private val heightKey = EditComponent.Template.EditComponentKey.HEIGHT.key
     private val topToTopKey = EditComponent.Template.EditComponentKey.TOP_TO_TOP.key
     private val topToBottomKey = EditComponent.Template.EditComponentKey.TOP_TO_BOTTOM.key
     private val startToStartKey = EditComponent.Template.EditComponentKey.START_TO_START.key
@@ -57,13 +59,40 @@ object ConstraintTool {
         frameKeyPairList: List<Pair<String, String>>?,
         overrideWidth: Int?,
         overrideHeight: Int?,
+        density: Float,
     ): ConstraintLayout.LayoutParams {
         return param.apply {
-            overrideWidth?.let {
-                width = it
+            withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    widthKey
+                )?.let {
+                    EditComponent.Template.LinearLayoutUpdater.convertWidth(
+                        it,
+                        overrideWidth,
+                        density,
+                    )
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    width = it
+                }
             }
-            overrideHeight?.let {
-                height = it
+            withContext(Dispatchers.IO) {
+                PairListTool.getValue(
+                    frameKeyPairList,
+                    heightKey
+                )?.let {
+                    EditComponent.Template.LinearLayoutUpdater.convertWidth(
+                        it,
+                        overrideHeight,
+                        density,
+                    )
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    height = it
+                }
             }
 //            val unsetInt =
 //                EditComponent.Template.ConstraintManager.ConstraintParameter.UNSET.int

@@ -134,10 +134,12 @@ object EditComponent {
                         DISABLE_KEYBOARD_HIDDEN("disableKeyboardHidden"),
                         HEIGHT("height"),
                         WIDTH("width"),
+                        PADDING("padding"),
                         PADDING_TOP("paddingTop"),
                         PADDING_BOTTOM("paddingBottom"),
                         PADDING_START("paddingStart"),
                         PADDING_END("paddingEnd"),
+                        MARGIN("margin"),
                         MARGIN_TOP("marginTop"),
                         MARGIN_BOTTOM("marginBottom"),
                         MARGIN_START("marginStart"),
@@ -166,6 +168,28 @@ object EditComponent {
                         DIMENSION_RATIO("dimensionRatio"),
                         HORIZONTAL_CHAIN_STYLE("horizontalChainStyle"),
                         VERTICAL_CHAIN_STYLE("verticalChainStyle"),
+                }
+
+                object ViewTypeManager {
+                        enum class ViewType(
+                                val str: String
+                        ) {
+                                FRAME("frame"),
+                                TEXT("text"),
+                                IMAGE("image"),
+                        }
+
+                        fun getViewType(
+                                contentsKeyPairsList: List<Pair<String, String>>
+                        ): ViewType {
+                                val viewTypeStr = PairListTool.getValue(
+                                        contentsKeyPairsList,
+                                        EditComponentKey.VIEW_TYPE.key,
+                                )
+                                return ViewType.entries.firstOrNull {
+                                        it.str == viewTypeStr
+                                } ?: ViewType.FRAME
+                        }
                 }
 
                 object ClickManager {
@@ -371,6 +395,7 @@ object EditComponent {
                                 WIDTH("width"),
                                 LAYOUT_GRAVITY("layoutGravity"),
                                 GRAVITI("gravity"),
+                                PADDING("padding"),
                                 PADDING_TOP("paddingTop"),
                                 PADDING_BOTTOM("paddingBottom"),
                                 PADDING_START("paddingStart"),
@@ -1242,10 +1267,11 @@ object EditComponent {
                         fun createTextMap(
                                 textMapCon: String?,
                                 settingValue: String?,
+                                separator: Char,
                         ): Map<String,String> {
                                 val textMapSrc = CmdClickMap.createMap(
                                         textMapCon,
-                                        keySeparator
+                                        separator,
                                 ).toMap()
                                 return when(settingValue.isNullOrEmpty()){
                                         true -> textMapSrc
@@ -1627,7 +1653,8 @@ object EditComponent {
                                         mapCon,
                                         totalSettingValMap?.get(
                                                 frameTag
-                                        )
+                                        ),
+                                        Template.keySeparator,
                                 )
                                 val tagName = textMap.get(tagKey) ?: let {
                                         val prefix = RandomStr.make(10)
@@ -1671,8 +1698,68 @@ object EditComponent {
                         val tagToImageViewListRef: WeakReference<List<Pair<String, AppCompatImageView>>>,
                 )
 
+
+                suspend fun makeImageViewLayout(
+                        context: Context,
+                        idInt: Int?,
+                        contentsTag: String,
+                ): AppCompatImageView {
+                        val dp50 =
+                                context.resources.getDimension(R.dimen.toolbar_layout_height)
+                        val imageView =
+                                AppCompatImageView(context).apply {
+                                        id = idInt ?: id
+                                        tag = contentsTag
+                                        layoutParams =
+                                                ConstraintLayout.LayoutParams(
+                                                        0,
+                                                        dp50.toInt()
+                                                )
+                                }
+//                        val textView =
+//                                OutlineTextView(context).apply {
+//                                        layoutParams =
+//                                                FrameLayout.LayoutParams(
+//                                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+//                                                        FrameLayout.LayoutParams.WRAP_CONTENT
+//                                                )
+//                                }
+                        return imageView
+//                        return contentsLayout
+                }
+
+                suspend fun makeTextViewLayout(
+                        context: Context,
+                        idInt: Int?,
+                        contentsTag: String,
+                ): OutlineTextView {
+                        val dp50 =
+                                context.resources.getDimension(R.dimen.toolbar_layout_height)
+                        val textView =
+                                OutlineTextView(context).apply {
+                                        id = idInt ?: id
+                                        tag = contentsTag
+                                        layoutParams =
+                                                ConstraintLayout.LayoutParams(
+                                                        0,
+                                                        dp50.toInt()
+                                                )
+                                }
+//                        val textView =
+//                                OutlineTextView(context).apply {
+//                                        layoutParams =
+//                                                FrameLayout.LayoutParams(
+//                                                        FrameLayout.LayoutParams.WRAP_CONTENT,
+//                                                        FrameLayout.LayoutParams.WRAP_CONTENT
+//                                                )
+//                                }
+                        return textView
+//                        return contentsLayout
+                }
+
                 suspend fun makeContentsFrameLayout(
                         context: Context,
+                        idInt: Int?,
                         contentsTag: String,
                         textTagToMap: Map<String, Map<String, String>?>,
                         imageTagToMap: Map<String, Map<String, String>>,
@@ -1682,6 +1769,7 @@ object EditComponent {
                                 context.resources.getDimension(R.dimen.toolbar_layout_height)
                         val contentsLayout =
                                 bkFrameLayout ?: FrameLayout(context).apply {
+                                        id = idInt ?: id
                                         tag = contentsTag
                                         layoutParams =
                                                 ConstraintLayout.LayoutParams(

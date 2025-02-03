@@ -1094,9 +1094,15 @@ object WithEditConstraintListView{
                                         contentsKeyPairsList,
                                     )
                                 }
+                                val idInt = withContext(Dispatchers.IO){
+                                    tagIdMapSrc.get(
+                                        execContentsTag
+                                    )
+                                }
                                 val returnContentsFrameLayout = withContext(Dispatchers.Main) {
                                     EditComponent.AdapterSetter.makeContentsFrameLayout(
                                         context,
+                                        idInt,
                                         execContentsTag,
                                         textTagToMapForContents,
                                         imageTagToMapForContents,
@@ -1204,11 +1210,6 @@ object WithEditConstraintListView{
                                 }
                                 withContext(Dispatchers.Main) {
                                     baseLayoutForAdd?.addView(contentsLayout)
-                                }
-                                val idInt = withContext(Dispatchers.IO){
-                                    tagIdMapSrc.get(
-                                        execContentsTag
-                                    )
                                 }
                                 val tagIdMap = when(sceneType){
                                     SceneType.TITLE,

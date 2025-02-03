@@ -6,6 +6,7 @@ import com.puutaro.commandclick.util.str.PairListTool
 
 object LayoutSetterTool {
 
+    private val marginKey = EditComponent.Template.EditComponentKey.MARGIN.key
     private val marginTopKey = EditComponent.Template.EditComponentKey.MARGIN_TOP.key
     private val marginBottomKey = EditComponent.Template.EditComponentKey.MARGIN_BOTTOM.key
     private val marginStartKey = EditComponent.Template.EditComponentKey.MARGIN_START.key
@@ -17,17 +18,26 @@ object LayoutSetterTool {
         density: Float,
     ){
         param.apply {
+            val margin = paramMap?.get(marginKey)
             val marginData = EditComponent.Template.MarginData(
-                paramMap?.get(marginTopKey),
-                paramMap?.get(marginBottomKey),
-                paramMap?.get(marginStartKey),
-                paramMap?.get(marginEndKey),
+                paramMap?.get(marginTopKey) ?: margin,
+                paramMap?.get(marginBottomKey) ?: margin,
+                paramMap?.get(marginStartKey) ?: margin,
+                paramMap?.get(marginEndKey) ?: margin,
                 density,
             )
-            topMargin = marginData.marginTop ?: 0
-            marginStart = marginData.marginStart ?: 0
-            marginEnd = marginData.marginEnd ?: 0
-            bottomMargin = marginData.marginBottom ?: 0
+            marginData.marginTop?.let {
+                topMargin = it
+            }
+            marginData.marginStart?.let {
+                marginStart = it
+            }
+            marginData.marginEnd?.let {
+                marginEnd = it
+            }
+            marginData.marginBottom?.let {
+                bottomMargin = it
+            }
         }
     }
 }

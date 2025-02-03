@@ -30,6 +30,7 @@ object TextViewTool {
     private val strokeWidthKey = EditComponent.Template.TextManager.PropertyKey.STROKE_WIDTH.key
     private val textAlphaKey = EditComponent.Template.TextManager.PropertyKey.ALPHA.key
     private val textMaxLinesKey = EditComponent.Template.TextManager.PropertyKey.MAX_LINES.key
+    private val paddingKey = EditComponent.Template.EditComponentKey.PADDING.key
     private val textPaddingTopKey = EditComponent.Template.TextManager.PropertyKey.PADDING_TOP.key
     private val textPaddingStartKey = EditComponent.Template.TextManager.PropertyKey.PADDING_START.key
     private val textPaddingEndKey = EditComponent.Template.TextManager.PropertyKey.PADDING_END.key
@@ -39,6 +40,7 @@ object TextViewTool {
     private val textShadowXKey = EditComponent.Template.TextManager.PropertyKey.SHADOW_X.key
     private val textShadowYKey = EditComponent.Template.TextManager.PropertyKey.SHADOW_Y.key
     private val letterSpacingKey = EditComponent.Template.TextManager.PropertyKey.LETTER_SPACING.key
+    private val elevationKey = EditComponent.Template.EditComponentKey.ELEVATION.key
 
     suspend fun setVisibility(
         textView: OutlineTextView,
@@ -92,20 +94,38 @@ object TextViewTool {
                     gravity = it
                 }
             }
+            withContext(Dispatchers.IO) {
+                textMap.get(
+                    elevationKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    elevation = it
+                }
+            }
             val paddingData = withContext(Dispatchers.IO) {
+                val padding = textMap.get(
+                    paddingKey
+                )
                 EditComponent.Template.PaddingData(
                     textMap.get(
                         textPaddingTopKey,
-                    ),
+                    ) ?: padding,
                     textMap.get(
                         textPaddingBottomKey,
-                    ),
+                    ) ?: padding,
                     textMap.get(
                         textPaddingStartKey,
-                    ),
+                    ) ?: padding,
                     textMap.get(
                         textPaddingEndKey,
-                    ),
+                    ) ?: padding,
                     density,
                 )
             }

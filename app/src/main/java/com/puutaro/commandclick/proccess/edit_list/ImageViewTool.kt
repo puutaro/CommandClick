@@ -48,6 +48,7 @@ object ImageViewTool {
     private val imageGravityKey = EditComponent.Template.ImageManager.PropertyKey.GRAVITI.key
     private val imageWidthKey = EditComponent.Template.ImageManager.PropertyKey.WIDTH.key
     private val imageHeightKey = EditComponent.Template.ImageManager.PropertyKey.HEIGHT.key
+    private val paddingKey = EditComponent.Template.ImageManager.PropertyKey.PADDING.key
     private val imagePaddingTopKey = EditComponent.Template.ImageManager.PropertyKey.PADDING_TOP.key
     private val imagePaddingStartKey = EditComponent.Template.ImageManager.PropertyKey.PADDING_START.key
     private val imagePaddingEndKey = EditComponent.Template.ImageManager.PropertyKey.PADDING_END.key
@@ -56,6 +57,7 @@ object ImageViewTool {
     private val imageRotateKey = EditComponent.Template.ImageManager.PropertyKey.ROTATE.key
     private val imageScaleXKey = EditComponent.Template.ImageManager.PropertyKey.SCALE_X.key
     private val imageScaleYKey = EditComponent.Template.ImageManager.PropertyKey.SCALE_Y.key
+    private val elevationKey = EditComponent.Template.EditComponentKey.ELEVATION.key
 
     suspend fun setVisibility(
         imageView: AppCompatImageView?,
@@ -168,6 +170,21 @@ object ImageViewTool {
             }?.let {
                 withContext(Dispatchers.Main) {
                     foregroundGravity = it
+                }
+            }
+            withContext(Dispatchers.IO) {
+                imageMap.get(
+                    elevationKey,
+                )?.let {
+                    try {
+                        it.toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    elevation = it
                 }
             }
             withContext(Dispatchers.IO) {
@@ -302,19 +319,22 @@ object ImageViewTool {
                 }
             }
             val paddingData = withContext(Dispatchers.IO) {
+                val padding = imageMap.get(
+                    paddingKey
+                )
                 EditComponent.Template.PaddingData(
                     imageMap.get(
                         imagePaddingTopKey,
-                    ),
+                    ) ?: padding,
                     imageMap.get(
                         imagePaddingBottomKey,
-                    ),
+                    ) ?: padding,
                     imageMap.get(
                         imagePaddingStartKey,
-                    ),
+                    ) ?: padding,
                     imageMap.get(
                         imagePaddingEndKey,
-                    ),
+                    ) ?: padding,
                     density,
                 )
             }
