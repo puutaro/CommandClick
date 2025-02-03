@@ -499,38 +499,43 @@ object EditConstraintFrameMaker {
                     foregroundGravity = it
                 }
             }
-            val paddingData = withContext(Dispatchers.IO) {
-                val padding = PairListTool.getValue(
-                    frameKeyPairList,
-                    paddingKey
-                )
-                EditComponent.Template.PaddingData(
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        paddingTopKey
-                    ) ?: padding,
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        paddingBottomKey
-                    ) ?: padding,
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        paddingStartKey
-                    ) ?: padding,
-                    PairListTool.getValue(
-                        frameKeyPairList,
-                        paddingEndKey
-                    )?: padding,
+//            val paddingData = withContext(Dispatchers.IO) {
+//                val padding = PairListTool.getValue(
+//                    frameKeyPairList,
+//                    paddingKey
+//                )
+//                EditComponent.Template.PaddingData(
+//                    PairListTool.getValue(
+//                        frameKeyPairList,
+//                        paddingTopKey
+//                    ) ?: padding,
+//                    PairListTool.getValue(
+//                        frameKeyPairList,
+//                        paddingBottomKey
+//                    ) ?: padding,
+//                    PairListTool.getValue(
+//                        frameKeyPairList,
+//                        paddingStartKey
+//                    ) ?: padding,
+//                    PairListTool.getValue(
+//                        frameKeyPairList,
+//                        paddingEndKey
+//                    )?: padding,
+//                    density,
+//                )
+//            }
+            withContext(Dispatchers.IO) {
+                LayoutSetterTool.setPadding(
+                    this@apply,
+                    frameKeyPairList?.toMap(),
                     density,
                 )
-            }
-            withContext(Dispatchers.Main) {
-                setPadding(
-                    paddingData.paddingStart ?: paddingStart,
-                    paddingData.paddingTop ?: paddingStart,
-                    paddingData.paddingEnd ?: paddingEnd,
-                    paddingData.paddingBottom ?: paddingBottom,
-                )
+//                setPadding(
+//                    paddingData.paddingStart ?: paddingStart,
+//                    paddingData.paddingTop ?: paddingStart,
+//                    paddingData.paddingEnd ?: paddingEnd,
+//                    paddingData.paddingBottom ?: paddingBottom,
+//                )
             }
             withContext(Dispatchers.IO) {
                 PairListTool.getValue(

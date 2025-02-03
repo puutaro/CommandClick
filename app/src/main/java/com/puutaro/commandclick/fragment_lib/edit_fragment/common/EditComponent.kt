@@ -139,11 +139,21 @@ object EditComponent {
                         PADDING_BOTTOM("paddingBottom"),
                         PADDING_START("paddingStart"),
                         PADDING_END("paddingEnd"),
+                        PADDING_MULTI("paddingMulti"),
+                        PADDING_MULTI_TOP("paddingMultiTop"),
+                        PADDING_MULTI_BOTTOM("paddingMultiBottom"),
+                        PADDING_MULTI_START("paddingMultiStart"),
+                        PADDING_MULTI_END("paddingMultiEnd"),
                         MARGIN("margin"),
                         MARGIN_TOP("marginTop"),
                         MARGIN_BOTTOM("marginBottom"),
                         MARGIN_START("marginStart"),
                         MARGIN_END("marginEnd"),
+                        MARGIN_MULTI("marginMulti"),
+                        MARGIN_MULTI_TOP("marginMultiTop"),
+                        MARGIN_MULTI_BOTTOM("marginMultiBottom"),
+                        MARGIN_MULTI_START("marginMultiStart"),
+                        MARGIN_MULTI_END("marginMultiEnd"),
                         GRAVITI("gravity"),
                         LAYOUT_GRAVITY("layoutGravity"),
                         BK_COLOR("bkColor"),
@@ -1012,41 +1022,77 @@ object EditComponent {
                         }
                 }
 
-//                object ImagePropertyManager {
-//
-//
-//                }
-
-//                object TextPropertyManager {
-//
-//                }
-
                 class MarginData(
                         marginTopStr: String?,
                         marginBottomStr: String?,
                         marginStartStr: String?,
                         marginEndStr: String?,
+                        marginMultiStr: String?,
+                        paddingMultiTopStr: String?,
+                        paddingMultiBottomStr: String?,
+                        paddingMultiStartStr: String?,
+                        paddingMultiEndStr: String?,
                         density: Float,
                 ) {
-                        val marginTop = convertStrToInt(marginTopStr, density)
-                        val marginBottom = convertStrToInt(marginBottomStr, density)
-                        val marginStart = convertStrToInt(marginStartStr, density)
-                        val marginEnd = convertStrToInt(marginEndStr, density)
+                        private val marginMulti = toFloat(marginMultiStr) ?: 1f
+                        private val marginMultiTop = toFloat(paddingMultiTopStr)
+                                ?: marginMulti
+                        private val marginMultiBottom = toFloat(paddingMultiBottomStr)
+                                ?: marginMulti
+                        private val marginMultiStart = toFloat(paddingMultiStartStr)
+                                ?: marginMulti
+                        private val marginMultiEnd = toFloat(paddingMultiEndStr)
+                                ?: marginMulti
+                        val marginTop = convertStrToInt(marginTopStr, density)?.let {
+                               (it * marginMultiTop).toInt()
+                        }
+                        val marginBottom = convertStrToInt(marginBottomStr, density)?.let {
+                                (it * marginMultiBottom).toInt()
+                        }
+                        val marginStart = convertStrToInt(marginStartStr, density)?.let {
+                                (it * marginMultiStart).toInt()
+                        }
+                        val marginEnd = convertStrToInt(marginEndStr, density)?.let {
+                                (it * marginMultiEnd).toInt()
+                        }
                 }
                 class PaddingData(
                         paddingTopStr: String?,
                         paddingBottomStr: String?,
                         paddingStartStr: String?,
                         paddingEndStr: String?,
+                        paddingMultiStr: String?,
+                        paddingMultiTopStr: String?,
+                        paddingMultiBottomStr: String?,
+                        paddingMultiStartStr: String?,
+                        paddingMultiEndStr: String?,
                         density: Float,
                 ) {
-                        val paddingTop = convertStrToInt(paddingTopStr, density)
-                        val paddingBottom = convertStrToInt(paddingBottomStr, density)
-                        val paddingStart = convertStrToInt(paddingStartStr, density)
-                        val paddingEnd = convertStrToInt(paddingEndStr, density)
+                        private val paddingMulti = toFloat(paddingMultiStr) ?: 1f
+                        private val paddingMultiTop = toFloat(paddingMultiTopStr)
+                                ?: paddingMulti
+                        private val paddingMultiBottom = toFloat(paddingMultiBottomStr)
+                                ?: paddingMulti
+                        private val paddingMultiStart = toFloat(paddingMultiStartStr)
+                                ?: paddingMulti
+                        private val paddingMultiEnd = toFloat(paddingMultiEndStr)
+                                ?: paddingMulti
+                        val paddingTop = convertStrToInt(paddingTopStr, density)?.let {
+                                (it * paddingMultiTop).toInt()
+                        }
+                        val paddingBottom = convertStrToInt(paddingBottomStr, density)?.let {
+                                (it * paddingMultiBottom).toInt()
+                        }
+                        val paddingStart = convertStrToInt(paddingStartStr, density)?.let {
+                                (it * paddingMultiStart).toInt()
+                        }
+                        val paddingEnd = convertStrToInt(paddingEndStr, density)?.let {
+                                (it * paddingMultiEnd).toInt()
+                        }
 
 
                 }
+
 
                 private fun convertStrToInt(
                         numStr: String?,

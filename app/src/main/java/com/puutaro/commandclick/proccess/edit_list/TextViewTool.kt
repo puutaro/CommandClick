@@ -109,34 +109,46 @@ object TextViewTool {
                     elevation = it
                 }
             }
-            val paddingData = withContext(Dispatchers.IO) {
-                val padding = textMap.get(
-                    paddingKey
+//            val paddingData = withContext(Dispatchers.IO) {
+                LayoutSetterTool.setPadding(
+                    this@apply,
+                    textMap.toMap(),
+                    density,
                 )
-                EditComponent.Template.PaddingData(
-                    textMap.get(
-                        textPaddingTopKey,
-                    ) ?: padding,
-                    textMap.get(
-                        textPaddingBottomKey,
-                    ) ?: padding,
-                    textMap.get(
-                        textPaddingStartKey,
-                    ) ?: padding,
-                    textMap.get(
-                        textPaddingEndKey,
-                    ) ?: padding,
+//                val padding = textMap.get(
+//                    paddingKey
+//                )
+//                EditComponent.Template.PaddingData(
+//                    textMap.get(
+//                        textPaddingTopKey,
+//                    ) ?: padding,
+//                    textMap.get(
+//                        textPaddingBottomKey,
+//                    ) ?: padding,
+//                    textMap.get(
+//                        textPaddingStartKey,
+//                    ) ?: padding,
+//                    textMap.get(
+//                        textPaddingEndKey,
+//                    ) ?: padding,
+//                    density,
+//                )
+//            }
+            withContext(Dispatchers.IO){
+                LayoutSetterTool.setPadding(
+                    this@apply,
+                    textMap.toMap(),
                     density,
                 )
             }
-            withContext(Dispatchers.Main) {
-                setPadding(
-                    paddingData.paddingStart ?: paddingStart,
-                    paddingData.paddingTop ?: paddingTop,
-                    paddingData.paddingEnd ?: paddingEnd,
-                    paddingData.paddingBottom ?: paddingBottom,
-                )
-            }
+//            withContext(Dispatchers.Main) {
+//                setPadding(
+//                    paddingData.paddingStart ?: paddingStart,
+//                    paddingData.paddingTop ?: paddingTop,
+//                    paddingData.paddingEnd ?: paddingEnd,
+//                    paddingData.paddingBottom ?: paddingBottom,
+//                )
+//            }
 //                val settingValue = withContext(Dispatchers.IO) {
 //                    textMap.get(
 //                        EditComponent.Template.TextManager.TextKey.SETTING_VALUE.key

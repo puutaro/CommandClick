@@ -1,10 +1,13 @@
 package com.puutaro.commandclick.proccess.edit_list
 
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 
 object ConstraintTool {
 
@@ -123,26 +126,6 @@ object ConstraintTool {
                     tagIdMap,
                 )
 //                    ?: unsetInt
-//                        if(
-//                            overrideTag == "ok"
-//                            || overrideTag == "firstTag"
-//                            ) {
-//                            FileSystems.updateFile(
-//                                File(
-//                                    UsePath.cmdclickDefaultAppDirPath,
-//                                    "ltagIdMap_topToBottomInt.txt"
-//                                ).absolutePath,
-//                                listOf(
-//                                    "overrideTag: ${overrideTag}",
-//                                    "idInt: ${idInt}",
-//                                    "tagIdMap: ${tagIdMap}",
-//                                    "topToBottomStr: ${topToBottomStr}",
-//                                    "topToBottomId: ${topToBottomId}",
-//                                    "edit_list_button_frame_layout1: ${R.id.edit_list_button_frame_layout1}",
-//                                    "edit_list_dialog_search_edit_text: ${R.id.edit_list_dialog_search_edit_text}",
-//                                ).joinToString("\n") + "\n\n============\n\n\n"
-//                            )
-//                        }
                 topToBottomId
             }?.let {
                 topToBottom = it

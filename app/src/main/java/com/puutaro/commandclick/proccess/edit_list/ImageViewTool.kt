@@ -318,34 +318,45 @@ object ImageViewTool {
                     scaleY = it
                 }
             }
-            val paddingData = withContext(Dispatchers.IO) {
-                val padding = imageMap.get(
-                    paddingKey
-                )
-                EditComponent.Template.PaddingData(
-                    imageMap.get(
-                        imagePaddingTopKey,
-                    ) ?: padding,
-                    imageMap.get(
-                        imagePaddingBottomKey,
-                    ) ?: padding,
-                    imageMap.get(
-                        imagePaddingStartKey,
-                    ) ?: padding,
-                    imageMap.get(
-                        imagePaddingEndKey,
-                    ) ?: padding,
+//            val paddingData = withContext(Dispatchers.IO) {
+//                val padding = imageMap.get(
+//                    paddingKey
+//                )
+//                EditComponent.Template.PaddingData(
+//                    imageMap.get(
+//                        imagePaddingTopKey,
+//                    ) ?: padding,
+//                    imageMap.get(
+//                        imagePaddingBottomKey,
+//                    ) ?: padding,
+//                    imageMap.get(
+//                        imagePaddingStartKey,
+//                    ) ?: padding,
+//                    imageMap.get(
+//                        imagePaddingEndKey,
+//                    ) ?: padding,
+//                    density,
+//                )
+//            }
+            withContext(Dispatchers.IO) {
+                LayoutSetterTool.setPadding(
+                    this@apply,
+                    imageMap.toMap(),
                     density,
                 )
+//                setPadding(
+//                    paddingData.paddingStart ?: paddingStart,
+//                    paddingData.paddingTop ?: paddingStart,
+//                    paddingData.paddingEnd ?: paddingEnd,
+//                    paddingData.paddingBottom ?: paddingBottom,
+//                )
             }
-            withContext(Dispatchers.Main) {
-                setPadding(
-                    paddingData.paddingStart ?: paddingStart,
-                    paddingData.paddingTop ?: paddingTop,
-                    paddingData.paddingEnd ?: paddingEnd,
-                    paddingData.paddingBottom ?: paddingBottom,
-                )
-            }
+//                setPadding(
+//                    paddingData.paddingStart ?: paddingStart,
+//                    paddingData.paddingTop ?: paddingTop,
+//                    paddingData.paddingEnd ?: paddingEnd,
+//                    paddingData.paddingBottom ?: paddingBottom,
+//                )
         }
     }
 

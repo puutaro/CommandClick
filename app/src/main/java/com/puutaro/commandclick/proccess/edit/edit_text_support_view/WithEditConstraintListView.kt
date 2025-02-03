@@ -28,15 +28,16 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.Template
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.makeStrPosi
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
+import com.puutaro.commandclick.proccess.edit_list.EditImageViewSetter
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
+import com.puutaro.commandclick.proccess.edit_list.EditTextViewSetter
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ImageActionForConfigCon
 import com.puutaro.commandclick.proccess.edit_list.config_settings.LayoutSettingsForEditList
 import com.puutaro.commandclick.proccess.edit_list.config_settings.ListSettingsForEditList
@@ -963,25 +964,6 @@ object WithEditConstraintListView{
                                         editConstraintListAdapterArg = editConstraintListAdapter,
                                     )
                                 }
-//                                EditComponent.AdapterSetter.makeFrameVarNameToValueMap(
-//                                    fragment,
-//                                    fannelInfoMap,
-//                                    setReplaceVariableMap,
-//                                    busyboxExecutor,
-//                                    settingActionAsyncCoroutine,
-//                                    editConstraintListAdapter,
-//                                    ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap).map{
-//                                        it.key
-//                                    },
-//                                    globalVarNameToValueMap,
-//                                    frameVarNameValueMap,
-//                                    mapListElInfoForExecContents,
-//                                    contentsKeyPairsListConSrc,
-//                                    frameTag,
-//                                    frameTag,
-//                                    frameTag,
-//                                    noIndexSign,
-//                                )
                             }
                         val contentsVarNameToValueMap = frameVarNameValueMap + varNameToValueMap
                         val contentsKeyPairsListCon = CmdClickMap.replace(
@@ -1003,6 +985,16 @@ object WithEditConstraintListView{
                                 contentsKeyPairsListCon,
                                 typeSeparator
                             )
+                        }
+                        withContext(Dispatchers.IO) {
+                            PairListTool.getValue(
+                                contentsKeyPairsList,
+                                enableKey,
+                            )
+                        }.let { enableStr ->
+                            if (
+                                enableStr == switchOff
+                            ) return@execSetContentsCoroutine
                         }
                         val execContentsTag = withContext(Dispatchers.IO) {
                             PairListTool.getValue(
@@ -1070,197 +1062,100 @@ object WithEditConstraintListView{
                                 contentsKeyPairsList
                             )
                         }
-                        val contentsFrameLayout =
-                            withContext(Dispatchers.Main) setLinearFrameLayout@{
-                                withContext(Dispatchers.IO) {
-                                    PairListTool.getValue(
-                                        contentsKeyPairsList,
-                                        enableKey,
-                                    )
-                                }.let { enableStr ->
-                                    if (
-                                        enableStr == switchOff
-                                    ) return@setLinearFrameLayout null
-                                }
-                                val textTagToMapForContents = withContext(Dispatchers.IO) {
-                                    EditComponent.AdapterSetter.makeTextTagToMap(
-                                        contentsKeyPairsList,
-                                        execContentsTag,
-                                        editConstraintListAdapter?.totalSettingValMap,
-                                    )
-                                }
-                                val imageTagToMapForContents = withContext(Dispatchers.IO) {
-                                    EditComponent.AdapterSetter.makeImageTagToMap(
-                                        contentsKeyPairsList,
-                                    )
-                                }
-                                val idInt = withContext(Dispatchers.IO){
-                                    tagIdMapSrc.get(
-                                        execContentsTag
-                                    )
-                                }
-                                val returnContentsFrameLayout = withContext(Dispatchers.Main) {
-                                    EditComponent.AdapterSetter.makeContentsFrameLayout(
-                                        context,
-                                        idInt,
-                                        execContentsTag,
-                                        textTagToMapForContents,
-                                        imageTagToMapForContents,
-                                        null,
-                                    )
-                                }
-                                val contentsLayout = withContext(Dispatchers.IO){
-                                    returnContentsFrameLayout.frameLayoutRef.get()
-                                } ?: return@setLinearFrameLayout null
-//                                    withContext(Dispatchers.Main) {
-//                                            EditComponent.AdapterSetter.makeContentsFrameLayout(
-//                                                context
-//                                            )
-//                                        }
-                                val tagToTextViewListForContents =
-                                    returnContentsFrameLayout.tagToTextViewListRef.get()
-                                        ?: return@setLinearFrameLayout null
-                                val tagToImageViewListForContents =
-                                    returnContentsFrameLayout.tagToImageViewListRef.get()
-                                        ?: return@setLinearFrameLayout null
-                                val textOrImageTagListForContents =
-                                    textTagToMapForContents.keys.toList() +
-                                            imageTagToMapForContents.keys.toList()
-                                val tagGenreForContents =
-                                    EditComponent.Template.TagManager.TagGenre.TEXT_OR_IMAGE_TAG
-                                val isDuplicateTextOrImageTagErrJobForContents = withContext(Dispatchers.IO) {
-                                    val alreadyUseTagListSrc =
-                                        EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
-                                            alreadyUseTagList,
-                                            alreadyUseTagListMutex
-                                        )
-                                    run dupCheckTextOrImageTag@{
-                                        textOrImageTagListForContents.forEach {
-                                                textOrImageTag ->
-                                            val correctContentsTag =
-                                                EditComponent.AdapterSetter.tagDuplicateErrHandler(
-                                                    context,
-                                                    tagGenreForContents,
-                                                    textOrImageTag,
-                                                    alreadyUseTagListSrc,
-                                                    totalMapListElInfo,
-                                                    String(),
-                                                )
-                                            correctContentsTag?.let {
-                                                alreadyUseTagListMutex.withLock {
-                                                    alreadyUseTagList.add(it)
-                                                }
-                                            }
-                                            val isDuplicateTagErr =
-                                                correctContentsTag.isNullOrEmpty()
-                                            if (
-                                                isDuplicateTagErr
-                                            ) return@dupCheckTextOrImageTag true
-                                        }
-                                        false
-                                    }
-                                }
-                                if(
-                                    isDuplicateTextOrImageTagErrJobForContents
-                                ) return@setLinearFrameLayout null
-                                CoroutineScope(Dispatchers.IO).launch {
-//                                    val varNameToBitmapMapInContents =
-                                    val imageView = withContext(Dispatchers.IO){
-                                        contentsLayout.children.firstOrNull {
-                                                view ->
-                                            view is AppCompatImageView
-                                        } as? AppCompatImageView
-                                    }
-                                    withContext(Dispatchers.IO){
-                                        val topLevelVarNameToBitmapMap =
-                                            globalVarNameToBitmapMap + varNameToBitmapMapInFrame
-//                                        FileSystems.updateFile(
-//                                            File(UsePath.cmdclickDefaultAppDirPath, "lglobal.txt").absolutePath,
-//                                            listOf(
-//                                                "topLevelVarNameToBitmapMap: ${topLevelVarNameToBitmapMap}"
-//                                            ).joinToString("\n")
-//                                        )
-                                        ImageActionManager().exec(
-                                            fragment,
-                                            fannelInfoMap,
-                                            setReplaceVariableMap,
-                                            busyboxExecutor,
-                                            imageView,
-                                            requestBuilderSrc,
-                                            imageActionAsyncCoroutine,
-                                            topLevelVarNameToBitmapMap.map {
-                                                it.key
-                                            },
-                                            topLevelVarNameToBitmapMap,
-                                            contentsKeyPairsListCon,
-                                            listOf(
-                                                "execContentsTag: ${execContentsTag}",
-                                                totalMapListElInfo
-                                            ).joinToString(", ")
-                                        )
-                                    }
-                                }
-                                val baseLayoutForAdd = when(sceneType){
-                                    SceneType.TITLE
-                                            -> editListTitleConstraintLayout
-                                    SceneType.TOOLBAR
-                                        -> editListToolbarConstraintLayout
-                                    SceneType.FOOTER ->  editListFooterConstraintLayout
-                                    SceneType.BK -> editBkConstraintLayout
-                                }
-                                withContext(Dispatchers.Main) {
-                                    baseLayoutForAdd?.addView(contentsLayout)
-                                }
-                                val tagIdMap = when(sceneType){
-                                    SceneType.TITLE,
-                                    SceneType.TOOLBAR,
-                                    SceneType.FOOTER -> tagIdMapSrc
-                                    SceneType.BK -> tagIdMapSrc + (eachLayoutIdMap ?: emptyMap())
-                                }
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    EditConstraintFrameMaker.make(
-                                        context,
-                                        idInt,
-                                        tagIdMap,
-                                        contentsLayout,
-                                        fannelInfoMap,
-                                        setReplaceVariableMap,
-                                        busyboxExecutor,
-                                        contentsKeyPairsList,
-                                        textTagToMapForContents,
-                                        tagToTextViewListForContents,
-                                        imageTagToMapForContents,
-                                        tagToImageViewListForContents,
-                                        0,
-//                                        execContentsTag,
-//                                        editConstraintListAdapter?.totalSettingValMap,
-                                        mapListElInfoForContentsTagWithReplace,
-                                        enableClick,
-                                        clickViewStrList,
-                                        outValue,
-                                        requestBuilderSrc,
-                                        density,
-                                    )
-                                }
-                                contentsLayout
-                            } ?: return@execSetContentsCoroutine
-                        CoroutineScope(Dispatchers.IO).launch execClick@{
-                            if(
-                                sceneType == SceneType.BK
-//                                || outValue == null
-                            ) return@execClick
-                            clickHandler(
-                                fragment,
-                                fannelInfoMap,
-                                setReplaceVariableMap,
-                                editListRecyclerView,
-                                contentsKeyPairsListCon,
-                                contentsKeyPairsList,
-                                contentsFrameLayout,
-                                enableClick,
-                                clickViewStrList,
-//                                outValue,
+                        val baseLayoutForAdd = makeBaseLayout(
+                            sceneType,
+                            editListTitleConstraintLayout,
+                            editListToolbarConstraintLayout,
+                            editListFooterConstraintLayout,
+                            editBkConstraintLayout,
+                        )
+                        val tagIdMap = withContext(Dispatchers.IO) {
+                            makeTagIdMap(
+                                sceneType,
+                                tagIdMapSrc,
+                                eachLayoutIdMap,
                             )
+                        }
+                        val idInt = withContext(Dispatchers.IO){
+                            tagIdMap.get(
+                                execContentsTag
+                            )
+                        }
+                        val viewType = Template.ViewTypeManager.getViewType(
+                            contentsKeyPairsList
+                        )
+                        when(viewType) {
+                            Template.ViewTypeManager.ViewType.TEXT ->
+                                setTextView(
+                                    fragment,
+                                    fannelInfoMap,
+                                    setReplaceVariableMap,
+                                    busyboxExecutor,
+                                    editListRecyclerView,
+                                    execContentsTag,
+                                    contentsKeyPairsList,
+                                    contentsKeyPairsListCon,
+                                    tagIdMap,
+                                    idInt,
+                                    sceneType,
+                                    baseLayoutForAdd,
+                                    enableClick,
+                                    clickViewStrList,
+                                    outValue,
+                                    density,
+                                    mapListElInfoForContentsTagWithReplace,
+                                )
+                            Template.ViewTypeManager.ViewType.FRAME ->
+                                setFrameLayout(
+                                    fragment,
+                                    fannelInfoMap,
+                                    setReplaceVariableMap,
+                                    busyboxExecutor,
+                                    editListRecyclerView,
+                                    execContentsTag,
+                                    contentsKeyPairsList,
+                                    contentsKeyPairsListCon,
+                                    tagIdMap,
+                                    idInt,
+                                    sceneType,
+                                    alreadyUseTagList,
+                                    alreadyUseTagListMutex,
+                                    imageActionAsyncCoroutine,
+                                    globalVarNameToBitmapMap,
+                                    varNameToBitmapMapInFrame,
+                                    baseLayoutForAdd,
+                                    enableClick,
+                                    clickViewStrList,
+                                    outValue,
+                                    requestBuilderSrc,
+                                    density,
+                                    mapListElInfoForContentsTagWithReplace,
+                                )
+
+                            Template.ViewTypeManager.ViewType.IMAGE ->
+                                setImageView(
+                                    fragment,
+                                    fannelInfoMap,
+                                    setReplaceVariableMap,
+                                    busyboxExecutor,
+                                    editListRecyclerView,
+                                    execContentsTag,
+                                    contentsKeyPairsList,
+                                    contentsKeyPairsListCon,
+                                    tagIdMap,
+                                    idInt,
+                                    sceneType,
+                                    imageActionAsyncCoroutine,
+                                    globalVarNameToBitmapMap,
+                                    varNameToBitmapMapInFrame,
+                                    baseLayoutForAdd,
+                                    enableClick,
+                                    clickViewStrList,
+                                    outValue,
+                                    requestBuilderSrc,
+                                    density,
+                                    mapListElInfoForContentsTagWithReplace,
+                                )
                         }
                     }
                 }
@@ -1334,6 +1229,401 @@ object WithEditConstraintListView{
                     }
                 }
             jobList?.forEach { it.await() }
+        }
+    }
+
+    private suspend fun setFrameLayout(
+        fragment: Fragment?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView?,
+        execContentsTag: String,
+        contentsKeyPairsList: List<Pair<String, String>>,
+        contentsKeyPairsListCon: String,
+        tagIdMap: Map<String, Int>,
+        idInt: Int?,
+        sceneType: SceneType,
+        alreadyUseTagList: MutableList<String>,
+        alreadyUseTagListMutex: Mutex,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>,
+        varNameToBitmapMapInFrame: Map<String, Bitmap?>,
+        baseLayoutForAdd: ConstraintLayout?,
+        enableClick: Boolean,
+        clickViewStrList: List<String>,
+        outValue: TypedValue?,
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
+        mapListElInfoForContentsTagWithReplace: String,
+    ){
+        val context = fragment?.context
+            ?: return
+        val editConstraintListAdapter =
+            editListRecyclerView?.adapter as? EditConstraintListAdapter
+        val contentsFrameLayout =
+            withContext(Dispatchers.Main) setLinearFrameLayout@{
+                val textTagToMapForContents = withContext(Dispatchers.IO) {
+                    EditComponent.AdapterSetter.makeTextTagToMap(
+                        contentsKeyPairsList,
+                        execContentsTag,
+                        editConstraintListAdapter?.totalSettingValMap,
+                    )
+                }
+                val imageTagToMapForContents = withContext(Dispatchers.IO) {
+                    EditComponent.AdapterSetter.makeImageTagToMap(
+                        contentsKeyPairsList,
+                    )
+                }
+                val returnContentsFrameLayout = withContext(Dispatchers.Main) {
+                    EditComponent.AdapterSetter.makeContentsFrameLayout(
+                        context,
+                        idInt,
+                        execContentsTag,
+                        textTagToMapForContents,
+                        imageTagToMapForContents,
+                        null,
+                    )
+                }
+                val contentsLayout = withContext(Dispatchers.IO){
+                    returnContentsFrameLayout.frameLayoutRef.get()
+                } ?: return@setLinearFrameLayout null
+//                                    withContext(Dispatchers.Main) {
+//                                            EditComponent.AdapterSetter.makeContentsFrameLayout(
+//                                                context
+//                                            )
+//                                        }
+                val tagToTextViewListForContents =
+                    returnContentsFrameLayout.tagToTextViewListRef.get()
+                        ?: return@setLinearFrameLayout null
+                val tagToImageViewListForContents =
+                    returnContentsFrameLayout.tagToImageViewListRef.get()
+                        ?: return@setLinearFrameLayout null
+                val textOrImageTagListForContents =
+                    textTagToMapForContents.keys.toList() +
+                            imageTagToMapForContents.keys.toList()
+                val tagGenreForContents =
+                    EditComponent.Template.TagManager.TagGenre.TEXT_OR_IMAGE_TAG
+                val isDuplicateTextOrImageTagErrJobForContents = withContext(Dispatchers.IO) {
+                    val alreadyUseTagListSrc =
+                        EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
+                            alreadyUseTagList,
+                            alreadyUseTagListMutex
+                        )
+                    run dupCheckTextOrImageTag@{
+                        textOrImageTagListForContents.forEach {
+                                textOrImageTag ->
+                            val correctContentsTag =
+                                EditComponent.AdapterSetter.tagDuplicateErrHandler(
+                                    context,
+                                    tagGenreForContents,
+                                    textOrImageTag,
+                                    alreadyUseTagListSrc,
+                                    mapListElInfoForContentsTagWithReplace,
+                                    String(),
+                                )
+                            correctContentsTag?.let {
+                                alreadyUseTagListMutex.withLock {
+                                    alreadyUseTagList.add(it)
+                                }
+                            }
+                            val isDuplicateTagErr =
+                                correctContentsTag.isNullOrEmpty()
+                            if (
+                                isDuplicateTagErr
+                            ) return@dupCheckTextOrImageTag true
+                        }
+                        false
+                    }
+                }
+                if(
+                    isDuplicateTextOrImageTagErrJobForContents
+                ) return@setLinearFrameLayout null
+                CoroutineScope(Dispatchers.IO).launch {
+//                                    val varNameToBitmapMapInContents =
+                    val imageView = withContext(Dispatchers.IO){
+                        contentsLayout.children.firstOrNull {
+                                view ->
+                            view is AppCompatImageView
+                        } as? AppCompatImageView
+                    }
+                    withContext(Dispatchers.IO){
+                        val topLevelVarNameToBitmapMap =
+                            globalVarNameToBitmapMap + varNameToBitmapMapInFrame
+//                                        FileSystems.updateFile(
+//                                            File(UsePath.cmdclickDefaultAppDirPath, "lglobal.txt").absolutePath,
+//                                            listOf(
+//                                                "topLevelVarNameToBitmapMap: ${topLevelVarNameToBitmapMap}"
+//                                            ).joinToString("\n")
+//                                        )
+                        ImageActionManager().exec(
+                            fragment,
+                            fannelInfoMap,
+                            setReplaceVariableMap,
+                            busyboxExecutor,
+                            imageView,
+                            requestBuilderSrc,
+                            imageActionAsyncCoroutine,
+                            topLevelVarNameToBitmapMap.map {
+                                it.key
+                            },
+                            topLevelVarNameToBitmapMap,
+                            contentsKeyPairsListCon,
+                            mapListElInfoForContentsTagWithReplace
+                        )
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    baseLayoutForAdd?.addView(contentsLayout)
+                }
+                CoroutineScope(Dispatchers.Main).launch {
+                    EditConstraintFrameMaker.make(
+                        context,
+                        idInt,
+                        tagIdMap,
+                        contentsLayout,
+                        fannelInfoMap,
+                        setReplaceVariableMap,
+                        busyboxExecutor,
+                        contentsKeyPairsList,
+                        textTagToMapForContents,
+                        tagToTextViewListForContents,
+                        imageTagToMapForContents,
+                        tagToImageViewListForContents,
+                        0,
+//                                        execContentsTag,
+//                                        editConstraintListAdapter?.totalSettingValMap,
+                        mapListElInfoForContentsTagWithReplace,
+                        enableClick,
+                        clickViewStrList,
+                        outValue,
+                        requestBuilderSrc,
+                        density,
+                    )
+                }
+                contentsLayout
+            } ?: return
+        CoroutineScope(Dispatchers.IO).launch execClick@{
+            if(
+                sceneType == SceneType.BK
+//                                || outValue == null
+            ) return@execClick
+            clickHandler(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                editListRecyclerView,
+                contentsKeyPairsListCon,
+                contentsKeyPairsList,
+                contentsFrameLayout,
+                enableClick,
+                clickViewStrList,
+//                                outValue,
+            )
+        }
+    }
+
+
+    private suspend fun setImageView(
+        fragment: Fragment?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView?,
+        execContentsTag: String,
+        contentsKeyPairsList: List<Pair<String, String>>,
+        contentsKeyPairsListCon: String,
+        tagIdMap: Map<String, Int>,
+        idInt: Int?,
+        sceneType: SceneType,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>,
+        varNameToBitmapMapInFrame: Map<String, Bitmap?>,
+        baseLayoutForAdd: ConstraintLayout?,
+        enableClick: Boolean,
+        clickViewStrList: List<String>,
+        outValue: TypedValue?,
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
+        mapListElInfoForContentsTagWithReplace: String,
+    ){
+        val context = fragment?.context
+            ?: return
+        val editConstraintListAdapter =
+            editListRecyclerView?.adapter as? EditConstraintListAdapter
+        val imageView = withContext(Dispatchers.Main) {
+            EditComponent.AdapterSetter.makeImageViewLayout(
+                context,
+                idInt,
+                execContentsTag,
+            )
+        }
+        withContext(Dispatchers.Main) {
+            baseLayoutForAdd?.addView(imageView)
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+//                                    val varNameToBitmapMapInContents =
+            withContext(Dispatchers.IO){
+                val topLevelVarNameToBitmapMap =
+                    globalVarNameToBitmapMap + varNameToBitmapMapInFrame
+//                                        FileSystems.updateFile(
+//                                            File(UsePath.cmdclickDefaultAppDirPath, "lglobal.txt").absolutePath,
+//                                            listOf(
+//                                                "topLevelVarNameToBitmapMap: ${topLevelVarNameToBitmapMap}"
+//                                            ).joinToString("\n")
+//                                        )
+                ImageActionManager().exec(
+                    fragment,
+                    fannelInfoMap,
+                    setReplaceVariableMap,
+                    busyboxExecutor,
+                    imageView,
+                    requestBuilderSrc,
+                    imageActionAsyncCoroutine,
+                    topLevelVarNameToBitmapMap.map {
+                        it.key
+                    },
+                    topLevelVarNameToBitmapMap,
+                    contentsKeyPairsListCon,
+                    mapListElInfoForContentsTagWithReplace,
+                    editConstraintListAdapterArg = editConstraintListAdapter,
+                )
+            }
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            EditImageViewSetter.setForConstraint(
+                context,
+                tagIdMap,
+                imageView,
+                contentsKeyPairsList,
+                0,
+                enableClick,
+                outValue,
+                requestBuilderSrc,
+                density,
+                mapListElInfoForContentsTagWithReplace,
+            )
+        }
+//        CoroutineScope(Dispatchers.IO).launch execClick@{
+//            if(
+//                sceneType == SceneType.BK
+////                                || outValue == null
+//            ) return@execClick
+//            clickHandler(
+//                fragment,
+//                fannelInfoMap,
+//                setReplaceVariableMap,
+//                editListRecyclerView,
+//                contentsKeyPairsListCon,
+//                contentsKeyPairsList,
+//                contentsFrameLayout,
+//                enableClick,
+//                clickViewStrList,
+////                                outValue,
+//            )
+//        }
+    }
+
+    private suspend fun setTextView(
+        fragment: Fragment?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        editListRecyclerView: RecyclerView?,
+        execContentsTag: String,
+        contentsKeyPairsList: List<Pair<String, String>>,
+        contentsKeyPairsListCon: String,
+        tagIdMap: Map<String, Int>,
+        idInt: Int?,
+        sceneType: SceneType,
+        baseLayoutForAdd: ConstraintLayout?,
+        enableClick: Boolean,
+        clickViewStrList: List<String>,
+        outValue: TypedValue?,
+        density: Float,
+        mapListElInfoForContentsTagWithReplace: String,
+    ){
+        val context = fragment?.context
+            ?: return
+        val editConstraintListAdapter =
+            editListRecyclerView?.adapter as? EditConstraintListAdapter
+        val textView = withContext(Dispatchers.Main) {
+            EditComponent.AdapterSetter.makeTextViewLayout(
+                context,
+                idInt,
+                execContentsTag,
+            )
+        }
+        withContext(Dispatchers.Main) {
+            baseLayoutForAdd?.addView(textView)
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            EditTextViewSetter.setForConstraint(
+                context,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                busyboxExecutor,
+                tagIdMap,
+                textView,
+                contentsKeyPairsList,
+                contentsKeyPairsListCon,
+                editConstraintListAdapter?.totalSettingValMap?.get(
+                    execContentsTag
+                ),
+                0,
+                enableClick,
+                outValue,
+                density,
+                mapListElInfoForContentsTagWithReplace,
+            )
+        }
+//        CoroutineScope(Dispatchers.IO).launch execClick@{
+//            if(
+//                sceneType == SceneType.BK
+////                                || outValue == null
+//            ) return@execClick
+//            clickHandler(
+//                fragment,
+//                fannelInfoMap,
+//                setReplaceVariableMap,
+//                editListRecyclerView,
+//                contentsKeyPairsListCon,
+//                contentsKeyPairsList,
+//                contentsFrameLayout,
+//                enableClick,
+//                clickViewStrList,
+////                                outValue,
+//            )
+//        }
+    }
+
+    private fun makeBaseLayout(
+        sceneType: SceneType,
+        editListTitleConstraintLayout: ConstraintLayout?,
+        editListToolbarConstraintLayout: ConstraintLayout?,
+        editListFooterConstraintLayout: ConstraintLayout?,
+        editBkConstraintLayout: ConstraintLayout?,
+    ): ConstraintLayout? {
+        return when(sceneType){
+            SceneType.TITLE
+                -> editListTitleConstraintLayout
+            SceneType.TOOLBAR
+                -> editListToolbarConstraintLayout
+            SceneType.FOOTER ->  editListFooterConstraintLayout
+            SceneType.BK -> editBkConstraintLayout
+        }
+    }
+
+    private fun makeTagIdMap(
+        sceneType: SceneType,
+        tagIdMapSrc: Map<String, Int>,
+        eachLayoutIdMap: Map<String, Int>?,
+    ): Map<String, Int> {
+        return when(sceneType){
+            SceneType.TITLE,
+            SceneType.TOOLBAR,
+            SceneType.FOOTER -> tagIdMapSrc
+            SceneType.BK -> tagIdMapSrc + (eachLayoutIdMap ?: emptyMap())
         }
     }
 

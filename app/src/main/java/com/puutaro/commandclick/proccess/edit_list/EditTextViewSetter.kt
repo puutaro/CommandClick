@@ -61,6 +61,31 @@ object EditTextViewSetter {
         if(
             textMap.isNullOrEmpty()
         ) return
+//        if(
+//            textView.tag == "okText"
+//        ) {
+//            val param = textView.layoutParams as ConstraintLayout.LayoutParams
+//            FileSystems.writeFile(
+//                File(
+//                    UsePath.cmdclickDefaultAppDirPath,
+//                    "ltagIdMap_topToBottomInt.txt"
+//                ).absolutePath,
+//                listOf(
+//                    "textView: ${textView.id}",
+//                    "overrideTag: ${textView.tag}",
+//                    "textMap: ${textMap}",
+//                    "tagIdMap: ${tagIdMap}",
+//                    "topToBottom: ${param.topToBottom}",
+//                    "topToTop: ${param.topToTop}",
+//                    "bottomToBottom: ${param.bottomToBottom}",
+//                    "bottomToTop: ${param.bottomToTop}",
+//                    "startToEnd: ${param.startToEnd}",
+//                    "startToStart: ${param.startToStart}",
+//                    "endToEnd: ${param.endToEnd}",
+//                    "endToStart: ${param.endToStart}",
+//                ).joinToString("\n") + "\n\n============\n\n\n"
+//            )
+//        }
         TextViewTool.setVisibility(
             textView,
             textMap
