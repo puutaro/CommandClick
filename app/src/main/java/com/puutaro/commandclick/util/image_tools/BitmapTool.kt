@@ -31,7 +31,10 @@ import android.text.style.RelativeSizeSpan
 import android.util.Base64
 import android.util.TypedValue
 import android.view.View
+import androidx.core.graphics.blue
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.core.graphics.toColor
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.PAINT_FLAGS
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -1354,8 +1357,9 @@ object BitmapTool {
             originalBitmap: Bitmap,
             colorStr: String,
         ): Bitmap {
+            val parsedColor = Color.parseColor(colorStr)
             if(
-                Color.parseColor(colorStr) == Color.BLACK
+                parsedColor == Color.BLACK
             ) return originalBitmap
             val width = originalBitmap.width
             val height = originalBitmap.height
@@ -1370,12 +1374,22 @@ object BitmapTool {
                     val green = Color.green(pixel)
                     val blue = Color.blue(pixel)
                     val alpha = Color.alpha(pixel)
-                    if (alpha > 0 && red < 10 && green < 10 && blue < 10) {
+                    if (
+                        alpha > 0
+                        && red == 0
+                        && green == 0
+                        && blue == 0
+                        ) {
                         // Set the pixel to fully transparent
                         resultBitmap.setPixel(
                             x,
                             y,
-                            Color.parseColor(colorStr)
+                            argb(
+                                alpha,
+                                parsedColor.red,
+                                parsedColor.green,
+                                parsedColor.blue,
+                            ),
                         )
                         continue
                     }

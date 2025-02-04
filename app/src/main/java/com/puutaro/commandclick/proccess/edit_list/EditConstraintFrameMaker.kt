@@ -15,9 +15,11 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import com.puutaro.commandclick.util.str.PairListTool
@@ -594,7 +596,7 @@ object EditConstraintFrameMaker {
         }
     }
 
-    private suspend fun setImageView(
+    suspend fun setImageView(
         imageView: AppCompatImageView,
         imageMap: Map<String, String>?,
         defaultWidth: Int?,
@@ -632,6 +634,20 @@ object EditConstraintFrameMaker {
             requestBuilderSrc,
             density,
         )
+//        if(imageView.tag == "speechModeFrame") {
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lframe.txt").absolutePath,
+//                listOf(
+//                    "imageMap,: ${imageMap}",
+//                    "isVisible,: ${imageView.isVisible}",
+//                    "visibility: ${imageView.visibility}",
+//                    "width: ${imageView.layoutParams.width}",
+//                    "height: ${imageView.layoutParams.height}",
+//                    "imageTintList: ${imageView.imageTintList}",
+//                    "matchParent: ${FrameLayout.LayoutParams.MATCH_PARENT}"
+//                ).joinToString("\n\n")
+//            )
+//        }
     }
 
     suspend fun setImageViewForDynamic(

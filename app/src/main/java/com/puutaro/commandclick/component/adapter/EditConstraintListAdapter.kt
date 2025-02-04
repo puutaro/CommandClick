@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -271,8 +272,11 @@ class EditConstraintListAdapter(
             view.findViewById<MaterialCardView>(
                 R.id.edit_constraint_adapter_mterial_card_view
             )
-        val bkFrameLayout = materialCardView.findViewById<FrameLayout>(
-            R.id.edit_constraint_adapter_bk_frame_layout
+//        val bkFrameLayout = materialCardView.findViewById<FrameLayout>(
+//            R.id.edit_constraint_adapter_bk_frame_layout
+//        )
+        val bkImageView = materialCardView.findViewById<AppCompatImageView>(
+            R.id.edit_constraint_adapter_bk_image
         )
         val totalConstraintLayout = materialCardView.findViewById<ConstraintLayout>(
             R.id.edit_constraint_adapter_constraint,
@@ -443,7 +447,12 @@ class EditConstraintListAdapter(
                     }
 
                     val removeAllViewFromBkFrameJob = async {
-                        holder.bkFrameLayout.removeAllViews()
+                        holder.bkImageView.apply {
+                            background = null
+                            backgroundTintList = null
+                            imageTintList = null
+                        }
+//                        holder.bkFrameLayout.removeAllViews()
                     }
                     listOf(
                         cardViewSettingJob,
@@ -539,11 +548,12 @@ class EditConstraintListAdapter(
                     key to it.value
                 }?.toMap() ?: emptyMap()
             }
-            val imageView = withContext(Dispatchers.IO){
-                holder.bkFrameLayout.children.firstOrNull {
-                        view ->
-                    view is AppCompatImageView
-                } as? AppCompatImageView
+            val bkImageView = withContext(Dispatchers.IO){
+                holder.bkImageView
+//                holder.bkFrameLayout.children.firstOrNull {
+//                        view ->
+//                    view is AppCompatImageView
+//                } as? AppCompatImageView
             }
             val varNameToBitmapMapInFrame = withContext(Dispatchers.IO){
                 ImageActionManager().exec(
@@ -551,7 +561,7 @@ class EditConstraintListAdapter(
                     fannelInfoMap,
                     setReplaceVariableMap,
                     busyboxExecutor,
-                    imageView,
+                    bkImageView,
                     requestBuilderSrc,
                     imageActionAsyncCoroutine,
                     globalVarNameToBitmapMap.map {
@@ -638,23 +648,23 @@ class EditConstraintListAdapter(
             if(
                 isDuplicateTextOrImageTagErrJobForFrame
             ) return@launch
-            val returnFrameLayout = withContext(Dispatchers.Main) {
-                EditComponent.AdapterSetter.makeContentsFrameLayout(
-                    context,
-                    null,
-                    frameTag,
-                    null,
-                    textTagToMapForFrame,
-                    imageTagToMapForFrame,
-                    holder.bkFrameLayout
-                )
-            }
-            val bkFrameLayout = returnFrameLayout.frameLayoutRef.get()
-                ?: return@launch
-            val tagToTextViewListForFrame = returnFrameLayout.tagToTextViewListRef.get()
-                ?: return@launch
-            val tagToImageViewListForFrame = returnFrameLayout.tagToImageViewListRef.get()
-                ?: return@launch
+//            val returnFrameLayout = withContext(Dispatchers.Main) {
+//                EditComponent.AdapterSetter.makeContentsFrameLayout(
+//                    context,
+//                    null,
+//                    frameTag,
+//                    null,
+//                    textTagToMapForFrame,
+//                    imageTagToMapForFrame,
+////                    holder.bkFrameLayout
+//                )
+//            }
+//            val bkFrameLayout = returnFrameLayout.frameLayoutRef.get()
+//                ?: return@launch
+//            val tagToTextViewListForFrame = returnFrameLayout.tagToTextViewListRef.get()
+//                ?: return@launch
+//            val tagToImageViewListForFrame = returnFrameLayout.tagToImageViewListRef.get()
+//                ?: return@launch
 //            val clickTagToViewList = returnFrameLayout.clickTagToViewListRef.get()
             val isClickEnable = withContext(Dispatchers.IO) {
                 EditComponent.Template.ClickManager.isClickEnable(frameKeyPairsList.toMap())
@@ -686,30 +696,45 @@ class EditConstraintListAdapter(
 //                )
                 val frameId = 10000
                 withContext(Dispatchers.Main) execSetFrame@{
-                    EditConstraintFrameMaker.make(
-                        context,
-                        frameId,
-                        null,
-                        bkFrameLayout,
-                        fannelInfoMap,
-                        setReplaceVariableMap,
-                        busyboxExecutor,
-                        frameKeyPairsList,
-                        textTagToMapForFrame,
-                        tagToTextViewListForFrame,
-                        imageTagToMapForFrame,
-                        tagToImageViewListForFrame,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-//                        frameTag,
-//                        totalSettingValMap,
+                    bkImageView.tag = frameTag
+                    EditConstraintFrameMaker.setImageView(
+                        bkImageView,
+                        frameKeyPairsList.toMap(),
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER,
+                        Gravity.CENTER,
+                        EditComponent.Template.ImageManager.ImageScale.FIT_CENTER.scale,
+                        false,
+                        outValue,
                         totalMapListElInfo,
-                        null,
-//                        false,
-                        null,
-//                        null,
                         requestBuilderSrc,
                         density,
                     )
+//                    EditConstraintFrameMaker.make(
+//                        context,
+//                        frameId,
+//                        null,
+//                        bkFrameLayout,
+//                        fannelInfoMap,
+//                        setReplaceVariableMap,
+//                        busyboxExecutor,
+//                        frameKeyPairsList,
+//                        textTagToMapForFrame,
+//                        tagToTextViewListForFrame,
+//                        imageTagToMapForFrame,
+//                        tagToImageViewListForFrame,
+//                        ViewGroup.LayoutParams.MATCH_PARENT,
+////                        frameTag,
+////                        totalSettingValMap,
+//                        totalMapListElInfo,
+//                        null,
+////                        false,
+//                        null,
+////                        null,
+//                        requestBuilderSrc,
+//                        density,
+//                    )
                 }
                 frameClickHandle(
                     frameTag,

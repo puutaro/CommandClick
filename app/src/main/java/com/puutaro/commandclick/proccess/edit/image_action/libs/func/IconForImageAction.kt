@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
@@ -10,6 +11,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlin.enums.EnumEntries
@@ -107,21 +109,44 @@ object IconForImageAction {
                 val bitmap = CmdClickIcons.entries.firstOrNull {
                    it.str == iconMacroStr
                }?.let {
-                   AppCompatResources.getDrawable(
-                       context,
-                       it.id,
-                   )?.let {
-                       when(
+                   icon ->
+                    val bitmapBeforeResize = AssetsFileManager.assetsByteArray(
+                        context,
+                        icon.assetsPath,
+                    )?.let {
+                        BitmapFactory.decodeByteArray(it, 0, it.size)
+                    } as Bitmap
+                    when(
                            width == intDefaultNullMacroStr.toInt()
                                    || height == intDefaultNullMacroStr.toInt()
                        ){
-                           true -> it.toBitmap()
-                           false -> it.toBitmap(
+                           true -> bitmapBeforeResize
+                           false -> Bitmap.createScaledBitmap(
+                               bitmapBeforeResize,
                                width,
-                               height
+                               height,
+                               true
                            )
                        }
-                   }
+//                   AppCompatResources.getDrawable(
+//                       context,
+//                       it.id,
+//                   )?.let {
+//                       val iconFile = ExecSetToolbarButtonImage.getImageFile(
+//                           it.ass
+//                       )
+//                       BitmapTool.convertFileToBitmap(iconFile.absolutePath)
+//                       when(
+//                           width == intDefaultNullMacroStr.toInt()
+//                                   || height == intDefaultNullMacroStr.toInt()
+//                       ){
+//                           true -> it.toBitmap()
+//                           false -> it.toBitmap(
+//                               width,
+//                               height
+//                           )
+//                       }
+//                   }
                }
                 Pair(
                     bitmap,
@@ -209,7 +234,7 @@ object IconForImageAction {
                 TYPE("type", null, FuncCheckerForSetting.ArgType.STRING),
                 WIDTH("width", intDefaultNullMacroStr, FuncCheckerForSetting.ArgType.INT),
                 HEIGHT("height", intDefaultNullMacroStr, FuncCheckerForSetting.ArgType.INT),
-                COLOR("color", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.INT),
+//                COLOR("color", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.INT),
             }
         }
         data object ImgArgs : IconMethodArgClass(), ArgType {

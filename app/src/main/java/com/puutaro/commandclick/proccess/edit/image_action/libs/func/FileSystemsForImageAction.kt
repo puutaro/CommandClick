@@ -77,7 +77,7 @@ object FileSystemsForImageAction {
                     mapArgMapList,
                     args.bitmapKeyToIndex,
                     varNameToBitmapMap,
-                    where
+                    where,
                 ).let { savePathToErr ->
                     val funcErr = savePathToErr.second
                         ?: return@let savePathToErr.first
@@ -94,7 +94,6 @@ object FileSystemsForImageAction {
                     bitmap,
                     null,
                 ) to null
-                null
             }
             is FileMethodArgClass.ReadArgs -> {
                 val formalArgIndexToNameToTypeList = args.entries.mapIndexed {

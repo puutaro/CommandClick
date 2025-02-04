@@ -20,19 +20,32 @@
     android:layout_gravity="center"
     android:gravity="center"
     >
-        <include
-            android:id="@+id/edit_constraint_adapter_bk_frame_layout"
-            layout="@layout/icon_caption_layout_for_edit_list"
-            android:background="@color/trans"
-            android:backgroundTint="@color/trans"
-            />
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/edit_constraint_adapter_constraint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white_green"
-            android:gravity="center"
-            >
+<!--        <include-->
+<!--            android:id="@+id/edit_constraint_adapter_bk_frame_layout"-->
+<!--            layout="@layout/icon_caption_layout_for_edit_list"-->
+<!--            android:background="@color/trans"-->
+<!--            android:backgroundTint="@color/trans"-->
+<!--            />-->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/edit_constraint_adapter_bk_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@null"
+        app:tint="@null"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="0dp"
+        android:background="@color/trans"
+        android:backgroundTint="@color/trans"
+        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/edit_constraint_adapter_constraint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white_green"
+        android:gravity="center"
+        >
 <!--            <include-->
 <!--                android:id="@+id/button_frame_layout1"-->
 <!--                layout="@layout/icon_caption_layout_for_edit_constraint_list"-->
@@ -49,5 +62,5 @@
 <!--                android:id="@+id/button_frame_layout4"-->
 <!--                layout="@layout/icon_caption_layout_for_edit_constraint_list"-->
 <!--                />-->
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

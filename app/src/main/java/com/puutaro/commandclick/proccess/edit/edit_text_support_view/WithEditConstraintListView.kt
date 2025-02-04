@@ -193,10 +193,15 @@ object WithEditConstraintListView{
                 UsePath.cmdclickDefaultIDebugAppDirPath
             )
         }
-        val globalVarNameToBitmapMap = let {
+        val globalVarNameToBitmapMap =
             ImageActionForConfigCon.getImageConfigCon(
                 editListConfigMapSrc,
-            ).let {
+            )?.let {
+                CmdClickMap.replace(
+                    it,
+                    globalVarNameToValueMap
+                )
+            }.let {
                 val imageActionManager = ImageActionManager()
                 runBlocking {
                     val keyToSubKeyConWhere =
@@ -213,14 +218,13 @@ object WithEditConstraintListView{
                         null,
                         imageActionAsyncCoroutine,
                         null,
-//                        listOf("testTopVar"),
+    //                        listOf("testTopVar"),
                         null,
                         it,
                         keyToSubKeyConWhere,
                     )
                 }
             }
-        }
         withContext(Dispatchers.IO) {
             ImageActionManager.init()
         }

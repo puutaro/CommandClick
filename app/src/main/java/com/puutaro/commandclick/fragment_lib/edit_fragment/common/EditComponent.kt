@@ -1821,7 +1821,7 @@ object EditComponent {
                         val dp50 =
                                 context.resources.getDimension(R.dimen.toolbar_layout_height)
                         val contentsLayout =
-                                bkFrameLayout ?: FrameLayout(context).apply {
+                                (bkFrameLayout ?: FrameLayout(context)).apply {
                                         id = idInt ?: id
                                         tag = contentsTag
                                         layoutParams =

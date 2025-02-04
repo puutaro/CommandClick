@@ -9,11 +9,16 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.BlurForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ColorForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.CutForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystemsForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OpacityForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OverlayForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.SizeForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ViewForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.WallForImageAction
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -123,6 +128,46 @@ object ImageFuncManager {
                     baseArgsPairList,
                     varNameToBitmapMap,
                 )
+            FuncType.OVERLAY ->
+                OverlayForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
+            FuncType.OPACITY ->
+                OpacityForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
+            FuncType.BLUR ->
+                BlurForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
+            FuncType.COLOR ->
+                ColorForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
+            FuncType.SIZE ->
+                SizeForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
         }
 
     }
@@ -138,6 +183,11 @@ object ImageFuncManager {
         DELAY("delay"),
         ARB("arb"),
         CUT("cut"),
+        OVERLAY("overlay"),
+        OPACITY("opacity"),
+        BLUR("blur"),
+        COLOR("color"),
+        SIZE("size")
     }
 
 }

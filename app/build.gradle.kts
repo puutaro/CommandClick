@@ -144,6 +144,7 @@ dependencies {
 
     implementation("com.github.yuriy-budiyev:code-scanner:2.3.2")
     implementation("io.github.thanosfisherman.wifiutils:wifiutils:1.6.6")
+    implementation("io.github.hokofly:hoko-blur:1.5.3")
 
     implementation ("com.github.alexzhirkevich:custom-qr-generator:2.0.0-alpha01")
 
@@ -162,7 +163,7 @@ dependencies {
 //    val htextview_version = "0.1.2"
 //    implementation("com.github.kibotu:htextview:0.1.28")
 //    implementation("com.github.takusemba:spotlight:2.0.5")
-//    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
+    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
     implementation("jp.wasabeef:glide-transformations:4.3.0")
     implementation("net.objecthunter:exp4j:0.4.8")
     implementation("jp.wasabeef:blurry:4.0.1")
