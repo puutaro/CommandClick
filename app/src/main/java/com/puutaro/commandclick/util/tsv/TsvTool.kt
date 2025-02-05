@@ -35,8 +35,10 @@ object TsvTool {
         if(
             tsvPath.isNullOrEmpty()
         ) return
-        var updateTsvCon =
-            ReadText(tsvPath).readText()
+//        var updateTsvCon =
+//            ReadText(tsvPath).readText()
+        val updateTsvConBuilder =
+            StringBuilder(ReadText(tsvPath).readText())
         updateTsvConList.forEach {
             val keyValueList = it.split("\t")
             val keyName = keyValueList.firstOrNull()
@@ -45,16 +47,33 @@ object TsvTool {
             ) return@forEach
             val value = keyValueList.getOrNull(1)
                 ?: String()
-            val tempUpdateTsvCon = execUpdateTsvByKey(
-                updateTsvCon,
-                keyName,
-                value
-            )
-            if(
-                tempUpdateTsvCon.isNullOrEmpty()
-            ) return@forEach
-            updateTsvCon = tempUpdateTsvCon
+            var index = updateTsvConBuilder.indexOf(keyName)
+            while (index != -1) {
+                updateTsvConBuilder.replace(
+                    index,
+                    index + keyName.length,
+                    value
+                )
+                index = updateTsvConBuilder.indexOf(
+                    keyName,
+                    index + value.length
+                )
+            }
+
+//            val value = keyValueList.getOrNull(1)
+//                ?: String()
+//            val tempUpdateTsvCon = execUpdateTsvByKey(
+//                updateTsvConBuilder,
+//                keyName,
+//                value
+//            )
+//            if(
+//                tempUpdateTsvCon.isNullOrEmpty()
+//            ) return@forEach
+//            updateTsvConBuilder = tempUpdateTsvCon
         }
+        val updateTsvCon =
+            updateTsvConBuilder.toString()
         if(
             updateTsvCon.isEmpty()
         ) return

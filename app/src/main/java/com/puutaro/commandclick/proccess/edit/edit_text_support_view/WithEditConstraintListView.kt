@@ -62,6 +62,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDateTime
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -127,6 +128,8 @@ object WithEditConstraintListView{
         density: Float,
         requestBuilderSrc: RequestBuilder<Drawable>?
     ) {
+        val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+        dateList.add("launch" to LocalDateTime.now())
         val context = fragment.context
             ?: return
         CoroutineScope(Dispatchers.Main).launch{
@@ -144,6 +147,7 @@ object WithEditConstraintListView{
                 }
             }
         }
+        dateList.add("settingAc" to LocalDateTime.now())
         withContext(Dispatchers.IO) {
 //            SettingActionManager.Companion.GlobalExitManager.init()
             SettingActionManager.init()
@@ -186,7 +190,7 @@ object WithEditConstraintListView{
 //                ).joinToString("\n\n\n")
 //            )
         }
-
+        dateList.add("imageAc" to LocalDateTime.now())
         withContext(Dispatchers.IO) {
             ImageActionManager.init()
             FileSystems.removeAndCreateDir(
@@ -252,6 +256,7 @@ object WithEditConstraintListView{
         val setReplaceVariableMap = withContext(Dispatchers.IO) {
             (setReplaceVariableMapSrc ?: emptyMap())
         }
+        dateList.add("makeEditConfig" to LocalDateTime.now())
         val editListConfigMap = withContext(Dispatchers.IO) {
             editListConfigMapSrc?.map {
                 val key = CmdClickMap.replace(
@@ -265,6 +270,7 @@ object WithEditConstraintListView{
                 key to value
             }
         }?.toMap()
+        dateList.add("setTitle" to LocalDateTime.now())
         CoroutineScope(Dispatchers.IO).launch {
             setTitle(
                 fragment,
@@ -283,6 +289,7 @@ object WithEditConstraintListView{
                 density,
             )
         }
+        dateList.add("setBk" to LocalDateTime.now())
         CoroutineScope(Dispatchers.IO).launch {
             setBk(
                 fragment,
@@ -322,21 +329,26 @@ object WithEditConstraintListView{
 //            File(UsePath.cmdclickDefaultAppDirPath, "lfannelContentsList.txt").absolutePath,
 //            fannelContentsList?.joinToString("\n") ?: String()
 //        )
+        dateList.add("makeAdapter" to LocalDateTime.now())
         val editConstraintListAdapter = withContext(Dispatchers.IO) {
+            dateList.add("setAdapter_indexListMap" to LocalDateTime.now())
             val indexListMap = EditListConfig.getConfigKeyMap(
                 editListConfigMap,
                 EditListConfig.EditListConfigKey.LIST.key,
                 setReplaceVariableMap,
             )
+            dateList.add("setAdapter_lineMapList" to LocalDateTime.now())
             val lineMapList = ListSettingsForEditList.EditListMaker.makeLineMapListHandler(
                 fannelInfoMap,
                 setReplaceVariableMap,
                 indexListMap,
                 busyboxExecutor,
             )
+            dateList.add("setAdapter_layoutInflater" to LocalDateTime.now())
             val layoutInflater = LayoutInflater.from(
                 context
             )
+            dateList.add("setAdapter_frameMapAndFrameTagToContentsMapListToTagIdList" to LocalDateTime.now())
             val frameMapAndFrameTagToContentsMapListToTagIdList =
                 let {
                     val viewLayoutPath = ListSettingsForEditList.ViewLayoutPathManager.getViewLayoutPath(
@@ -345,6 +357,7 @@ object WithEditConstraintListView{
                         indexListMap,
                         ListSettingsForEditList.ListSettingKey.VIEW_LAYOUT_PATH.key,
                     )
+                    dateList.add("setAdapter_ListSettingsForEditList.ViewLayoutPathManager.parseForConstraint" to LocalDateTime.now())
                     ListSettingsForEditList.ViewLayoutPathManager.parseForConstraint(
                         context,
                         fannelInfoMap,
@@ -352,6 +365,7 @@ object WithEditConstraintListView{
                         viewLayoutPath
                     )
                 }
+            dateList.add("setAdapter_EditConstraintListAdapter" to LocalDateTime.now())
             EditConstraintListAdapter(
                 WeakReference(fragment),
                 layoutInflater,
@@ -370,7 +384,11 @@ object WithEditConstraintListView{
                 density
             )
         }
-
+        dateList.add("setAdapter" to LocalDateTime.now())
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "leditDateList.txt").absolutePath,
+//            dateList.joinToString("\n")
+//        )
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
                 editListRecyclerView.adapter = editConstraintListAdapter
@@ -871,12 +889,12 @@ object WithEditConstraintListView{
             }?.toMap() ?: emptyMap()
         }
         val varNameToBitmapMapInFrame = withContext(Dispatchers.IO) {
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "lglobal_frame.txt").absolutePath,
-                listOf(
-                    "globalVarNameToBitmapMap: ${globalVarNameToBitmapMap}"
-                ).joinToString("\n")
-            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lglobal_frame.txt").absolutePath,
+//                listOf(
+//                    "globalVarNameToBitmapMap: ${globalVarNameToBitmapMap}"
+//                ).joinToString("\n")
+//            )
             ImageActionManager().exec(
                 fragment,
                 fannelInfoMap,
@@ -1850,17 +1868,17 @@ object WithEditConstraintListView{
                     editListPosition: Int,
                 ) {
 //                    ToastUtils.showShort("${itemView is MaterialCardView}")
-                    FileSystems.writeFile(
-                        File(UsePath.cmdclickDefaultAppDirPath, "lOnClidek00.txt").absolutePath,
-                        listOf(
-                            "editListPosition: ${editListPosition}",
-                            "holder.bindingAdapterPosition: ${holder.bindingAdapterPosition}",
-                            "is FrameLayout: ${itemView is FrameLayout}",
-                            "is MaterialCardView: ${itemView is MaterialCardView}",
-                            "itemView: ${itemView.tag}",
-                            "frameTag: ${frameTag}",
-                        ).joinToString("\n")
-                    )
+//                    FileSystems.writeFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lOnClidek00.txt").absolutePath,
+//                        listOf(
+//                            "editListPosition: ${editListPosition}",
+//                            "holder.bindingAdapterPosition: ${holder.bindingAdapterPosition}",
+//                            "is FrameLayout: ${itemView is FrameLayout}",
+//                            "is MaterialCardView: ${itemView is MaterialCardView}",
+//                            "itemView: ${itemView.tag}",
+//                            "frameTag: ${frameTag}",
+//                        ).joinToString("\n")
+//                    )
 //                    val frameLayout = when(true){
 //                        (itemView is MaterialCardView) -> {
 //                            itemView.children.firstOrNull {

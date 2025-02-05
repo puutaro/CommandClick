@@ -52,6 +52,15 @@ object ScriptPreWordReplacer {
     ): String {
         val fannelDirName = CcPathTool.makeFannelDirName(currentScriptName)
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
+//        return buildString {
+//            append(tergetContents)
+//            replace(currentScriptPathMark, "$cmdclickDefaultAppDirPath/$currentScriptName")
+//            replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
+//            replace(currentAppDirPathMark, cmdclickDefaultAppDirPath)
+//            replace(fannelDirNameMark, fannelDirName)
+//            replace(currentScriptNameMark, currentScriptName)
+//            replace(storagePathMark, storagePath)
+//        }
         return tergetContents
             .replace(currentScriptPathMark, "$cmdclickDefaultAppDirPath/$currentScriptName")
             .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)

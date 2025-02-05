@@ -99,7 +99,7 @@ object SetReplaceVariabler {
             ?.map { "${it.key}\t${it.value}"}
             ?: return null
         val firstSetVariableMapStringListSize = firstSetVariableMapStringList.size
-        var lastSetVariableMapStringList = firstSetVariableMapStringList
+        val lastSetVariableMapStringList = firstSetVariableMapStringList.toMutableList()
         (0 until firstSetVariableMapStringListSize).forEach {
             val valRepList = lastSetVariableMapStringList.get(it).split("\t")
             if(valRepList.size != 2) {
@@ -124,12 +124,18 @@ object SetReplaceVariabler {
 
             val replaceVariable = "\${${valRepList.first()}}"
             val replaceString = valRepList.last()
-            lastSetVariableMapStringList = lastSetVariableMapStringList.map {
-                it.replace(
+            lastSetVariableMapStringList.forEachIndexed { index, value ->
+                lastSetVariableMapStringList[index] = value.replace(
                     replaceVariable,
                     replaceString
                 )
             }
+//            lastSetVariableMapStringList = lastSetVariableMapStringList.map {
+//                it.replace(
+//                    replaceVariable,
+//                    replaceString
+//                )
+//            }
         }
         return lastSetVariableMapStringList.map {
             val valRepList = it.split("\t")
@@ -181,27 +187,60 @@ object SetReplaceVariabler {
         fannelName: String
     ):String {
 //        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-        var loadJsUrlSource = replacingContents
+//        val loadJsUrlSource = buildString {
+//            append(replacingContents)
+//            setReplaceVariableCompleteMap?.forEach {
+//                val replaceVariable = Regex("[$][{]${it.key}[}]")
+//                val replaceString = it.value
+////                    .let {
+////                        ScriptPreWordReplacer.replace(
+////                            it,
+//////                        recentAppDirPath,
+////                            fannelName
+////                        )
+////                    }
+//                replace(
+//                    replaceVariable,
+//                    replaceString
+//                )
+//            }
+//        }
+        val builder = StringBuilder(replacingContents)
         setReplaceVariableCompleteMap?.forEach {
             val replaceVariable = "\${${it.key}}"
             val replaceString = it.value
-                .let {
-                    ScriptPreWordReplacer.replace(
-                        it,
-//                        recentAppDirPath,
-                        fannelName
-                    )
-                }
-            loadJsUrlSource = loadJsUrlSource.replace(
-                replaceVariable,
-                replaceString
-            )
+            var index = builder.indexOf(replaceVariable)
+            while (index != -1) {
+                builder.replace(index, index + replaceVariable.length, replaceString)
+                index = builder.indexOf(replaceVariable, index + replaceString.length)
+            }
         }
         return ScriptPreWordReplacer.replace(
-            loadJsUrlSource,
+            builder.toString(),
 //            recentAppDirPath,
             fannelName
         )
+//        var loadJsUrlSource = replacingContents
+//        setReplaceVariableCompleteMap?.forEach {
+//            val replaceVariable = "\${${it.key}}"
+//            val replaceString = it.value
+//                .let {
+//                    ScriptPreWordReplacer.replace(
+//                        it,
+////                        recentAppDirPath,
+//                        fannelName
+//                    )
+//                }
+//            loadJsUrlSource = loadJsUrlSource.replace(
+//                replaceVariable,
+//                replaceString
+//            )
+//        }
+//        return ScriptPreWordReplacer.replace(
+//            loadJsUrlSource,
+////            recentAppDirPath,
+//            fannelName
+//        )
     }
 
 

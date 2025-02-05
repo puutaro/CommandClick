@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.SpeedReplacer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -538,24 +539,27 @@ object SettingFile {
 
                 }
             }
-            var settingCon = settingConBeforeImport
-            rawToConList.forEach {
-                settingCon = settingCon.replace(
-                    it.first,
-                    it.second
-                )
-            }
+
+            val settingCon = SpeedReplacer.replace(
+                settingConBeforeImport,
+                rawToConList,
+            )
+//            var settingCon = settingConBeforeImport
+//            rawToConList.forEach {
+//                settingCon = settingCon.replace(
+//                    it.first,
+//                    it.second
+//                )
+//            }
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lexecimport.txt").absolutePath,
 //                (dateList).joinToString("\n") + "\n\n===========\n\n"
 //            )
-            return settingCon.let {
-                SetReplaceVariabler.execReplaceByReplaceVariables(
-                    it,
-                    setReplaceVariableCompleteMap,
-                    fannelName,
-                )
-            }
+            return SetReplaceVariabler.execReplaceByReplaceVariables(
+                settingCon,
+                setReplaceVariableCompleteMap,
+                fannelName,
+            )
         }
 
 

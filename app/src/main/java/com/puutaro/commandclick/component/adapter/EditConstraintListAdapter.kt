@@ -60,6 +60,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDateTime
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -367,6 +368,8 @@ class EditConstraintListAdapter(
             editListPosition > listLimitSize
         ) return
         CoroutineScope(Dispatchers.IO).launch {
+            val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+            dateList.add("start" to LocalDateTime.now())
             initListProperty(editListPosition)
             if(
                 context == null
@@ -438,7 +441,9 @@ class EditConstraintListAdapter(
 //                        }
 //                    }
                     val removeAndSet2TotalConstraint = async {
-                        totalConstraintLayout.removeAllViews()
+                        if(totalConstraintLayout.childCount > 0) {
+                            totalConstraintLayout.removeAllViews()
+                        }
                         totalConstraintLayout.apply {
                             innerPadding?.let {
                                 setPadding(it)
@@ -462,6 +467,7 @@ class EditConstraintListAdapter(
                     ).forEach { it.await() }
                 }
             }
+            dateList.add("setupEnd" to LocalDateTime.now())
             val mapListElInfo = withContext(Dispatchers.IO) {
                 listOf(
                     "srcTitle: ${holder.srcTitle}",
@@ -503,6 +509,7 @@ class EditConstraintListAdapter(
                     "mapListElInfo: ${mapListElInfo}",
                     plusKeyToSubKeyConWhere
                 ).joinToString(", ")
+            dateList.add("1firstSettingAc" to LocalDateTime.now())
             val frameKeyPairsConToVarNameValueMap = withContext(Dispatchers.IO) {
                 val frameKeyPairsConSrc = frameMap.get(frameTag)
                 EditComponent.Template.ReplaceHolder.replaceHolder(
@@ -537,6 +544,7 @@ class EditConstraintListAdapter(
                     ) to varNameToValueMap
                 }
             }
+            dateList.add("firstSettingAcEnd" to LocalDateTime.now())
             val frameKeyPairsCon = frameKeyPairsConToVarNameValueMap.first
             val frameVarNameValueMap = frameKeyPairsConToVarNameValueMap.second
             val tagIdMap = withContext(Dispatchers.IO){
@@ -555,6 +563,7 @@ class EditConstraintListAdapter(
 //                    view is AppCompatImageView
 //                } as? AppCompatImageView
             }
+            dateList.add("frameImageActionStart" to LocalDateTime.now())
             val varNameToBitmapMapInFrame = withContext(Dispatchers.IO){
                 ImageActionManager().exec(
                     fragment,
@@ -581,6 +590,7 @@ class EditConstraintListAdapter(
 //                    "tagIdMap: ${tagIdMap}",
 //                ).joinToString("\n") + "\n\n============\n\n\n"
 //            )
+            dateList.add("frameMakeFramePairs" to LocalDateTime.now())
             val frameKeyPairsList = withContext(Dispatchers.IO) {
                 EditComponent.AdapterSetter.makeLinearFrameKeyPairsList(
                     frameKeyPairsCon,
@@ -596,76 +606,6 @@ class EditConstraintListAdapter(
 //                    "frameKeyPairsList: ${frameKeyPairsList}",
 //                ).joinToString("\n\n") + "\n\n============\n\n"
 //            )
-            val textTagToMapForFrame = withContext(Dispatchers.IO) {
-                EditComponent.AdapterSetter.makeTextTagToMap(
-                    frameKeyPairsList,
-                    frameTag,
-                    totalSettingValMap,
-                )
-            }
-            val imageTagToMapForFrame = withContext(Dispatchers.IO) {
-                EditComponent.AdapterSetter.makeImageTagToMap(
-                    frameKeyPairsList,
-                )
-            }
-            val textOrImageTagListForFrame =
-                textTagToMapForFrame.keys.toList() +
-                        imageTagToMapForFrame.keys.toList()
-            val tagGenreForFrame =
-                EditComponent.Template.TagManager.TagGenre.TEXT_OR_IMAGE_TAG
-            val isDuplicateTextOrImageTagErrJobForFrame = withContext(Dispatchers.IO) {
-                val alreadyUseTagListSrc =
-                    EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
-                        alreadyUseTagList,
-                        alreadyUseTagListMutex
-                    )
-                run dupCheckTextOrImageTag@{
-                    textOrImageTagListForFrame.forEach {
-                        textOrImageTag ->
-                        val correctContentsTag =
-                            EditComponent.AdapterSetter.tagDuplicateErrHandler(
-                                context,
-                                tagGenreForFrame,
-                                textOrImageTag,
-                                alreadyUseTagListSrc,
-                                totalMapListElInfo,
-                                String(),
-                            )
-                        correctContentsTag?.let {
-                            alreadyUseTagListMutex.withLock {
-                                alreadyUseTagList.add(it)
-                            }
-                        }
-                        val isDuplicateTagErr =
-                            correctContentsTag.isNullOrEmpty()
-                        if (
-                            isDuplicateTagErr
-                        ) return@dupCheckTextOrImageTag true
-                    }
-                    false
-                }
-            }
-            if(
-                isDuplicateTextOrImageTagErrJobForFrame
-            ) return@launch
-//            val returnFrameLayout = withContext(Dispatchers.Main) {
-//                EditComponent.AdapterSetter.makeContentsFrameLayout(
-//                    context,
-//                    null,
-//                    frameTag,
-//                    null,
-//                    textTagToMapForFrame,
-//                    imageTagToMapForFrame,
-////                    holder.bkFrameLayout
-//                )
-//            }
-//            val bkFrameLayout = returnFrameLayout.frameLayoutRef.get()
-//                ?: return@launch
-//            val tagToTextViewListForFrame = returnFrameLayout.tagToTextViewListRef.get()
-//                ?: return@launch
-//            val tagToImageViewListForFrame = returnFrameLayout.tagToImageViewListRef.get()
-//                ?: return@launch
-//            val clickTagToViewList = returnFrameLayout.clickTagToViewListRef.get()
             val isClickEnable = withContext(Dispatchers.IO) {
                 EditComponent.Template.ClickManager.isClickEnable(frameKeyPairsList.toMap())
             }
@@ -684,6 +624,13 @@ class EditConstraintListAdapter(
             if(
                 isFrameTagDulidateErrJob.await()
             ) return@launch
+            dateList.add("frameSetupEnd" to LocalDateTime.now())
+//            if(editListPosition == 0) {
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "ladapter_setupMemo.txt").absolutePath,
+//                    dateList.joinToString("\n")
+//                )
+//            }
             CoroutineScope(Dispatchers.IO).launch {
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lframeTag.txt").absolutePath,

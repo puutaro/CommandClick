@@ -14,6 +14,7 @@ import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.RegexTool
+import com.puutaro.commandclick.util.str.SpeedReplacer
 import java.io.File
 
 object CheckTool {
@@ -630,16 +631,40 @@ object CheckTool {
                 val mainKey = keyToSubKeyCon.first
                 val subKeyCon = keyToSubKeyCon.second
 
-                var displaySubKeyCon = subKeyCon.replace(
-                    Regex("[?]+"),
-                    "?"
+//                var displaySubKeyCon = subKeyCon.replace(
+//                    Regex("[?]+"),
+//                    "?"
+//                )
+                val displaySubKeyCon = SpeedReplacer.replace(
+                    subKeyCon.replace(
+                        Regex("[?]+"),
+                        "?"
+                    ),
+                    separatorPairForLog.map {
+                        it.first.toString() to it.second
+                    },
                 )
-                separatorPairForLog.forEach {
-                    displaySubKeyCon = displaySubKeyCon.replace(
-                        it.first.toString(),
-                        it.second,
-                    )
-                }
+//                val builder = StringBuilder(
+//                    subKeyCon.replace(
+//                        Regex("[?]+"),
+//                        "?"
+//                    )
+//                )
+//                separatorPairForLog.forEach {
+//                    val oldString = it.first.toString()
+//                    val newString = it.second
+//                    var index = builder.indexOf(oldString)
+//                    while (index != -1) {
+//                        builder.replace(index, index + oldString.length, newString)
+//                        index = builder.indexOf(oldString, index + newString.length)
+//                    }
+//                }
+//                separatorPairForLog.forEach {
+//                    displaySubKeyCon = displaySubKeyCon.replace(
+//                        it.first.toString(),
+//                        it.second,
+//                    )
+//                }
                 listOf(
                     ">|${mainKey}=",
                     displaySubKeyCon
@@ -667,16 +692,40 @@ object CheckTool {
                 '?' to "\n ?",
                 '&' to "\n  &",
             )
-            var jsAcKeyToSubKeyConForJs = jsAcKeyToSubKeyCon.replace(
-                Regex("[?]+"),
-                "?"
+            val jsAcKeyToSubKeyConForJs = SpeedReplacer.replace(
+                jsAcKeyToSubKeyCon.replace(
+                    Regex("[?]+"),
+                    "?"
+                ),
+                separatorPairForLog.map {
+                    it.first.toString() to it.second
+                },
             )
-            separatorPairForLog.forEach {
-                jsAcKeyToSubKeyConForJs = jsAcKeyToSubKeyConForJs.replace(
-                    it.first.toString(),
-                    it.second,
-                )
-            }
+//            val builder = StringBuilder(
+//                jsAcKeyToSubKeyCon.replace(
+//                    Regex("[?]+"),
+//                    "?"
+//                )
+//            )
+//            separatorPairForLog.forEach {
+//                val oldString = it.first.toString()
+//                val newString = it.second
+//                var index = builder.indexOf(oldString)
+//                while (index != -1) {
+//                    builder.replace(index, index + oldString.length, newString)
+//                    index = builder.indexOf(oldString, index + newString.length)
+//                }
+//            }
+//            var jsAcKeyToSubKeyConForJs = jsAcKeyToSubKeyCon.replace(
+//                Regex("[?]+"),
+//                "?"
+//            )
+//            separatorPairForLog.forEach {
+//                jsAcKeyToSubKeyConForJs = jsAcKeyToSubKeyConForJs.replace(
+//                    it.first.toString(),
+//                    it.second,
+//                )
+//            }
             return QuoteTool.splitBySurroundedIgnore(
                 jsAcKeyToSubKeyConForJs,
                 '|'
@@ -905,16 +954,22 @@ object CheckTool {
             repConWithErrWord: String,
             tagStrToMarkList: List<Pair<String, String>>
         ): String {
-            var repCon = repConWithErrWord
-            tagStrToMarkList.forEach {
-                val tagMark = it.second
-                val tagStr = it.first
-                repCon = repCon.replace(
-                    tagMark,
-                    tagStr
-                )
-            }
-            return repCon
+            return SpeedReplacer.replace(
+                repConWithErrWord,
+                tagStrToMarkList.map {
+                   it.second to it.first
+                },
+            )
+//            var repCon = repConWithErrWord
+//            tagStrToMarkList.forEach {
+//                val tagMark = it.second
+//                val tagStr = it.first
+//                repCon = repCon.replace(
+//                    tagMark,
+//                    tagStr
+//                )
+//            }
+//            return repCon
         }
 
         private fun errExtractHandler(

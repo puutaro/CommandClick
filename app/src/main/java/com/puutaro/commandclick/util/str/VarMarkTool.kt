@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util.str
 
 object VarMarkTool {
+
     fun replaceByValue(
         con :String,
         varName: String,
@@ -8,12 +9,16 @@ object VarMarkTool {
     ): String {
         return try {
             con.replace(
-                Regex("""([^\\])[$][{]${varName}[}]"""),
-                "$1${varValue}"
-            ).replace(
-                Regex("""^[$][{]${varName}[}]"""),
-                varValue
+                "(?<!\\\\)[$][{]$varName[}]]".toRegex(),
+                varValue,
             )
+//            con.replace(
+//                Regex("""([^\\])[$][{]${varName}[}]"""),
+//                "$1${varValue}"
+//            ).replace(
+//                Regex("""^[$][{]${varName}[}]"""),
+//                varValue
+//            )
         } catch (e: Exception){
             con
         }

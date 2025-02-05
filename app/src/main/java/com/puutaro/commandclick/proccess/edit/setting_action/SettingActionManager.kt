@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -31,6 +32,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -47,6 +49,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDateTime
+import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.enums.EnumEntries
 
@@ -411,10 +415,14 @@ class SettingActionManager {
                 settingActionExitManager.setExit()
                 return null
             }
-            keyToSubKeyConList.forEach { keyToSubKeyConSrc ->
+            val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+            dateList.add("start" to LocalDateTime.now())
+            keyToSubKeyConList.forEachIndexed { index, keyToSubKeyConSrc ->
+                dateList.add("get exit ${index}" to LocalDateTime.now())
                 if (
                     settingActionExitManager.get()
                 ) return null
+                dateList.add("get exit end ${index}" to LocalDateTime.now())
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sMap.txt").absolutePath,
 //                    listOf(
@@ -444,7 +452,8 @@ class SettingActionManager {
                 val curSettingActionKey =
                     SettingActionKeyManager.SettingActionsKey.entries.firstOrNull {
                         it.key == curImageActionKeyStr
-                    } ?: return@forEach
+                    } ?: return@forEachIndexed
+                dateList.add("${curSettingActionKey} ${index} start" to LocalDateTime.now())
                 val subKeyCon = keyToSubKeyCon.second
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "isubkeycon.txt").absolutePath,
@@ -487,19 +496,19 @@ class SettingActionManager {
                             importPathAndRenewalVarNameToImportConToVarNameValueStrMapToImportRepMap.first
                         if (
                             importPath.isEmpty()
-                        ) return@forEach
+                        ) return@forEachIndexed
                         val renewalVarNameToImportConToVarNameToValueStrMap =
                             importPathAndRenewalVarNameToImportConToVarNameValueStrMapToImportRepMap.second
                         val acIVarName =
                             renewalVarNameToImportConToVarNameToValueStrMap.first
                         if (
                             acIVarName.isEmpty()
-                        ) return@forEach
+                        ) return@forEachIndexed
                         val importedKeyToSubKeyConList =
                             renewalVarNameToImportConToVarNameToValueStrMap.second
                         if (
                             importedKeyToSubKeyConList.isEmpty()
-                        ) return@forEach
+                        ) return@forEachIndexed
 //                        val curImportedVarNameToValueStrMap =
 //                            renewalVarNameToImportConToVarNameToValueStrMap.third
                         val importVarNameToValueStrMap =
@@ -669,7 +678,7 @@ class SettingActionManager {
                             CoroutineScope(Dispatchers.IO).launch {
                                 settingActionAsyncCoroutine.put(asyncJob)
                             }
-                            return@forEach
+                            return@forEachIndexed
                         }
                         val curStringVarKeyList = ((topVarNameToValueStrMap ?: emptyMap()) + importVarNameToValueStrMap).map {
                             it.key
@@ -729,8 +738,8 @@ class SettingActionManager {
 //                                proposalRenewalVarNameSrcInnerMapValueStr
 //                            )
                         }
-                        val removedLoopKey =
-                            SettingActionKeyManager.LoopKeyManager.removeLoopKey(curMapLoopKey)
+//                        val removedLoopKey =
+//                            SettingActionKeyManager.LoopKeyManager.removeLoopKey(curMapLoopKey)
 //                        FileSystems.updateFile(
 //                            File(
 //                                UsePath.cmdclickDefaultSDebugAppDirPath,
@@ -783,7 +792,7 @@ class SettingActionManager {
                             !globalVarNameRegex.matches(acIVarName)
                             || mapRoopKeyUnit != curMapLoopKey
 //                            || mapRoopKeyUnit != removedLoopKey
-                        ) return@forEach
+                        ) return@forEachIndexed
                         val proposalRenewalVarNameSrcMapValueStr =
                             downLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStr(
                             curMapLoopKey,
@@ -847,7 +856,8 @@ class SettingActionManager {
                             mainSubKeyPairList,
                             settingVarKey
                         )?.get(settingVarKey)
-                            ?: return@forEach
+                            ?: return@forEachIndexed
+                        dateList.add("${curSettingActionKey} ${index} ::${settingVarName}" to LocalDateTime.now())
                         val isAsync =
                             settingVarName.startsWith(asyncPrefix)
                                     || settingVarName.startsWith(runAsyncPrefix)
@@ -957,7 +967,7 @@ class SettingActionManager {
                             CoroutineScope(Dispatchers.IO).launch {
                                 settingActionAsyncCoroutine.put(asyncJob)
                             }
-                            return@forEach
+                            return@forEachIndexed
                         }
                         SettingVarExecutor().exec(
                             fragment,
@@ -1182,6 +1192,11 @@ class SettingActionManager {
                     }
                 }
             }
+            dateList.add("end start" to LocalDateTime.now())
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lsettingAcTime.txt").absolutePath,
+//                dateList.joinToString("\n") + "\n\n============\n\n"
+//            )
             return Pair(
                 loopKeyToVarNameValueStrMap,
                 privateLoopKeyVarNameValueStrMap,
@@ -1290,6 +1305,8 @@ class SettingActionManager {
                         >? = null
                 val ifStackList =
                     mutableListOf<SettingIfManager.IfStack>()
+                val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+                dateList.add("start" to LocalDateTime.now())
                 mainSubKeyPairList.forEach {
                         mainSubKeyPair ->
                     val varNameToValueStrMap = makeVarNameToValueStrMap(
@@ -1318,6 +1335,7 @@ class SettingActionManager {
                     val privateSubKeyClass = SettingActionKeyManager.SettingSubKey.entries.firstOrNull {
                         it.key == mainSubKey
                     } ?: return@forEach
+                    dateList.add("${privateSubKeyClass.key} start" to LocalDateTime.now())
                     val isNext = ifStackList.lastOrNull().let {
                         ifStack ->
                         if(
@@ -1632,6 +1650,8 @@ class SettingActionManager {
 //                                isNext = true
                                 return@forEach
                             }
+                            val dateListInSIf = mutableListOf<Pair<String, java.time.LocalDateTime>>()
+                            dateListInSIf.add("ifStart_creaatePairList" to java.time.LocalDateTime.now())
                             val argsPairList = CmdClickMap.createMap(
                                 mainSubKeyMapSrc.get(
                                     SettingActionKeyManager.SettingSubKey.ARGS.key
@@ -1647,11 +1667,13 @@ class SettingActionManager {
                                             varNameToValueStrMap,
                                         )
                             }
+                            dateListInSIf.add("ifManage ${mainSubKeyMapSrc.get(mainSubKey)}" to java.time.LocalDateTime.now())
                             val isNextToErrType = SettingIfManager.handle(
                                 sIfKeyName,
                                 argsPairList,
                                 varNameToValueStrMap,
                             )
+                            dateListInSIf.add("ifManage_end" to java.time.LocalDateTime.now())
                             val errType = isNextToErrType.second
                             if(errType != null){
                                 runBlocking {
@@ -1667,6 +1689,7 @@ class SettingActionManager {
                                 settingActionExitManager.setExit()
                                 return@forEach
                             }
+                            dateListInSIf.add("makeIfProcNameNotExistInRuntime" to java.time.LocalDateTime.now())
                             val sIfProcName = IfErrManager.makeIfProcNameNotExistInRuntime(
                                 mainSubKey,
                                 mainSubKeyMapSrc.get(mainSubKey)
@@ -1687,12 +1710,18 @@ class SettingActionManager {
                                 return@forEach
                             }
                             val isNextBool = isNextToErrType.first ?: false
+                            dateListInSIf.add("ifStackList.add" to java.time.LocalDateTime.now())
                             ifStackList.add(
                                 SettingIfManager.IfStack(
                                     sIfProcName,
                                     isNextBool
                                 )
                             )
+                            dateListInSIf.add("ifStackList.add end" to java.time.LocalDateTime.now())
+//                            FileSystems.updateFile(
+//                                File(UsePath.cmdclickDefaultAppDirPath, "lIfOutTime.txt").absolutePath,
+//                                dateListInSIf.joinToString("\n") + "\n\n======\n\n"
+//                            )
 //                            isNext = isNextBool
                         }
                         SettingActionKeyManager.SettingSubKey.S_IF_END -> {
@@ -1737,6 +1766,10 @@ class SettingActionManager {
                 val isEscape =
                     isNoImageVar
                             && itPronounValueStrToBreakSignal?.second != SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lvar.txt").absolutePath,
+//                    dateList.joinToString("\n") + "\n\n=========\n\n"
+//                )
                 return when(isEscape){
                     true -> null
                     else -> Pair(

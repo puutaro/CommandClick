@@ -1,10 +1,17 @@
 package com.puutaro.commandclick.util.map
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.util.CcScript
+import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.BackslashTool
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.SpeedReplacer
 import com.puutaro.commandclick.util.str.VarMarkTool
+import java.io.File
+import java.time.Duration
+import java.time.LocalDateTime
 
 object CmdClickMap {
 
@@ -113,14 +120,20 @@ object CmdClickMap {
         irregularQuoteList: List<String>,
         targetCon: String,
     ): String {
-        var updateCon = targetCon
-        irregularQuoteList.forEach {
-            updateCon = updateCon.replace(
-                it,
-                String()
-            )
-        }
-        return updateCon
+        return SpeedReplacer.replace(
+            targetCon,
+            irregularQuoteList.map {
+                it to String()
+            }
+        )
+//        var updateCon = targetCon
+//        irregularQuoteList.forEach {
+//            updateCon = updateCon.replace(
+//                it,
+//                String()
+//            )
+//        }
+//        return updateCon
 
     }
 
@@ -159,6 +172,22 @@ object CmdClickMap {
         }?.second
     }
 
+    fun efficientReplace(original: String, oldValue: String, newValue: String, count: Int): String {
+        val regex = "(?<!\\\\)[$][{]$oldValue[}]]".toRegex()
+        val builder = StringBuilder(original)
+        var replaceCount = 0
+
+        var result = regex.find(builder)
+        while (result != null && replaceCount < count) {
+            builder.replace(result.range.first, result.range.last + 1, newValue)
+            replaceCount++
+            result = regex.find(builder, result.range.first + newValue.length)
+        }
+
+        return builder.toString()
+    }
+
+
     fun replace(
         targetCon: String,
         repMap: Map<String, String?>?
@@ -166,18 +195,107 @@ object CmdClickMap {
         if(
             repMap.isNullOrEmpty()
         ) return targetCon
-        var repCon = targetCon
-        repMap.forEach {
-            val replaceStr =
-                it.value ?: String()
-            val tempRepCon = VarMarkTool.replaceByValue(
-                repCon,
-                it.key,
-                replaceStr,
-            )
-            repCon = tempRepCon
+//        val dateList = mutableListOf<Pair<String, String>>()
+//        dateList.add("builder" to LocalDateTime.now().toString())
+        val builder = StringBuilder(targetCon)
+        repMap.forEach { (varNameKey, replaceStr) ->
+            if(
+                varNameKey.isEmpty()
+            ) return@forEach
+            val regex = "(?<!\\\\)[$][{]$varNameKey[}]".toRegex()
+            var result = regex.find(builder)
+            val newValue = replaceStr ?: String()
+            while (result != null) {
+                builder.replace(result.range.first, result.range.last + 1, newValue)
+                result = regex.find(builder, result.range.first + newValue.length)
+            }
         }
-        return repCon
+        return builder.toString()
+//        var repCon = targetCon
+//        dateList.add("builder end" to LocalDateTime.now().toString())
+//        val builderDiff = Duration.between(
+//            LocalDatetimeTool.getLocalDatetimeFromString(
+//                dateList.get(dateList.lastIndex - 1).second
+//            ),
+//            LocalDatetimeTool.getLocalDatetimeFromString((dateList.last()).second)
+//        )
+//        dateList.add("builder diff" to builderDiff.toString())
+//       return try {
+//           buildString {
+//               append(targetCon)
+//               repMap.forEach { (varNameKey, replaceStrSrc) ->
+//                   val replaceStr = replaceStrSrc ?: String()
+//                   replace(
+//                       "",
+//                       ""
+//                   )
+//                   try {
+//                       replace(
+//                           Regex("""([^\\])[$][{]${varNameKey}[}]"""),
+//                           "$1${replaceStr}"
+//                       )
+//                   } catch(e: Exception){ }
+//                   try {
+//                       replace(
+//                           Regex(
+//                               """^[$][{]${varNameKey}[}]"""
+//                           ),
+//                           replaceStr
+//                       )
+//                   } catch(e: Exception){ }
+//               }
+//           }
+//       } catch (e: Exception) {
+//           FileSystems.writeFile(
+//               File(UsePath.cmdclickDefaultAppDirPath, "lreplace_error.txt").absolutePath,
+//               e.toString()
+//           )
+//           targetCon
+//       }
+//        repMap.forEach {
+//            val replaceStr =
+//                it.value ?: String()
+////            sb.replace(it.key, replaceStr)
+////            val tempRepCon = VarMarkTool.replaceByValue(
+////                repCon,
+////                it.key,
+////                replaceStr,
+////            )
+////            repCon = tempRepCon
+//        }
+//        dateList.add("replace" to LocalDateTime.now().toString())
+//        repMap.forEach {
+//            if(
+//                it.key.isEmpty()
+//            ) return@forEach
+//            val replaceStr =
+//                it.value ?: String()
+//            val tempRepCon = VarMarkTool.replaceByValue(
+//                repCon,
+//                it.key,
+//                replaceStr,
+//            )
+//            repCon = tempRepCon
+//        }
+//        dateList.add("replace end" to LocalDateTime.now().toString())
+//        val repDiff = Duration.between(
+//            LocalDatetimeTool.getLocalDatetimeFromString(
+//                dateList.get(dateList.lastIndex - 1).second
+//            ),
+//            LocalDatetimeTool.getLocalDatetimeFromString((dateList.last()).second)
+//        )
+//        dateList.add("rep diff" to repDiff.toString())
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lconpare.txt").absolutePath,
+//            (
+//                    listOf(
+//                        targetCon.take(100) +
+//                                "___" +  targetCon.length.toString() +
+//                                "___" + repMap.keys.size.toString()
+//                    ) + dateList
+//                    ).joinToString("\n") + "\n\n=====\n\n"
+//        )
+//        return repCon
     }
 
     fun replaceByBackslashToNormal(
@@ -273,14 +391,20 @@ object CmdClickMap {
         if(
             repMap.isNullOrEmpty()
         ) return targetCon
-        var repCon = targetCon
-        repMap.forEach {
-            repCon = repCon.replace(
-                "@{${it.key}}",
-                it.value
-            )
-        }
-        return repCon
+        return SpeedReplacer.replace(
+            targetCon,
+            repMap.map {
+                "@{${it.key}}" to it.value
+            }
+        )
+//        var repCon = targetCon
+//        repMap.forEach {
+//            repCon = repCon.replace(
+//                "@{${it.key}}",
+//                it.value
+//            )
+//        }
+//        return repCon
     }
 
     fun replaceHolderForJsAction(
@@ -292,7 +416,8 @@ object CmdClickMap {
                 targetCon,
                 repMap
         )
-        var repCon = targetCon
+//        var repCon = targetCon
+        val repConBuilder = StringBuilder(targetCon)
         val noQuotePrefix = JsActionKeyManager.noQuotePrefix
         holderNameToValueMap.forEach {
             val holderMark = it.key
@@ -301,10 +426,23 @@ object CmdClickMap {
             val repValue = repValueSrc.removePrefix(noQuotePrefix)
             when(isNoQuote) {
                 true -> {
-                    repCon = repCon.replace(
-                        "`${holderMark}`",
-                        repValue
-                    )
+                    val oldString = "`${holderMark}`"
+                    var index = repConBuilder.indexOf(oldString)
+                    while (index != -1) {
+                        repConBuilder.replace(
+                            index,
+                            index + oldString.length,
+                            repValue
+                        )
+                        index = repConBuilder.indexOf(
+                            oldString,
+                            index + repValue.length
+                        )
+                    }
+//                    repCon = repCon.replace(
+//                        "`${holderMark}`",
+//                        repValue
+//                    )
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "repHolder.txt").absolutePath,
 //                        listOf(
@@ -316,10 +454,24 @@ object CmdClickMap {
 //                        ).joinToString("\n\n") + "\n---\n"
 //                    )
                 }
-                else -> repCon = repCon.replace(
-                    holderMark,
-                    repValue
-                )
+                else -> {
+                    var index = repConBuilder.indexOf(holderMark)
+                    while (index != -1) {
+                        repConBuilder.replace(
+                            index,
+                            index + holderMark.length,
+                            repValue
+                        )
+                        index = repConBuilder.indexOf(
+                            holderMark,
+                            index + repValue.length
+                        )
+                    }
+//                    repCon = repCon.replace(
+//                        holderMark,
+//                        repValue
+//                    )
+                }
             }
         }
 //        FileSystems.writeFile(
@@ -331,7 +483,8 @@ object CmdClickMap {
 //                "repCon: ${repCon}",
 //            ).joinToString("\n\n")
 //        )
-        return repCon
+        return repConBuilder.toString()
+//        repCon
     }
 
     fun concatRepValMap(
