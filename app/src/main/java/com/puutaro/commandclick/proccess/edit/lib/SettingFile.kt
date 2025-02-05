@@ -5,9 +5,14 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.str.QuoteTool
-import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import org.threeten.bp.LocalDateTime
 import java.io.File
 
 object SettingFile {
@@ -21,9 +26,12 @@ object SettingFile {
         val fannelPathObj = File(fannelPath)
         if (!fannelPathObj.isFile) return String()
         val fannelName = fannelPathObj.name
-        val firstSettingConList = ReadText(
+        val firstSettingConList = ReadSettingFileBuf.read(
             settingFilePath
-        ).textToList()
+        ).split("\n")
+//        ReadText(
+//            settingFilePath
+//        ).textToList()
         val settingConList = ImportManager.import(
             context,
             firstSettingConList,
@@ -62,9 +70,14 @@ object SettingFile {
         val fannelPathObj = File(fannelPath)
         if (!fannelPathObj.isFile) return String()
         val fannelName = fannelPathObj.name
-        val firstSettingConList = ReadText(
+//        val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+//        dateList.add("read" to LocalDateTime.now())
+        val firstSettingConList = ReadSettingFileBuf.read(
             settingFilePath
-        ).textToList()
+        ).split("\n")
+//        ReadText(
+//            settingFilePath
+//        ).textToList()
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "settingFile.txt").absolutePath,
 //            listOf(
@@ -77,12 +90,21 @@ object SettingFile {
 //                )}"
 //            ).joinToString("\n\n\n") + "\n\n--------------\n\n"
 //        )
+//        dateList.add("readLayoutFromList" to LocalDateTime.now())
         return readLayoutFromList(
             context,
             firstSettingConList,
             fannelName,
             setReplaceVariableCompleteMap,
         )
+//            .let {
+//            dateList.add("readLayoutFromList_end" to LocalDateTime.now())
+////            FileSystems.updateFile(
+////                File(UsePath.cmdclickDefaultAppDirPath, "lreadLayout.txt").absolutePath,
+////                (listOf(settingFilePath) + dateList).joinToString("\n") + "\n========\n\n"
+////            )
+//            it
+//        }
     }
 
     fun readLayoutFromList(
@@ -109,14 +131,15 @@ object SettingFile {
             settingConList
         ).let {
             formSettingContents(it)
-        }.let {
-            val layoutContents = SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                setReplaceVariableCompleteMap,
-                fannelName
-            )
-            layoutContents
         }
+//            .let {
+//            val layoutContents = SetReplaceVariabler.execReplaceByReplaceVariables(
+//                it,
+//                setReplaceVariableCompleteMap,
+//                fannelName
+//            )
+//            layoutContents
+//        }
     }
 
     fun readFromList(
@@ -247,19 +270,25 @@ object SettingFile {
             setReplaceVariableCompleteMap: Map<String, String>?,
             fannelName: String,
         ): String {
-            var settingCon = settingConBeforeImport
-            result.forEach {
-                val importRawSrcCon = it.value
-                val importSrcConWithPrefix = importRawSrcCon
-                    .trim('\n')
-                    .trim()
-                val separatorPrefix =
-                    Regex("^[${settingSeparators}]*").find(importSrcConWithPrefix)?.value
-                val importSrcCon =
-                    when(separatorPrefix == null) {
-                        true -> importSrcConWithPrefix
-                        else -> importSrcConWithPrefix.removePrefix(separatorPrefix.toString())
-                    }.removeSuffix(importEndSeparator)
+//            val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+//            dateList.add("init" to LocalDateTime.now())
+//            var settingCon = settingConBeforeImport
+            val rawToConList = runBlocking {
+                withContext(Dispatchers.IO) {
+                    val importRawToConJobList = result.mapIndexed { index, it ->
+                        async {
+//                            dateList.add("loop${index}" to LocalDateTime.now())
+                            val importRawSrcCon = it.value
+                            val importSrcConWithPrefix = importRawSrcCon
+                                .trim('\n')
+                                .trim()
+                            val separatorPrefix =
+                                Regex("^[${settingSeparators}]*").find(importSrcConWithPrefix)?.value
+                            val importSrcCon =
+                                when (separatorPrefix == null) {
+                                    true -> importSrcConWithPrefix
+                                    else -> importSrcConWithPrefix.removePrefix(separatorPrefix.toString())
+                                }.removeSuffix(importEndSeparator)
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sInImpoet.txt").absolutePath,
 //                    listOf(
@@ -269,61 +298,75 @@ object SettingFile {
 //                        "importSrcCon: ${importSrcCon}",
 //                    ).joinToString("\n\n=====================\n\n")
 //                )
-                if (
-                    importSrcCon.isEmpty()
-                ) return@forEach
-                val importMap = makeImportMap(
-                    importSrcCon
-                )
-                val importPath = getImportPath(
-                    importMap
-                ) ?: return@forEach
-                if (
-                    importPath.isEmpty()
-                    || !File(importPath).isFile
-                ) {
-                    LogSystems.stdErr(
-                        context,
-                        "Import path not found: ${importPath}"
-                    )
-                    settingCon = settingCon.replace(
-                        importRawSrcCon,
-                        String(),
-                    )
-                    return@forEach
-                }
-                val loopTimes = getLoopTimes(
-                    importMap
-                )
-                val loopVarName = getLoopVarName(
-                    importMap
-                )
-                val isLoop = loopTimes > startLoopIndex
-                if(
-                    isLoop
-                    && loopVarName.isNullOrEmpty()
-                    ){
-                    val spanTimes = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.lightBlue,
-                        ImportKey.TIMES.key
-                    )
-                    val spanLoopVarNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        ImportKey.LOOP_VAR_NAME.key
-                    )
-                    val spanImportRawSrcCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        importRawSrcCon
-                    )
-                    val errMessage =
-                        "[SETTING IMPORT] ${spanLoopVarNameKey} must specify in ${spanTimes} > ${startLoopIndex}: ${spanImportRawSrcCon}"
-                    LogSystems.broadErrLog(
-                        context,
-                        Jsoup.parse(errMessage).text(),
-                        errMessage,
-                    )
-                    return@forEach
-                }
+                            if (
+                                importSrcCon.isEmpty()
+                            ) return@async Pair(
+                                String(),
+                                String(),
+                            )
+                            val importMap = makeImportMap(
+                                importSrcCon
+                            )
+                            val importPath = getImportPath(
+                                importMap
+                            ) ?: return@async Pair(
+                                String(),
+                                String(),
+                            )
+                            if (
+                                importPath.isEmpty()
+                                || !File(importPath).isFile
+                            ) {
+                                LogSystems.stdErr(
+                                    context,
+                                    "Import path not found: ${importPath}"
+                                )
+//                            settingCon = settingCon.replace(
+//                                importRawSrcCon,
+//                                String(),
+//                            )
+                                return@async Pair(
+                                    importRawSrcCon,
+                                    String(),
+                                )
+                            }
+                            val loopTimes = getLoopTimes(
+                                importMap
+                            )
+                            val loopVarName = getLoopVarName(
+                                importMap
+                            )
+                            val isLoop = loopTimes > startLoopIndex
+                            if (
+                                isLoop
+                                && loopVarName.isNullOrEmpty()
+                            ) {
+                                val spanTimes = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                    CheckTool.lightBlue,
+                                    ImportKey.TIMES.key
+                                )
+                                val spanLoopVarNameKey =
+                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                        CheckTool.errRedCode,
+                                        ImportKey.LOOP_VAR_NAME.key
+                                    )
+                                val spanImportRawSrcCon =
+                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                        CheckTool.errBrown,
+                                        importRawSrcCon
+                                    )
+                                val errMessage =
+                                    "[SETTING IMPORT] ${spanLoopVarNameKey} must specify in ${spanTimes} > ${startLoopIndex}: ${spanImportRawSrcCon}"
+                                LogSystems.broadErrLog(
+                                    context,
+                                    Jsoup.parse(errMessage).text(),
+                                    errMessage,
+                                )
+                                return@async Pair(
+                                    String(),
+                                    String(),
+                                )
+                            }
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lloopVarName.txt").absolutePath,
 //                    listOf(
@@ -333,50 +376,56 @@ object SettingFile {
 //                        "settingCon: ${settingCon}",
 //                    ).joinToString("\n\n\n\n") + "\n\n========\n\n"
 //                )
-                if(
-                    isLoop
-                    && isAlreadyUseLoopVarNameList(loopVarName)
-                ){
-                    val spanLoopVarNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.lightBlue,
-                        ImportKey.LOOP_VAR_NAME.key
-                    )
-                    val spanLoopVarName = loopVarName?.let {
-                        CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                            CheckTool.errRedCode,
-                            it
-                        )
-                    } ?: String()
-                    val spanAlreadyUseLoopVarNameListCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        alreadyUseLoopVarNameList.joinToString(",")
-                    )
-                    val spanImportRawSrcCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        importRawSrcCon
-                    )
-                    val errMessage =
-                        "[SETTING IMPORT] ${spanLoopVarNameKey} duplicated: ${spanLoopVarName}, spanAlreadyUseLoopVarNameListCon: ${spanAlreadyUseLoopVarNameListCon} impotCon: ${spanImportRawSrcCon}"
-                    LogSystems.broadErrLog(
-                        context,
-                        Jsoup.parse(errMessage).text(),
-                        errMessage,
-                    )
-                    return@forEach
-                }
-                addToAlreadyUseLoopVarNameList(loopVarName)
-                val separator = getSeparator(
-                    importMap
-                )
-                val prefix = getPrefix(
-                    importMap
-                )
-                val suffix = getSuffix(
-                    importMap
-                )
-                val repValMap = getRepMap(
-                    importMap
-                )
+                            if (
+                                isLoop
+                                && isAlreadyUseLoopVarNameList(loopVarName)
+                            ) {
+                                val spanLoopVarNameKey =
+                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                        CheckTool.lightBlue,
+                                        ImportKey.LOOP_VAR_NAME.key
+                                    )
+                                val spanLoopVarName = loopVarName?.let {
+                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                        CheckTool.errRedCode,
+                                        it
+                                    )
+                                } ?: String()
+                                val spanAlreadyUseLoopVarNameListCon =
+                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                        CheckTool.errBrown,
+                                        alreadyUseLoopVarNameList.joinToString(",")
+                                    )
+                                val spanImportRawSrcCon =
+                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                        CheckTool.errBrown,
+                                        importRawSrcCon
+                                    )
+                                val errMessage =
+                                    "[SETTING IMPORT] ${spanLoopVarNameKey} duplicated: ${spanLoopVarName}, spanAlreadyUseLoopVarNameListCon: ${spanAlreadyUseLoopVarNameListCon} impotCon: ${spanImportRawSrcCon}"
+                                LogSystems.broadErrLog(
+                                    context,
+                                    Jsoup.parse(errMessage).text(),
+                                    errMessage,
+                                )
+                                return@async Pair(
+                                    String(),
+                                    String(),
+                                )
+                            }
+                            addToAlreadyUseLoopVarNameList(loopVarName)
+                            val separator = getSeparator(
+                                importMap
+                            )
+                            val prefix = getPrefix(
+                                importMap
+                            )
+                            val suffix = getSuffix(
+                                importMap
+                            )
+                            val repValMap = getRepMap(
+                                importMap
+                            )
 //                if(importPath.endsWith("notAwaitAsyncVarErr.js")) {
 //                    FileSystems.updateFile(
 //                        File(
@@ -393,66 +442,78 @@ object SettingFile {
 //                        ).joinToString("\n\n") + "\n\n============\n\n"
 //                    )
 //                }
-                val importCon = when(loopTimes < startLoopIndex) {
-                    true -> String()
-                    else -> CmdClickMap.replaceHolderForJsAction(
-                        ReadText(importPath).readText(),
-                        repValMap
-                    ).let { innerImportCon ->
-                        (startLoopIndex..loopTimes).map { loopIndex ->
-                            if(loopTimes == startLoopIndex) {
-                                return@map innerImportCon
+//                            dateList.add("read${index}" to LocalDateTime.now())
+                            val importCon = when (loopTimes < startLoopIndex) {
+                                true -> String()
+                                else -> CmdClickMap.replaceHolderForJsAction(
+                                    ReadSettingFileBuf.read(
+                                        importPath
+                                    ),
+//                        ReadText(importPath).readText(),
+                                    repValMap
+                                ).let { innerImportCon ->
+                                    (startLoopIndex..loopTimes).map { loopIndex ->
+                                        if (loopTimes == startLoopIndex) {
+                                            return@map innerImportCon
+                                        }
+                                        if (
+                                            loopVarName.isNullOrEmpty()
+                                        ) return@map innerImportCon
+                                        if (
+                                            !innerImportCon.contains("@{${loopVarName}}")
+                                        ) {
+                                            val spanLoopVarName =
+                                                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                                    CheckTool.errRedCode,
+                                                    loopVarName
+                                                )
+                                            val spanImportRawSrcCon =
+                                                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                                    CheckTool.errBrown,
+                                                    importRawSrcCon
+                                                )
+                                            val errMessage =
+                                                "[SETTING IMPORT] ${ImportKey.LOOP_VAR_NAME.key}'s ${spanLoopVarName} var name is not used: importCon: ${spanImportRawSrcCon}"
+                                            LogSystems.broadErrLog(
+                                                context,
+                                                Jsoup.parse(errMessage).text(),
+                                                errMessage,
+                                            )
+                                            return@map String()
+                                        }
+                                        CmdClickMap.replaceByAtVar(
+                                            innerImportCon,
+                                            mapOf(
+                                                loopVarName to
+                                                        loopIndex.toString()
+                                            )
+                                        )
+                                    }.joinToString(separator).let {
+                                        listOf(
+                                            prefix,
+                                            it,
+                                            suffix
+                                        ).joinToString("\n")
+                                    }
+                                }
                             }
-                            if(
-                                loopVarName.isNullOrEmpty()
-                            ) return@map innerImportCon
-                            if(
-                                !innerImportCon.contains("@{${loopVarName}}")
-                            ) {
-                                val spanLoopVarName =
-                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                        CheckTool.errRedCode,
-                                        loopVarName
-                                    )
-                                val spanImportRawSrcCon = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                                    CheckTool.errBrown,
-                                    importRawSrcCon
-                                )
-                                val errMessage =
-                                    "[SETTING IMPORT] ${ImportKey.LOOP_VAR_NAME.key}'s ${spanLoopVarName} var name is not used: importCon: ${spanImportRawSrcCon}"
-                                LogSystems.broadErrLog(
-                                    context,
-                                    Jsoup.parse(errMessage).text(),
-                                    errMessage,
-                                )
-                                return@map String()
-                            }
-                            CmdClickMap.replaceByAtVar(
-                                innerImportCon,
-                                mapOf(
-                                    loopVarName to
-                                            loopIndex.toString()
-                                )
+//                            dateList.add("replace${index} ${importPath}" to LocalDateTime.now())
+//                            dateList.add("loopEnd${index}" to LocalDateTime.now())
+                            Pair(
+                                importRawSrcCon,
+                                "${separatorPrefix}${importCon}"
                             )
-                        }.joinToString(separator).let {
-                            listOf(
-                                prefix,
-                                it,
-                                suffix
-                            ).joinToString("\n")
-                        }
-                    }
-                }
-                settingCon = settingCon.replace(
-                    importRawSrcCon,
-                    "${separatorPrefix}${importCon}"
-                ).let {
-                    SetReplaceVariabler.execReplaceByReplaceVariables(
-                        it,
-                        setReplaceVariableCompleteMap,
-                        fannelName,
-                    )
-                }
+//                        settingCon = settingCon.replace(
+//                            importRawSrcCon,
+//                            "${separatorPrefix}${importCon}"
+//                        )
+//                    .let {
+//                    SetReplaceVariabler.execReplaceByReplaceVariables(
+//                        it,
+//                        setReplaceVariableCompleteMap,
+//                        fannelName,
+//                    )
+//                }
 //                if(suffix.isNotEmpty()) {
 //                    FileSystems.updateFile(
 //                        File(
@@ -466,8 +527,35 @@ object SettingFile {
 //                        ).joinToString("\n\n") + "\n\n============\n\n"
 //                    )
 //                }
+                        }
+                    }
+                    importRawToConJobList
+                        .toList()
+                        .awaitAll()
+                        .filter { (importRawCon, _) ->
+                            importRawCon.isNotEmpty()
+                        }
+
+                }
             }
-            return settingCon
+            var settingCon = settingConBeforeImport
+            rawToConList.forEach {
+                settingCon = settingCon.replace(
+                    it.first,
+                    it.second
+                )
+            }
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lexecimport.txt").absolutePath,
+//                (dateList).joinToString("\n") + "\n\n===========\n\n"
+//            )
+            return settingCon.let {
+                SetReplaceVariabler.execReplaceByReplaceVariables(
+                    it,
+                    setReplaceVariableCompleteMap,
+                    fannelName,
+                )
+            }
         }
 
 

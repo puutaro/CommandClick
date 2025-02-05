@@ -236,13 +236,13 @@ object OverlayForImageAction {
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                FileSystems.updateFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "loffset.txt").absolutePath,
-                    listOf(
-                        "offsetX: ${offsetX}",
-                        "offsetY: ${offsetY}",
-                    ).joinToString("\n\n") + "\n\n============\n\n"
-                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "loffset.txt").absolutePath,
+//                    listOf(
+//                        "offsetX: ${offsetX}",
+//                        "offsetY: ${offsetY}",
+//                    ).joinToString("\n\n") + "\n\n============\n\n"
+//                )
                 val overlayBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
                     bkBitmap,
                     bitmap,

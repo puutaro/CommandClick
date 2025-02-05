@@ -167,6 +167,7 @@ dependencies {
     implementation("jp.wasabeef:glide-transformations:4.3.0")
     implementation("net.objecthunter:exp4j:0.4.8")
     implementation("jp.wasabeef:blurry:4.0.1")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.8")
 // as 3.0 use implementation
 //    implementation ("com.hanks:htextview-base:0.1.6" )       // base library
 

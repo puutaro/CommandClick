@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import org.threeten.bp.LocalDateTime
 import java.io.File
 
 object ListSettingsForEditList  {
@@ -77,6 +78,8 @@ object ListSettingsForEditList  {
                 Map<String, Int>,
                 >?
         {
+//            val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+//            dateList.add("launch" to LocalDateTime.now())
             val viewLayoutPathObj = File(viewLayoutPath)
             if(
                 !viewLayoutPathObj.isFile
@@ -85,6 +88,7 @@ object ListSettingsForEditList  {
                 fannelInfoMap
             )
             val fannelPath = File(UsePath.cmdclickDefaultAppDirPath, fannelName).absolutePath
+//            dateList.add("viewLayoutListSrc" to LocalDateTime.now())
             val viewLayoutListSrc = LayoutSettingFile.read(
                 context,
                 viewLayoutPathObj.absolutePath,
@@ -106,11 +110,20 @@ object ListSettingsForEditList  {
                     val key = SnakeCamelTool.snakeToCamel(it.key)
                     "${key}: ${it.value}"
                 }.joinToString(", ")
+//            dateList.add("execConstraintParse" to LocalDateTime.now())
             return execConstraintParse(
                 context,
                 viewLayoutListSrc,
                 plusKeyToSubKeyConWhere,
             )
+//                .let {
+//                dateList.add("end" to LocalDateTime.now())
+////                FileSystems.updateFile(
+////                    File(UsePath.cmdclickDefaultAppDirPath, "lparseForConstraint.txt").absolutePath,
+////                    (listOf(viewLayoutPathObj.absolutePath) + dateList).joinToString("\n\n") + "\n\n======\n\n\n"
+////                )
+//                it
+//            }
         }
 
         suspend fun parseFromListForConstraint(

@@ -20,6 +20,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.InitManager
 import com.puutaro.commandclick.activity_lib.event.*
@@ -213,6 +214,7 @@ class MainActivity:
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
         savedInstanceStateVal = null
+        AndroidThreeTen.init(this)
 //        savedInstanceState
         val actionBar = supportActionBar
         actionBar?.hide()
