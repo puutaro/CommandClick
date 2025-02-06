@@ -1356,7 +1356,7 @@ class SettingActionManager {
                                 val mainSubKeyMap = CmdClickMap.MapReplacer.replaceToPairList(
                                     mainSubKeyMapSrc,
                                     varNameToValueStrMap
-                                ).toMap()
+                                )
                                 val rawValue = mainSubKeyMap.get(mainSubKey)?.let {
                                     BackslashTool.toNormal(it)
                                 } ?: return@let null
@@ -1391,7 +1391,7 @@ class SettingActionManager {
                             val mainSubKeyMap = CmdClickMap.MapReplacer.replaceToPairList(
                                 mainSubKeyMapSrc,
                                 varNameToValueStrMap
-                            ).toMap()
+                            )
                             val awaitVarNameList = mainSubKeyMap.get(
                                 privateSubKeyClass.key
                             )?.let {
@@ -1501,7 +1501,7 @@ class SettingActionManager {
                                 val mainSubKeyMap = CmdClickMap.MapReplacer.replaceToPairList(
                                     mainSubKeyMapSrc,
                                     varNameToValueStrMap
-                                ).toMap()
+                                )
                                 val rawValue = mainSubKeyMap.get(mainSubKey)?.let {
                                     BackslashTool.toNormal(it)
                                 } ?: return@let null
