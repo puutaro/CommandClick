@@ -415,7 +415,7 @@ class SettingActionManager {
                 settingActionExitManager.setExit()
                 return null
             }
-            val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+            val dateList = arrayListOf<Pair<String, LocalDateTime>>()
             dateList.add("start" to LocalDateTime.now())
             keyToSubKeyConList.forEachIndexed { index, keyToSubKeyConSrc ->
                 dateList.add("get exit ${index}" to LocalDateTime.now())
@@ -1304,8 +1304,8 @@ class SettingActionManager {
                         SettingActionKeyManager.BreakSignal?
                         >? = null
                 val ifStackList =
-                    mutableListOf<SettingIfManager.IfStack>()
-                val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+                    arrayListOf<SettingIfManager.IfStack>()
+                val dateList = arrayListOf<Pair<String, LocalDateTime>>()
                 dateList.add("start" to LocalDateTime.now())
                 mainSubKeyPairList.forEach {
                         mainSubKeyPair ->
@@ -1650,7 +1650,7 @@ class SettingActionManager {
 //                                isNext = true
                                 return@forEach
                             }
-                            val dateListInSIf = mutableListOf<Pair<String, java.time.LocalDateTime>>()
+                            val dateListInSIf = arrayListOf<Pair<String, java.time.LocalDateTime>>()
                             dateListInSIf.add("ifStart_creaatePairList" to java.time.LocalDateTime.now())
                             val argsPairList = CmdClickMap.createMap(
                                 mainSubKeyMapSrc.get(

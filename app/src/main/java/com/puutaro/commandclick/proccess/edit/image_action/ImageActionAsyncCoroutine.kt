@@ -6,7 +6,7 @@ import kotlinx.coroutines.sync.withLock
 
 class ImageActionAsyncCoroutine {
 
-    private val imageActionAsyncCoroutineList = mutableListOf<Job?>()
+    private val imageActionAsyncCoroutineList = arrayListOf<Job?>()
     private val imageActionAsyncCoroutineListMutex = Mutex()
 
     suspend fun put(job: Job?){

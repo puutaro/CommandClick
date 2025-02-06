@@ -1227,7 +1227,7 @@ class ImageActionManager {
             ): Pair<Pair<String, Bitmap?>, ImageActionKeyManager.BreakSignal?>? {
                 val context = fragment.context
                 val ifStackList =
-                    mutableListOf<SettingIfManager.IfStack>()
+                    arrayListOf<SettingIfManager.IfStack>()
                 mainSubKeyPairList.forEach {
                         mainSubKeyPair ->
                     val mainSubKey = mainSubKeyPair.first

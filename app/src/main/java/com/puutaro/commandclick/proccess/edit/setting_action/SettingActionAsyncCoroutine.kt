@@ -6,7 +6,7 @@ import kotlinx.coroutines.sync.withLock
 
 class SettingActionAsyncCoroutine {
 
-    private val settingActionAsyncCoroutineList = mutableListOf<Job?>()
+    private val settingActionAsyncCoroutineList = arrayListOf<Job?>()
     private val settingActionAsyncCoroutineListMutex = Mutex()
 
     suspend fun put(job: Job?){

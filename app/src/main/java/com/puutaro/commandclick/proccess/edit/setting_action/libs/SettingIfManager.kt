@@ -69,7 +69,7 @@ object SettingIfManager {
 //                argsPairList,
 //            )
 //        }
-        val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+        val dateList = arrayListOf<Pair<String, LocalDateTime>>()
         dateList.add("ifStart" to LocalDateTime.now())
         return IfArgMatcher.match(
             ifKeyName,
