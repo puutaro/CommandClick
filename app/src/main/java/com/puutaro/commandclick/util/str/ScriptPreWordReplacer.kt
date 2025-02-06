@@ -61,13 +61,26 @@ object ScriptPreWordReplacer {
 //            replace(currentScriptNameMark, currentScriptName)
 //            replace(storagePathMark, storagePath)
 //        }
-        return tergetContents
-            .replace(currentScriptPathMark, "$cmdclickDefaultAppDirPath/$currentScriptName")
-            .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
-            .replace(currentAppDirPathMark, cmdclickDefaultAppDirPath)
-            .replace(fannelDirNameMark, fannelDirName)
-            .replace(currentScriptNameMark, currentScriptName)
-            .replace(storagePathMark, storagePath)
+
+        val replacePairList = listOf(
+            Pair(currentScriptPathMark, "$cmdclickDefaultAppDirPath/$currentScriptName"),
+            Pair(cmdclickDirPathMark, UsePath.cmdclickDirPath),
+            Pair(currentAppDirPathMark, cmdclickDefaultAppDirPath),
+            Pair(fannelDirNameMark, fannelDirName),
+            Pair(currentScriptNameMark, currentScriptName),
+            Pair(storagePathMark, storagePath),
+        )
+        return SpeedReplacer.replace(
+            tergetContents,
+            replacePairList
+        )
+//        return tergetContents
+//            .replace(currentScriptPathMark, "$cmdclickDefaultAppDirPath/$currentScriptName")
+//            .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
+//            .replace(currentAppDirPathMark, cmdclickDefaultAppDirPath)
+//            .replace(fannelDirNameMark, fannelDirName)
+//            .replace(currentScriptNameMark, currentScriptName)
+//            .replace(storagePathMark, storagePath)
     }
 
     fun replaceForQr(
