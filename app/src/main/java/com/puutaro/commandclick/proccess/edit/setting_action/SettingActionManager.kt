@@ -341,8 +341,8 @@ class SettingActionManager {
                 }
                 val settingKeyToVarNameList = SettingActionKeyManager
                     .filterSettingKeyToDefinitionListByValidVarDefinition(
-                        settingKeyToVarNameListWithIrregular
-                    )
+                        settingKeyToVarNameListWithIrregular.asSequence()
+                    ).toList()
                 val isSameVarNameErrJob = async {
                     VarErrManager.isSameVarNameErr(
                         context,
@@ -1225,7 +1225,7 @@ class SettingActionManager {
                 subKeySeparator
             )
             val argsSubKey = SettingActionKeyManager.SettingSubKey.ARGS.key
-            return subKeyToConList.mapIndexed {
+            return subKeyToConList.asSequence().mapIndexed {
                     index, subKeyToCon ->
                 val innerSubKeyName = subKeyToCon.first
                 val innerSubKeyClass = SettingActionKeyManager.SettingSubKey.entries.firstOrNull {
@@ -1268,7 +1268,7 @@ class SettingActionManager {
                 }
             }.filter {
                 it.first.isNotEmpty()
-            }
+            }.toList()
         }
 
         private class SettingVarExecutor {
@@ -1657,7 +1657,7 @@ class SettingActionManager {
                                     SettingActionKeyManager.SettingSubKey.ARGS.key
                                 ),
                                 valueSeparator
-                            ).filter {
+                            ).asSequence().filter {
                                 it.first.isNotEmpty()
                             }.map {
                                     argNameToValueStr ->
@@ -1666,7 +1666,7 @@ class SettingActionManager {
                                             argNameToValueStr.second,
                                             varNameToValueStrMap,
                                         )
-                            }
+                            }.toList()
                             dateListInSIf.add("ifManage ${mainSubKeyMapSrc.get(mainSubKey)}" to java.time.LocalDateTime.now())
                             val isNextToErrType = SettingIfManager.handle(
                                 sIfKeyName,
@@ -1719,7 +1719,7 @@ class SettingActionManager {
                             )
                             dateListInSIf.add("ifStackList.add end" to java.time.LocalDateTime.now())
 //                            FileSystems.updateFile(
-//                                File(UsePath.cmdclickDefaultAppDirPath, "lIfOutTime.txt").absolutePath,
+//                                File(UsePath.cmdclickDefaultAppDirPath, "lIfOut   qTime.txt").absolutePath,
 //                                dateListInSIf.joinToString("\n") + "\n\n======\n\n"
 //                            )
 //                            isNext = isNextBool

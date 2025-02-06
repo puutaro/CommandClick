@@ -972,7 +972,7 @@ object VarErrManager {
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key
             }
-        return keyToSubKeyConList.map {
+        return keyToSubKeyConList.asSequence().map {
                 keyToSubKeyCon ->
             val settingKey = keyToSubKeyCon.first
             if(
@@ -993,7 +993,7 @@ object VarErrManager {
                     && it.second.isNotEmpty()
         }.let {
             SettingActionKeyManager.filterSettingKeyToDefinitionListByValidVarDefinition(it)
-        }
+        }.toList()
     }
 
     fun makeSettingKeyToNoRunVarNameList(
@@ -1005,7 +1005,7 @@ object VarErrManager {
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key
             }
-        return keyToSubKeyConList.map {
+        return keyToSubKeyConList.asSequence().map {
                 keyToSubKeyCon ->
             val settingKey = keyToSubKeyCon.first
             if(
@@ -1029,7 +1029,7 @@ object VarErrManager {
             SettingActionKeyManager.filterSettingKeyToDefinitionListByValidVarDefinition(
                 it
             )
-        }
+        }.toList()
     }
 
     private fun makeSettingKeyToPrivateVarNameListWithBlank(
@@ -1041,7 +1041,7 @@ object VarErrManager {
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key
             }
-        return keyToSubKeyConList.map {
+        return keyToSubKeyConList.asSequence().map {
                 keyToSubKeyCon ->
             val settingKey = keyToSubKeyCon.first
             if(
@@ -1053,7 +1053,7 @@ object VarErrManager {
             settingKey to varName
         }.filter {
             it.first.isNotEmpty()
-        }
+        }.toList()
     }
 
     fun makeSettingKeyToSubKeyMap(
@@ -1071,7 +1071,7 @@ object VarErrManager {
             runAsyncPrefix,
         )
         val awaitSubKey = SettingActionKeyManager.SettingSubKey.AWAIT.key
-        return keyToSubKeyConList.map {
+        return keyToSubKeyConList.asSequence().map {
                 keyToSubKeyCon ->
             val settingKey = keyToSubKeyCon.first
             if(
@@ -1124,7 +1124,7 @@ object VarErrManager {
             settingKey.isNotEmpty()
                     && varName.isNotEmpty()
 
-        }
+        }.toList()
     }
 
     fun makeSettingKeyAndAsyncVarNameToAwaitVarNameList(
@@ -1142,7 +1142,7 @@ object VarErrManager {
             runAsyncPrefix,
         )
         val awaitSubKey = SettingActionKeyManager.SettingSubKey.AWAIT.key
-        return keyToSubKeyConList.map {
+        return keyToSubKeyConList.asSequence().map {
                 keyToSubKeyCon ->
             val settingKey = keyToSubKeyCon.first
             if(
@@ -1202,7 +1202,7 @@ object VarErrManager {
             settingKey.isNotEmpty()
                     && varName.isNotEmpty()
 
-        }
+        }.toList()
     }
 
     private fun makeSettingKeyToPrivateRunVarNameList(
@@ -1214,7 +1214,7 @@ object VarErrManager {
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key
             }
-        return keyToSubKeyConList.map {
+        return keyToSubKeyConList.asSequence().map {
                 keyToSubKeyCon ->
             val settingKey = keyToSubKeyCon.first
             if(
@@ -1237,6 +1237,6 @@ object VarErrManager {
             SettingActionKeyManager.filterSettingKeyToDefinitionListByValidVarDefinition(
                 it
             )
-        }
+        }.toList()
     }
 }

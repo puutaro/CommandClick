@@ -49,7 +49,7 @@ object FuncCheckerForSetting {
             argsNameToTypeList: List<Pair<String, ArgType>>?
         ): String {
             val funcDotMethodCon = let {
-                val funcDotMethod = listOf(
+                val funcDotMethod = sequenceOf(
                     funcName,
                     methodNameStr,
                 ).joinToString(".")
@@ -65,7 +65,7 @@ object FuncCheckerForSetting {
             }?.joinToString(",")?.let {
                 "args format: ${it}"
             } ?: String()
-            return listOf(
+            return sequenceOf(
                 funcDotMethodCon,
                 currentArgsCon,
                 formatArgsCon

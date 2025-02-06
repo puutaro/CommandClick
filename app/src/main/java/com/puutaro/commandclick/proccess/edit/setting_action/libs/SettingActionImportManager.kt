@@ -274,7 +274,7 @@ object SettingActionImportManager {
                 SettingActionKeyManager.ActionImportManager.ActionImportKey.ARGS.key
             ),
             valueSeparator
-        ).filter {
+        ).asSequence().filter {
             it.first.isNotEmpty()
         }.map {
                 argNameToValueStr ->
@@ -282,7 +282,7 @@ object SettingActionImportManager {
                 argNameToValueStr.second,
                 varNameToValueStrMap
             )
-        }
+        }.toList()
         val isImportToErrType = when(ifProcName.isEmpty()) {
             true -> true to null
             else -> {
@@ -328,7 +328,7 @@ object SettingActionImportManager {
         val varNameToValueStrMapPlusAwait =
             varNameToValueStrMap + awaitVarNameValueStrMap
         val importVarNameToValueStrMap =
-            importRepMapBeforeReplace.map {
+            importRepMapBeforeReplace.asSequence().map {
                 (_, valueStr) ->
                 val blankMapPair =
                     String() to String()
@@ -400,7 +400,7 @@ object SettingActionImportManager {
                 importedKeyToSubKeyConList
             ).let {
                 SettingActionKeyManager.filterSettingKeyToDefinitionListByValidVarDefinition(
-                    it
+                    it.asSequence()
                 )
             }
         val isErr = withContext(Dispatchers.IO) {
@@ -436,7 +436,7 @@ object SettingActionImportManager {
             val isSettingReturnNotLastErrWithoutRunPrefixJob = async {
                 ImportErrManager.isGlobalVarNameNotLastErrWithoutRunPrefix(
                     context,
-                    settingKeyToVarNameListForReturn,
+                    settingKeyToVarNameListForReturn.toList(),
                     importedKeyToSubKeyConList,
                     topIAcVarName,
                     keyToSubKeyConWhereInImportPath

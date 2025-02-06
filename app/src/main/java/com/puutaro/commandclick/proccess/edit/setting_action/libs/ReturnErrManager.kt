@@ -235,13 +235,13 @@ object ReturnErrManager {
             if(
                 settingKey != settingReturnKey
             ) return@forEachIndexed
-            val alreadyVarNameList = settingKeyToVarNameList.filterIndexed { innerIndex, innerSettingKeyToVarName ->
+            val alreadyVarNameList = settingKeyToVarNameList.asSequence().filterIndexed { innerIndex, innerSettingKeyToVarName ->
                 innerSettingKeyToVarName.first != settingReturnKey
                         && innerIndex < index
             }.map {
                     innerSettingKeyToVarName ->
                 innerSettingKeyToVarName.second
-            }
+            }.toList()
             val returnVarName = settingKeyToVarName.second
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultSDebugAppDirPath, "lisNotBeforeDefinitionInReturnErr_for.txt").absolutePath,
@@ -289,7 +289,7 @@ object ReturnErrManager {
     ): List<Pair<String, String>> {
         val defaultReturnPair = String() to String()
         val subKeySeparator = SettingActionKeyManager.subKeySepartor
-        return keyToSubKeyConList.map {
+        return keyToSubKeyConList.asSequence().map {
                 keyToSubKeyCon ->
             val settingKey = keyToSubKeyCon.first
             if(
@@ -303,6 +303,6 @@ object ReturnErrManager {
             settingKey to varName
         }.filter {
             it.first.isNotEmpty()
-        }
+        }.toList()
     }
 }

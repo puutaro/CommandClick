@@ -47,7 +47,7 @@ object SettingIfManager {
         GREATER_EQUAL(">="),
     }
 
-    private val numMachTypeList = listOf(
+    private val numMachTypeList = sequenceOf(
         MatchType.LESS,
         MatchType.LESS_EQUAL,
         MatchType.GREATER,
@@ -219,7 +219,7 @@ object SettingIfManager {
         ): Pair<List<Boolean>?, IfCheckErr?> {
             val targetKey = IfArgs.TARGET.str
             val matcherKey = IfArgs.MATCHER.str
-            val ifKeyList = IfArgs.entries.filter {
+            val ifKeyList = IfArgs.entries.asSequence().filter {
                 it != IfArgs.GLUE
             }.map {
                     ifKeyClass ->
@@ -236,7 +236,7 @@ object SettingIfManager {
 //                ).joinToString("\n\n") + "\n\n==========\n\n"
 //            )
             let {
-                val requireIfKeyList = listOf(
+                val requireIfKeyList = sequenceOf(
                     listOf(targetKey),
                     listOf(matcherKey),
                     listOf(
@@ -249,7 +249,7 @@ object SettingIfManager {
                     ifKeyList.contains(ifKeyEntry)
                 }.forEachIndexed { index, (ifKeyEntry, _) ->
                     val curIfKeyIndex = index % judgeIfKeySetNum
-                    val curIfKeyList = requireIfKeyList.get(curIfKeyIndex)
+                    val curIfKeyList = requireIfKeyList.elementAt(curIfKeyIndex)
                     if (
                         curIfKeyList.contains(ifKeyEntry)
                     ) return@forEachIndexed
@@ -777,7 +777,7 @@ object SettingIfManager {
         ): List<
                 Map<String, String>
                 > {
-            val ifKeyList = IfArgs.entries.filter {
+            val ifKeyList = IfArgs.entries.asSequence().filter {
                 it != IfArgs.GLUE
             }.map {
                 ifKeyClass ->
@@ -785,7 +785,7 @@ object SettingIfManager {
             }
             val targetKey = IfArgs.TARGET.str
             val matcherKey = IfArgs.MATCHER.str
-            val compareBaseKeyList = listOf(
+            val compareBaseKeyList = sequenceOf(
                 IfArgs.VALUE.str,
                 IfArgs.REGEX.str
             )

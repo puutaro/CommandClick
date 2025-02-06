@@ -37,7 +37,7 @@ object SettingActionKeyManager {
         fun addLoopKey(
             curMapLoopKey: String
         ): String {
-            return listOf(
+            return sequenceOf(
                 curMapLoopKey,
                 mapRoopKeyUnit
             ).joinToString(mapLoopKeySeparator)
@@ -87,11 +87,11 @@ object SettingActionKeyManager {
         const val awaitWaitTimes = 5//10
 
         fun getAwaitVarNameList(awaitVarNameListCon: String): List<String> {
-            return awaitVarNameListCon.split(awaitSeparator).map {
+            return awaitVarNameListCon.split(awaitSeparator).asSequence().map {
                 it.trim()
             }.filter {
                 it.isNotEmpty()
-            }
+            }.toList()
         }
     }
 
@@ -197,8 +197,8 @@ object SettingActionKeyManager {
     }
 
     fun filterSettingKeyToDefinitionListByValidVarDefinition(
-        settingKeyToDefinitionList: List<Pair<String, String>>
-    ): List<Pair<String, String>> {
+        settingKeyToDefinitionList: Sequence<Pair<String, String>>
+    ): Sequence<Pair<String, String>> {
         val settingReturnKey =
             SettingActionsKey.SETTING_RETURN.key
         val varStrRegex = Regex("[a-zA-Z0-9_]+")
@@ -248,14 +248,14 @@ object SettingActionKeyManager {
             return CmdClickMap.createMap(
                 keyToSubKeyCon,
                 keySeparator
-            ).filter {
+            ).asSequence().filter {
                 val mainKey = it.first
                 settingActionsKeyPlusList.contains(mainKey)
             }.map {
                 val mainKey = it.first
                 val subKeyAfterStr = it.second
                 mainKey to subKeyAfterStr
-            }
+            }.toList()
         }
     }
 }

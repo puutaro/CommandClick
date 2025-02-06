@@ -95,7 +95,7 @@ class SettingReturnExecutor {
                     SettingActionKeyManager.SettingSubKey.ARGS.key
                 ),
                 valueSeparator
-            ).filter {
+            ).asSequence().filter {
                 it.first.isNotEmpty()
             }.map {
                     argNameToValueStr ->
@@ -104,7 +104,7 @@ class SettingReturnExecutor {
                             argNameToValueStr.second,
                             varNameToValueStrMap,
                         )
-            }
+            }.toList()
             SettingIfManager.handle(
                 sIf.key,
 //                        judgeTargetStr,
