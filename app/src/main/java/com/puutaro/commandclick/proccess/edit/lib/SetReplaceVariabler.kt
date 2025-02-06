@@ -99,7 +99,7 @@ object SetReplaceVariabler {
             ?.map { "${it.key}\t${it.value}"}
             ?: return null
         val firstSetVariableMapStringListSize = firstSetVariableMapStringList.size
-        val lastSetVariableMapStringList = firstSetVariableMapStringList.toMutableList()
+        val lastSetVariableMapStringList = firstSetVariableMapStringList.toTypedArray()
         (0 until firstSetVariableMapStringListSize).forEach {
             val valRepList = lastSetVariableMapStringList.get(it).split("\t")
             if(valRepList.size != 2) {
