@@ -5,7 +5,7 @@ import com.puutaro.commandclick.util.CcPathTool
 
 object VirtualSubFannel {
     fun makePath(
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
     ): String {
         val fannelDirName = CcPathTool.makeFannelDirName(
             FannelInfoTool.getCurrentFannelName(fannelInfoMap),

@@ -71,7 +71,7 @@ class SettingActionManager {
 
     suspend fun exec(
         fragment: Fragment?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
@@ -125,7 +125,7 @@ class SettingActionManager {
 
     private fun makeSetRepValMap(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         extraRepValMap: Map<String, String>?
     ): Map<String, String>? {
         val virtualSubFannelPath = VirtualSubFannel.makePath(
@@ -158,7 +158,7 @@ class SettingActionManager {
 
     private fun makeSettingActionKeyToSubKeyList(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         keyToSubKeyCon: String?,
         setReplaceVariableMapSrc: Map<String, String>?,
         repValsMap: Map<String, String>?
@@ -184,7 +184,7 @@ class SettingActionManager {
 
     private class SettingActionExecutor(
         private val fragmentRef: WeakReference<Fragment>,
-        private val fannelInfoMap: Map<String, String>,
+        private val fannelInfoMap: HashMap<String, String>,
         private val setReplaceVariableMapSrc: Map<String, String>?,
         private val busyboxExecutor: BusyboxExecutor?,
         private val topLevelValueStrKeyList: List<String>?,
@@ -1282,7 +1282,7 @@ class SettingActionManager {
 
             suspend fun exec(
                 fragment: Fragment,
-                fannelInfoMap: Map<String, String>,
+                fannelInfoMap: HashMap<String, String>,
                 setReplaceVariableMapSrc: Map<String, String>?,
                 mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
                 busyboxExecutor: BusyboxExecutor?,
@@ -1794,7 +1794,7 @@ private object SettingFuncManager {
 
     suspend fun handle(
         fragment: Fragment?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         topVarNameToValueStrMap: Map<String, String?>?,
@@ -1990,7 +1990,7 @@ object EvalForSetting {
 
     suspend fun handle(
         fragment: Fragment?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         topVarNameToValueStrMap: Map<String, String?>?,
@@ -2228,7 +2228,7 @@ object EvalForSetting {
 
         suspend fun map(
             fragment: Fragment?,
-            fannelInfoMap: Map<String, String>,
+            fannelInfoMap: HashMap<String, String>,
             setReplaceVariableMapSrc: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
             topVarNameToValueStrMapSrc: Map<String, String?>?,
@@ -2388,7 +2388,7 @@ object EvalForSetting {
 
         private suspend fun execAction(
             fragment: Fragment?,
-            fannelInfoMap: Map<String, String>,
+            fannelInfoMap: HashMap<String, String>,
             setReplaceVariableMapSrc: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
             topVarNameToValueStrMap: Map<String, String?>?,

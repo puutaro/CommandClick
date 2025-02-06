@@ -150,7 +150,7 @@ class ShortCutManager(
 
     private fun createExecIntent(
         activity: MainActivity,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         url: String?,
     ): Intent {
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(

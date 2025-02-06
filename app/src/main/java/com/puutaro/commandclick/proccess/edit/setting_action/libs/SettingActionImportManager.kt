@@ -82,7 +82,7 @@ object SettingActionImportManager {
 
     suspend fun makeImportPathAndRenewalVarNameToImportCon(
         context: Context?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         curMapLoopKey: String,
         topVarNameToValueStrMap: Map<String, String?>?,
@@ -489,7 +489,7 @@ object SettingActionImportManager {
         context: Context?,
         importPath: String,
 //        currentAppDirPath: String,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
         val beforeActionImportSrcCon = withContext(Dispatchers.IO) {

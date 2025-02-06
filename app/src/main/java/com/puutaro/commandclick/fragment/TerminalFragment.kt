@@ -64,8 +64,8 @@ class TerminalFragment:
     val binding get() = _binding!!
     val terminalViewhandler: Handler = Handler(Looper.getMainLooper())
     var busyboxExecutor: BusyboxExecutor? = null
-    var fannelInfoMap = mapOf<String, String>()
-    var srcFannelInfoMap: Map<String, String>? = null
+    var fannelInfoMap = hashMapOf<String, String>()
+    var srcFannelInfoMap: HashMap<String, String>? = null
     var editType =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
 //    var currentAppDirPath = String()
@@ -528,14 +528,14 @@ class TerminalFragment:
     }
     interface OnEditFannelContentsListUpdateListenerForTerm {
         fun onEditFannelContentsListUpdateForTerm(
-            fannelInfoMap: Map<String, String>,
+            fannelInfoMap: HashMap<String, String>,
             updateScriptContents: List<String>,
         )
     }
 
     interface OnMonitorSizeChangingForTerm {
         fun onMonitorSizeChangingForTerm(
-            fannelInfoMap: Map<String, String>,
+            fannelInfoMap: HashMap<String, String>,
         )
     }
 

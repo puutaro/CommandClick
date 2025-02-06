@@ -192,7 +192,7 @@ class EditListDialogOrdinary(
                 CmdClickMap.createMap(
                     fannelInfoCon,
                     JsFannelInfo.fannelInfoMapSeparator
-                ).toMap()
+                ).toMap() as HashMap<String, String>
             }
             val mainFannelFile = withContext(Dispatchers.IO) {
                 FannelInfoTool.getCurrentFannelName(

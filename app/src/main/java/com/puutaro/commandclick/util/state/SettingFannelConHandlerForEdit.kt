@@ -25,7 +25,7 @@ object SettingFannelConHandlerForEdit {
     }
 
     private fun execMakeSettingFanenlConList(
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         currentFannelPath: String,
         currentScriptContentsList: List<String>,

@@ -37,7 +37,7 @@ import java.io.File
 
 class FannelManageAdapter(
     private val context: Context?,
-    private val fannelInfoMap: Map<String, String>,
+    private val fannelInfoMap: HashMap<String, String>,
     var fannelNameList: MutableList<String>
     ): RecyclerView.Adapter<FannelManageAdapter.FannelManageViewHolder>(){
 

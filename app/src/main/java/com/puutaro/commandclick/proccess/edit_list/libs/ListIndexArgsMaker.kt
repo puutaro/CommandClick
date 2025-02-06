@@ -16,7 +16,7 @@ import java.io.File
 
 class ListIndexArgsMaker(
 //    val editFragment: EditFragment,
-    val fannelInfoMap: Map<String, String>,
+    val fannelInfoMap: HashMap<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
     val clickConfigPairList: List<Pair<String, String>>?,
 ) {

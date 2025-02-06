@@ -26,7 +26,7 @@ object SetReplaceVariabler {
             settingVariableList.isNullOrEmpty()
         ) return null
 
-        val fannelInfoMap = mapOf(
+        val fannelInfoMap = hashMapOf(
             FannelInfoSetting.current_fannel_name.name to currentScriptFileName,
         )
         val noImportRepValMap = execMakeSetReplaceVariableMap(
@@ -66,7 +66,7 @@ object SetReplaceVariabler {
     private fun execMakeSetReplaceVariableMap(
         context: Context?,
         settingVariableList: List<String>?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         noImportRepValMap: Map<String, String>?,
     ): Map<String, String>? {
         if(

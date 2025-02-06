@@ -10,7 +10,7 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 object JsActionHandler {
     fun handle(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         mainOrSubFannelPath: String,
         setReplaceVariableMapSrc: Map<String, String>?,
         jsActionPairListCon: String,

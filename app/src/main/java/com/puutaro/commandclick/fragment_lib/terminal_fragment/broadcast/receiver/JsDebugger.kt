@@ -454,7 +454,7 @@ object JsDebugger {
 
     private fun removeScrollPosiFile(
         activity: FragmentActivity?,
-        fannelInfoMap: Map<String, String>
+        fannelInfoMap: HashMap<String, String>
     ){
         val currentFannelHtmlPosiDirPath =
             TxtHtmlDescriber.makeCurrentFannelHtmlPosiDirPath(

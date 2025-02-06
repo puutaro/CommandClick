@@ -13,7 +13,7 @@ object MacroHandlerForQrAndListIndex {
 
     fun handle(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView?,

@@ -155,7 +155,7 @@ object JsActionTool {
 
     private fun makeSetRepValMap(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         extraRepValMap: Map<String, String>?
     ): Map<String, String>? {
         val virtualSubFannelPath = VirtualSubFannel.makePath(
@@ -188,7 +188,7 @@ object JsActionTool {
 
     fun makeJsActionMap(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         keyToSubKeyCon: String?,
         setReplaceVariableMapSrc: Map<String, String>?,
         mainOrSubFannelPath: String,
@@ -507,7 +507,7 @@ object JsActionTool {
 
     private fun extractJsDataMap(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
         keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
@@ -612,7 +612,7 @@ object JsActionTool {
 
     private fun createKeyToSubMapTypeMap(
         context: Context?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         keyToSubKeyCon: String?,
         setReplaceVariableMap: Map<String, String>?,
     ): Pair<
@@ -756,7 +756,7 @@ object JsActionTool {
 
     private fun convertJsCon(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
         keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
@@ -860,7 +860,7 @@ private object KeyToSubKeyMapListMaker {
     fun make(
         context: Context?,
         keyToSubKeyCon: String?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): Pair<List<Pair<String, Map<String, String>>>, List<Pair<String, String>>> {
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(

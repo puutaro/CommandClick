@@ -128,7 +128,7 @@ object TitleImageAndViewSetter {
 
     suspend fun set(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListTitleFrame: FrameLayout?,
@@ -253,7 +253,7 @@ object TitleImageAndViewSetter {
     private object FragAlignBk {
         suspend fun set(
             fragment: Fragment,
-            fannelInfoMap: Map<String, String>,
+            fannelInfoMap: HashMap<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
             fragBkImageView: AppCompatImageView?,
@@ -452,7 +452,7 @@ object TitleImageAndViewSetter {
 
         private suspend fun setBackstackCountAndLogoImage(
             context: Context?,
-            fannelInfoMap: Map<String, String>,
+            fannelInfoMap: HashMap<String, String>,
             fragBkImageView: AppCompatImageView?,
             bkCount: String,
             overrideText: String,
@@ -756,7 +756,7 @@ object TitleImageAndViewSetter {
 
     private suspend fun setLinearAlignTitle(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         fragImageFrame: FrameLayout?,
@@ -1061,7 +1061,7 @@ object TitleImageAndViewSetter {
     )
     private suspend fun setTitleText(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         fragImageFrame: FrameLayout?,
@@ -1229,7 +1229,7 @@ object TitleImageAndViewSetter {
 
     fun makeDefaultTitle(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         isBackstackEmoji: Boolean,
     ): String {
         val currentFannelName = FannelInfoTool.getCurrentFannelName(
@@ -1268,7 +1268,7 @@ object TitleImageAndViewSetter {
     private suspend fun setTitleImage(
         fragment: Fragment,
         editTitleImageView: AppCompatImageView?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         bkArgbColorStr: String,
         requestBuilder: RequestBuilder<Drawable>?
     ){
@@ -1380,7 +1380,7 @@ private object EditTextMaker {
 
     fun make(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         titleTextMap: Map<String, String>?,
@@ -1409,7 +1409,7 @@ private object EditTextMaker {
     }
     private fun makeByShellCon(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editTextPropertyMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,

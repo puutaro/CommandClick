@@ -9,7 +9,7 @@ import com.puutaro.commandclick.util.map.FilePrefixGetter
 object ExecSwitcherForListIndexAdapter {
 
     fun updateTsv(
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editConstraintListAdapter: EditConstraintListAdapter,
         lineMapList: List<Map<String, String>>,

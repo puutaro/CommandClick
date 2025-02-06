@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
 
 class EditFragmentArgs(
-    private val fannelInfoMap: Map<String, String>,
+    private val fannelInfoMap: HashMap<String, String>,
     private val editType: EditTypeSettingsKey,
-    private val srcFannelInfoMap: Map<String, String>? = null,
+    private val srcFannelInfoMap: HashMap<String, String>? = null,
 ) {
 
     companion object {
@@ -45,8 +45,8 @@ class EditFragmentArgs(
             currentFannelName: String,
             onShortcut: String,
             fannelState: String,
-        ): Map<String, String> {
-            return mapOf(
+        ): HashMap<String, String> {
+            return hashMapOf(
 //                FannelInfoSetting.current_app_dir.name to currentAppDirPath,
                 FannelInfoSetting.current_fannel_name.name to currentFannelName,
                 FannelInfoSetting.on_shortcut.name to onShortcut,
@@ -56,7 +56,7 @@ class EditFragmentArgs(
 
         fun getFannelInfoMap(
             fragArgsBundle:  Bundle?,
-        ): Map<String, String> {
+        ): HashMap<String, String> {
 //            val currentAppDirPath =
 //                fragArgsBundle?.getString(
 //                    FragmentArgsKey.CURRENT_APP_DIR_PATH.key
@@ -73,7 +73,7 @@ class EditFragmentArgs(
                 fragArgsBundle?.getString(
                     FragmentArgsKey.CURRENT_FANNEL_STATE.key
                 ) ?: FannelInfoSetting.current_fannel_state.defalutStr
-            return mapOf(
+            return hashMapOf(
 //                FragmentArgsKey.CURRENT_APP_DIR_PATH.key to currentAppDirPath,
                 FragmentArgsKey.CURRENT_FANNEL_NAME.key to currentFannelName,
                 FragmentArgsKey.ON_SHORTCUT.key to onShortcut,
@@ -83,7 +83,7 @@ class EditFragmentArgs(
 
         fun getSrcFannelInfoMap(
             fragArgsBundle: Bundle?,
-        ): Map<String, String>? {
+        ): HashMap<String, String>? {
 //            val currentAppDirPath =
 //                fragArgsBundle?.getString(
 //                    FragmentArgsKey.SRC_CURRENT_APP_DIR_PATH.key
@@ -100,7 +100,7 @@ class EditFragmentArgs(
                 fragArgsBundle.getString(
                     FragmentArgsKey.SRC_CURRENT_FANNEL_STATE.key
                 ) ?: FannelInfoSetting.current_fannel_state.defalutStr
-            return mapOf(
+            return hashMapOf(
 //                FragmentArgsKey.CURRENT_APP_DIR_PATH.key to currentAppDirPath,
                 FragmentArgsKey.CURRENT_FANNEL_NAME.key to currentFannelName,
                 FragmentArgsKey.ON_SHORTCUT.key to onShortcut,

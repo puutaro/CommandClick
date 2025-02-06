@@ -7,7 +7,7 @@ import com.puutaro.commandclick.util.state.TargetFragmentInstance
 object ExecFannelConListUpdate {
     fun update(
         activity: MainActivity,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         updateFannelConList: List<String>
     ){
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(

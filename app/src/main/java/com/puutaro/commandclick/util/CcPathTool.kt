@@ -266,7 +266,7 @@ object CcPathTool {
     }
 
     fun getCurrentScriptFileName(
-        fannelInfoMap: Map<String, String>
+        fannelInfoMap: HashMap<String, String>
     ): String {
         val currentScriptFileName = FannelInfoTool.getCurrentFannelName(
             fannelInfoMap

@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 object GgleSerchSystemMaker
 //    private val binding: CommandIndexFragmentBinding,
 //    private val cmdIndexFragment: CommandIndexFragment,
-//    fannelInfoMap: Map<String, String>,
+//    fannelInfoMap: HashMap<String, String>,
  {
 //    private val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 

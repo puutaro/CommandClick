@@ -223,7 +223,7 @@ object TxtHtmlDescriber {
 
     fun makeCurrentFannelHtmlPosiDirPath(
         activity: FragmentActivity?,
-        fannelInfoMap: Map<String, String>? = null
+        fannelInfoMap: HashMap<String, String>? = null
     ): String {
         val sharePref = FannelInfoTool.getSharePref(activity)
         val fannelDirName = when(fannelInfoMap.isNullOrEmpty()) {

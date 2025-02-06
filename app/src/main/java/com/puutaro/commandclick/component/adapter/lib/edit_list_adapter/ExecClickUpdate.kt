@@ -12,7 +12,7 @@ object ExecClickUpdate {
 
 //    fun update(
 //        fragment: Fragment,
-//        fannelInfoMap: Map<String, String>,
+//        fannelInfoMap: HashMap<String, String>,
 //        setReplaceVariableMap: Map<String, String>?,
 //        editComponentListAdapter: EditComponentListAdapter,
 //        listIndexArgsMaker: ListIndexArgsMaker,
@@ -50,7 +50,7 @@ object ExecClickUpdate {
 
     private fun updateForTsv(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editConstraintListAdapter: EditConstraintListAdapter,
         bindingAdapterPosition: Int,

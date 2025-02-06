@@ -43,7 +43,7 @@ object BkImageSettingsForEditList {
 //    suspend fun makeBkFrame(
 //        context: Context?,
 //        buttonFrameLayout: FrameLayout?,
-//        fannelInfoMap: Map<String, String>,
+//        fannelInfoMap: HashMap<String, String>,
 //        setReplaceVariableMap: Map<String, String>?,
 //        busyboxExecutor: BusyboxExecutor?,
 //        editListBkPairs: List<Pair<String, String>>?,

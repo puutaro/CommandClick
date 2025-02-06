@@ -213,7 +213,7 @@ object ExecAddForEditListAdapter {
 
     fun execAddForEditList(
         context: Context?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView,
 //        editComponentListAdapter: EditComponentListAdapter,

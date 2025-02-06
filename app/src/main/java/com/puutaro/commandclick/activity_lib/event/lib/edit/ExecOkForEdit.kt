@@ -11,7 +11,7 @@ object ExecOkForEdit{
     fun execOkForEdit(
         activity: MainActivity,
         callOwnerFragmentTag : String?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
     ) {
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap

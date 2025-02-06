@@ -22,7 +22,7 @@ object ListSettingVariableListMaker {
         context: Context?,
         targetSettingConfigValName: String,
         settingVariableList: List<String>?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         defaultButtonConfigCon: String,
     ): Map<String, String> {
@@ -50,7 +50,7 @@ object ListSettingVariableListMaker {
     fun makeFromSettingVariableList(
         context: Context?,
         settingVariableName: String,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingVariablesList: List<String>?,
     ): List<String> {
@@ -114,7 +114,7 @@ object ListSettingVariableListMaker {
     fun makeFromSettingPath(
         context: Context?,
         settingPath: String,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): Map<String, String> {
         val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
@@ -149,7 +149,7 @@ object ListSettingVariableListMaker {
     private fun createFromSettingVal(
         settingValConSrc: String,
         defaultConfigMapStr: String,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap:  Map<String, String>? = null,
     ): Map<String, String> {
         val propertySeparator = ','

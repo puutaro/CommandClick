@@ -71,8 +71,8 @@ class EditFragment: Fragment() {
     var jsExecuteJob: Job? = null
 //    var popBackStackToIndexImmediateJob: Job? = null
     var suggestJob: Job? = null
-    var fannelInfoMap: Map<String, String> = mapOf()
-    var srcFannelInfoMap: Map<String, String>? = null
+    var fannelInfoMap: HashMap<String, String> = hashMapOf()
+    var srcFannelInfoMap: HashMap<String, String>? = null
     var editTypeSettingKey =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var setReplaceVariableMap: Map<String, String>? = null
@@ -402,7 +402,7 @@ class EditFragment: Fragment() {
         fun onToolBarButtonClickForEditFragment(
             callOwnerFragmentTag : String?,
             toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-            fannelInfoMap: Map<String, String>,
+            fannelInfoMap: HashMap<String, String>,
             enableCmdEdit: Boolean,
         )
     }

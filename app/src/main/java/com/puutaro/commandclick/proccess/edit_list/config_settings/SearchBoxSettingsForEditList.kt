@@ -23,7 +23,7 @@ object SearchBoxSettingsForEditList {
 
     fun makeCurrentVariableValueInEditText(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         currentVariableValue: String?
     ): String {
         if(

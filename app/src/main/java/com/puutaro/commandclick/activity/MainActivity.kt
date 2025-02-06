@@ -339,7 +339,7 @@ class MainActivity:
     override fun onToolBarButtonClickForEditFragment(
         callOwnerFragmentTag : String?,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         enableCmdEdit: Boolean,
     ){
         ExecToolBarButtonClickForEdit.execToolBarButtonClickForEdit(
@@ -844,7 +844,7 @@ class MainActivity:
     }
 
     override fun onEditFannelContentsListUpdateForTerm(
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         updateScriptContents: List<String>,
     ) {
         ExecFannelConListUpdate.update(
@@ -855,7 +855,7 @@ class MainActivity:
     }
 
     override fun onMonitorSizeChangingForTerm(
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
     ) {
         ExecMonitorSizeChangeForTerm.change(
             this,

@@ -77,7 +77,7 @@ class ImageActionManager {
 
     suspend fun exec(
         fragment: Fragment?,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         imageView: AppCompatImageView?,
@@ -131,7 +131,7 @@ class ImageActionManager {
 
     private fun makeSetRepValMap(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         extraRepValMap: Map<String, String>?
     ): Map<String, String>? {
         val virtualSubFannelPath = VirtualSubFannel.makePath(
@@ -164,7 +164,7 @@ class ImageActionManager {
 
     private fun makeImageActionKeyToSubKeyList(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         keyToSubKeyCon: String?,
         setReplaceVariableMapSrc: Map<String, String>?,
         repValsMap: Map<String, String>?
@@ -190,7 +190,7 @@ class ImageActionManager {
 
     private class ImageActionExecutor(
         private val fragmentRef: WeakReference<Fragment>,
-        private val fannelInfoMap: Map<String, String>,
+        private val fannelInfoMap: HashMap<String, String>,
         private val setReplaceVariableMapSrc: Map<String, String>?,
         private val busyboxExecutor: BusyboxExecutor?,
         private val topLevelBitmapStrKeyList: List<String>?,

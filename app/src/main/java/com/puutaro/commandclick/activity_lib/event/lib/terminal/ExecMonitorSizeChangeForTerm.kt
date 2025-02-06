@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 object ExecMonitorSizeChangeForTerm {
     fun change(
         activity: MainActivity,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
     ){
         try {
             CoroutineScope(Dispatchers.Main).launch {
@@ -39,7 +39,7 @@ object ExecMonitorSizeChangeForTerm {
     }
     private fun execChange(
         activity: MainActivity,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
     ){
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
 //            fannelInfoMap

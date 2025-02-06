@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 object ExecCopyFile {
     fun copyFile(
         fragment: Fragment,
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         listIndexPosition: Int,
         filterMap: Map<String, String>,
     ){

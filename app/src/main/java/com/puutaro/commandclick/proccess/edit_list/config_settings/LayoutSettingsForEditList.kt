@@ -52,7 +52,7 @@ object LayoutSettingsForEditList {
     }
 
     fun howReverseLayout(
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         layoutMap: Map<String, String>?,
     ): Boolean {
@@ -65,7 +65,7 @@ object LayoutSettingsForEditList {
     }
 
     fun howClickUpdate(
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         layoutMap: Map<String, String>?,
     ): Boolean {
@@ -92,7 +92,7 @@ object LayoutSettingsForEditList {
     }
 
     fun howDisableEditByDrag(
-        fannelInfoMap: Map<String, String>,
+        fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
 //        editFragment: EditFragment,
         editByDragMap: Map<String, String>
