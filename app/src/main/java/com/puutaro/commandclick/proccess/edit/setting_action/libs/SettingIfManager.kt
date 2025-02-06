@@ -237,9 +237,9 @@ object SettingIfManager {
 //            )
             let {
                 val requireIfKeyList = sequenceOf(
-                    listOf(targetKey),
-                    listOf(matcherKey),
-                    listOf(
+                    sequenceOf(targetKey),
+                    sequenceOf(matcherKey),
+                    sequenceOf(
                         IfArgs.VALUE.str,
                         IfArgs.REGEX.str
                     ),

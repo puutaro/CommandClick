@@ -952,7 +952,7 @@ object WithEditConstraintListView{
                         val contentsTagSrc =
                             contentsTagToKeyPairsList.getOrNull(execSetContentsIndex)
                         val mapListElInfoForExecContents =
-                            listOf(
+                            sequenceOf(
                                 "contentsTagSrc: ${contentsTagSrc}",
                                 totalMapListElInfo
                             ).joinToString(", ")
@@ -1030,7 +1030,7 @@ object WithEditConstraintListView{
                             } ?: String()
                         }
                         val mapListElInfoForContentsTagWithReplace =
-                            listOf(
+                            sequenceOf(
                                 "execContentsTag: ${execContentsTag}",
                                 totalMapListElInfo
                             ).joinToString(", ")

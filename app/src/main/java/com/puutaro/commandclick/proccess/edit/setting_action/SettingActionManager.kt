@@ -2262,7 +2262,7 @@ object EvalForSetting {
                         >?,
                 FuncCheckerForSetting.FuncCheckErr?
                 > {
-            val info = listOf(
+            val info = sequenceOf(
                 "inputCon ${inputCon}",
                 "separator: ${separator}",
                 "indexVarName: ${indexVarName}",

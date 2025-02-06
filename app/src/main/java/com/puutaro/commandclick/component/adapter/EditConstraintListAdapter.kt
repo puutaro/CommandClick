@@ -459,7 +459,7 @@ class EditConstraintListAdapter(
                         }
 //                        holder.bkFrameLayout.removeAllViews()
                     }
-                    listOf(
+                    sequenceOf(
                         cardViewSettingJob,
                         removeAndSet2TotalConstraint,
                         removeAllViewFromBkFrameJob
@@ -469,7 +469,7 @@ class EditConstraintListAdapter(
             }
             dateList.add("setupEnd" to LocalDateTime.now())
             val mapListElInfo = withContext(Dispatchers.IO) {
-                listOf(
+                sequenceOf(
                     "srcTitle: ${holder.srcTitle}",
                     "srcCon: ${holder.srcCon}",
                     "srcImage: ${holder.srcImage}",
@@ -504,7 +504,7 @@ class EditConstraintListAdapter(
                 }
             }
             val totalMapListElInfo =
-                listOf(
+                sequenceOf(
                     "frameTag: ${frameTag}",
                     "mapListElInfo: ${mapListElInfo}",
                     plusKeyToSubKeyConWhere
