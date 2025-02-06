@@ -56,7 +56,7 @@ class ImageActionManager {
                 ImageActionKeyManager.ImageActionsKey.entries.map {
                     it.key
                 }
-            return keyToSubKeyConList.map {
+            return keyToSubKeyConList.asSequence().map {
                     keyToSubKeyCon ->
                 val settingKey = keyToSubKeyCon.first
                 if(
@@ -71,7 +71,7 @@ class ImageActionManager {
             }.filter {
                 it.first.isNotEmpty()
                         && it.second.isNotEmpty()
-            }
+            }.toList()
         }
     }
 
@@ -1148,7 +1148,7 @@ class ImageActionManager {
                 subKeySeparator
             )
             val argsSubKey = ImageActionKeyManager.ImageSubKey.ARGS.key
-            return subKeyToConList.mapIndexed {
+            return subKeyToConList.asSequence().mapIndexed {
                     index, subKeyToCon ->
                 val innerSubKeyName = subKeyToCon.first
                 val innerSubKeyClass = ImageActionKeyManager.ImageSubKey.entries.firstOrNull {
@@ -1190,7 +1190,7 @@ class ImageActionManager {
                 }
             }.filter {
                 it.first.isNotEmpty()
-            }
+            }.toList()
         }
 
         private class ImageVarExecutor {

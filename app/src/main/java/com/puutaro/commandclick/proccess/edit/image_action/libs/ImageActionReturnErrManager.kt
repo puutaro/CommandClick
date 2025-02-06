@@ -238,13 +238,13 @@ object ImageActionReturnErrManager {
                 settingKey != imageReturnKey
             ) return@forEachIndexed
             val alreadyVarNameList = let {
-                settingKeyToVarNameList.filterIndexed { innerIndex, innerSettingKeyToVarName ->
+                settingKeyToVarNameList.asSequence().filterIndexed { innerIndex, innerSettingKeyToVarName ->
                     innerSettingKeyToVarName.first != imageReturnKey
                             && innerIndex < index
                 }.map { innerSettingKeyToVarName ->
                     innerSettingKeyToVarName.second
                 } + (bitmapVarKeyList ?: emptyList())
-            }.sorted().distinct()
+            }.sorted().distinct().toList()
             val returnVarName = settingKeyToVarName.second
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultSDebugAppDirPath, "lisNotBeforeDefinitionInReturnErr_for.txt").absolutePath,
@@ -292,7 +292,7 @@ object ImageActionReturnErrManager {
     ): List<Pair<String, String>> {
         val defaultReturnPair = String() to String()
         val subKeySeparator = ImageActionKeyManager.subKeySepartor
-        return keyToSubKeyConList.map {
+        return keyToSubKeyConList.asSequence().map {
                 keyToSubKeyCon ->
             val settingKey = keyToSubKeyCon.first
             if(
@@ -306,6 +306,6 @@ object ImageActionReturnErrManager {
             settingKey to bitmapVarMark
         }.filter {
             it.first.isNotEmpty()
-        }
+        }.toList()
     }
 }

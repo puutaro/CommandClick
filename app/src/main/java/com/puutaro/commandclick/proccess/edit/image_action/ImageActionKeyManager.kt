@@ -83,11 +83,11 @@ object ImageActionKeyManager {
         private const val awaitSeparator = ','
 
         fun getAwaitVarNameList(awaitVarNameListCon: String): List<String> {
-            return awaitVarNameListCon.split(awaitSeparator).map {
+            return awaitVarNameListCon.split(awaitSeparator).asSequence().map {
                 it.trim()
             }.filter {
                 it.isNotEmpty()
-            }
+            }.toList()
         }
     }
 
@@ -221,14 +221,14 @@ object ImageActionKeyManager {
             return CmdClickMap.createMap(
                 keyToSubKeyCon,
                 keySeparator
-            ).filter {
+            ).asSequence().filter {
                 val mainKey = it.first
                 imageActionsKeyPlusList.contains(mainKey)
             }.map {
                 val mainKey = it.first
                 val subKeyAfterStr = it.second
                 mainKey to subKeyAfterStr
-            }
+            }.toList()
         }
     }
 

@@ -1165,7 +1165,7 @@ object ImageActionVarErrManager {
             ImageActionKeyManager.ImageActionsKey.entries.map {
                 it.key
             }
-        return keyToSubKeyConList.map {
+        return keyToSubKeyConList.asSequence().map {
                 keyToSubKeyCon ->
             val settingKey = keyToSubKeyCon.first
             if(
@@ -1184,7 +1184,7 @@ object ImageActionVarErrManager {
         }.filter {
             it.first.isNotEmpty()
                     && it.second.isNotEmpty()
-        }.let {
+        }.toList().let {
             ImageActionKeyManager.filterSettingKeyToDefinitionListByValidVarDefinition(
                 it
             )
