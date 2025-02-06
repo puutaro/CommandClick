@@ -625,12 +625,12 @@ class EditConstraintListAdapter(
                 isFrameTagDulidateErrJob.await()
             ) return@launch
             dateList.add("frameSetupEnd" to LocalDateTime.now())
-//            if(editListPosition == 0) {
-//                FileSystems.writeFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "ladapter_setupMemo.txt").absolutePath,
-//                    dateList.joinToString("\n")
-//                )
-//            }
+            if(editListPosition == 0) {
+                FileSystems.writeFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "ladapter_setupMemo.txt").absolutePath,
+                    dateList.joinToString("\n")
+                )
+            }
             CoroutineScope(Dispatchers.IO).launch {
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lframeTag.txt").absolutePath,

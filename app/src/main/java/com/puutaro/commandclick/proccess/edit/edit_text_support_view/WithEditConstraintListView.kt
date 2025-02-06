@@ -385,10 +385,10 @@ object WithEditConstraintListView{
             )
         }
         dateList.add("setAdapter" to LocalDateTime.now())
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "leditDateList.txt").absolutePath,
-//            dateList.joinToString("\n")
-//        )
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "leditDateList.txt").absolutePath,
+            dateList.joinToString("\n")
+        )
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
                 editListRecyclerView.adapter = editConstraintListAdapter
