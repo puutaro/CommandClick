@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -32,7 +31,6 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -50,7 +48,6 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDateTime
-import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.enums.EnumEntries
 
@@ -1204,7 +1201,7 @@ class SettingActionManager {
             )
         }
 
-        private fun makeMainSubKeyPairList(
+        private suspend fun makeMainSubKeyPairList(
             settingVarKey: String,
             subKeyCon: String,
         ): List<
@@ -1225,50 +1222,64 @@ class SettingActionManager {
                 subKeySeparator
             )
             val argsSubKey = SettingActionKeyManager.SettingSubKey.ARGS.key
-            return subKeyToConList.asSequence().mapIndexed {
-                    index, subKeyToCon ->
-                val innerSubKeyName = subKeyToCon.first
-                val innerSubKeyClass = SettingActionKeyManager.SettingSubKey.entries.firstOrNull {
-                    it.key == innerSubKeyName
-                } ?: return@mapIndexed Pair(String(), emptyMap())
-                val innerSubKeyCon = subKeyToCon.second
-                when(innerSubKeyClass) {
-                    SettingActionKeyManager.SettingSubKey.S_IF_END,
-                    SettingActionKeyManager.SettingSubKey.SETTING_VAR,
-                    SettingActionKeyManager.SettingSubKey.SETTING_RETURN,
-                    SettingActionKeyManager.SettingSubKey.VALUE,
-                    SettingActionKeyManager.SettingSubKey.AWAIT,
-                    SettingActionKeyManager.SettingSubKey.ON_RETURN -> {
-                        val mainSubKeyMap = mapOf(
-                            innerSubKeyName to innerSubKeyCon,
-                        )
-                        Pair(innerSubKeyName, mainSubKeyMap)
-                    }
-                    SettingActionKeyManager.SettingSubKey.FUNC,
-                    SettingActionKeyManager.SettingSubKey.S_IF -> {
-                        val funcPartMap = mapOf(
-                            innerSubKeyName to innerSubKeyCon,
-                        )
-                        val argsMap = let {
-                            val nextSubKeyToCon =
-                                subKeyToConList.getOrNull(index + 1)
-                                    ?: return@let emptyMap()
-                            val nextSubKeyName = nextSubKeyToCon.first
-                            when (nextSubKeyName == argsSubKey) {
-                                false -> emptyMap()
-                                else -> mapOf(
-                                    argsSubKey to nextSubKeyToCon.second
+            return withContext(Dispatchers.IO) {
+                val indexAndKeyToSubKeyJobList = subKeyToConList.asSequence().mapIndexed { index, subKeyToCon ->
+                    async {
+                        val innerSubKeyName = subKeyToCon.first
+                        val innerSubKeyClass =
+                            SettingActionKeyManager.SettingSubKey.entries.firstOrNull {
+                                it.key == innerSubKeyName
+                            } ?: return@async index to Pair(String(), emptyMap())
+                        val innerSubKeyCon = subKeyToCon.second
+                        when (innerSubKeyClass) {
+                            SettingActionKeyManager.SettingSubKey.S_IF_END,
+                            SettingActionKeyManager.SettingSubKey.SETTING_VAR,
+                            SettingActionKeyManager.SettingSubKey.SETTING_RETURN,
+                            SettingActionKeyManager.SettingSubKey.VALUE,
+                            SettingActionKeyManager.SettingSubKey.AWAIT,
+                            SettingActionKeyManager.SettingSubKey.ON_RETURN -> {
+                                val mainSubKeyMap = mapOf(
+                                    innerSubKeyName to innerSubKeyCon,
                                 )
+                                index to Pair(innerSubKeyName, mainSubKeyMap)
                             }
+
+                            SettingActionKeyManager.SettingSubKey.FUNC,
+                            SettingActionKeyManager.SettingSubKey.S_IF -> {
+                                val funcPartMap = mapOf(
+                                    innerSubKeyName to innerSubKeyCon,
+                                )
+                                val argsMap = let {
+                                    val nextSubKeyToCon =
+                                        subKeyToConList.getOrNull(index + 1)
+                                            ?: return@let emptyMap()
+                                    val nextSubKeyName = nextSubKeyToCon.first
+                                    when (nextSubKeyName == argsSubKey) {
+                                        false -> emptyMap()
+                                        else -> mapOf(
+                                            argsSubKey to nextSubKeyToCon.second
+                                        )
+                                    }
+                                }
+                                index to Pair(innerSubKeyName, (funcPartMap + argsMap))
+                            }
+
+                            SettingActionKeyManager.SettingSubKey.ARGS
+                                -> index to Pair(String(), emptyMap())
                         }
-                        Pair(innerSubKeyName, (funcPartMap + argsMap))
                     }
-                    SettingActionKeyManager.SettingSubKey.ARGS
-                        -> Pair(String(), emptyMap())
                 }
-            }.filter {
-                it.first.isNotEmpty()
-            }.toList()
+                val indexAndKeyToSubKeyConList =
+                    ArrayList<Pair<Int, Pair<String, Map<String, String>>>>(indexAndKeyToSubKeyJobList.count())
+                indexAndKeyToSubKeyJobList.forEach {
+                    indexAndKeyToSubKeyConList.add(it.await())
+                }
+                indexAndKeyToSubKeyConList.sortedBy { it.first }.map {
+                    it.second
+                }.filter {
+                    it.first.isNotEmpty()
+                }.toList()
+            }
         }
 
         private class SettingVarExecutor {

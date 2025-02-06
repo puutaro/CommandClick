@@ -1129,7 +1129,7 @@ class ImageActionManager {
             )
         }
 
-        private fun makeMainSubKeyPairList(
+        private suspend fun makeMainSubKeyPairList(
             settingVarKey: String,
             subKeyCon: String,
         ): List<
@@ -1148,49 +1148,63 @@ class ImageActionManager {
                 subKeySeparator
             )
             val argsSubKey = ImageActionKeyManager.ImageSubKey.ARGS.key
-            return subKeyToConList.asSequence().mapIndexed {
-                    index, subKeyToCon ->
-                val innerSubKeyName = subKeyToCon.first
-                val innerSubKeyClass = ImageActionKeyManager.ImageSubKey.entries.firstOrNull {
-                    it.key == innerSubKeyName
-                } ?: return@mapIndexed Pair(String(), emptyMap())
-                val innerSubKeyCon = subKeyToCon.second
-                when(innerSubKeyClass) {
-                    ImageActionKeyManager.ImageSubKey.I_IF_END,
-                    ImageActionKeyManager.ImageSubKey.IMAGE_VAR,
-                    ImageActionKeyManager.ImageSubKey.IMAGE_RETURN,
-                    ImageActionKeyManager.ImageSubKey.AWAIT,
-                    ImageActionKeyManager.ImageSubKey.ON_RETURN -> {
-                        val mainSubKeyMap = mapOf(
-                            innerSubKeyName to innerSubKeyCon,
-                        )
-                        Pair(innerSubKeyName, mainSubKeyMap)
-                    }
-                    ImageActionKeyManager.ImageSubKey.FUNC,
-                    ImageActionKeyManager.ImageSubKey.I_IF-> {
-                        val funcPartMap = mapOf(
-                            innerSubKeyName to innerSubKeyCon,
-                        )
-                        val argsMap = let {
-                            val nextSubKeyToCon =
-                                subKeyToConList.getOrNull(index + 1)
-                                    ?: return@let emptyMap()
-                            val nextSubKeyName = nextSubKeyToCon.first
-                            when (nextSubKeyName == argsSubKey) {
-                                false -> emptyMap()
-                                else -> mapOf(
-                                    argsSubKey to nextSubKeyToCon.second
+
+            return withContext(Dispatchers.IO) {
+                val indexAndKeyToSubKeyJobList = subKeyToConList.asSequence().mapIndexed { index, subKeyToCon ->
+                    async {
+                        val innerSubKeyName = subKeyToCon.first
+                        val innerSubKeyClass =
+                            ImageActionKeyManager.ImageSubKey.entries.firstOrNull {
+                                it.key == innerSubKeyName
+                            } ?: return@async index to Pair(String(), emptyMap())
+                        val innerSubKeyCon = subKeyToCon.second
+                        when (innerSubKeyClass) {
+                            ImageActionKeyManager.ImageSubKey.I_IF_END,
+                            ImageActionKeyManager.ImageSubKey.IMAGE_VAR,
+                            ImageActionKeyManager.ImageSubKey.IMAGE_RETURN,
+                            ImageActionKeyManager.ImageSubKey.AWAIT,
+                            ImageActionKeyManager.ImageSubKey.ON_RETURN -> {
+                                val mainSubKeyMap = mapOf(
+                                    innerSubKeyName to innerSubKeyCon,
                                 )
+                                index to Pair(innerSubKeyName, mainSubKeyMap)
                             }
+
+                            ImageActionKeyManager.ImageSubKey.FUNC,
+                            ImageActionKeyManager.ImageSubKey.I_IF -> {
+                                val funcPartMap = mapOf(
+                                    innerSubKeyName to innerSubKeyCon,
+                                )
+                                val argsMap = let {
+                                    val nextSubKeyToCon =
+                                        subKeyToConList.getOrNull(index + 1)
+                                            ?: return@let emptyMap()
+                                    val nextSubKeyName = nextSubKeyToCon.first
+                                    when (nextSubKeyName == argsSubKey) {
+                                        false -> emptyMap()
+                                        else -> mapOf(
+                                            argsSubKey to nextSubKeyToCon.second
+                                        )
+                                    }
+                                }
+                                index to Pair(innerSubKeyName, (funcPartMap + argsMap))
+                            }
+                            ImageActionKeyManager.ImageSubKey.ARGS
+                                -> index to Pair(String(), emptyMap())
                         }
-                        Pair(innerSubKeyName, (funcPartMap + argsMap))
                     }
-                    ImageActionKeyManager.ImageSubKey.ARGS
-                        -> Pair(String(), emptyMap())
                 }
-            }.filter {
-                it.first.isNotEmpty()
-            }.toList()
+                val indexAndKeyToSubKeyConList =
+                    ArrayList<Pair<Int, Pair<String, Map<String, String>>>>(indexAndKeyToSubKeyJobList.count())
+                indexAndKeyToSubKeyJobList.forEach {
+                    indexAndKeyToSubKeyConList.add(it.await())
+                }
+                indexAndKeyToSubKeyConList.sortedBy { it.first }.map {
+                    it.second
+                }.filter {
+                    it.first.isNotEmpty()
+                }.toList()
+            }
         }
 
         private class ImageVarExecutor {
