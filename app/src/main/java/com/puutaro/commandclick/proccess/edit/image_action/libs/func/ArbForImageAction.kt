@@ -9,14 +9,13 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.Font
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.IconType
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction.ArbMethodArgClass.StringsArgs.StringsEnumArgs
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
@@ -244,13 +243,25 @@ object ArbForImageAction {
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-                val angleRange = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val startAngle = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
-                    args.angleRangeKeyToDefaultValueStr,
+                    args.startAngleKeyToDefaultValueStr,
                     where
-                ).let { angleRangeToErr ->
-                    val funcErr = angleRangeToErr.second
-                        ?: return@let angleRangeToErr.first
+                ).let { startAngleToErr ->
+                    val funcErr = startAngleToErr.second
+                        ?: return@let startAngleToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val endAngle = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.endAngleKeyToDefaultValueStr,
+                    where
+                ).let { endAngleToErr ->
+                    val funcErr = endAngleToErr.second
+                        ?: return@let endAngleToErr.first
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
@@ -364,7 +375,8 @@ object ArbForImageAction {
                     width,
                     height,
                     pieceOneSide,
-                    angleRange,
+                    startAngle,
+                    endAngle,
                     times,
                     shapeStr,
                     iconType,
@@ -444,13 +456,25 @@ object ArbForImageAction {
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }.toFloat()
-                val angleRange = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val startAngle = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
-                    args.angleRangeKeyToDefaultValueStr,
+                    args.startAngleKeyToDefaultValueStr,
                     where
-                ).let { angleRangeToErr ->
-                    val funcErr = angleRangeToErr.second
-                        ?: return@let angleRangeToErr.first
+                ).let { startAngleToErr ->
+                    val funcErr = startAngleToErr.second
+                        ?: return@let startAngleToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val endAngle = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.endAngleKeyToDefaultValueStr,
+                    where
+                ).let { endAngleToErr ->
+                    val funcErr = endAngleToErr.second
+                        ?: return@let endAngleToErr.first
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
@@ -641,7 +665,8 @@ object ArbForImageAction {
                     height,
                     pieceWidthFloat,
                     pieceHeightFloat,
-                    angleRange,
+                    startAngle,
+                    endAngle,
                     times,
                     string,
                     fontSizeFloat,
@@ -669,7 +694,8 @@ object ArbForImageAction {
             baseHeight: Int,
             pieceWidthFloat: Float,
             pieceHeightFloat: Float,
-            angleRange: Int,
+            startAngle: Int,
+            endAngle: Int,
             times: Int,
             string: String,
             fontSizeFloat: Float,
@@ -741,7 +767,8 @@ object ArbForImageAction {
                         baseWidth,
                         baseHeight,
                         stringBitmap,
-                        angleRange,
+                        startAngle,
+                        endAngle,
                         times
                     ).let {
                         val cutWidth = (baseWidth * 0.8).toInt()
@@ -784,7 +811,8 @@ object ArbForImageAction {
             width: Int,
             height: Int,
             pieceOneSide: Int,
-            angleRange: Int,
+            startAngle: Int,
+            endAngle: Int,
             times: Int,
             shapeStr: String,
             iconType: IconType,
@@ -806,7 +834,8 @@ object ArbForImageAction {
                         width,
                         height,
                         pieceBitmap,
-                        angleRange,
+                        startAngle,
+                        endAngle,
                         times
                     ).let {
                         val cutWidth = (width * 0.8).toInt()
@@ -1001,9 +1030,13 @@ object ArbForImageAction {
                 IconsEnumArgs.PIECE_ONE_SIDE.key,
                 IconsEnumArgs.PIECE_ONE_SIDE.defaultValueStr
             )
-            val angleRangeKeyToDefaultValueStr = Pair(
-                IconsEnumArgs.ANGLE_RANGE.key,
-                IconsEnumArgs.ANGLE_RANGE.defaultValueStr
+            val startAngleKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.START_ANGLE.key,
+                IconsEnumArgs.START_ANGLE.defaultValueStr
+            )
+            val endAngleKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.END_ANGLE.key,
+                IconsEnumArgs.END_ANGLE.defaultValueStr
             )
             val timesKeyToDefaultValueStr = Pair(
                 IconsEnumArgs.TIMES.key,
@@ -1044,7 +1077,8 @@ object ArbForImageAction {
                 WIDTH("width", widthSrc.toString(), FuncCheckerForSetting.ArgType.INT),
                 HEIGHT("height", heightSrc.toString(), FuncCheckerForSetting.ArgType.INT),
                 PIECE_ONE_SIDE("pieceOneSide", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
-                ANGLE_RANGE("angleRange", 180.toString(), FuncCheckerForSetting.ArgType.INT),
+                START_ANGLE("startAngle", 0.toString(), FuncCheckerForSetting.ArgType.INT),
+                END_ANGLE("endAngle", 180.toString(), FuncCheckerForSetting.ArgType.INT),
                 TIMES("times", 10.toString(), FuncCheckerForSetting.ArgType.INT),
                 SHAPE("shape", CmdClickIcons.RECT.str, FuncCheckerForSetting.ArgType.STRING),
                 ICON_TYPE("iconType", IconType.SVG.name, FuncCheckerForSetting.ArgType.STRING),
@@ -1071,9 +1105,13 @@ object ArbForImageAction {
                 StringsEnumArgs.PIECE_HEIGHT.key,
                 StringsEnumArgs.PIECE_HEIGHT.defaultValueStr
             )
-            val angleRangeKeyToDefaultValueStr = Pair(
-                StringsEnumArgs.ANGLE_RANGE.key,
-                StringsEnumArgs.ANGLE_RANGE.defaultValueStr
+            val startAngleKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.START_ANGLE.key,
+                StringsEnumArgs.START_ANGLE.defaultValueStr
+            )
+            val endAngleKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.END_ANGLE.key,
+                StringsEnumArgs.END_ANGLE.defaultValueStr
             )
             val timesKeyToDefaultValueStr = Pair(
                 StringsEnumArgs.TIMES.key,
@@ -1136,7 +1174,8 @@ object ArbForImageAction {
                 HEIGHT("height", heightSrc.toString(), FuncCheckerForSetting.ArgType.INT),
                 PIECE_WIDTH("pieceWidth", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
                 PIECE_HEIGHT("pieceHeight", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
-                ANGLE_RANGE("angleRange", 180.toString(), FuncCheckerForSetting.ArgType.INT),
+                START_ANGLE("startAngle", 0.toString(), FuncCheckerForSetting.ArgType.INT),
+                END_ANGLE("endAngle", 180.toString(), FuncCheckerForSetting.ArgType.INT),
                 TIMES("times", 10.toString(), FuncCheckerForSetting.ArgType.INT),
                 STRING("string", "C", FuncCheckerForSetting.ArgType.STRING),
                 FONT_SIZE("fontSize", 20.toString(), FuncCheckerForSetting.ArgType.STRING),

@@ -198,7 +198,8 @@ object CcDotArt {
             width: Int,
             height: Int,
             pieceBitmap: Bitmap,
-            angleRange: Int,
+            startAngle: Int,
+            endAngle: Int,
             times: Int,
         ): Bitmap {
             var baseRect = ImageTransformer.makeRect(
@@ -214,7 +215,7 @@ object CcDotArt {
             for (i in 1..times) {
                 val curPieceRectSrc = rotate(
                     pieceBitmap,
-                    (0..angleRange).random().toFloat()
+                    (startAngle..endAngle).random().toFloat()
                 ).let {
                     val rate = (5..10).random() / 10f
                     Bitmap.createScaledBitmap(
