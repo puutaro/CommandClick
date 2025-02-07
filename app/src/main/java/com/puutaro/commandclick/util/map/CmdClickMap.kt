@@ -55,7 +55,7 @@ object CmdClickMap {
          if(
              mapEntryStr.isNullOrEmpty()
          ) return emptyList()
-         val normalSplitSeparatorList = listOf('\n', '\t')
+         val normalSplitSeparatorList = sequenceOf('\n', '\t')
         val mapEntryStrList = when(
             normalSplitSeparatorList.contains(separator)
         ) {
@@ -92,7 +92,7 @@ object CmdClickMap {
         srcMap: Map<String, String>,
     ): Map<String, String> {
 
-        val checkQuote = listOf(
+        val checkQuote = sequenceOf(
             "`",
             "\"",
             "'"
@@ -117,14 +117,15 @@ object CmdClickMap {
     }
 
     private fun removeIrregularQuote(
-        irregularQuoteList: List<String>,
+        irregularQuoteList: Sequence<String>,
         targetCon: String,
     ): String {
         return SpeedReplacer.replace(
             targetCon,
             irregularQuoteList.map {
                 it to String()
-            }
+            }.asSequence()
+
         )
 //        var updateCon = targetCon
 //        irregularQuoteList.forEach {
@@ -144,7 +145,7 @@ object CmdClickMap {
         if(
             mapEntryStr.isNullOrEmpty()
         ) return emptyList()
-        val normalSplitSeparatorList = listOf('\n', '\t')
+        val normalSplitSeparatorList = sequenceOf('\n', '\t')
         val mapEntryStrList = when(
             normalSplitSeparatorList.contains(separator)
         ) {
@@ -395,7 +396,7 @@ object CmdClickMap {
             targetCon,
             repMap.map {
                 "@{${it.key}}" to it.value
-            }
+            }.asSequence()
         )
 //        var repCon = targetCon
 //        repMap.forEach {

@@ -38,7 +38,7 @@ object WaitQuizPair {
     private val jsAction = "js action"
     private val cmdTerminal = SystemFannel.tapTerminal
     private val documentDir = "{documentDir}"
-    val quizPairList = listOf(
+    val quizPairList = arrayOf(
         Pair(
             "Why introduce Ubuntu?",
             "-> To realize multiple feature",

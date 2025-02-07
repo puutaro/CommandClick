@@ -213,7 +213,7 @@ object ExecJsLoad {
         fragment: Fragment,
 //        currentAppDirPath: String,
         fannelName: String,
-        systemExecReplaceTextList: List<String>,
+        systemExecReplaceTextList: Sequence<String>,
     ){
         val context = fragment.context
             ?: return
@@ -252,7 +252,7 @@ object ExecJsLoad {
         fragment: Fragment,
 //        scriptDirPath: String,
         scriptName: String,
-    ): List<Map<String, String>> {
+    ): Array<Map<String, String>> {
         val context = fragment.context
 //        val languageType =
 //            CommandClickVariables.judgeJsOrShellFromSuffix(scriptName)
@@ -311,7 +311,7 @@ object ExecJsLoad {
     private fun decideLoadJsPath(
 //        scriptDirPath: String,
         scriptName: String,
-        updateScriptArgsMapList: List<Map<String, String>>,
+        updateScriptArgsMapList: Array<Map<String, String>>,
         jsArgs: String,
     ): String {
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath

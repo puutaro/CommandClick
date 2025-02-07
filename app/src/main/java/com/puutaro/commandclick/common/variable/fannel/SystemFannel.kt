@@ -25,7 +25,7 @@ object SystemFannel {
         }
     }
 
-    val maskListForFannelManageList = listOf(
+    val maskListForFannelManageList = arrayOf(
         webSearcher,
         copyLink,
         preference,
@@ -37,7 +37,7 @@ object SystemFannel {
         shareImage,
     )
 
-    val allowIntentSystemFannelList = listOf(
+    val allowIntentSystemFannelList = arrayOf(
         tapTerminal,
 //        fannelRepoFannelName
     )

@@ -21,7 +21,7 @@ object ScriptArgsMapList {
 //        scriptDirPath: String,
         scriptName: String,
         settingSectionVariableList: List<String>?,
-    ): List<Map<String, String>> {
+    ): Array<Map<String, String>> {
         var updateScriptArgsMapList = scriptArgsMapList
         settingValAndArgNamePair.forEach {
 //            FileSystems.updateFile(
@@ -52,11 +52,11 @@ object ScriptArgsMapList {
 
     private fun execUpdateScriptArgsMapList(
         context: Context?,
-        scriptArgsMapList: List<Map<String, String>>,
+        scriptArgsMapList: Array<Map<String, String>>,
         scriptName: String,
         settingSectionVariableList: List<String>?,
         settingValAndArgsNamePair: Pair<String, String>
-    ): List<Map<String, String>> {
+    ): Array<Map<String, String>> {
         val settingValName = settingValAndArgsNamePair.first
         val argName = settingValAndArgsNamePair.second
         val settingArgMap = scriptArgsMapList.first {
@@ -70,7 +70,7 @@ object ScriptArgsMapList {
         val settingPathSrc = CommandClickVariables.substituteFilePrefixPath(
             settingSectionVariableList,
             settingValName,
-            listOf(
+            sequenceOf(
                 fannelDirPath,
                 settingArgMap.get(ScriptArgsKey.DIR_NAME.key),
                 settingArgMap.get(ScriptArgsKey.JS_NAME.key)
@@ -115,7 +115,7 @@ object ScriptArgsMapList {
                 )
                 else -> it
             }
-        }
+        }.toTypedArray()
     }
 
     private fun makeAutoExecArgMapForFilePrefix(
@@ -160,7 +160,7 @@ object ScriptArgsMapList {
 
 
     private val settingValAndArgNamePair =
-        listOf(
+        sequenceOf(
             CommandClickScriptVariable.AUTO_EXEC_PATH to
                     ScriptArgsName.ON_AUTO_EXEC.str,
             CommandClickScriptVariable.NO_ARG_JS_PATH to
@@ -168,7 +168,7 @@ object ScriptArgsMapList {
 
             )
 
-    private val scriptArgsMapList = listOf(
+    private val scriptArgsMapList = arrayOf(
         mapOf(
             nameKey to ScriptArgsName.ON_AUTO_EXEC.str,
             dirNameKey to UsePath.systemExecJsDirName,

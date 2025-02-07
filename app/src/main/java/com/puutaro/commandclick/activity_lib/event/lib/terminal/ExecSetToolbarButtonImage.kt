@@ -109,7 +109,7 @@ object ExecSetToolbarButtonImage {
 
     object SelectionBarButton {
 
-        val rectColorList = listOf(
+        val rectColorList = arrayOf(
             CmdClickColorStr.LIGHT_GREEN.str,
             CmdClickColorStr.WHITE_GREEN.str,
             CmdClickColorStr.YELLOW_GREEN.str,
@@ -139,7 +139,7 @@ object ExecSetToolbarButtonImage {
         private suspend fun setPocketSearchIconImage(
             binding: CommandIndexFragmentBinding
         ){
-            val baseIconViewList = listOf(
+            val baseIconViewList = arrayOf(
                 binding.cmdindexSelectionSearchIcon1,
             )
             withContext(Dispatchers.Main) {
@@ -180,13 +180,13 @@ object ExecSetToolbarButtonImage {
         ) {
             val rectColor = rectColorList.random()
             val isAll = (1..10).random() < 3
-            val rotateRndList = listOf(0f, 180f)
+            val rotateRndList = arrayOf(0f, 180f)
             val bitmapListSrc = (1..2).map {
                 createGBarActiveBitmap(
                     isAll,
                     rectColor,
                 )
-            } +  listOf(
+            } +  arrayOf(
                 createGBarActiveBitmap(
                     true,
                     rectColor
@@ -219,7 +219,7 @@ object ExecSetToolbarButtonImage {
                 true -> repeatTime //(4..repeatTime).random()
                 else -> (0..repeatTime).random()
             }
-            val rotateAngleList = listOf(-90f, 0f, 90f)
+            val rotateAngleList = arrayOf(-90f, 0f, 90f)
             var gOutBitmap: Bitmap? = null
             if(gRepeatTimes > 0) {
                 gOutBitmap = gBitmap
@@ -461,7 +461,7 @@ object ExecSetToolbarButtonImage {
             iconMacro: String,
             checksum: String
         ): String {
-            return listOf(
+            return arrayOf(
                 iconMacro,
                 checksum
             ).joinToString(separator)

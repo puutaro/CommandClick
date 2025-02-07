@@ -44,7 +44,7 @@ object ConfigFromPreferenceFileSetter {
             CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
             SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name,
             CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name,
                 SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
             ),

@@ -81,7 +81,7 @@ object ButtonImageCreator {
                 }
                 SelectionBarButton.create(
                     context,
-                    listOf(CmdClickIcons.GOOGLE.assetsPath),
+                    arrayOf(CmdClickIcons.GOOGLE.assetsPath),
                     defaultUrlCapBitmap,
                     null,
                 )
@@ -195,7 +195,7 @@ object ButtonImageCreator {
 
         private const val selectionImageFileNumSeparator = "_"
 
-        private val ccGradColorList = listOf(
+        private val ccGradColorList = arrayOf(
             CmdClickColorStr.LIGHT_GREEN.str,
             CmdClickColorStr.WHITE_GREEN.str,
             CmdClickColorStr.DARK_GREEN.str,
@@ -211,7 +211,7 @@ object ButtonImageCreator {
         )
         suspend fun create(
             context: Context?,
-            assetsPathList: List<String>,
+            assetsPathList: Array<String>,
             defaultUrlCapBitmap: Bitmap?,
             centerColorStr: String?,
         ) {
@@ -287,7 +287,7 @@ object ButtonImageCreator {
         ): File {
             return File(
                 UrlHistoryPath.selectionTextBarImageDirPath,
-                listOf(
+                sequenceOf(
                     num,
                     File(assetsPath).name
                 ).joinToString(selectionImageFileNumSeparator)
@@ -357,7 +357,7 @@ object ButtonImageCreator {
             return@let output
         }
         val cornerDips = (2..8).random()
-        val colorIntArray = listOf(
+        val colorIntArray = arrayOf(
             colorList.random(),
             centerColorStr ?: colorList.random(),
             colorList.random()
@@ -395,7 +395,7 @@ object ButtonImageCreator {
             captureDirPath
         ).map {
             val dirName = it.removeSuffix(lastModifyExtend)
-            listOf(
+            sequenceOf(
                 captureDirPath,
                 dirName,
                 partPngDirName
@@ -449,7 +449,7 @@ object ButtonImageCreator {
         return output
     }
 
-    private val colorList = listOf(
+    private val colorList = arrayOf(
         CmdClickColorStr.LIGHT_GREEN.str,
         CmdClickColorStr.THICK_AO.str,
         CmdClickColorStr.BLUE.str,
@@ -473,7 +473,7 @@ object ButtonImageCreator {
 //        "#f7e4f7"
 //    )
 
-    private val gradientOrientationList = listOf(
+    private val gradientOrientationList = arrayOf(
         GradientDrawable.Orientation.TOP_BOTTOM,
         GradientDrawable.Orientation.BOTTOM_TOP,
         GradientDrawable.Orientation.LEFT_RIGHT,

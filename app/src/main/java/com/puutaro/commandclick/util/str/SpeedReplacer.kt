@@ -3,7 +3,7 @@ package com.puutaro.commandclick.util.str
 object SpeedReplacer {
     fun replace(
         srcCon: String,
-        oldNewPair: List<Pair<String, String>>,
+        oldNewPair: Sequence<Pair<String, String>>,
     ): String {
         val builder = StringBuilder(
             srcCon

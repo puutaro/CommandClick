@@ -141,7 +141,7 @@ object WebChromeClientSetter {
                         BroadcastSender.normalSend(
                             context,
                             BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
-                            listOf(
+                            sequenceOf(
                                 BroadCastIntentSchemeTerm.MONITOR_TOAST.scheme
                                         to errOutput
                             )

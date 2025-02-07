@@ -58,7 +58,7 @@ object PlayNotiLauncher {
             playIndex,
             playList
         )
-        return listOf(
+        return sequenceOf(
             indexHolder,
             timeHolder,
             uriTitle

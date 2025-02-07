@@ -14,7 +14,7 @@ object PendingIntentForUbuntu {
         return PendingIntentCreator.create(
             ubuntuService.applicationContext,
             BroadCastIntentSchemeUbuntu.OPEN_FANNEL.action,
-            listOf(
+            sequenceOf(
 //                Pair(
 //                    UbuntuServerIntentExtra.fannelDirPath.schema,
 //                    UsePath.cmdclickDefaultAppDirPath
@@ -33,7 +33,7 @@ object PendingIntentForUbuntu {
         return PendingIntentCreator.create(
             ubuntuService.applicationContext,
             BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action,
-            listOf(
+            sequenceOf(
                 Pair(
                     UbuntuServerIntentExtra.foregroundShellPath.schema,
                     ubuntuService.ubuntuFiles?.ubuntuManagerShellPath?.absolutePath

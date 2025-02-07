@@ -39,7 +39,7 @@ object SettingVariableReader {
         defaultVariableStrValue: String,
         inheritVariableValue: String,
         inheritVariableReturnValue: String,
-        noDefaultValueList: List<String>,
+        noDefaultValueList: Sequence<String>,
     ): String {
         val historySwitchSource = CommandClickVariables.substituteCmdClickVariable(
             cmdVariableList,

@@ -1256,7 +1256,7 @@ class WebViewJsDialog(
                 debugPath,
                 onFormat = TxtHtmlDescriber.switchOff,
             )
-            val extraStrPairList = listOf(
+            val extraStrPairList = sequenceOf(
                 PocketWebviewLoadUrlExtra.url.schema
                         to launchUrl
             )

@@ -449,7 +449,7 @@ private object AudioStreamingMapExtractor {
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,
-            listOf(
+            sequenceOf(
                 UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema to
                         processName
             )
@@ -817,7 +817,7 @@ private object AudioStreamingMapExtractor {
             BroadcastSender.normalSend(
                 context,
                 BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action,
-                listOf(
+                sequenceOf(
                     UbuntuServerIntentExtra.backgroundShellPath.schema to
                             extractAudioStreamingMapShellPathInMusic,
                     UbuntuServerIntentExtra.backgroundArgsTabSepaStr.schema to

@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.file
 
+import com.puutaro.commandclick.util.str.SpeedReplacer
 import java.io.File
 
 
@@ -39,11 +40,14 @@ class ReadText(
             !targetFile.isFile
         ) return String()
         return try{
-           targetFile
-               .readText()
-               .replace("<", "&lt;")
-               .replace(">", "&gt;")
-               .replace("%", "&#37;")
+            SpeedReplacer.replace(
+                targetFile.readText(),
+                sequenceOf(
+                    Pair("<", "&lt;"),
+                    Pair(">", "&gt;"),
+                    Pair("%", "&#37;"),
+                )
+            )
         } catch(e: Exception) {
             String()
         }

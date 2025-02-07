@@ -53,7 +53,7 @@ object BroadcastSender {
     fun normalSend(
         context: Context?,
         action: String,
-        putStringExtraList: List<Pair<String, String>>? = null,
+        putStringExtraList: Sequence<Pair<String, String>>? = null,
     ){
         val broadcastIntent = Intent()
         broadcastIntent.action = action

@@ -21,7 +21,7 @@ object PocketWebViewLancher {
         terminalFragment.onRegisterPocketWebViewUrl?.cancel()
         terminalFragment.onRegisterPocketWebViewUrl = CoroutineScope(Dispatchers.Main).launch pocketLaunch@ {
             val webSearcherName = SystemFannel.webSearcher
-            val systemExecRepTextList = listOf(url)
+            val systemExecRepTextList = sequenceOf(url)
             val isStop = withContext(Dispatchers.IO){
                 for(i in 1..5){
                     if(

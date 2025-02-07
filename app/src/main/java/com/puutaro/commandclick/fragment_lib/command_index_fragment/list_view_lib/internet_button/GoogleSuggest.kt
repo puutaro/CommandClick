@@ -35,7 +35,7 @@ class GoogleSuggest(
         fragment,
         cmdSearchEditText
     )
-    private var mDispText = String()
+    private var mDispText = StringBuilder()
 
     fun set (
         searchEditable: Editable?
@@ -44,7 +44,7 @@ class GoogleSuggest(
             context == null
         ) return
         suggestEditTexter.setItemClickListener()
-        mDispText = String()
+        mDispText.clear()
         if(searchEditable?.trim().isNullOrEmpty()) return
         if(
             !NetworkTool.isOnline(context)
@@ -126,7 +126,7 @@ class GoogleSuggest(
                 suggestEditTexter.setAdapter(
                     context,
                     cmdSearchEditText,
-                    mDispText.split("\n").filter {
+                    mDispText.toString().split("\n").filter {
                         it.isNotEmpty()
                     }
                 )
@@ -175,10 +175,12 @@ class GoogleSuggest(
         i = 0
         while (i < n) {
             val `object` = array.optJSONObject(i) ?: break
-            mDispText += """
+            mDispText.append (
+                """
                 ${`object`.optString("Txt")}
                 
                 """.trimIndent()
+            )
             i++
         }
     }

@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util
 
+import com.puutaro.commandclick.util.str.SpeedReplacer
 import com.puutaro.commandclick.util.url.WebUrlVariables
 
 object UrlTool {
@@ -33,32 +34,51 @@ object UrlTool {
             .replace(
                 Regex("^${slashPrefix}"),
                 slashPrefixMark
-            )
-            .replace(
-                httpPrefix,
-                httpPrefixMark
-            )
-            .replace(
-                filePrefix,
-                filePrefixMark
-            )
+            ).let {
+                SpeedReplacer.replace(
+                    it,
+                    sequenceOf(
+                        Pair(httpPrefix, httpPrefixMark),
+                        Pair(filePrefix, filePrefixMark),
+                    )
+                )
+            }
+//            .replace(
+//                httpPrefix,
+//                httpPrefixMark
+//            )
+//            .replace(
+//                filePrefix,
+//                filePrefixMark
+//            )
             .split("/")
             .firstOrNull()
-            ?.replace(
-                slashPrefixMark,
-                slashPrefix,
-            )
-            ?.replace(
-                httpsPrefixMark,
-                httpsPrefix,
-            )
-            ?.replace(
-                httpPrefixMark,
-                httpPrefix,
-            )
-            ?.replace(
-                filePrefixMark,
-                filePrefix,
-            )
+            ?.let {
+                SpeedReplacer.replace(
+                    it,
+                    sequenceOf(
+                        Pair(slashPrefixMark, slashPrefix),
+                        Pair(httpsPrefixMark, httpsPrefix),
+                        Pair(httpPrefixMark, httpPrefix),
+                        Pair(filePrefixMark, filePrefix,),
+                    )
+                )
+            }
+//            ?.replace(
+//                slashPrefixMark,
+//                slashPrefix,
+//            )
+//            ?.replace(
+//                httpsPrefixMark,
+//                httpsPrefix,
+//            )
+//            ?.replace(
+//                httpPrefixMark,
+//                httpPrefix,
+//            )
+//            ?.replace(
+//                filePrefixMark,
+//                filePrefix,
+//            )
     }
 }

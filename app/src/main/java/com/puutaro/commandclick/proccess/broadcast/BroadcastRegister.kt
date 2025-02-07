@@ -44,7 +44,7 @@ object BroadcastRegister {
     fun registerBroadcastReceiverMultiActions(
         fragment: Fragment,
         broadcastReceiver: BroadcastReceiver,
-        actionNameList: List<String>
+        actionNameList: Sequence<String>
     ){
         try {
             val intentFilter = IntentFilter()

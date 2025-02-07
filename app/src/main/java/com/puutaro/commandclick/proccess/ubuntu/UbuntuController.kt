@@ -32,7 +32,7 @@ object UbuntuController {
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action,
-            listOf(
+            sequenceOf(
                 UbuntuServerIntentExtra.backgroundShellPath.schema to
                         backgroundShellPath,
                 UbuntuServerIntentExtra.backgroundArgsTabSepaStr.schema to

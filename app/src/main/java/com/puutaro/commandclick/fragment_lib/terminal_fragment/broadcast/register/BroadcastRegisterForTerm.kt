@@ -11,7 +11,7 @@ object BroadcastRegisterForTerm {
         BroadcastRegister.registerBroadcastReceiverMultiActions(
             terminalFragment,
             terminalFragment.broadcastReceiverForTerm,
-            listOf(
+            sequenceOf(
                 BroadCastIntentSchemeTerm.HTML_LAUNCH.action,
                 BroadCastIntentSchemeTerm.ULR_LAUNCH.action,
                 BroadCastIntentSchemeTerm.MONITOR_TEXT_PATH.action,

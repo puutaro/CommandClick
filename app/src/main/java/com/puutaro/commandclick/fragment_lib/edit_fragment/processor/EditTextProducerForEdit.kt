@@ -24,7 +24,7 @@ object EditTextProducerForEdit {
     ) {
         val editViewModel: EditViewModel by editFragment.activityViewModels()
         editViewModel.variableNameToEditTextIdMap.clear()
-        editFragment.listConSelectBoxMapList.clear()
+//        editFragment.listConSelectBoxMapList.clear()
         execAddEditComponent(
             editFragment,
         )

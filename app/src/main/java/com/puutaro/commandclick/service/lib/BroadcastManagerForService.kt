@@ -27,7 +27,7 @@ object BroadcastManagerForService {
     fun registerActionListBroadcastReceiver(
         service: Service,
         broadcastReceiver: BroadcastReceiver,
-        actionNameList: List<String>
+        actionNameList: Sequence<String>
     ){
         try {
             val intentFilter = IntentFilter()

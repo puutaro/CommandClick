@@ -47,7 +47,7 @@ class FannelRepoDownloadService: Service() {
         BroadcastManagerForService.registerActionListBroadcastReceiver(
             this,
             broadcastReceiverForRepoDownloadStop,
-            BroadCastIntentSchemeFannelRepoDownload.values().map {
+            BroadCastIntentSchemeFannelRepoDownload.entries.asSequence().map {
                 it.action
             }
 
@@ -283,7 +283,7 @@ class FannelRepoDownloadService: Service() {
     private fun setNotiTitleMessage(
         order: Int
     ): String{
-        val titleMsgList = listOf(
+        val titleMsgList = arrayOf(
             "Ready...",
             "Cloning...",
             "Update fannel list..."

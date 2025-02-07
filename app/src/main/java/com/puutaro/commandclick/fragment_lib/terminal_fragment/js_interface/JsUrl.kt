@@ -189,7 +189,7 @@ class JsUrl(
 
         Load js contents when page load finish
         */
-        val urlBroadcastExtra = listOf(
+        val urlBroadcastExtra = sequenceOf(
             Pair(
                 BroadCastIntentSchemeTerm.ULR_LAUNCH.scheme,
                 urlCon

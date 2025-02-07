@@ -657,7 +657,7 @@ object PreInstallFannel {
                 CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE,
                 String(),
                 CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE,
-                SettingVariableSelects.EditExecuteSelects.values().map { it.name },
+                SettingVariableSelects.EditExecuteSelects.entries.asSequence().map { it.name },
             ) == SettingVariableSelects.EditExecuteSelects.ALWAYS.name
             val enableEditExecuteButtonValue = when (isEditExecute) {
                 false -> String()
@@ -678,7 +678,7 @@ object PreInstallFannel {
                 SettingVariableSelects.DisableSettingValsEdit.OFF.name,
                 String(),
                 SettingVariableSelects.DisableSettingValsEdit.OFF.name,
-                SettingVariableSelects.DisableSettingValsEdit.values().map { it.name },
+                SettingVariableSelects.DisableSettingValsEdit.entries.asSequence().map { it.name },
             ) != SettingVariableSelects.DisableSettingValsEdit.ON.name
             val enableEditSettingValsValue = when (enableEditSettingVals) {
                 false -> String()
@@ -761,7 +761,7 @@ object PreInstallFannel {
                 File(cmdclickDefaultAppDirPath, fannelName).absolutePath,
             ).textToList()
             val descConSrc = ScriptFileDescription.makeDescriptionContents(
-                fannelConList,
+                fannelConList.asSequence(),
                 fannelName
             )
             val readmeUrl = ScriptFileDescription.getReadmeUrl(descConSrc)

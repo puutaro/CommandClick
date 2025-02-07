@@ -62,7 +62,7 @@ object JsDebugger {
             } ?: BroadCastIntentExtraForJsDebug.DebugGenre.SYS_ERR
         val notiDatetime = LocalDateTime.now().toString()
         val jsDebugExtraPairList =
-            listOf(
+            sequenceOf(
                 BroadCastIntentExtraForJsDebug.BroadcastSchema.DATETIME.scheme
                         to notiDatetime,
                 BroadCastIntentExtraForJsDebug.BroadcastSchema.NOTI_LEVEL.scheme
@@ -122,7 +122,7 @@ object JsDebugger {
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action,
-                    jsDebugExtraPairList
+                    jsDebugExtraPairList.asSequence()
                 )
             }
         }

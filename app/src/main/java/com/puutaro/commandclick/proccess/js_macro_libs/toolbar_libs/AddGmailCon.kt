@@ -35,7 +35,7 @@ object AddGmailCon {
             editFragment,
 //            UsePath.cmdclickDefaultAppDirPath,
             UsePath.saveWebConDialogFannelName,
-            listOf(
+            sequenceOf(
                 urlString,
                 urlConSaveParentDirPath,
                 compSuffix

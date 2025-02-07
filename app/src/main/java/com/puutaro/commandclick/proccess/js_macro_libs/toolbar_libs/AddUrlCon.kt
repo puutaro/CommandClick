@@ -47,7 +47,7 @@ object AddUrlCon {
             editFragment,
 //            UsePath.cmdclickDefaultAppDirPath,
             UsePath.saveWebConDialogFannelName,
-            listOf(
+            sequenceOf(
                 urlString,
                 onSearchBtn,
                 urlConSaveParentDirPath,

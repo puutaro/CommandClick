@@ -56,7 +56,7 @@ object QuoteTool {
         if(
             targetStr.isNullOrEmpty()
         ) return '"'
-        val quoteList = listOf('\'', '"', '`',)
+        val quoteList = sequenceOf('\'', '"', '`',)
         quoteList.forEach {
             if (
                 isBothChar(
@@ -144,7 +144,7 @@ object QuoteTool {
             isCountStr1 && isCountStr
         ){
             LogSystems.stdErrByNoBroad(
-                listOf(
+                sequenceOf(
                     "comp quote err",
                     errMessage,
                     targetStr,
@@ -170,7 +170,7 @@ object QuoteTool {
         targetStr: String,
         compQuote: String,
     ): String {
-        return listOf(
+        return sequenceOf(
             compQuote,
             targetStr,
             compQuote,
@@ -398,18 +398,27 @@ object QuoteTool {
     fun removeDoubleQuoteByIgnoreBackSlash(
         targetStr: String?
     ): String? {
-        return targetStr?.replace(
-            backSlachDoubleQuote,
-            cmdClickBackspaceQuote
-        )
-            ?.replace(
-                "\"",
-                ""
+        return targetStr?.let {
+            SpeedReplacer.replace(
+                it,
+                sequenceOf(
+                    Pair("\"", ""),
+                    Pair(cmdClickBackspaceQuote, backSlachDoubleQuote),
+                )
             )
-            ?.replace(
-                cmdClickBackspaceQuote,
-                backSlachDoubleQuote
-            )
+        }
+//        targetStr?.replace(
+//            backSlachDoubleQuote,
+//            cmdClickBackspaceQuote
+//        )
+//            ?.replace(
+//                "\"",
+//                ""
+//            )
+//            ?.replace(
+//                cmdClickBackspaceQuote,
+//                backSlachDoubleQuote
+//            )
     }
 
     fun compOneSideQuote(
@@ -420,7 +429,7 @@ object QuoteTool {
         if(
             trimTargetStr.isNullOrEmpty()
         ) return trimTargetStr
-        val targetQuoteList = listOf(
+        val targetQuoteList = sequenceOf(
             '\"',
             '\'',
             '`',

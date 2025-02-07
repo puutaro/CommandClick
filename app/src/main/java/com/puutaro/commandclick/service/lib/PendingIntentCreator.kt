@@ -8,7 +8,7 @@ object PendingIntentCreator {
     fun create(
         context: Context,
         action: String,
-        extraList: List<Pair<String, String>>? = null,
+        extraList: Sequence<Pair<String, String>>? = null,
         requestCode: Int = 0
     ): PendingIntent {
         val intent = Intent()

@@ -27,7 +27,7 @@ object ExecShowDescription {
                 File(
                     showFilePath
                 ).absolutePath
-            ).textToList(),
+            ).textToList().asSequence(),
 //            showFileParentDirPath,
             showFileName
         )

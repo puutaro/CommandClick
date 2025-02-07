@@ -46,7 +46,7 @@ object IntentRequestMonitor {
     private const val keySeparator = '?'
     private const val valueSeparator = '&'
     private val requireArgsErrMessage = "%s is required"
-    private var responseString = String()
+    private val responseString = StringBuilder()
 
     fun launch(
         ubuntuService: UbuntuService,
@@ -91,7 +91,7 @@ object IntentRequestMonitor {
                 continue
             }
             var isTerminated = false
-            responseString = String()
+            responseString.clear()
             val client = withContext(Dispatchers.IO) {
                 try {
 //                    LogSystems.stdSys(
@@ -112,13 +112,13 @@ object IntentRequestMonitor {
                 try {
                     //code to read and print headers
                     var headerLine: String? = null
-                    var responseCon = String()
+                    responseString.clear()
                     while (
                         br.readLine().also {
                             headerLine = it
                         }.isNotEmpty()
                     ) {
-                        responseCon += "\t$headerLine"
+                        responseString.append("\t$headerLine")
                     }
                     val payload = StringBuilder()
                     while (br.ready()) {
@@ -131,7 +131,7 @@ object IntentRequestMonitor {
                     val response = String.format(
                         "HTTP/1.1 200 OK\nContent-Length: %d\r\n\r\n%s",
                         responseString.length,
-                        responseString
+                        responseString.toString()
                     )
                     writer.write(response.toByteArray())
                     writer.flush()
@@ -204,7 +204,7 @@ object IntentRequestMonitor {
         if(
             !helpOption.isNullOrEmpty()
         ) return Unit.also {
-            responseString += "\n${makeHelpConForTextToSpeech()}"
+            responseString.append("\n${makeHelpConForTextToSpeech()}")
         }
         val launchType = broadcastMap.get(TextToSpeechCliSchema.launchType.name)
             ?: return
@@ -231,7 +231,7 @@ object IntentRequestMonitor {
         if(
             !helpOption.isNullOrEmpty()
         ) return Unit.also {
-            responseString += "\n${makeHelpConForMusicPlayer()}"
+            responseString.append("\n${makeHelpConForMusicPlayer()}")
         }
         val launchType = broadcastMap.get(MusicPlayerCliSchema.launchType.name)
             ?: return
@@ -300,7 +300,7 @@ object IntentRequestMonitor {
         if(
             !helpOption.isNullOrEmpty()
         ) return Unit.also {
-            responseString += "\n${makeHelpConForIntent()}"
+            responseString.append("\n${makeHelpConForIntent()}")
         }
         val action = broadcastMap.get(
             IntentMonitorSchema.action.name
@@ -353,7 +353,7 @@ object IntentRequestMonitor {
         if(
             !helpOption.isNullOrEmpty()
         ) return Unit.also {
-            responseString += "\n${makeHelpConForToast()}"
+            responseString.append("\n${makeHelpConForToast()}")
         }
         val message = broadcastMap.get(
             ToastSchema.message.name
@@ -383,7 +383,7 @@ object IntentRequestMonitor {
         if(
             !helpOption.isNullOrEmpty()
         ) return Unit.also {
-            responseString += "\n${makeHelpConForNotification()}"
+            responseString.append("\n${makeHelpConForNotification()}")
         }
         val typeLaunch = IntentMonitorNotificationType.launch.name
         val typeExit = IntentMonitorNotificationType.exit.name
@@ -404,8 +404,9 @@ object IntentRequestMonitor {
             else
             -> {
                 val notificationTypeOption = "${BroadcastMonitorScheme.notificationType.name.camelToShellArgsName()}/-t"
-                responseString +=
+                responseString.append(
                     "\n${notificationTypeOption} must be \"${typeLaunch}\" or \"${typeExit}\""
+                )
             }
         }
     }
@@ -433,7 +434,9 @@ object IntentRequestMonitor {
         val channeNumOptionName = "${channelNumKey.camelToShellArgsName()}/-cn"
         val channelNumStr = broadcastMap.get(channelNumKey)
             ?: return Unit.also {
-                responseString += "\n${requireArgsErrMessage.format(channeNumOptionName)}"
+                responseString.append(
+                    "\n${requireArgsErrMessage.format(channeNumOptionName)}"
+                )
             }
         val notificationIdToImportance = decideImportance(
             broadcastMap.get(BroadcastMonitorScheme.importance.name)
@@ -443,7 +446,9 @@ object IntentRequestMonitor {
         )
         val delete = broadcastMap.get(BroadcastMonitorScheme.delete.name)
         val channelNum = toInt(channelNumStr) ?: return Unit.also {
-            responseString += "\n${channeNumOptionName} must be Int"
+            responseString.append(
+                "\n${channeNumOptionName} must be Int"
+            )
         }
         val iconName = broadcastMap.get(BroadcastMonitorScheme.iconName.name)
         val title = broadcastMap.get(BroadcastMonitorScheme.title.name)
@@ -663,7 +668,7 @@ object IntentRequestMonitor {
             else -> BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action
         }
         val extraList = when(execAction){
-            backgroundAction -> listOf(
+            backgroundAction -> sequenceOf(
                 Pair(
                     UbuntuServerIntentExtra.backgroundShellPath.schema,
                     shellPath
@@ -677,7 +682,7 @@ object IntentRequestMonitor {
                     UsePath.cmdClickMonitorFileName_2
                 )
             )
-            else -> listOf(
+            else -> sequenceOf(
                 Pair(
                     UbuntuServerIntentExtra.foregroundShellPath.schema,
                     shellPath

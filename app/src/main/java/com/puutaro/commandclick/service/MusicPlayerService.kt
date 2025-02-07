@@ -71,7 +71,7 @@ class MusicPlayerService: Service() {
         BroadcastManagerForService.registerActionListBroadcastReceiver(
             this,
             broadcastReceiverForMusicPlayerService,
-            BroadCastIntentSchemeMusicPlayer.values().map {
+            BroadCastIntentSchemeMusicPlayer.entries.asSequence().map {
                 it.action
             }
         )
@@ -207,7 +207,7 @@ class MusicPlayerService: Service() {
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.action,
-                    listOf(
+                    sequenceOf(
                         BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.scheme
                                 to currentTrackIndex.toString(),
                     )

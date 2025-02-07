@@ -298,7 +298,7 @@ class JsQr(
         val lightDeepGreen = Color(
             255, 52, 199, 71
         )
-        val graphicsColorList = listOf(
+        val graphicsColorList = arrayOf(
             android.graphics.Color.RED,
             android.graphics.Color.BLUE,
             android.graphics.Color.BLACK,
@@ -317,7 +317,7 @@ class JsQr(
             lightDeepGreen
         )
 
-        val orientationList = listOf(
+        val orientationList = arrayOf(
             QrVectorColor.LinearGradient
                 .Orientation.LeftDiagonal,
             QrVectorColor.LinearGradient
@@ -328,7 +328,7 @@ class JsQr(
                 .Orientation.Vertical
 
         )
-        val shapeList = listOf(
+        val shapeList = arrayOf(
             QrVectorLogoShape.Circle,
             QrVectorLogoShape.Rhombus,
 //            QrVectorLogoShape.Default,

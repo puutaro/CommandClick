@@ -93,7 +93,7 @@ object UrlFileSystems {
         context: Context?,
         fannelName: String
     ): String? {
-        val fannelUrl = listOf(
+        val fannelUrl = sequenceOf(
             gitUserContentFannelPrefix,
             fannelName,
         ).joinToString("/")

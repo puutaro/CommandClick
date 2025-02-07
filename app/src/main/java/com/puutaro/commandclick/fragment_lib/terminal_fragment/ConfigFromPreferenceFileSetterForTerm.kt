@@ -76,7 +76,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE,
             SettingVariableSelects.OnAdblockSelects.INHERIT.name,
             CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.OnAdblockSelects.ON.name,
                 SettingVariableSelects.OnAdblockSelects.OFF.name,
             ),
@@ -88,7 +88,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE,
             SettingVariableSelects.OnTermBackendWhenStartSelects.INHERIT.name,
             CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name,
                 SettingVariableSelects.OnTermBackendWhenStartSelects.OFF.name,
             ),
@@ -100,7 +100,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE,
             SettingVariableSelects.OnTermShortWhenLoadSelects.INHERIT.name,
             CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name,
                 SettingVariableSelects.OnTermShortWhenLoadSelects.OFF.name,
             ),
@@ -112,7 +112,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
             SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.INHERIT.name,
             CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name,
                 SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name,
             ),
@@ -137,7 +137,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             String(),
             String(),
             String(),
-            listOf(onRootfsSdCardSaveSelectsOn),
+            sequenceOf(onRootfsSdCardSaveSelectsOn),
         ).let {
             val isRootfsSdCardSave =
                 it == onRootfsSdCardSaveSelectsOn
@@ -195,7 +195,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
             CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
             CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
-            listOf(
+            sequenceOf(
                 UsePath.cmdClickMonitorFileName_2,
                 UsePath.cmdClickMonitorFileName_3,
                 UsePath.cmdClickMonitorFileName_4,
@@ -229,7 +229,7 @@ object ConfigFromPreferenceFileSetterForTerm {
                 terminalFragment.onLaunchUrlHistoryByBackstack,
                 terminalFragment.onLaunchUrlHistoryByBackstack,
                 terminalFragment.onLaunchUrlHistoryByBackstack,
-                listOf(
+                sequenceOf(
                     SettingVariableSelects.OnLaunchUrlHistoryByBackstack.ON.name,
                     SettingVariableSelects.OnLaunchUrlHistoryByBackstack.OFF.name,
                 ),
@@ -240,7 +240,7 @@ object ConfigFromPreferenceFileSetterForTerm {
                 CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
                 CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
                 CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
-                listOf(
+                sequenceOf(
                     UsePath.cmdClickMonitorFileName_2,
                     UsePath.cmdClickMonitorFileName_3,
                     UsePath.cmdClickMonitorFileName_4,
@@ -257,7 +257,7 @@ object ConfigFromPreferenceFileSetterForTerm {
                 CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
                 CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
                 CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
-                listOf(
+                sequenceOf(
                     SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name,
                     SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name,
                 ),
@@ -362,7 +362,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             terminalFragment.onAdBlock,
             SettingVariableSelects.OnAdblockSelects.INHERIT.name,
             terminalFragment.onAdBlock,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.OnAdblockSelects.ON.name,
                 SettingVariableSelects.OnAdblockSelects.OFF.name,
             ),
@@ -373,7 +373,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             terminalFragment.onLaunchUrlHistoryByBackstack,
             terminalFragment.onLaunchUrlHistoryByBackstack,
             terminalFragment.onLaunchUrlHistoryByBackstack,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.OnLaunchUrlHistoryByBackstack.ON.name,
                 SettingVariableSelects.OnLaunchUrlHistoryByBackstack.OFF.name,
             ),
@@ -385,7 +385,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             terminalFragment.onTermBackendWhenStart,
             SettingVariableSelects.OnTermBackendWhenStartSelects.INHERIT.name,
             terminalFragment.onTermBackendWhenStart,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name,
                 SettingVariableSelects.OnTermBackendWhenStartSelects.OFF.name,
             ),
@@ -397,7 +397,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             terminalFragment.onTermShortWhenLoad,
             SettingVariableSelects.OnTermShortWhenLoadSelects.INHERIT.name,
             terminalFragment.onTermShortWhenLoad,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name,
                 SettingVariableSelects.OnTermShortWhenLoadSelects.OFF.name,
             ),
@@ -409,7 +409,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             terminalFragment.disableShowToolbarWhenHighlight,
             CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
             terminalFragment.disableShowToolbarWhenHighlight,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name,
                 SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name,
             ),
@@ -421,7 +421,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
             CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
             CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
-            listOf(
+            sequenceOf(
                 UsePath.cmdClickMonitorFileName_2,
                 UsePath.cmdClickMonitorFileName_3,
                 UsePath.cmdClickMonitorFileName_4,
@@ -439,7 +439,7 @@ object ConfigFromPreferenceFileSetterForTerm {
             CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
             CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
             CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name,
                 SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name,
             ),

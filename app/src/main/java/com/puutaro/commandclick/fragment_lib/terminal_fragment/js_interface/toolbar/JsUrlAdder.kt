@@ -71,7 +71,7 @@ class JsUrlAdder(
             editFragment,
 //            UsePath.cmdclickDefaultAppDirPath,
             UsePath.savePageUrlDialogFannelName,
-            listOf(
+            sequenceOf(
                 urlString,
                 onSearchBtn,
             ),

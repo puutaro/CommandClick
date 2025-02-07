@@ -65,7 +65,7 @@ object UbuntuAutoSetupManager {
             ubuntuAutoSetupOff.name,
             String(),
             String(),
-            listOf(
+            sequenceOf(
                 SettingVariableSelects.UbuntuAutoSetup.SETUP.name,
                 SettingVariableSelects.UbuntuAutoSetup.RESTORE.name,
                 ubuntuAutoSetupOff.name,
@@ -103,7 +103,7 @@ object UbuntuAutoSetupManager {
                     ) Pair(
                         UbuntuServerIntentExtra.ubuntuRestoreSign.schema,
                         "on"
-                    ).let { listOf(it) }
+                    ).let { sequenceOf(it) }
                     else null
                     BroadcastSender.normalSend(
                         context,
@@ -126,7 +126,7 @@ object UbuntuAutoSetupManager {
                 String(),
                 String(),
                 String(),
-                listOf(onRootfsSdCardSaveSelectsOn),
+                sequenceOf(onRootfsSdCardSaveSelectsOn),
             ) == onRootfsSdCardSaveSelectsOn
             if (
                 !isRootfsSdCardSave

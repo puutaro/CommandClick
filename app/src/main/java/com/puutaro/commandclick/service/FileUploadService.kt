@@ -75,7 +75,7 @@ class FileUploadService: Service() {
         BroadcastManagerForService.registerActionListBroadcastReceiver(
             this,
             broadcastReceiverForFileUplaod,
-            listOf(
+            sequenceOf(
                 BroadCastIntentSchemeFileUpload.STOP_FILE_UPLOAD.action,
                 BroadCastIntentSchemeFileUpload.STAN_FILE_UPLOAD.action
             )

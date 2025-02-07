@@ -149,21 +149,21 @@ object BitmapTool {
 
         }
 
-        private val linearGradOrientList = listOf(
+        private val linearGradOrientList = arrayOf(
             GradientDrawable.Orientation.TOP_BOTTOM,
             GradientDrawable.Orientation.BOTTOM_TOP,
             GradientDrawable.Orientation.LEFT_RIGHT,
             GradientDrawable.Orientation.RIGHT_LEFT,
         )
 
-        private val diagonalGradOrientList = listOf(
+        private val diagonalGradOrientList = arrayOf(
             GradientDrawable.Orientation.BL_TR,
             GradientDrawable.Orientation.TR_BL,
             GradientDrawable.Orientation.TL_BR,
             GradientDrawable.Orientation.BR_TL,
         )
 
-        private val bottomTopGradOrientList = listOf(
+        private val bottomTopGradOrientList = arrayOf(
             GradientDrawable.Orientation.BOTTOM_TOP,
         )
         fun addGradient(originalBitmap: Bitmap, startColor: Int, endColor: Int): Bitmap {
@@ -1088,7 +1088,7 @@ object BitmapTool {
             val semaphore = Semaphore(concurrencyLimitForMakeTextBitmap)
             val bitmapListSize = bitmapList.size
             val channel = Channel<Pair<Int, Bitmap?>>(bitmapListSize)
-            val indexToBitmapList: MutableList<Pair<Int, Bitmap?>> = mutableListOf()
+            val indexToBitmapList: ArrayList<Pair<Int, Bitmap?>> = arrayListOf()
             val maskedBitmapList = withContext(Dispatchers.IO) {
                 val jobList = bitmapList.mapIndexed {
                     index, bkPartBitmap ->

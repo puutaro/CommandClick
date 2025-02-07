@@ -45,7 +45,7 @@ object MusicPlayerBroadcastHandler {
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeMusicPlayer.SEEK_MUSIC_PLAYER.action,
-                    listOf(
+                    sequenceOf(
                         BroadCastIntentSchemeMusicPlayer.SEEK_MUSIC_PLAYER.scheme
                                 to fromPosition.toString()
                     )
@@ -72,7 +72,7 @@ object MusicPlayerBroadcastHandler {
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeMusicPlayer.SEEK_MUSIC_PLAYER.action,
-                    listOf(
+                    sequenceOf(
                         BroadCastIntentSchemeMusicPlayer.SEEK_MUSIC_PLAYER.scheme
                                 to toPosition.toString()
                     )
@@ -89,7 +89,7 @@ object MusicPlayerBroadcastHandler {
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.action,
-                    listOf(
+                    sequenceOf(
                         BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.scheme
                                 to previousIndex.toString()
                     )
@@ -116,7 +116,7 @@ object MusicPlayerBroadcastHandler {
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.action,
-                    listOf(
+                    sequenceOf(
                         BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.scheme
                                 to nextIndex.toString()
                     )

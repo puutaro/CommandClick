@@ -1,15 +1,15 @@
 package com.puutaro.commandclick.common.variable.edit
 
 object TypeVariable {
-    private val textTypeList = listOf(
+    private val textTypeList = arrayOf(
         EditTextSupportViewName.EDIT_TEXT_EMPHASIS.str,
         EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str,
         EditTextSupportViewName.PASSWORD.str,
     )
-    private val textLabelTypeList = listOf(
+    private val textLabelTypeList = arrayOf(
         EditTextSupportViewName.HIDDEN_LABEL.str,
     )
-    private val otherLabelTypeList = listOf(
+    private val otherLabelTypeList = arrayOf(
 //        EditTextSupportViewName.DIRECTORY_PICKER.str,
 //        EditTextSupportViewName.FILE_PICKER.str,
         EditTextSupportViewName.COLOR.str,
@@ -25,7 +25,7 @@ object TypeVariable {
             textLabelTypeList +
             otherLabelTypeList
 
-    val variableTypeDefineListForMiniEdit = listOf(
+    val variableTypeDefineListForMiniEdit = arrayOf(
         EditTextSupportViewName.VARIABLE_LABEL.str,
         EditTextSupportViewName.CHECK_BOX.str,
         EditTextSupportViewName.EDITABLE_CHECK_BOX.str,

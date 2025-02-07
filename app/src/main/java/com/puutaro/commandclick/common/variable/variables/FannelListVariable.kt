@@ -60,7 +60,7 @@ object FannelListVariable {
 //                LanguageTypeSelects.JAVA_SCRIPT
             )
             val descConSrc = ScriptFileDescription.makeDescriptionContents(
-                fannelConList,
+                fannelConList.asSequence(),
 //                cmdclickFannelItselfDirPath,
                 it
             )
@@ -107,7 +107,7 @@ object FannelListVariable {
         val gitUserContentPrefix = UrlFileSystems.gitUserContentPrefix
         val readmeSuffix = UrlFileSystems.readmeSuffix
         val gitSuffix = ".git"
-        return listOf(
+        return sequenceOf(
             readmeUrl
                 .replace(Regex("${gitSuffix}#.*$"), "")
                 .replace(Regex("#.*$"), "")

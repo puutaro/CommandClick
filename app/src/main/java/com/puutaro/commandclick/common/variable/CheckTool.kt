@@ -159,7 +159,7 @@ object CheckTool {
 //                ).joinToString("\n")}"
 //            ).joinToString("\n\n") + "\n----------\n"
 //        )
-            val debugTopBoardConArg = listOf(
+            val debugTopBoardConArg = sequenceOf(
                 "${JsOrActionMark.JS_ACTION.mark}\n",
                 typeLogConWithTag,
             ).joinToString("\n")
@@ -412,7 +412,7 @@ object CheckTool {
             saveJsConDebugReport()
         }
         private fun saveJsSrcActionDebugReport() {
-            val jsAcDebugCon = listOf(
+            val jsAcDebugCon = sequenceOf(
                 DebugMapManager.readAcImportWithOpenDetailTagCon(),
                 DebugMapManager.readSrcDetailTagCon(),
             ).joinToString("\n")
@@ -424,7 +424,7 @@ object CheckTool {
         }
 
         private fun saveJsGenActionDebugReport() {
-            val jsAcDebugCon = listOf(
+            val jsAcDebugCon = sequenceOf(
                 DebugMapManager.readGeneratedDetailTagCon(),
             ).joinToString("\n")
             saveDebugReportCon(
@@ -434,7 +434,7 @@ object CheckTool {
         }
 
         fun saveJsConDebugReport() {
-            val jsDebugCon = listOf(
+            val jsDebugCon = sequenceOf(
                 DebugMapManager.readJsConWithDetailTag(),
             ).joinToString("\n")
             saveDebugReportCon(
@@ -447,11 +447,11 @@ object CheckTool {
             path: String,
             con: String,
         ) {
-            val topBoardCon = listOf(
+            val topBoardCon = sequenceOf(
                 DebugMapManager.readErrEvidence(),
                 DebugMapManager.readDebugTopBoardCon()
             ).joinToString("\n")
-            val conWithTopBoard = listOf(
+            val conWithTopBoard = sequenceOf(
                 topBoardCon,
                 con,
             ).joinToString("\n")
@@ -578,7 +578,7 @@ object CheckTool {
             }
         }
 
-        private val escapeErrMessageList = listOf(
+        private val escapeErrMessageList = sequenceOf(
             "Java exception was raised during method invocation"
         )
     }
@@ -597,7 +597,7 @@ object CheckTool {
                 Regex("\n"),
                 "\n "
             )
-            val jsAcConGenerated = listOf(
+            val jsAcConGenerated = sequenceOf(
                 "normal -> ",
                 normalCon,
                 "\n after -> ",
@@ -622,7 +622,7 @@ object CheckTool {
         private fun toSepa(
             actionImportedKeyToSubKeyConList: List<Pair<String, String>>,
         ): String {
-            val separatorPairForLog = listOf(
+            val separatorPairForLog = sequenceOf(
                 '?' to "\n ?",
                 '&' to "\n  &",
             )
@@ -642,7 +642,7 @@ object CheckTool {
                     ),
                     separatorPairForLog.map {
                         it.first.toString() to it.second
-                    },
+                    }.asSequence(),
                 )
 //                val builder = StringBuilder(
 //                    subKeyCon.replace(
@@ -665,7 +665,7 @@ object CheckTool {
 //                        it.second,
 //                    )
 //                }
-                listOf(
+                sequenceOf(
                     ">|${mainKey}=",
                     displaySubKeyCon
                 ).joinToString("\n")
@@ -688,7 +688,7 @@ object CheckTool {
         private fun toSepa(
             jsAcKeyToSubKeyCon: String
         ): String {
-            val separatorPairForLog = listOf(
+            val separatorPairForLog = sequenceOf(
                 '?' to "\n ?",
                 '&' to "\n  &",
             )
@@ -768,7 +768,7 @@ object CheckTool {
                 val mainKeyName = "\n\n>|${it.first}="
                 val subKeyMap = it.second
                 val formatSubKeyCon = toSepa(subKeyMap)
-                listOf(
+                sequenceOf(
                     mainKeyName,
                     formatSubKeyCon
                 ).joinToString("\n")
@@ -786,7 +786,7 @@ object CheckTool {
             }.map {
                 val subKey = " ?${it.key}"
                 val subKeyValue = it.value
-                listOf(
+                sequenceOf(
                     subKey,
                     subKeyValue
                 ).joinToString("=")
@@ -958,7 +958,7 @@ object CheckTool {
                 repConWithErrWord,
                 tagStrToMarkList.map {
                    it.second to it.first
-                },
+                }.asSequence(),
             )
 //            var repCon = repConWithErrWord
 //            tagStrToMarkList.forEach {
@@ -975,7 +975,7 @@ object CheckTool {
         private fun errExtractHandler(
             errCon: String
         ): String? {
-            val errWordExtractRegexList = listOf(
+            val errWordExtractRegexList = sequenceOf(
                 Regex("([^ \t\n]+?) is not defined$"),
                 Regex("([^\n]*) is not a function$"),
                 Regex("SyntaxError: Missing initializer in (const) declaration$"),

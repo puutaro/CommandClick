@@ -38,13 +38,13 @@ object StreamWrapper {
         reader: BufferedReader
     ): String {
 
-        var output = String()
+        val output = StringBuilder()
         reader.forEachLine { line ->
             if (
                 line.trim().isEmpty()
             ) return@forEachLine
-            output += "\n${line}"
+            output.append("\n${line}")
         }
-        return output
+        return output.toString()
     }
 }

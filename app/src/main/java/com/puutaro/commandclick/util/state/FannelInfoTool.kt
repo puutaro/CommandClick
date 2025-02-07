@@ -153,7 +153,7 @@ object FannelInfoTool {
         currentFannelState: String?,
     ){
         val nullStr = "NULL_STR"
-        val fannelInfoMap = listOf(
+        val fannelInfoMap = sequenceOf(
 //            FannelInfoSetting.current_app_dir.name
 //                    to (currentAppDirPath ?: nullStr),
             FannelInfoSetting.current_fannel_name.name

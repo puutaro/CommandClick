@@ -228,7 +228,7 @@ object UrlHistoryAddToTsv {
                 editFragment,
 //                currentAppDirPath,
                 webSearcherName,
-                listOf(selectedUrl),
+                sequenceOf(selectedUrl),
             )
            true
         }

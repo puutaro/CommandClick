@@ -737,7 +737,7 @@ class TextToSpeechService:
                         if(totalTimes != 0) {
                             "${currentBlockNum + 1}/${totalTimes} (${displayRoopTimes}"
                         } else "${currentBlockNum + 1} (${displayRoopTimes}"
-                    val displayTimesAndExtra = listOf(
+                    val displayTimesAndExtra = sequenceOf(
                         displayTimes,
                         extraContent,
                     ).joinToString(" ")

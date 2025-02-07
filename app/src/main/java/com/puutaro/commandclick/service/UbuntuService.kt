@@ -100,7 +100,7 @@ class UbuntuService:
         BroadcastManagerForService.registerActionListBroadcastReceiver(
             this,
             broadcastReceiverForUbuntuServerProcess,
-            listOf(
+            sequenceOf(
                 BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE.action,
                 BroadCastIntentSchemeUbuntu.WIFI_WAIT_NITIFICATION.action,
                 BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_NOTIFICATION.action,
@@ -210,7 +210,7 @@ class UbuntuService:
             )
             val isUbuntuRestore = UbuntuFiles.isUbuntuRestore()
             if(isUbuntuRestore) {
-                val extraList = listOf(
+                val extraList = sequenceOf(
                     UbuntuServerIntentExtra.ubuntuRestoreSign.schema to "on"
                 )
                 val restoreUbuntuServicePendingIntent = PendingIntentCreator.create(

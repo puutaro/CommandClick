@@ -81,7 +81,7 @@ class ShortCutManager(
         if(
             url.isNullOrEmpty()
         ) {
-            val logoPngPath = listOf(
+            val logoPngPath = sequenceOf(
                 UsePath.fannelLogoPngPath,
             ).joinToString("/").let {
                 ScriptPreWordReplacer.replace(

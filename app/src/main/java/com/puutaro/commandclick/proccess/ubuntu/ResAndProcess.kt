@@ -50,7 +50,7 @@ object ResAndProcess {
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,
-            listOf(
+            sequenceOf(
                 UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema to
                         procName
             )

@@ -3,6 +3,7 @@ package com.puutaro.commandclick.util.str
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.CcPathTool
 
+
 object ScriptPreWordReplacer {
 
     private val currentScriptPathMark = "\${0}"
@@ -17,7 +18,7 @@ object ScriptPreWordReplacer {
 //        currentAppDirPath: String,
         scriptName: String,
     ): String {
-        return listOf(
+        return sequenceOf(
             currentScriptPathMark,
             cmdclickDirPathMark,
             currentAppDirPathMark,
@@ -62,7 +63,7 @@ object ScriptPreWordReplacer {
 //            replace(storagePathMark, storagePath)
 //        }
 
-        val replacePairList = listOf(
+        val replacePairList = sequenceOf(
             Pair(currentScriptPathMark, "$cmdclickDefaultAppDirPath/$currentScriptName"),
             Pair(cmdclickDirPathMark, UsePath.cmdclickDirPath),
             Pair(currentAppDirPathMark, cmdclickDefaultAppDirPath),
@@ -87,17 +88,32 @@ object ScriptPreWordReplacer {
         tergetString: String,
 //        currentAppDirPath: String,
     ): String {
-        return tergetString
-            .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
-            .replace(currentAppDirPathMark, UsePath.cmdclickDefaultAppDirPath)
+        return SpeedReplacer.replace(
+            tergetString,
+                sequenceOf(
+                    Pair(cmdclickDirPathMark, UsePath.cmdclickDirPath),
+                    Pair(currentAppDirPathMark, UsePath.cmdclickDefaultAppDirPath),
+                )
+            )
+//
+//        tergetString
+//            .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
+//            .replace(currentAppDirPathMark, UsePath.cmdclickDefaultAppDirPath)
     }
 
     fun settingValReplace(
         tergetString: String,
         currentAppDirPath: String,
     ): String {
-        return tergetString
-            .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
-            .replace(currentAppDirPathMark, currentAppDirPath)
+        return SpeedReplacer.replace(
+            tergetString,
+            sequenceOf(
+                Pair(cmdclickDirPathMark, UsePath.cmdclickDirPath),
+                Pair(currentAppDirPathMark, currentAppDirPath),
+            )
+        )
+//        tergetString
+//            .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
+//            .replace(currentAppDirPathMark, currentAppDirPath)
     }
 }

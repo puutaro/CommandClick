@@ -91,7 +91,7 @@ object FileDownloader {
             getPathOrFannelRawName.startsWith("/")
         ) parentDirPathSrc
         else String()
-        val cpFileMapStr = listOf(
+        val cpFileMapStr = sequenceOf(
             "${CpFileKey.CP_FILE_MACRO_FOR_SERVICE.key}=${ReceivePathMacroType.GET_FILE_LIST.name}",
             "${CpFileKey.PATH.key}=$parentDirPath",
 //            "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${parendDirPathForUploader}"

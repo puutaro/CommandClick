@@ -193,7 +193,7 @@ object TsvTool {
         tsvPath: String,
         insertLine: String,
     ){
-        val updateTsvCon = listOf(
+        val updateTsvCon = sequenceOf(
             insertLine,
             ReadText(tsvPath).readText(),
         ).joinToString("\n")

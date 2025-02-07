@@ -10,7 +10,7 @@ object UbuntuEnvTsv {
     fun makeTsv(
         context: Context?,
     ): String {
-        return listOf(
+        return arrayOf(
             "WAIT_QUIZ_TSV_NAME" to UbuntuFiles.waitQuizTsvName,
             "UBUNTU_BACKUP_DIR_PATH" to UsePath.cmdclickUbuntuBackupDirPath,
             "UBUNTU_BACKUP_ROOTFS_DIR_PATH" to UbuntuFiles.getUbuntuBackupRootfsDirPathOnlyWrite(),

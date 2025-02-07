@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.SpeedReplacer
 import java.io.File
 
 object CcPathTool {

@@ -38,7 +38,7 @@ object ExecMacroHandlerForQr {
                 ) ?: return
                 ScriptFileDescription.show(
                     fragment,
-                    contents.split("\n"),
+                    contents.split("\n").asSequence(),
 //                    parentDirPath,
                     clickFileName
                 )

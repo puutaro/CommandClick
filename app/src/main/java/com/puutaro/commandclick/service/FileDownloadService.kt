@@ -65,7 +65,7 @@ class FileDownloadService: Service() {
         BroadcastManagerForService.registerActionListBroadcastReceiver(
             this,
             broadcastReceiverForFileDownlaod,
-            listOf(
+            sequenceOf(
                 BroadCastIntentSchemeFileDownload.STOP_FILE_DOWNLOAD.action,
                 BroadCastIntentSchemeFileDownload.STAN_FILE_DOWNLOAD.action
             )

@@ -459,7 +459,7 @@ private fun launchUrlByPocketWebView(
             BroadcastSender.normalSend(
                 activity,
                 BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LAUNCH.action,
-                listOf(
+                sequenceOf(
                     PocketWebviewLaunchExtra.url.schema to urlStr,
                 )
             )

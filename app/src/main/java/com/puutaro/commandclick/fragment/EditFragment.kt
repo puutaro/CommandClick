@@ -99,7 +99,7 @@ class EditFragment: Fragment() {
 //    var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
     var disableKeyboardFragmentChange = false
-    val listConSelectBoxMapList: MutableList<Map<String, String>?> = mutableListOf()
+//    val listConSelectBoxMapList: ArrayList<Map<String, String>?> = arrayListOf()
 //    var recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null
 //    var recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null
     var firstUpdate = false
@@ -338,7 +338,7 @@ class EditFragment: Fragment() {
         BroadcastRegister.registerBroadcastReceiverMultiActions(
             this,
             broadcastReceiverForEdit,
-            listOf(
+            sequenceOf(
                 BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action,
             )
         )

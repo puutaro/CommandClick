@@ -117,7 +117,7 @@ object LinuxCmd {
     ){
         val funcName = object{}.javaClass.enclosingMethod?.name
         LogSystems.stdSys(
-            listOf(
+            sequenceOf(
                 "${objectName}.${funcName}",
                 processNane
             ).joinToString("\t")
@@ -135,7 +135,7 @@ object LinuxCmd {
     fun killAllProcess(){
         val funcName = object{}.javaClass.enclosingMethod?.name
         LogSystems.stdSys(
-            listOf(
+            sequenceOf(
                 "${objectName}.${funcName}",
             ).joinToString("\t")
         )
@@ -147,7 +147,7 @@ object LinuxCmd {
     ){
         val funcName = object{}.javaClass.enclosingMethod?.name
         LogSystems.stdSys(
-            listOf(
+            sequenceOf(
                 "${objectName}.${funcName}",
             ).joinToString("\t")
         )
@@ -165,7 +165,7 @@ object LinuxCmd {
     ){
         val psOutput = execCommand(
             context,
-            listOf("sh" , "-c", pListOutputCmd).joinToString("\t")
+            sequenceOf("sh" , "-c", pListOutputCmd).joinToString("\t")
         )
 //        LogSystems.stdSys(
 //            "psOutput ${psOutput}"
@@ -182,7 +182,7 @@ object LinuxCmd {
 //        )
         val killOutput = execCommand(
             context,
-            listOf(
+            sequenceOf(
                 "sh",
                 "-c",
                 killCmd
@@ -246,7 +246,7 @@ object LinuxCmd {
             val process = pb.start()
             val exitCode = process.waitFor()
 
-            var errContents = String()
+            val errContents = StringBuilder()
             BufferedReader(
                 InputStreamReader(
                     process.errorStream,
@@ -255,10 +255,10 @@ object LinuxCmd {
             ).use { r ->
                 var line: String?
                 while (r.readLine().also { line = it } != null) {
-                    errContents += "\n" + line
+                    errContents.append("\n" + line)
                 }
             }
-            var outputContents = String()
+            val outputContents = StringBuilder()
             BufferedReader(
                 InputStreamReader(
                     process.inputStream,
@@ -267,10 +267,10 @@ object LinuxCmd {
             ).use { r ->
                 var line: String?
                 while (r.readLine().also { line = it } != null) {
-                    outputContents += "\n" + line
+                    outputContents.append("\n" + line)
                 }
             }
-            return outputContents + "\n" + errContents
+            return outputContents.append("\n" + errContents.toString()).toString()
         } catch (e: Exception){
             LogSystems.stdErr(
                 context,

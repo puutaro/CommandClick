@@ -45,7 +45,7 @@ object ExtraMenuForCmdIndex  {
 
 
     private var imageDialogObj: Dialog? = null
-    private val shuujiColorList = listOf(
+    private val shuujiColorList = arrayOf(
         R.color.teal_200,
         R.color.teal_700,
         R.color.fannel_icon_color,
@@ -66,7 +66,7 @@ object ExtraMenuForCmdIndex  {
 //        R.color.yellow,
 
         )
-    private val shuujiColorList_bk = listOf(
+    private val shuujiColorList_bk = arrayOf(
         R.color.gray_out,
         R.color.file_dark_green_color,
         R.color.light_ao,
@@ -86,7 +86,7 @@ object ExtraMenuForCmdIndex  {
 
     )
 
-    private val darkShujiColorList = listOf(
+    private val darkShujiColorList = arrayOf(
         R.color.file_dark_green_color,
         R.color.file_dark_green_color,
         R.color.file_dark_green_color,

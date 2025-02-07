@@ -68,7 +68,7 @@ class GitDownloadService: Service() {
         BroadcastManagerForService.registerActionListBroadcastReceiver(
             this,
             broadcastReceiverForGitDownload,
-            listOf(
+            sequenceOf(
                 BroadCastIntentSchemeGitDownload.STOP_GIT_DOWNLOAD.action,
                 BroadCastIntentSchemeGitDownload.STAN_GIT_DOWNLOAD.action
             )

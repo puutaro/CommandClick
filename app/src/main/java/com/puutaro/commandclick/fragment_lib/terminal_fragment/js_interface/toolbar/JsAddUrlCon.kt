@@ -83,7 +83,7 @@ class JsAddUrlCon(
             terminalFragment,
 //            UsePath.cmdclickDefaultAppDirPath,
             UsePath.saveWebConDialogFannelName,
-            listOf(
+            sequenceOf(
                 urlString,
                 onSearchBtn,
                 urlConSaveParentDirPath,

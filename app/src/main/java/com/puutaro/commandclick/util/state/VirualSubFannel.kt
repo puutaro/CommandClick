@@ -10,7 +10,7 @@ object VirtualSubFannel {
         val fannelDirName = CcPathTool.makeFannelDirName(
             FannelInfoTool.getCurrentFannelName(fannelInfoMap),
         )
-        return listOf(
+        return sequenceOf(
             UsePath.cmdclickDefaultAppDirPath,
             fannelDirName,
             "virtualSubFannel.js",

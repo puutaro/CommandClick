@@ -22,7 +22,7 @@ class JsCcUsage(
             terminalFragment,
 //            currentAppDirPath,
             webSearcherName,
-            listOf(WebUrlVariables.commandClickUsageUrl),
+            sequenceOf(WebUrlVariables.commandClickUsageUrl),
         )
     }
 }

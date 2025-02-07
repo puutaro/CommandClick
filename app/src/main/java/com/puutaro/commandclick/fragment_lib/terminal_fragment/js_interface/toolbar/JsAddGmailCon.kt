@@ -69,7 +69,7 @@ class JsAddGmailCon(
             terminalFragment,
 //            UsePath.cmdclickDefaultAppDirPath,
             UsePath.saveGmailConDialogFannelName,
-            listOf(
+            sequenceOf(
                 gmailAd,
                 urlConSaveParentDirPath,
                 compSuffix,

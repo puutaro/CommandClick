@@ -54,7 +54,7 @@ object TextSelectionBarCtrl {
                     BroadcastSender.normalSend(
                         context,
                         BroadCastIntentSchemeTerm.POCKET_WEBVIEW_LAUNCH.action,
-                        listOf(
+                        sequenceOf(
                             Pair(PocketWebviewLaunchExtra.url.schema, queryUrl)
                         )
                     )

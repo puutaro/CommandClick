@@ -23,7 +23,7 @@ object ScriptFileDescription {
 
     fun show(
         fragment: Fragment,
-        currentScriptContentsList: List<String>,
+        currentScriptContentsList: Sequence<String>,
 //        currentAppDirPath: String,
         fannelName: String,
     ) {
@@ -33,7 +33,7 @@ object ScriptFileDescription {
         ) ?: return
 
         val descCon = makeDescriptionContents(
-            labelingSecConList,
+            labelingSecConList.asSequence(),
 //            currentAppDirPath,
             fannelName,
         )
@@ -49,8 +49,8 @@ object ScriptFileDescription {
                 val webSearcherName = SystemFannel.webSearcher
                 val systemExecRepTextList =
                     when(readmeUrl == null){
-                        false -> listOf(readmeUrl)
-                        else -> emptyList()
+                        false -> sequenceOf(readmeUrl)
+                        else -> sequenceOf()
                     }
                 ExecJsLoad.execExternalJs(
                     fragment,
@@ -81,7 +81,7 @@ object ScriptFileDescription {
                     fragment,
                     fannelName,
                     makeDescriptionContents(
-                        labelingSecConList,
+                        labelingSecConList.asSequence(),
 //                        currentAppDirPath,
                         fannelName,
                     )
@@ -125,7 +125,7 @@ object ScriptFileDescription {
     }
 
     fun makeDescriptionContents(
-        labelingSecConList: List<String>,
+        labelingSecConList: Sequence<String>,
 //        currentAppDirPath: String,
         fannelName: String,
     ): String {
@@ -137,7 +137,7 @@ object ScriptFileDescription {
     }
 
     private fun subLabelingSecConList(
-        currentScriptContentsList: List<String>,
+        currentScriptContentsList: Sequence<String>,
 //        fannelName: String,
     ): List<String>? {
 //        val languageType =
@@ -153,17 +153,17 @@ object ScriptFileDescription {
 //            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
 //        ) as String
         return CommandClickVariables.extractValListFromHolder(
-            currentScriptContentsList,
+            currentScriptContentsList.toList(),
             labelingSectionStart,
             labelingSectionEnd,
         )
     }
 
     private fun makeDescConFromLabelingSec(
-        labelingSecConList: List<String>,
+        labelingSecConList: Sequence<String>,
 //        currentAppDirPath: String,
         fannelName: String,
-    ): List<String> {
+    ): Sequence<String> {
 //        val languageType =
 //            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
 //        val languageTypeToSectionHolderMap =
@@ -181,7 +181,7 @@ object ScriptFileDescription {
 //            "#"
 //        } else "//"
         val suffixBlank = "  "
-        return (listOf("\n") + labelingSecConList).filter {
+        return (sequenceOf("\n") + labelingSecConList).filter {
             (
                     !it.startsWith(labelingSectionStart)
                             && !it.endsWith(labelingSectionStart)

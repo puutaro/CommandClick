@@ -530,19 +530,25 @@ object SettingFile {
 //                }
                         }
                     }
-                    importRawToConJobList
-                        .toList()
-                        .awaitAll()
-                        .filter { (importRawCon, _) ->
-                            importRawCon.isNotEmpty()
-                        }
+                    val importRawToConArray = arrayListOf<Pair<String, String>>()
+                    importRawToConJobList.forEach {
+                        val (importRawCon, con) = it.await()
+                        if(
+                            importRawCon.isEmpty()
+                        ) return@forEach
+                        importRawToConArray.add(Pair(importRawCon, con))
+                    }
+                    importRawToConArray
+//                        .filter { (importRawCon, _) ->
+//                            importRawCon.isNotEmpty()
+//                        }
 
                 }
             }
 
             val settingCon = SpeedReplacer.replace(
                 settingConBeforeImport,
-                rawToConList,
+                rawToConList.asSequence(),
             )
 //            var settingCon = settingConBeforeImport
 //            rawToConList.forEach {

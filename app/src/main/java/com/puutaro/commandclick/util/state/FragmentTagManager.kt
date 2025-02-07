@@ -41,7 +41,7 @@ object FragmentTagManager {
         scriptFileName: String,
         fannelState: String = String(),
     ): String {
-        return listOf(
+        return sequenceOf(
             prefix,
 //            parentAppDirPath,
             scriptFileName,

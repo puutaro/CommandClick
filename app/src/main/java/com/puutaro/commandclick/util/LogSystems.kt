@@ -69,7 +69,7 @@ object LogSystems {
             BroadcastSender.normalSend(
                 context,
                 BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
-                listOf(
+                sequenceOf(
                     Pair(
                         BroadCastIntentSchemeTerm.MONITOR_TOAST.scheme,
                         toastMessage
@@ -80,7 +80,7 @@ object LogSystems {
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeTerm.ERR_LOG.action,
-            listOf(
+            sequenceOf(
                 ErrLogExtraForTerm.ERR_CONTENTS.schema to
                         errMessage
             )

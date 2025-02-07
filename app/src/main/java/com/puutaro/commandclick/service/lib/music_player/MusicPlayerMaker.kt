@@ -118,7 +118,7 @@ object MusicPlayerMaker {
             BroadcastSender.normalSend(
                 context,
                 BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.action,
-                listOf(
+                sequenceOf(
                     BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.scheme
                             to uriTitle
                 )
@@ -135,7 +135,7 @@ object MusicPlayerMaker {
             BroadcastSender.normalSend(
                 musicPlayerService,
                 BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.action,
-                listOf(
+                sequenceOf(
                     BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.scheme
                             to uriTitle
                 )
@@ -223,7 +223,7 @@ object MusicPlayerMaker {
                         BroadcastSender.normalSend(
                             musicPlayerService,
                             BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.action,
-                            listOf(
+                            sequenceOf(
                                 BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.scheme
                                         to uriTitle
                             )
@@ -266,7 +266,7 @@ object MusicPlayerMaker {
             BroadcastSender.normalSend(
                 musicPlayerService,
                 BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.action,
-                listOf(
+                sequenceOf(
                     BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE.scheme
                             to uriTitle
                 )

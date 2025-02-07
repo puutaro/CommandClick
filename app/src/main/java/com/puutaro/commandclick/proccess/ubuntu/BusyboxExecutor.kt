@@ -497,12 +497,12 @@ class BusyboxExecutor(
     ): String {
         val inputStream = process.inputStream
         val reader = inputStream.bufferedReader(Charsets.UTF_8)
-        var output = String()
+        val output = StringBuilder()
         reader.forEachLine { line ->
             if(
                 line.trim().isEmpty()
             ) return@forEachLine
-            output += "\n${line}"
+            output.append("\n${line}")
         }
         if(process.inputStream != null){
             process.inputStream.close()
@@ -524,7 +524,7 @@ class BusyboxExecutor(
         if(process.errorStream != null){
             process.errorStream.close()
         }
-        return output.removePrefix("\n")
+        return output.toString().removePrefix("\n")
     }
 
     private fun outputStdAndErr(
@@ -532,24 +532,24 @@ class BusyboxExecutor(
     ): Pair<String, String?> {
         val inputStream = process.inputStream
         val reader = inputStream.bufferedReader(Charsets.UTF_8)
-        var output = String()
+        val output = StringBuilder()
         reader.forEachLine { line ->
             if(
                 line.trim().isEmpty()
             ) return@forEachLine
-            output += "\n${line}"
+            output.append("\n${line}")
         }
         if(process.inputStream != null){
             process.inputStream.close()
         }
         val errStream = process.errorStream
         val errReader = errStream.bufferedReader(Charsets.UTF_8)
-        var errOutput = String()
+        val errOutput = StringBuilder()
         errReader.forEachLine { line ->
             if(
                 line.trim().isEmpty()
             ) return@forEachLine
-            errOutput += "\n${line}"
+            errOutput.append("\n${line}")
         }
         if(process.errorStream != null){
             process.errorStream.close()
@@ -564,8 +564,9 @@ class BusyboxExecutor(
 //
 //            ).joinToString("\n\n") + "\n====\n"
 //        )
-        return output.removePrefix("\n") to
-                errOutput.removePrefix("\n")
+        val outputStr = output.toString()
+        return outputStr.removePrefix("\n") to
+                outputStr.removePrefix("\n")
     }
 
     private fun setupForUbuntu(
