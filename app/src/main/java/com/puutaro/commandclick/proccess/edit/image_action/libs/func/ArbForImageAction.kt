@@ -244,6 +244,18 @@ object ArbForImageAction {
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
+                val angleRange = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.angleRangeKeyToDefaultValueStr,
+                    where
+                ).let { angleRangeToErr ->
+                    val funcErr = angleRangeToErr.second
+                        ?: return@let angleRangeToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
@@ -352,6 +364,7 @@ object ArbForImageAction {
                     width,
                     height,
                     pieceOneSide,
+                    angleRange,
                     times,
                     shapeStr,
                     iconType,
@@ -431,6 +444,18 @@ object ArbForImageAction {
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }.toFloat()
+                val angleRange = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.angleRangeKeyToDefaultValueStr,
+                    where
+                ).let { angleRangeToErr ->
+                    val funcErr = angleRangeToErr.second
+                        ?: return@let angleRangeToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
@@ -616,6 +641,7 @@ object ArbForImageAction {
                     height,
                     pieceWidthFloat,
                     pieceHeightFloat,
+                    angleRange,
                     times,
                     string,
                     fontSizeFloat,
@@ -643,6 +669,7 @@ object ArbForImageAction {
             baseHeight: Int,
             pieceWidthFloat: Float,
             pieceHeightFloat: Float,
+            angleRange: Int,
             times: Int,
             string: String,
             fontSizeFloat: Float,
@@ -714,6 +741,7 @@ object ArbForImageAction {
                         baseWidth,
                         baseHeight,
                         stringBitmap,
+                        angleRange,
                         times
                     ).let {
                         val cutWidth = (baseWidth * 0.8).toInt()
@@ -756,6 +784,7 @@ object ArbForImageAction {
             width: Int,
             height: Int,
             pieceOneSide: Int,
+            angleRange: Int,
             times: Int,
             shapeStr: String,
             iconType: IconType,
@@ -777,6 +806,7 @@ object ArbForImageAction {
                         width,
                         height,
                         pieceBitmap,
+                        angleRange,
                         times
                     ).let {
                         val cutWidth = (width * 0.8).toInt()
@@ -971,6 +1001,10 @@ object ArbForImageAction {
                 IconsEnumArgs.PIECE_ONE_SIDE.key,
                 IconsEnumArgs.PIECE_ONE_SIDE.defaultValueStr
             )
+            val angleRangeKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.ANGLE_RANGE.key,
+                IconsEnumArgs.ANGLE_RANGE.defaultValueStr
+            )
             val timesKeyToDefaultValueStr = Pair(
                 IconsEnumArgs.TIMES.key,
                 IconsEnumArgs.TIMES.defaultValueStr
@@ -1010,6 +1044,7 @@ object ArbForImageAction {
                 WIDTH("width", widthSrc.toString(), FuncCheckerForSetting.ArgType.INT),
                 HEIGHT("height", heightSrc.toString(), FuncCheckerForSetting.ArgType.INT),
                 PIECE_ONE_SIDE("pieceOneSide", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
+                ANGLE_RANGE("angleRange", 180.toString(), FuncCheckerForSetting.ArgType.INT),
                 TIMES("times", 10.toString(), FuncCheckerForSetting.ArgType.INT),
                 SHAPE("shape", CmdClickIcons.RECT.str, FuncCheckerForSetting.ArgType.STRING),
                 ICON_TYPE("iconType", IconType.SVG.name, FuncCheckerForSetting.ArgType.STRING),
@@ -1035,6 +1070,10 @@ object ArbForImageAction {
             val pieceHeightKeyToDefaultValueStr = Pair(
                 StringsEnumArgs.PIECE_HEIGHT.key,
                 StringsEnumArgs.PIECE_HEIGHT.defaultValueStr
+            )
+            val angleRangeKeyToDefaultValueStr = Pair(
+                StringsEnumArgs.ANGLE_RANGE.key,
+                StringsEnumArgs.ANGLE_RANGE.defaultValueStr
             )
             val timesKeyToDefaultValueStr = Pair(
                 StringsEnumArgs.TIMES.key,
@@ -1097,6 +1136,7 @@ object ArbForImageAction {
                 HEIGHT("height", heightSrc.toString(), FuncCheckerForSetting.ArgType.INT),
                 PIECE_WIDTH("pieceWidth", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
                 PIECE_HEIGHT("pieceHeight", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
+                ANGLE_RANGE("angleRange", 180.toString(), FuncCheckerForSetting.ArgType.INT),
                 TIMES("times", 10.toString(), FuncCheckerForSetting.ArgType.INT),
                 STRING("string", "C", FuncCheckerForSetting.ArgType.STRING),
                 FONT_SIZE("fontSize", 20.toString(), FuncCheckerForSetting.ArgType.STRING),
