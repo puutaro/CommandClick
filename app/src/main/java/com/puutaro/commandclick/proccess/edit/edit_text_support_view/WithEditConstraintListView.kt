@@ -270,25 +270,6 @@ object WithEditConstraintListView{
                 key to value
             }
         }?.toMap()
-        dateList.add("setTitle" to LocalDateTime.now())
-        CoroutineScope(Dispatchers.IO).launch {
-            setTitle(
-                fragment,
-                fannelInfoMap,
-                setReplaceVariableMap,
-                settingActionAsyncCoroutine,
-                imageActionAsyncCoroutine,
-                globalVarNameToValueMap,
-                globalVarNameToBitmapMap,
-                busyboxExecutor,
-                editListRecyclerView,
-                editListTitleConstraint,
-                editListConfigMap,
-                eachLayoutIdMap,
-                requestBuilderSrc,
-                density,
-            )
-        }
         dateList.add("setBk" to LocalDateTime.now())
         CoroutineScope(Dispatchers.IO).launch {
             setBk(
@@ -302,6 +283,25 @@ object WithEditConstraintListView{
                 busyboxExecutor,
                 editListRecyclerView,
                 editBkConstraintLayout,
+                editListConfigMap,
+                eachLayoutIdMap,
+                requestBuilderSrc,
+                density,
+            )
+        }
+        dateList.add("setTitle" to LocalDateTime.now())
+        CoroutineScope(Dispatchers.IO).launch {
+            setTitle(
+                fragment,
+                fannelInfoMap,
+                setReplaceVariableMap,
+                settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
+                globalVarNameToValueMap,
+                globalVarNameToBitmapMap,
+                busyboxExecutor,
+                editListRecyclerView,
+                editListTitleConstraint,
                 editListConfigMap,
                 eachLayoutIdMap,
                 requestBuilderSrc,
