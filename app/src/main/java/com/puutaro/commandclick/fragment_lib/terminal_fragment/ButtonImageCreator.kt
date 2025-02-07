@@ -303,11 +303,11 @@ object ButtonImageCreator {
             val fileName = File(assetsPath).name
             return FileSystems.sortedFiles(
                 selectionTextBarImageDirPath,
-            ).filter {
+            ).asSequence().filter {
                 it.endsWith("${selectionImageFileNumSeparator}${fileName}")
             }.map {
                 File(selectionTextBarImageDirPath, it).absolutePath
-            }
+            }.toList()
 
         }
     }

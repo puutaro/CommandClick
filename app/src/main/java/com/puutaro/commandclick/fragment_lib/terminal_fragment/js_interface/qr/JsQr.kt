@@ -51,14 +51,14 @@ class JsQr(
     @JavascriptInterface
     fun qrEditTypeList(): String {
         val freeEditType = QrEditType.FREE_TEXT.type
-        val qrEditTypesCon = QrLaunchType.values().map { it.prefix }.map {
+        val qrEditTypesCon = QrLaunchType.entries.asSequence().map { it.prefix }.map {
             prefix ->
             QrEditType.values()
                 .find {
                     it.prefixList.contains(prefix)
                 }?.type
                 ?: freeEditType
-        }.distinct().reversed().joinToString("\n")
+        }.distinct().toList().reversed().joinToString("\n")
         return qrEditTypesCon
     }
 

@@ -260,7 +260,7 @@ object TsvTool {
         return filterByColumnNum(
             con.split("\n"),
             twoColumnNum
-        ).map {
+        ).asSequence().map {
             it.split("\t").lastOrNull()
                 ?: String()
         }.filter {
@@ -274,7 +274,7 @@ object TsvTool {
         return filterByColumnNum(
             con.split("\n"),
             twoColumnNum
-        ).map {
+        ).asSequence().map {
             it.split("\t").firstOrNull()
                 ?: String()
         }.filter {

@@ -671,11 +671,11 @@ object QrScanner{
             val qrLogo = R.drawable.icons_qr_code
             return makeQrHistoryList(
 //                currentAppDirPath
-            ).map {
+            ).asSequence().map {
                 val titleUriList = it.split("\t")
                 val title = titleUriList.firstOrNull() ?: String()
                 title to qrLogo
-            }.filter { it.first.isNotEmpty() }.reversed()
+            }.filter { it.first.isNotEmpty() }.toList().reversed()
         }
 
         private fun makeQrHistoryList(

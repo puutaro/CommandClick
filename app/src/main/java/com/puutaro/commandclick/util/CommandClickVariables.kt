@@ -81,7 +81,7 @@ object CommandClickVariables {
         if(
             substituteSettingVariableList == null
         ) return null
-        return substituteSettingVariableList.filter {
+        return substituteSettingVariableList.asSequence().filter {
             it.startsWith("${substituteVariableName}=")
         }.map {
             val targetSettingValue =
@@ -94,13 +94,14 @@ object CommandClickVariables {
 //            targetSettingValue.replace(",", "\n")
         }.joinToString("\n")
             .split("\n")
+            .asSequence()
             .map {
                 QuoteTool.trimBothEdgeQuote(
                     it
                 )
             }.filter {
                 it.isNotEmpty()
-            }
+            }.toList()
     }
 
 //    fun judgeJsOrShellFromSuffix(

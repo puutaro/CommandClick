@@ -256,11 +256,11 @@ object AppProcessManager {
                 UsePath.cmdclickTempProcessesTxt
             ).absolutePath,
         ).textToList()
-        return processListSrc.filter {
+        return processListSrc.asSequence().filter {
                 it.isNotEmpty()
             }.map {
                 "${it}\t${ringStr}"
-            }
+            }.toList()
     }
 
     private fun selectKillProcessDialog(

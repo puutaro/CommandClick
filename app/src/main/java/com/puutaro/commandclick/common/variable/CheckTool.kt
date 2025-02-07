@@ -642,7 +642,7 @@ object CheckTool {
                     ),
                     separatorPairForLog.map {
                         it.first.toString() to it.second
-                    }.asSequence(),
+                    },
                 )
 //                val builder = StringBuilder(
 //                    subKeyCon.replace(
@@ -729,7 +729,7 @@ object CheckTool {
             return QuoteTool.splitBySurroundedIgnore(
                 jsAcKeyToSubKeyConForJs,
                 '|'
-            ).filter { it.trim().isNotEmpty() }.map {
+            ).asSequence().filter { it.trim().isNotEmpty() }.map {
                 ">|${it}"
             }.joinToString("\n")
         }

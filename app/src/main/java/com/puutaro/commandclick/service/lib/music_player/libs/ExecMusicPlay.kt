@@ -534,7 +534,7 @@ private object AudioStreamingMapExtractor {
                         preLoadUrlList,
                         UsePath.mediaPlayerServiceStreamingPreloadShellDirPath,
                         UsePath.mediaPlayerServiceStreamingPreloadShellOutDirPath,
-                    ).sortedBy {
+                    ).asSequence().sortedBy {
                         it.first
                     }.map {
                         it.second
@@ -581,7 +581,7 @@ private object AudioStreamingMapExtractor {
                 '\t'
             ).toMap()
             saveMapToPreloadFile(
-                listOf(existStreamingMap)
+                sequenceOf(existStreamingMap)
             )
             return existStreamingMap
         }
@@ -595,7 +595,7 @@ private object AudioStreamingMapExtractor {
             newStreamingMap.isNullOrEmpty()
         ) return null
         saveMapToPreloadFile(
-            listOf(newStreamingMap)
+            sequenceOf(newStreamingMap)
         )
         return newStreamingMap
 
@@ -614,7 +614,7 @@ private object AudioStreamingMapExtractor {
     }
 
     private fun saveMapToPreloadFile(
-        insertStUrlMapList: List<Map<String, String>,>
+        insertStUrlMapList: Sequence<Map<String, String>,>
     ){
         val insertMapLineList = insertStUrlMapList.map{
             it.toSortedMap().map {
@@ -624,6 +624,7 @@ private object AudioStreamingMapExtractor {
         val existPreloadMapFileCon =
             ReadText(mediaPlayerServiceStreamingPreloadTxtPath)
                 .textToList()
+                .asSequence()
                 .filter { it.isNotEmpty() }
                 .filter {
                     !insertMapLineList.contains(it)

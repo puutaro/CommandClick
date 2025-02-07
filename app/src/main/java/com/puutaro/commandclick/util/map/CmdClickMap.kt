@@ -124,7 +124,7 @@ object CmdClickMap {
             targetCon,
             irregularQuoteList.map {
                 it to String()
-            }.asSequence()
+            }
 
         )
 //        var updateCon = targetCon

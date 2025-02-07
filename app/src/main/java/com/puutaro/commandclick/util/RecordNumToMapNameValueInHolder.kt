@@ -28,7 +28,7 @@ object RecordNumToMapNameValueInHolder {
             return null
         }
         val cmdclickVariableRegex = Regex("^[a-zA-Z0-9_-]*=")
-        return substituteCmdStartEndContentList.map {
+        return substituteCmdStartEndContentList.asSequence().map {
                 substituteCmdStartEndContentStr ->
             val result = cmdclickVariableRegex.containsMatchIn(
                 substituteCmdStartEndContentStr
