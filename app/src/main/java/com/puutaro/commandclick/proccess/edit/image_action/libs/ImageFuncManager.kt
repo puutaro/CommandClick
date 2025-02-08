@@ -14,11 +14,13 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ColorForIma
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.CutForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FannelIconForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystemsForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OpacityForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OverlayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.SizeForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.StrPngForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ViewForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.WallForImageAction
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -67,6 +69,13 @@ object ImageFuncManager {
         return when(funcType){
             FuncType.ICON ->
                 IconForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList
+                )
+            FuncType.FANNEL_ICON ->
+                FannelIconForImageAction.handle(
                     fragment,
                     funcTypeStr,
                     methodName,
@@ -168,6 +177,13 @@ object ImageFuncManager {
                     baseArgsPairList,
                     varNameToBitmapMap,
                 )
+            FuncType.STR_PNG ->
+                StrPngForImageAction.handle(
+                        fragment,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                    )
         }
 
     }
@@ -176,6 +192,7 @@ object ImageFuncManager {
         val key: String,
     ) {
         ICON("icon"),
+        FANNEL_ICON("fannelIcon"),
         FILE("file"),
         WALL("wall"),
         DEBUG("debug"),
@@ -187,7 +204,8 @@ object ImageFuncManager {
         OPACITY("opacity"),
         BLUR("blur"),
         COLOR("color"),
-        SIZE("size")
+        SIZE("size"),
+        STR_PNG("strPng"),
     }
 
 }

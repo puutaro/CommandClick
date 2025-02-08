@@ -2,8 +2,10 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
+import com.puutaro.commandclick.common.variable.res.FannelIcons
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.enums.EnumEntries
@@ -122,9 +124,56 @@ object RndForSetting {
                         null,
                     ) to null
                 }
+                is RndMethodArgClass.ColorArgs -> {
+                    val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                            index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
+                    )
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val colorRnd = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                        mapArgMapList,
+                        args.colorKeyToDefaultValueStr,
+                        where
+                    ).let { minIntToErr ->
+                        val funcErr = minIntToErr.second
+                            ?: return@let minIntToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ) to funcErr
+                    }.let {
+                        colorMacroStr ->
+                        ColorTool.ColorRndStr.entries.firstOrNull {
+                            it.name == colorMacroStr
+                        } ?: ColorTool.ColorRndStr.RND
+                    }
+                    Pair(
+                        ColorTool.parseColorMacro(colorRnd.name),
+                        null,
+                    ) to null
+                }
                 is RndMethodArgClass.IconArgs -> {
                     Pair(
                         CmdClickIcons.entries.random().str,
+                        null,
+                    ) to null
+                }
+                is RndMethodArgClass.FannelIconArgs -> {
+                    Pair(
+                        FannelIcons.entries.random().str,
                         null,
                     ) to null
                 }
@@ -167,10 +216,18 @@ object RndForSetting {
             "icon",
             RndMethodArgClass.IconArgs,
         ),
+        FANNEL_ICON(
+            "fannelIcon",
+            RndMethodArgClass.FannelIconArgs,
+        ),
         BK_ICON(
             "bkIcon",
             RndMethodArgClass.BkIconArgs,
         ),
+        COLOR(
+            "color",
+            RndMethodArgClass.ColorArgs,
+        )
     }
 
 
@@ -199,7 +256,23 @@ object RndForSetting {
                 MAX_INT("maxInt", 0, FuncCheckerForSetting.ArgType.INT),
             }
         }
+        data object ColorArgs : RndMethodArgClass(), ArgType {
+            override val entries = ColorEnumArgs.entries
+            val colorKeyToDefaultValueStr = Pair(
+                ColorEnumArgs.TYPE.key,
+                ColorEnumArgs.TYPE.defaultValueStr
+            )
+
+            enum class ColorEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                TYPE("type", ColorTool.ColorRndStr.RND.name, FuncCheckerForSetting.ArgType.STRING),
+            }
+        }
         data object IconArgs : RndMethodArgClass()
+        data object FannelIconArgs : RndMethodArgClass()
         data object BkIconArgs : RndMethodArgClass()
     }
 }

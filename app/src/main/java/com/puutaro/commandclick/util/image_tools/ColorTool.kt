@@ -11,7 +11,7 @@ import org.jsoup.Jsoup
 
 object ColorTool {
 
-    private enum class ColorRndStr{
+    enum class ColorRndStr{
         RND,
         LIGHT_RND,
         WHITE_RND,
@@ -88,6 +88,9 @@ object ColorTool {
         if(
             colorStr.startsWith("#")
         ) return colorStr
+        if(
+            colorStr == CmdClickColor.TRANSPARENT.str
+        ) return "#00000000"
         val parsedColorStr = parseColorMacro(
             colorStr
         )

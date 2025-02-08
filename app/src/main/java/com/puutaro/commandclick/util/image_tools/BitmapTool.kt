@@ -31,6 +31,7 @@ import android.text.style.RelativeSizeSpan
 import android.util.Base64
 import android.util.TypedValue
 import android.view.View
+import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.green
@@ -1357,7 +1358,16 @@ object BitmapTool {
             originalBitmap: Bitmap,
             colorStr: String,
         ): Bitmap {
-            val parsedColor = Color.parseColor(colorStr)
+            val parsedColor = when(
+                colorStr == "#00000000"
+            ) {
+                true -> Color.TRANSPARENT
+                else -> Color.parseColor(colorStr)
+            }
+//            val overrideAlpha = when(parsedColor.alpha == 0){
+//                true -> Color.TRANSPARENT.alpha
+//                else -> null
+//            }
             if(
                 parsedColor == Color.BLACK
             ) return originalBitmap
@@ -1385,7 +1395,8 @@ object BitmapTool {
                             x,
                             y,
                             argb(
-                                alpha,
+                                parsedColor.alpha,
+//                                overrideAlpha ?: alpha,
                                 parsedColor.red,
                                 parsedColor.green,
                                 parsedColor.blue,
