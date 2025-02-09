@@ -10,7 +10,7 @@ import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlin.enums.EnumEntries
 
 object ColorForImageAction {
-    fun handle(
+    suspend fun handle(
         fragment: Fragment,
         funcName: String,
         methodNameStr: String,
@@ -120,7 +120,7 @@ object ColorForImageAction {
     }
 
     private object ColorManager {
-        fun blackTo(
+        suspend fun blackTo(
             bitmap: Bitmap,
             colorStr: String,
             where: String,

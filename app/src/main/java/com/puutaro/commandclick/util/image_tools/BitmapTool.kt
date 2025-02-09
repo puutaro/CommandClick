@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Color.argb
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.graphics.LinearGradient
 import android.graphics.Matrix
 import android.graphics.Paint
@@ -36,12 +38,13 @@ import androidx.core.graphics.blue
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.green
 import androidx.core.graphics.red
-import androidx.core.graphics.toColor
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.PAINT_FLAGS
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -53,6 +56,7 @@ import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.util.Arrays
 import java.util.Locale
+import kotlin.concurrent.thread
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -1374,37 +1378,134 @@ object BitmapTool {
             val width = originalBitmap.width
             val height = originalBitmap.height
 
-            // Create a mutable copy of the bitmap
-            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+//            val pixels = IntArray(width * height)
+//            originalBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+//
+//            val r = Color.red(parsedColor)
+//            val g = Color.green(parsedColor)
+//            val b = Color.blue(parsedColor)
+//            val a = Color.alpha(parsedColor)
+//            val numThreads = Runtime.getRuntime().availableProcessors()
+//            val threads = mutableListOf<Thread>()
+//
+//            for (i in 0 until numThreads) {
+//                val thread = thread {
+//                    val start = i * pixels.size / numThreads
+//                    val end = (i + 1) * pixels.size / numThreads
+//                    for (j in start until end) {
+//                        val pixel = pixels[j]
+//                        if (pixel == Color.BLACK) {
+//                            pixels[j] = Color.argb(a, r, g, b)
+//                        }
+//                    }
+//                }
+//                threads.add(thread)
+//            }
+//            val numThreads = Runtime.getRuntime().availableProcessors()
+//            val threads = mutableListOf<Thread>()
+//
+//            for (i in 0 until numThreads) {
+//                val thread = thread {
+//                    val start = i * pixels.size / numThreads
+//                    val end = (i + 1) * pixels.size / numThreads
+//                    for (j in start until end) {
+//                        val pixel = pixels[j]
+//                        if (pixel == Color.BLACK) {
+//                            pixels[j] = Color.argb(a, r, g, b)
+//                        }
+//                    }
+//                }
+//                threads.add(thread)
+//            }
 
+//            threads.forEach { it.join() }
+//
+//            val result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+//            result.setPixels(pixels, 0, width, 0, 0, width, height)
+//            return result
+//            return withContext(Dispatchers.IO) {
+//                val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+//                val semaphore = Semaphore(100)
+//                val jobList = ArrayList<Deferred<Unit>>()
+//                (0 until width).map { x ->
+//                    (0 until height).map { y ->
+//                        val job = async {
+//                            semaphore.withPermit {
+//                                val pixel = resultBitmap.getPixel(x, y)
+//                                val red = Color.red(pixel)
+//                                val green = Color.green(pixel)
+//                                val blue = Color.blue(pixel)
+//                                val alpha = Color.alpha(pixel)
+//                                if (
+//                                    alpha > 0
+//                                    && red == 0
+//                                    && green == 0
+//                                    && blue == 0
+//                                ) {
+//                                    // Set the pixel to fully transparent
+//                                    resultBitmap.setPixel(
+//                                        x,
+//                                        y,
+//                                        argb(
+//                                            parsedColor.alpha,
+//                                            //                                overrideAlpha ?: alpha,
+//                                            parsedColor.red,
+//                                            parsedColor.green,
+//                                            parsedColor.blue,
+//                                        ),
+//                                    )
+//                                    return@withPermit
+//                                }
+//                                resultBitmap.setPixel(x, y, argb(alpha, red, green, blue))
+//                            }
+//                        }
+//                        jobList.add(job)
+//                    }
+//                }
+//                jobList.awaitAll()
+//                FileSystems.writeFromByteArray(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lpox.txt").absolutePath,
+//                    convertBitmapToByteArray(resultBitmap)
+//                )
+//                resultBitmap
+//            }
+            val purposeArgb = argb(
+                parsedColor.alpha,
+//                                overrideAlpha ?: alpha,
+                parsedColor.red,
+                parsedColor.green,
+                parsedColor.blue,
+            )
+            val blackInt = Color.BLACK
+            val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    val pixel = resultBitmap.getPixel(x, y)
-                    val red = Color.red(pixel)
-                    val green = Color.green(pixel)
-                    val blue = Color.blue(pixel)
-                    val alpha = Color.alpha(pixel)
+                    val pixel = originalBitmap.getPixel(x, y)
                     if (
-                        alpha > 0
-                        && red == 0
-                        && green == 0
-                        && blue == 0
+                        pixel == blackInt
+//                        alpha > 0
+//                        && red == 0
+//                        && green == 0
+//                        && blue == 0
                         ) {
                         // Set the pixel to fully transparent
                         resultBitmap.setPixel(
                             x,
                             y,
-                            argb(
-                                parsedColor.alpha,
-//                                overrideAlpha ?: alpha,
-                                parsedColor.red,
-                                parsedColor.green,
-                                parsedColor.blue,
-                            ),
+                            purposeArgb,
                         )
                         continue
                     }
-                    resultBitmap.setPixel(x, y, argb(alpha, red, green, blue))
+//                    val red = Color.red(pixel)
+//                    val green = Color.green(pixel)
+//                    val blue = Color.blue(pixel)
+//                    val alpha = Color.alpha(pixel)
+                    resultBitmap.setPixel(
+                        x,
+                        y,
+                        pixel,
+//                        argb(alpha, red, green, blue)
+                    )
 
                 }
             }
