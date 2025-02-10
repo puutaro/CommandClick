@@ -24,6 +24,8 @@ object AssetsFileManager {
     const val sibukiPngPath = "${gridDialogDirPath}/sibuki.png"
     const val fannelBkDirPath = "${resPngDirPath}/fannel_bk"
     const val fannelStrBkPngPath = "${fannelBkDirPath}/string_bk_dura.png"
+    const val fannelLineHorizonBkPngPath = "${fannelBkDirPath}/line_horizon.png"
+    const val fannelLineVerticalPngPath = "${fannelBkDirPath}/line_vertical.png"
     const val fannelCircleBkPngPath = "${fannelBkDirPath}/circle_bk.png"
     const val underLinePngPath = "${textViewDecoDirPath}/under_line.png"
     const val resGifDirPath = "res/gif"

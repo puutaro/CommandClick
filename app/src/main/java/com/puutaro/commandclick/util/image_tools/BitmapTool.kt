@@ -9,8 +9,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Color.argb
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
 import android.graphics.LinearGradient
 import android.graphics.Matrix
 import android.graphics.Paint
@@ -41,10 +39,8 @@ import androidx.core.graphics.red
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.PAINT_FLAGS
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
@@ -56,7 +52,6 @@ import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.util.Arrays
 import java.util.Locale
-import kotlin.concurrent.thread
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -98,10 +93,11 @@ object BitmapTool {
 
     fun concatByHorizon(
         c: Bitmap,
-        s: Bitmap
+        s: Bitmap,
+        duplication: Int,
     ): Bitmap { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
         var cs: Bitmap? = null
-        val width = c.width + s.width
+        val width = c.width + s.width - duplication
         val height = when(c.height > s.height) {
             false -> s.height
             else -> c.height
@@ -116,7 +112,8 @@ object BitmapTool {
         cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val comboImage = Canvas(cs)
         comboImage.drawBitmap(c, 0f, 0f, null)
-        comboImage.drawBitmap(s, c.width.toFloat(), 0f, null)
+        val startX = c.width.toFloat() - duplication
+        comboImage.drawBitmap(s, startX, 0f, null)
 
         // this is an extra bit I added, just incase you want to save the new image somewhere and then return the location
         /*String tmpImg = String.valueOf(System.currentTimeMillis()) + ".png";
@@ -874,6 +871,16 @@ object BitmapTool {
             return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
         }
 
+        // To flip vertically:
+        fun flipVertically(
+            bitmap: Bitmap
+        ): Bitmap {
+            val width = bitmap.width
+            val height = bitmap.height
+            val matrix = Matrix().apply { postScale(1f, -1f, width / 2f, height / 2f) }
+            return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
+        }
+
         fun createKasureBitmap(bitmap: Bitmap): Bitmap {
             val resultBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
             val randomList = (-10..10)
@@ -974,16 +981,6 @@ object BitmapTool {
             }
 
             return resultBitmap
-        }
-
-        // To flip vertically:
-        fun flipVertically(
-            bitmap: Bitmap
-        ): Bitmap {
-            val width = bitmap.width
-            val height = bitmap.height
-            val matrix = Matrix().apply { postScale(1f, -1f, width / 2f, height / 2f) }
-            return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
         }
 
         fun addPadding(Src: Bitmap, padding_x: Int, padding_y: Int): Bitmap {
@@ -1128,7 +1125,7 @@ object BitmapTool {
                     else -> concatByHorizon(
                         horizonBitmap,
                         maskedBitmapPart as Bitmap,
-
+                        0
                         )
                 }
                 if(
@@ -1143,6 +1140,7 @@ object BitmapTool {
                     else -> concatByHorizon(
                         horizonBitmap,
                         maskedBitmapPart as Bitmap,
+                        0
                         )
                 }
             }
@@ -1237,29 +1235,34 @@ object BitmapTool {
             return resultBitmap
         }
 
-        fun exchangeTransparentToBlack(
+        fun swapTransparentAndBlack(
             originalBitmap: Bitmap,
         ): Bitmap {
-            val width = originalBitmap.width
-            val height = originalBitmap.height
-
-            // Create a mutable copy of the bitmap
-            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
-
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    val pixel = resultBitmap.getPixel(x, y)
-                    if (
-                        Color.alpha(pixel) == 0
-                    ) {
-                        resultBitmap.setPixel(x, y, Color.BLACK)
-                        continue
-                    }
-                    resultBitmap.setPixel(x, y, Color.TRANSPARENT)
-                }
-            }
-
-            return resultBitmap
+            return swap(
+                originalBitmap,
+                "#000000",
+               "#00000000",
+            )
+//            val width = originalBitmap.width
+//            val height = originalBitmap.height
+//
+//            // Create a mutable copy of the bitmap
+//            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+//
+//            for (x in 0 until width) {
+//                for (y in 0 until height) {
+//                    val pixel = resultBitmap.getPixel(x, y)
+//                    if (
+//                        Color.alpha(pixel) == 0
+//                    ) {
+//                        resultBitmap.setPixel(x, y, Color.BLACK)
+//                        continue
+//                    }
+//                    resultBitmap.setPixel(x, y, Color.TRANSPARENT)
+//                }
+//            }
+//
+//            return resultBitmap
         }
 
         fun exchangeColorToBlack(
@@ -1372,9 +1375,20 @@ object BitmapTool {
 //                true -> Color.TRANSPARENT.alpha
 //                else -> null
 //            }
+            val blackInt = Color.BLACK
             if(
-                parsedColor == Color.BLACK
+                parsedColor == blackInt
             ) return originalBitmap
+            return changeColor(
+                originalBitmap,
+                Color.BLACK,
+                parsedColor
+            )
+//            convertColorTo(
+//                originalBitmap: Bitmap,
+//                fromColorStr: String,
+//                toColorStr: String,
+//            )
             val width = originalBitmap.width
             val height = originalBitmap.height
 
@@ -1476,8 +1490,8 @@ object BitmapTool {
                 parsedColor.green,
                 parsedColor.blue,
             )
-            val blackInt = Color.BLACK
-            val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val resultBitmap = originalBitmap.copy(originalBitmap.config!!, true)
+//            val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             for (x in 0 until width) {
                 for (y in 0 until height) {
                     val pixel = originalBitmap.getPixel(x, y)
@@ -1500,17 +1514,194 @@ object BitmapTool {
 //                    val green = Color.green(pixel)
 //                    val blue = Color.blue(pixel)
 //                    val alpha = Color.alpha(pixel)
-                    resultBitmap.setPixel(
-                        x,
-                        y,
-                        pixel,
-//                        argb(alpha, red, green, blue)
-                    )
+//                    resultBitmap.setPixel(
+//                        x,
+//                        y,
+//                        pixel,
+////                        argb(alpha, red, green, blue)
+//                    )
 
                 }
             }
 
             return resultBitmap
+        }
+
+        fun convertColorTo(
+            originalBitmap: Bitmap,
+            fromColorStr: String,
+            toColorStr: String,
+        ): Bitmap {
+            val fromParsedColor = when(
+                fromColorStr == "#00000000"
+            ) {
+                true -> Color.TRANSPARENT
+                else -> Color.parseColor(fromColorStr)
+            }
+            val toParsedColor = when(
+                toColorStr == "#00000000"
+            ) {
+                true -> Color.TRANSPARENT
+                else -> Color.parseColor(toColorStr)
+            }
+            return changeColor(
+                originalBitmap,
+                toParsedColor,
+                fromParsedColor
+            )
+//            val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+//            FileSystems.writeFromByteArray(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lcolor_in.png").absolutePath,
+//                convertBitmapToByteArray(originalBitmap)
+//            )
+//            for (x in 0 until width) {
+//                for (y in 0 until height) {
+//                    val pixel = originalBitmap.getPixel(x, y)
+//                    if(
+//                        (x == 5
+//                        && y == 5)
+//                        || (x == 10
+//                                && y == 10)
+//                    ){
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "lcolor_in.txt").absolutePath,
+//                            listOf(
+//                                "x, y: ${x}, ${y}",
+//                                "toColorStr: ${toColorStr}",
+//                                "toArgb: ${toArgb}",
+//                                "fromColorStr: ${fromColorStr}",
+//                                "fromArgb: ${fromArgb}",
+//                                "pixel: ${pixel}",
+//                            ).joinToString("\n") + "\n\n=======\n\n"
+//                        )
+//                    }
+//                    if (
+//                        pixel == fromParsedColor
+//                    ) {
+//                        // Set the pixel to fully transparent
+//                        resultBitmap.setPixel(
+//                            x,
+//                            y,
+//                            toArgb,
+//                        )
+//                        continue
+//                    }
+//                    resultBitmap.setPixel(
+//                        x,
+//                        y,
+//                        pixel,
+//                    )
+//
+//                }
+//            }
+//
+//            return resultBitmap
+        }
+
+        private fun changeColor(
+            src: Bitmap,
+            fromColor: Int,
+            toColor: Int,
+        ): Bitmap {
+            val width = src.width
+            val height = src.height
+            val pixels = IntArray(width * height)
+            // get pixel array from source
+            src.getPixels(pixels, 0, width, 0, 0, width, height)
+
+            val bmOut = Bitmap.createBitmap(
+                width,
+                height,
+                src.config!!
+            )
+
+//            var pixel: Int
+            val toArgb = argb(
+                toColor.alpha,
+                toColor.red,
+                toColor.green,
+                toColor.blue,
+            )
+            // iteration through pixels
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    // get current index in 2D-matrix
+                    val index = y * width + x
+                    val pixel = pixels[index]
+                    if (pixel == fromColor) {
+                        pixels[index] = toArgb
+
+                        /*or change the whole color
+                    pixels[index] = colorThatWillReplace;*/
+                    }
+                }
+            }
+            bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+            return bmOut
+        }
+
+        fun swap(
+            originalBitmap: Bitmap,
+            colorStr1: String,
+            colorStr2: String,
+        ): Bitmap {
+            val parsedColor1 = when(
+                colorStr1 == "#00000000"
+            ) {
+                true -> Color.TRANSPARENT
+                else -> Color.parseColor(colorStr1)
+            }
+            val parsedColor2 = when(
+                colorStr2 == "#00000000"
+            ) {
+                true -> Color.TRANSPARENT
+                else -> Color.parseColor(colorStr2)
+            }
+            val width = originalBitmap.width
+            val height = originalBitmap.height
+            val pixels = IntArray(width * height)
+            // get pixel array from source
+            originalBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+            val bmOut = Bitmap.createBitmap(
+                width, height,
+                originalBitmap.config!!
+            )
+
+//            var pixel: Int
+            val argb1 = argb(
+                parsedColor1.alpha,
+                parsedColor1.red,
+                parsedColor1.green,
+                parsedColor1.blue,
+            )
+            val argb2 = argb(
+                parsedColor2.alpha,
+                parsedColor2.red,
+                parsedColor2.green,
+                parsedColor2.blue,
+            )
+            // iteration through pixels
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    // get current index in 2D-matrix
+                    val index = y * width + x
+                    val pixel = pixels[index]
+                    when(true) {
+                        (pixel == parsedColor1) -> {
+                            //change A-RGB individually
+                            pixels[index] = argb2
+                        }
+                        (pixel == parsedColor2) -> {
+                            //change A-RGB individually
+                            pixels[index] = argb1
+                        }
+                        else -> {}
+                    }
+                }
+            }
+            bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+            return bmOut
         }
 
         private fun isWhite(pixel: Int): Boolean {

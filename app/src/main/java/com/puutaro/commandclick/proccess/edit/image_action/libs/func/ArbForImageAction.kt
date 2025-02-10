@@ -9,6 +9,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.Font
@@ -16,6 +17,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction.ArbMethodArgClass.StringsArgs.StringsEnumArgs
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
@@ -173,6 +175,42 @@ object ArbForImageAction {
                         where,
                     )
                 }
+                val xDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.xDupKeyToDefaultValueStr,
+                    where
+                ).let { xDupToErr ->
+                    val funcErr = xDupToErr.second
+                        ?: return@let xDupToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val yDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.yDupKeyToDefaultValueStr,
+                    where
+                ).let { yDupToErr ->
+                    val funcErr = yDupToErr.second
+                        ?: return@let yDupToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val pieceRotate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.pieceRotateKeyToDefaultValueStr,
+                    where
+                ).let { pieceRotateToErr ->
+                    val funcErr = pieceRotateToErr.second
+                        ?: return@let pieceRotateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
                 val returnBitmap = MatrixStorm.make(
                     context,
                     width,
@@ -181,8 +219,21 @@ object ArbForImageAction {
                     yMulti,
                     shapeStr,
                     iconType,
-                    iconColorStr
-                )
+                    iconColorStr,
+                    xDup,
+                    yDup,
+                    pieceRotate,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                    ) to err
+                }
                 Pair(
                     returnBitmap,
                     null,
@@ -806,7 +857,7 @@ object ArbForImageAction {
     }
 
     private object RndIcons {
-        fun make(
+        suspend fun make(
             context: Context,
             width: Int,
             height: Int,
@@ -828,6 +879,14 @@ object ArbForImageAction {
                 iconType,
                 iconColorStr,
             )
+//            if(endAngle == 0)
+//            FileSystems.writeFromByteArray(
+//                File(UsePath.cmdclickDefaultAppDirPath, "rpiece.png").absolutePath,
+//                BitmapTool.convertBitmapToByteArray(
+//                    pieceBitmap
+//                )
+//            )
+
             val autoRndIcons = when(layout) {
                 ArbForImageAction.ArbMethodArgClass.IconsArgs.Layout.LEFT -> {
                     CcDotArt.MistMaker.makeLeftRndBitmaps(
@@ -874,28 +933,50 @@ object ArbForImageAction {
             yMulti: Int,
             shapeStr: String,
             iconType: IconType,
-            iconColorStr: String
-        ): Bitmap? {
-            val pieceWidth = goalWidth / xMulti
-            val pieceHeight = goalHeight / yMulti
-            val pieceBitmap = makePieceBitmap(
-                context,
-                pieceWidth,
-                pieceHeight,
-                shapeStr,
-                iconType,
-                iconColorStr,
-            )
-            return CcDotArt.makeMatrixStorm(
-                pieceBitmap,
-                xMulti,
-                yMulti,
-            )
+            iconColorStr: String,
+            xDup: Int,
+            yDup: Int,
+            pieceRotate: Float,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val pieceWidth = goalWidth / xMulti
+                val pieceHeight = goalHeight / yMulti
+                val pieceBitmap = makePieceBitmap(
+                    context,
+                    pieceWidth,
+                    pieceHeight,
+                    shapeStr,
+                    iconType,
+                    iconColorStr,
+                ).let { piece ->
+                    if (
+                        pieceRotate == 0f
+                    ) return@let piece
+                    BitmapTool.rotate(
+                        piece,
+                        pieceRotate,
+                    )
+                }
+                CcDotArt.makeMatrixStorm(
+                    pieceBitmap,
+                    xMulti,
+                    yMulti,
+                    xDup,
+                    yDup,
+                ) to null
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
         }
     }
 
 
-    private fun makePieceBitmap(
+    private suspend fun makePieceBitmap(
         context: Context,
         pieceWidth: Int,
         pieceHeight: Int,
@@ -998,6 +1079,18 @@ object ArbForImageAction {
                 MatrixStormEnumArgs.ICON_TYPE.key,
                 MatrixStormEnumArgs.ICON_TYPE.defaultValueStr
             )
+            val xDupKeyToDefaultValueStr = Pair(
+                MatrixStormEnumArgs.X_DUP.key,
+                MatrixStormEnumArgs.X_DUP.defaultValueStr
+            )
+            val yDupKeyToDefaultValueStr = Pair(
+                MatrixStormEnumArgs.Y_DUP.key,
+                MatrixStormEnumArgs.Y_DUP.defaultValueStr
+            )
+            val pieceRotateKeyToDefaultValueStr = Pair(
+                MatrixStormEnumArgs.PIECE_ROTATE.key,
+                MatrixStormEnumArgs.PIECE_ROTATE.defaultValueStr
+            )
             private const val widthSrc = 300
             private const val heightSrc = widthSrc * 2
             private const val xMultiSrc = 60
@@ -1014,6 +1107,9 @@ object ArbForImageAction {
                 SHAPE("shape", CmdClickIcons.RECT.str, FuncCheckerForSetting.ArgType.STRING),
                 ICON_TYPE("iconType", IconType.SVG.name, FuncCheckerForSetting.ArgType.STRING),
                 ICON_COLOR("iconColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
+                X_DUP("xDup", 0.toString(), FuncCheckerForSetting.ArgType.INT),
+                Y_DUP("yDup", 0.toString(), FuncCheckerForSetting.ArgType.INT),
+                PIECE_ROTATE("pieceRotate", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
             }
         }
         data object IconsArgs : ArbMethodArgClass(), ArgType {

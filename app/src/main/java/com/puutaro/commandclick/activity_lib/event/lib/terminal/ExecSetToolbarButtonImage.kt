@@ -233,6 +233,7 @@ object ExecSetToolbarButtonImage {
                     gOutBitmap = BitmapTool.concatByHorizon(
                         outBitmapEntry,
                         rotateGBitmap,
+                        0,
                     )
                 }
             }
@@ -252,6 +253,7 @@ object ExecSetToolbarButtonImage {
                 colorOutBitmap = BitmapTool.concatByHorizon(
                     outBitmapEntry,
                     colorRect,
+                    0,
                 )
             }
             val gOutBitmapResult = gOutBitmap
@@ -265,6 +267,7 @@ object ExecSetToolbarButtonImage {
             return BitmapTool.concatByHorizon(
                 gOutBitmapResult,
                 colorOutBitmapResult,
+                0,
             )
         }
     }

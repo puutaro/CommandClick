@@ -2011,7 +2011,7 @@ class PromptWithListDialog(
 //                    }
 //                }
                 val mainImageBitmap = let {
-                    val reversedSquareBitmap = ImageTransformer.exchangeTransparentToBlack(
+                    val reversedSquareBitmap = ImageTransformer.swapTransparentAndBlack(
                         maskSquare,
                     )
                 val maskedMainImageBitmap = ImageTransformer.maskImageByTransparent(

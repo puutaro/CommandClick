@@ -35,7 +35,8 @@ object CcDotArt {
                     true -> bitmap
                     else -> concatByHorizon(
                         horizontalRect,
-                        bitmap
+                        bitmap,
+                        0,
                     )
                 }
             }
@@ -47,7 +48,8 @@ object CcDotArt {
                 true -> verticalBitmap
                 else -> concatByHorizon(
                     resultRect,
-                    verticalBitmap
+                    verticalBitmap,
+                    0,
                 )
             }
         }
@@ -60,6 +62,8 @@ object CcDotArt {
         pieceBitmapSrc: Bitmap,
         widthMulti: Int,
         heightMulti: Int,
+        xDup: Int,
+        yDup: Int,
     ): Bitmap? {
         if(
             widthMulti <= 0
@@ -88,6 +92,10 @@ object CcDotArt {
                             pieceBitmapSrc,
                             firstOpacity
                         )
+                        val useYup = when(yDup < 0){
+                            true -> (yDup..0)
+                            else -> (0..yDup)
+                        }.random()
                         (2..widthMulti).forEach { horizonOrder ->
                             val curOpacityDiff = opacityDiff * (horizonOrder - 1)
                             val supOpacity = (maxOpacity - curOpacityDiff).let makeSupOpacity@ {
@@ -110,7 +118,8 @@ object CcDotArt {
                             )
                             horizontalRect = concatByHorizon(
                                 horizontalRect,
-                                pieceRect
+                                pieceRect,
+                                useYup,
                             )
                         }
                         rotate(
@@ -129,9 +138,15 @@ object CcDotArt {
                             var partVerticalRect = horizonChunkedRectList.first()
                             horizonChunkedRectList.forEachIndexed { horizonRectListIndex, horizonBitmap ->
                                 if (horizonRectListIndex == 0) return@forEachIndexed
+                                val useXup = when(yDup < 0){
+                                    true -> (xDup..0)
+                                    else -> (0..xDup)
+                                }.random()
                                 partVerticalRect = concatByHorizon(
                                     partVerticalRect,
-                                    horizonBitmap
+                                    horizonBitmap,
+                                    useXup,
+
                                 )
                             }
                             partVerticalRect
