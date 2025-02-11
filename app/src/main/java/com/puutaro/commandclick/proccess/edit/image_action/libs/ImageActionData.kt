@@ -3,15 +3,16 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs
 import android.graphics.Bitmap
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import kotlinx.coroutines.Deferred
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.withLock
 
 object ImageActionData {
     class LoopKeyToAsyncDeferredVarNameBitmapMap {
-        private val loopKeyToAsyncDeferredVarNameBitmapMap = mutableMapOf<
+        private val loopKeyToAsyncDeferredVarNameBitmapMap: ConcurrentHashMap<
                 String,
-                MutableMap <
+                ConcurrentHashMap <
                         String,
                         Deferred<
                                 Pair<
@@ -20,9 +21,21 @@ object ImageActionData {
                                         >?
                                 >
                         >
-                >()
-        private val asyncLoopKeyToVarNameBitmapMapMutex = ReentrantReadWriteLock()
-        suspend fun getAsyncVarNameToBitmapAndExitSignal(loopKey: String):  MutableMap <
+                > = ConcurrentHashMap()
+//        mutableMapOf<
+//                String,
+//                MutableMap <
+//                        String,
+//                        Deferred<
+//                                Pair<
+//                                        Pair<String, Bitmap?>,
+//                                        ImageActionKeyManager.BreakSignal?
+//                                        >?
+//                                >
+//                        >
+//                >()
+//        private val asyncLoopKeyToVarNameBitmapMapMutex = ReentrantReadWriteLock()
+        suspend fun getAsyncVarNameToBitmapAndExitSignal(loopKey: String):  ConcurrentHashMap <
                 String,
                 Deferred<
                         Pair<
@@ -31,11 +44,14 @@ object ImageActionData {
                                 >?
                         >
                 >? {
-            return asyncLoopKeyToVarNameBitmapMapMutex.readLock().withLock {
-                loopKeyToAsyncDeferredVarNameBitmapMap.get(
-                    loopKey
-                )
-            }
+            return loopKeyToAsyncDeferredVarNameBitmapMap.get(
+                loopKey
+            )
+//    asyncLoopKeyToVarNameBitmapMapMutex.readLock().withLock {
+//                loopKeyToAsyncDeferredVarNameBitmapMap.get(
+//                    loopKey
+//                )
+//            }
         }
 
         suspend fun put(
@@ -48,7 +64,7 @@ object ImageActionData {
                             >?
                     >
         ){
-            asyncLoopKeyToVarNameBitmapMapMutex.writeLock().withLock {
+//            asyncLoopKeyToVarNameBitmapMapMutex.writeLock().withLock {
                 loopKeyToAsyncDeferredVarNameBitmapMap.get(
                     loopKey
                 ).let { curPrivateMapLoopKeyVarNameValueMap ->
@@ -64,47 +80,66 @@ object ImageActionData {
                             )
                         }
 
-                        else -> loopKeyToAsyncDeferredVarNameBitmapMap.put(
-                            loopKey,
-                            mutableMapOf(varName to deferredVarNameBitmapMapAndBreakSignal)
-                        )
+                        else -> {
+                            val asyncDeferredVarNameBitmapMap: ConcurrentHashMap <
+                                    String,
+                                    Deferred<
+                                            Pair<
+                                                    Pair<String, Bitmap?>,
+                                                    ImageActionKeyManager.BreakSignal?
+                                                    >?
+                                            >
+                                    > = ConcurrentHashMap()
+                            asyncDeferredVarNameBitmapMap.put(
+                                varName,
+                                deferredVarNameBitmapMapAndBreakSignal
+                            )
+                            loopKeyToAsyncDeferredVarNameBitmapMap.put(
+                                loopKey,
+                                asyncDeferredVarNameBitmapMap
+//                                mutableMapOf(varName to deferredVarNameBitmapMapAndBreakSignal)
+                            )
+                        }
                     }
                 }
-            }
+//            }
         }
 
         suspend fun clearVarName(
             loopKey: String,
             varName: String,
         ) {
-            asyncLoopKeyToVarNameBitmapMapMutex.writeLock().withLock {
+//            asyncLoopKeyToVarNameBitmapMapMutex.writeLock().withLock {
                 loopKeyToAsyncDeferredVarNameBitmapMap.get(
                     loopKey
                 )?.remove(varName)
-            }
+//            }
         }
 
         suspend fun clearAsyncVarNameToBitmapAndExitSignal(loopKey: String) {
-            asyncLoopKeyToVarNameBitmapMapMutex.writeLock().withLock {
+//            asyncLoopKeyToVarNameBitmapMapMutex.writeLock().withLock {
                 loopKeyToAsyncDeferredVarNameBitmapMap.remove(
                     loopKey
                 )
-            }
+//            }
         }
     }
 
     class PrivateLoopKeyVarNameBitmapMap {
         private val privateLoopKeyVarNameBitmapMap =
-            mutableMapOf<String, MutableMap<String, Bitmap?>>()
-        private val privateLoopKeyVarNameBitmapMapMutex = ReentrantReadWriteLock()
+            ConcurrentHashMap<String, ConcurrentHashMap<String, Bitmap>>()
+//        private val privateLoopKeyVarNameBitmapMapMutex = ReentrantReadWriteLock()
         suspend fun getAsyncVarNameToBitmap(
             loopKey: String
-        ): MutableMap<String, Bitmap?>? {
-            return privateLoopKeyVarNameBitmapMapMutex.readLock().withLock {
-                privateLoopKeyVarNameBitmapMap.get(
-                    loopKey
-                )
-            }
+        ): MutableMap<String, Bitmap>? {
+            return privateLoopKeyVarNameBitmapMap.get(
+                loopKey
+            )
+//    privateLoopKeyVarNameBitmapMapMutex.readLock().withLock {
+//                privateLoopKeyVarNameBitmapMap.get(
+//                    loopKey
+//                )
+//            }
         }
 
         suspend fun put(
@@ -112,56 +147,71 @@ object ImageActionData {
             varName: String,
             bitmap: Bitmap?,
         ){
-            privateLoopKeyVarNameBitmapMapMutex.writeLock().withLock {
-                privateLoopKeyVarNameBitmapMap.get(
-                    loopKey
-                ).let { curPrivateVarNameValueMap ->
-                    when (curPrivateVarNameValueMap.isNullOrEmpty()) {
-                        false -> curPrivateVarNameValueMap.put(
+//            privateLoopKeyVarNameBitmapMapMutex.writeLock().withLock {
+            if(bitmap == null) return
+            privateLoopKeyVarNameBitmapMap.get(
+                loopKey
+            ).let { curPrivateVarNameValueMap ->
+                when (curPrivateVarNameValueMap.isNullOrEmpty()) {
+                    false -> curPrivateVarNameValueMap.put(
+                        varName,
+                        bitmap
+                    )
+
+                    else -> {
+                        val loopKeyVarNameBitmapMap: ConcurrentHashMap<String, Bitmap> = ConcurrentHashMap()
+                        loopKeyVarNameBitmapMap.put(
                             varName,
                             bitmap
                         )
-
-                        else -> privateLoopKeyVarNameBitmapMap.put(
+                        privateLoopKeyVarNameBitmapMap.put(
                             loopKey,
-                            mutableMapOf(varName to bitmap)
+                            loopKeyVarNameBitmapMap,
+//                            mutableMapOf(varName to bitmap)
                         )
                     }
                 }
             }
+//            }
         }
 
         suspend fun initPrivateLoopKeyVarNameBitmapMapMutex(
             loopKey: String
         ) {
-            return privateLoopKeyVarNameBitmapMapMutex.writeLock().withLock {
-                privateLoopKeyVarNameBitmapMap.get(
-                    loopKey
-                )?.clear()
-            }
+            privateLoopKeyVarNameBitmapMap.get(
+                loopKey
+            )?.clear()
+//            privateLoopKeyVarNameBitmapMapMutex.writeLock().withLock {
+//                privateLoopKeyVarNameBitmapMap.get(
+//                    loopKey
+//                )?.clear()
+//            }
         }
 
         suspend fun clearPrivateLoopKeyVarNameBitmapMapMutex(loopKey: String){
-            privateLoopKeyVarNameBitmapMapMutex.writeLock().withLock {
+//            privateLoopKeyVarNameBitmapMapMutex.writeLock().withLock {
                 privateLoopKeyVarNameBitmapMap.remove(
                     loopKey
                 )
-            }
+//            }
         }
     }
 
     class LoopKeyToVarNameBitmapMap {
         private val loopKeyToVarNameBitmapMap =
-            mutableMapOf<String, MutableMap<String, Bitmap?>>()
-        private val loopKeyToVarNameBitmapMapMutex = ReentrantReadWriteLock()
+            ConcurrentHashMap<String, ConcurrentHashMap<String, Bitmap>>()
+//        private val loopKeyToVarNameBitmapMapMutex = ReentrantReadWriteLock()
         suspend fun getAsyncVarNameToBitmap(
             loopKey: String
-        ): MutableMap<String, Bitmap?>? {
-            return loopKeyToVarNameBitmapMapMutex.readLock().withLock {
-                loopKeyToVarNameBitmapMap.get(
-                    loopKey
-                )
-            }
+        ): MutableMap<String, Bitmap>? {
+            return loopKeyToVarNameBitmapMap.get(
+                loopKey
+            )
+//    loopKeyToVarNameBitmapMapMutex.readLock().withLock {
+//                loopKeyToVarNameBitmapMap.get(
+//                    loopKey
+//                )
+//            }
         }
 
         suspend fun put(
@@ -169,41 +219,50 @@ object ImageActionData {
             varName: String,
             bitmap: Bitmap?,
         ){
-            loopKeyToVarNameBitmapMapMutex.writeLock().withLock {
-                loopKeyToVarNameBitmapMap.get(
-                    loopKey
-                ).let { curVarNameBitmapMap ->
-                    when (curVarNameBitmapMap.isNullOrEmpty()) {
-                        false -> curVarNameBitmapMap.put(
+//            loopKeyToVarNameBitmapMapMutex.writeLock().withLock {
+            if(bitmap == null) return
+            loopKeyToVarNameBitmapMap.get(
+                loopKey
+            ).let { curVarNameBitmapMap ->
+                when (curVarNameBitmapMap.isNullOrEmpty()) {
+                    false -> curVarNameBitmapMap.put(
+                        varName,
+                        bitmap
+                    )
+
+                    else -> {
+                        val varNameBitmapMap = ConcurrentHashMap<String, Bitmap>()
+                        varNameBitmapMap.put(
                             varName,
                             bitmap
                         )
-
-                        else -> loopKeyToVarNameBitmapMap.put(
+                        loopKeyToVarNameBitmapMap.put(
                             loopKey,
-                            mutableMapOf(varName to bitmap)
+                            varNameBitmapMap
+//                            mutableMapOf(varName to bitmap)
                         )
                     }
                 }
             }
+//            }
         }
 
         suspend fun initPrivateLoopKeyVarNameBitmapMapMutex(
             loopKey: String
         ) {
-            return loopKeyToVarNameBitmapMapMutex.writeLock().withLock{
+//            loopKeyToVarNameBitmapMapMutex.writeLock().withLock{
                 loopKeyToVarNameBitmapMap.get(
                     loopKey
                 )?.clear()
-            }
+//            }
         }
 
         suspend fun clearPrivateLoopKeyVarNameBitmapMapMutex(loopKey: String){
-            loopKeyToVarNameBitmapMapMutex.writeLock().withLock {
+//            loopKeyToVarNameBitmapMapMutex.writeLock().withLock {
                 loopKeyToVarNameBitmapMap.remove(
                     loopKey
                 )
-            }
+//            }
         }
     }
 
