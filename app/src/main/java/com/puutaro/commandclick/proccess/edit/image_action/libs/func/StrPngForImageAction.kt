@@ -1,17 +1,18 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.UrlImageDownloader
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.image_tools.BitmapTool
-import java.io.File
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import kotlin.enums.EnumEntries
 
 object StrPngForImageAction {
+
+    private const val defaultZeroMacroStr = 0
+
     suspend fun handle(
         fragment: Fragment,
         funcName: String,
@@ -43,7 +44,7 @@ object StrPngForImageAction {
         val args =
             methodNameClass.args
         return when(args){
-            is WallMethodArgClass.MakeArgs -> {
+            is StrBkMethodArgClass.MakeArgs -> {
                 val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
                         index, formalArgsNameToType ->
                     Triple(
@@ -52,7 +53,7 @@ object StrPngForImageAction {
                         formalArgsNameToType.type,
                     )
                 }
-                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
                     formalArgIndexToNameToTypeList,
                     argsPairList
                 )
@@ -62,28 +63,84 @@ object StrPngForImageAction {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val macroStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
+                val shapeAssetsPath = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
-                    args.macroKeyToIndex,
+                    args.shapeKeyToDefaultValueStr,
                     where
-                ).let { macroStrToErr ->
-                    val funcErr = macroStrToErr.second
-                        ?: return@let macroStrToErr.first
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    shapeStr ->
+                    StrBkMethodArgClass.MakeArgs.Shape.entries.firstOrNull {
+                        it.name == shapeStr
+                    } ?: StrBkMethodArgClass.MakeArgs.Shape.STR
+                }.let {
+                    when(it) {
+                        StrBkMethodArgClass.MakeArgs.Shape.STR ->
+                            AssetsFileManager.fannelStrBkPngPath
+                        StrBkMethodArgClass.MakeArgs.Shape.CIRCLE ->
+                            AssetsFileManager.fannelCircleBkPngPath
+                        StrBkMethodArgClass.MakeArgs.Shape.LINE ->
+                            AssetsFileManager.fannelLineHorizonBkPngPath
+                    }
+                }
+                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.widthKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-                val cmdClickBkImageFilePath = BkWallPath.get(
-                    macroStr
-                ) ?: return null
-                val returnBitmap = BitmapTool.convertFileToBitmap(cmdClickBkImageFilePath)?.let {
-                        BitmapTool.ImageTransformer.cutCenter(
-                            it,
-                            400,
-                            800
-                        )
-                    }
+                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.heightKeyToDefaultValueStr,
+                    where
+                ).let { heightToErr ->
+                    val funcErr = heightToErr.second
+                        ?: return@let heightToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val returnBitmap = AssetsFileManager.assetsByteArray(
+                    fragment.context,
+                    shapeAssetsPath
+                )?.let {
+                  val innerBitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                    val innerBitmapWidth = innerBitmap.width
+                    val isDefaultWidth = innerBitmapWidth == defaultZeroMacroStr
+                            || innerBitmapWidth == width
+                    val innerBitmapHeight = innerBitmap.height
+                    val isDefaultHeight = innerBitmapHeight == defaultZeroMacroStr
+                            || innerBitmapHeight == height
+                    if(
+                        isDefaultWidth
+                        && isDefaultHeight
+                    ) return@let innerBitmap
+                   val resizeBitmapWidth = if (isDefaultWidth) {
+                       innerBitmapWidth
+                       } else width
+                    val resizeBitmapHeight = if (isDefaultHeight) {
+                        innerBitmapHeight
+                    } else height
+                    Bitmap.createScaledBitmap(
+                        innerBitmap,
+                        resizeBitmapWidth,
+                        resizeBitmapHeight,
+                        true,
+                    )
+                }
                 Pair(
                     returnBitmap,
                     null,
@@ -92,94 +149,49 @@ object StrPngForImageAction {
         }
     }
 
-    private object BkWallPath {
-
-        fun get(
-            wallRelativePath: String,
-        ): String? {
-            val fannelWallDirPath = UrlImageDownloader.fannelWallDirPath
-            val fannelWallDirName = File(fannelWallDirPath).name
-            if(
-                !wallRelativePath
-                    .startsWith(fannelWallDirName)
-            ) return null
-            val wallPathObj = File(
-                UrlImageDownloader.imageDirObj.absolutePath,
-                wallRelativePath
-            )
-            val wallPathOrDirPath = wallPathObj.absolutePath
-            return when(true){
-                wallPathObj.isFile -> {
-                    if(
-                        !isImageFile(wallPathOrDirPath)
-                    ) return null
-                    wallPathOrDirPath
-                }
-                else -> {
-                    File(fannelWallDirPath).walk().filter {
-                            wallImageFileEntry ->
-                        if(
-                            !wallImageFileEntry.isFile
-                        ) return@filter false
-                        val wallImageFilePath =
-                            wallImageFileEntry.absolutePath
-                        wallImageFilePath.startsWith(
-                            wallPathOrDirPath
-                        ) && isImageFile(
-                            wallImageFilePath
-                        )
-                    }.shuffled().firstOrNull()?.absolutePath
-                        ?: return null
-                }
-            }
-        }
-
-        private fun isImageFile(
-            wallImageFilePath: String
-        ): Boolean {
-            val imageFileExtendList = listOf(".jpeg", ".jpg", ".png")
-            return imageFileExtendList.any {
-                    imageFileExtend ->
-                wallImageFilePath.endsWith(imageFileExtend)
-            }
-        }
-
-        private fun getBkImageFilePathFromDirPath(
-            bkImageDirPath: String,
-        ): String {
-            return FileSystems.sortedFiles(
-                bkImageDirPath
-            ).random().let {
-                File(bkImageDirPath, it).absolutePath
-            }
-        }
-    }
-
     private enum class MethodNameClass(
         val str: String,
-        val args: WallMethodArgClass,
+        val args: StrBkMethodArgClass,
     ){
-        MAKE("make", WallMethodArgClass.MakeArgs),
+        MAKE("make", StrBkMethodArgClass.MakeArgs),
     }
-
     private sealed interface ArgType {
         val entries: EnumEntries<*>
     }
+    private sealed class StrBkMethodArgClass {
 
-    private sealed class WallMethodArgClass {
-        data object MakeArgs : WallMethodArgClass(), ArgType {
-            override val entries = MakeEnumArgs.entries
-            val macroKeyToIndex = Pair(
-                MakeEnumArgs.MACRO.key,
-                MakeEnumArgs.MACRO.defaultValueStr
+        val defaultZeroMacroStr = 0.toString()
+        data object MakeArgs : StrBkMethodArgClass(), ArgType {
+            override val entries = SizeArgs.entries
+            val shapeKeyToDefaultValueStr = Pair(
+                SizeArgs.SHAPE.key,
+                SizeArgs.SHAPE.defaultValueStr
             )
-            enum class MakeEnumArgs(
+
+            val widthKeyToDefaultValueStr = Pair(
+                SizeArgs.WIDTH.key,
+                SizeArgs.WIDTH.defaultValueStr
+            )
+            val heightKeyToDefaultValueStr = Pair(
+                SizeArgs.HEIGHT.key,
+                SizeArgs.HEIGHT.defaultValueStr
+            )
+            enum class SizeArgs(
                 val key: String,
-                val defaultValueStr: Int,
+                val defaultValueStr: String?,
                 val type: FuncCheckerForSetting.ArgType,
             ){
-                MACRO("macro", 0, FuncCheckerForSetting.ArgType.STRING),
+                SHAPE("shape", Shape.STR.name, FuncCheckerForSetting.ArgType.STRING),
+                WIDTH("width", defaultZeroMacroStr, FuncCheckerForSetting.ArgType.INT),
+                HEIGHT("height", defaultZeroMacroStr, FuncCheckerForSetting.ArgType.INT),
+            }
+
+            enum class Shape{
+                STR,
+                CIRCLE,
+                LINE,
             }
         }
+
     }
 }

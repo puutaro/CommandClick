@@ -16,7 +16,10 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForIma
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FannelIconForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystemsForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FlipForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.LineArtPngForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.MaskForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OpacityForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OverlayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.SizeForImageAction
@@ -103,6 +106,13 @@ object ImageFuncManager {
                     methodName,
                     baseArgsPairList,
                 )
+            FuncType.LINE_ART ->
+                LineArtPngForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
             FuncType.DEBUG ->
                 DebugForImageAction.handle(
                     fragment,
@@ -177,6 +187,22 @@ object ImageFuncManager {
                     baseArgsPairList,
                     varNameToBitmapMap,
                 )
+            FuncType.MASK ->
+                MaskForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
+            FuncType.FLIP ->
+                FlipForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
             FuncType.STR_PNG ->
                 StrPngForImageAction.handle(
                         fragment,
@@ -199,12 +225,15 @@ object ImageFuncManager {
         VIEW("view"),
         DELAY("delay"),
         ARB("arb"),
+        LINE_ART("lineArt"),
         CUT("cut"),
         OVERLAY("overlay"),
         OPACITY("opacity"),
         BLUR("blur"),
         COLOR("color"),
         SIZE("size"),
+        MASK("mask"),
+        FLIP("flip"),
         STR_PNG("strPng"),
     }
 

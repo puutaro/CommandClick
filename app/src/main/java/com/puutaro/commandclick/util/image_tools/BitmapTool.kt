@@ -1389,8 +1389,8 @@ object BitmapTool {
 //                fromColorStr: String,
 //                toColorStr: String,
 //            )
-            val width = originalBitmap.width
-            val height = originalBitmap.height
+//            val width = originalBitmap.width
+//            val height = originalBitmap.height
 
 //            val pixels = IntArray(width * height)
 //            originalBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
@@ -1483,48 +1483,48 @@ object BitmapTool {
 //                )
 //                resultBitmap
 //            }
-            val purposeArgb = argb(
-                parsedColor.alpha,
-//                                overrideAlpha ?: alpha,
-                parsedColor.red,
-                parsedColor.green,
-                parsedColor.blue,
-            )
-            val resultBitmap = originalBitmap.copy(originalBitmap.config!!, true)
-//            val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    val pixel = originalBitmap.getPixel(x, y)
-                    if (
-                        pixel == blackInt
-//                        alpha > 0
-//                        && red == 0
-//                        && green == 0
-//                        && blue == 0
-                        ) {
-                        // Set the pixel to fully transparent
-                        resultBitmap.setPixel(
-                            x,
-                            y,
-                            purposeArgb,
-                        )
-                        continue
-                    }
-//                    val red = Color.red(pixel)
-//                    val green = Color.green(pixel)
-//                    val blue = Color.blue(pixel)
-//                    val alpha = Color.alpha(pixel)
-//                    resultBitmap.setPixel(
-//                        x,
-//                        y,
-//                        pixel,
-////                        argb(alpha, red, green, blue)
-//                    )
-
-                }
-            }
-
-            return resultBitmap
+//            val purposeArgb = argb(
+//                parsedColor.alpha,
+////                                overrideAlpha ?: alpha,
+//                parsedColor.red,
+//                parsedColor.green,
+//                parsedColor.blue,
+//            )
+//            val resultBitmap = originalBitmap.copy(originalBitmap.config!!, true)
+////            val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+//            for (x in 0 until width) {
+//                for (y in 0 until height) {
+//                    val pixel = originalBitmap.getPixel(x, y)
+//                    if (
+//                        pixel == blackInt
+////                        alpha > 0
+////                        && red == 0
+////                        && green == 0
+////                        && blue == 0
+//                        ) {
+//                        // Set the pixel to fully transparent
+//                        resultBitmap.setPixel(
+//                            x,
+//                            y,
+//                            purposeArgb,
+//                        )
+//                        continue
+//                    }
+////                    val red = Color.red(pixel)
+////                    val green = Color.green(pixel)
+////                    val blue = Color.blue(pixel)
+////                    val alpha = Color.alpha(pixel)
+////                    resultBitmap.setPixel(
+////                        x,
+////                        y,
+////                        pixel,
+//////                        argb(alpha, red, green, blue)
+////                    )
+//
+//                }
+//            }
+//
+//            return resultBitmap
         }
 
         fun convertColorTo(
