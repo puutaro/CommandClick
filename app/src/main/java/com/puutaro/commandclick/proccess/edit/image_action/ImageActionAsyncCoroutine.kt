@@ -13,7 +13,7 @@ class ImageActionAsyncCoroutine {
     suspend fun put(job: Job?){
         if(job == null) return
 //        imageActionAsyncCoroutineListMutex.withLock {
-            imageActionAsyncCoroutineList.add(job)
+        imageActionAsyncCoroutineList.add(job)
 //        }
     }
 

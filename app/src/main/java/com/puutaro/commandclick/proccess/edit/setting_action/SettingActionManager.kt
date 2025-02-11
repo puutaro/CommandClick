@@ -410,7 +410,11 @@ class SettingActionManager {
             }
             if(isErr) {
                 settingActionExitManager.setExit()
-                return null
+                return Pair(
+                    loopKeyToVarNameValueStrMap,
+                    privateLoopKeyVarNameValueStrMap,
+//                loopKeyToAsyncDeferredVarNameValueStrMap,
+                )
             }
             val dateList = arrayListOf<Pair<String, LocalDateTime>>()
             dateList.add("start" to LocalDateTime.now())
@@ -418,7 +422,11 @@ class SettingActionManager {
                 dateList.add("get exit ${index}" to LocalDateTime.now())
                 if (
                     settingActionExitManager.get()
-                ) return null
+                ) return Pair(
+                    loopKeyToVarNameValueStrMap,
+                    privateLoopKeyVarNameValueStrMap,
+//                loopKeyToAsyncDeferredVarNameValueStrMap,
+                )
                 dateList.add("get exit end ${index}" to LocalDateTime.now())
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sMap.txt").absolutePath,

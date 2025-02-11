@@ -956,6 +956,17 @@ object WithEditConstraintListView{
                                 "contentsTagSrc: ${contentsTagSrc}",
                                 totalMapListElInfo
                             ).joinToString(", ")
+                        PairListTool.getValue(
+                            CmdClickMap.createMap(
+                                contentsKeyPairsListConSrc,
+                                typeSeparator
+                            ),
+                            enableKey,
+                        ).let { enableStr ->
+                            if (
+                                enableStr == switchOff
+                            ) return@execSetContentsCoroutine
+                        }
                         val varNameToValueMap =
                             withContext(Dispatchers.IO) updateLinearKeyParsListCon@{
                                 Template.ReplaceHolder.replaceHolder(

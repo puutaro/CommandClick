@@ -408,12 +408,18 @@ class ImageActionManager {
             }
             if(isErr) {
                 imageActionExitManager.setExit()
-                return null
+                return Pair(
+                    loopKeyToVarNameBitmapMap,
+                    privateLoopKeyVarNameBitmapMap,
+                )
             }
             keyToSubKeyConList.forEach { keyToSubKeyConSrc ->
                 if (
                     imageActionExitManager.get()
-                ) return null
+                ) return Pair(
+                    loopKeyToVarNameBitmapMap,
+                    privateLoopKeyVarNameBitmapMap,
+                )
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sMap.txt").absolutePath,
 //                    listOf(

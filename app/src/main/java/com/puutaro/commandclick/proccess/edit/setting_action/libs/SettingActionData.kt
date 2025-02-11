@@ -2,8 +2,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import kotlinx.coroutines.Deferred
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.withLock
@@ -11,19 +9,17 @@ import kotlin.concurrent.withLock
 object SettingActionData {
 
     class LoopKeyToVarNameValueStrMap {
-        private val loopKeyToVarNameValueStrMap: ConcurrentHashMap<String, ConcurrentHashMap<String, String>> = ConcurrentHashMap()
-//        private val loopKeyToVarNameValueStrMapMutex = ReentrantReadWriteLock()
+        private val loopKeyToVarNameValueStrMap =
+            mutableMapOf<String, MutableMap<String, String?>>()
+        private val loopKeyToVarNameValueStrMapMutex = ReentrantReadWriteLock()
         fun getAsyncVarNameToValueStr(
             loopKey: String
-        ): ConcurrentHashMap<String, String>? {
-            return loopKeyToVarNameValueStrMap.get(
-                loopKey
-            )
-//    loopKeyToVarNameValueStrMapMutex.readLock().withLock {
-//                loopKeyToVarNameValueStrMap.get(
-//                    loopKey
-//                )
-//            }
+        ): MutableMap<String, String?>? {
+            return loopKeyToVarNameValueStrMapMutex.readLock().withLock {
+                loopKeyToVarNameValueStrMap.get(
+                    loopKey
+                )
+            }
         }
 
         suspend fun put(
@@ -31,30 +27,19 @@ object SettingActionData {
             varName: String,
             valueStr: String?,
         ){
-//            loopKeyToVarNameValueStrMapMutex.writeLock().withLock {
-            if(
-                valueStr.isNullOrEmpty()
-            ) return
-
-            loopKeyToVarNameValueStrMap.get(
-                loopKey
-            ).let { curVarNameValueStrMap ->
-                when (curVarNameValueStrMap.isNullOrEmpty()) {
-                    false -> curVarNameValueStrMap.put(
-                        varName,
-                        valueStr
-                    )
-
-                    else -> {
-                        val varNameValueStrMap: ConcurrentHashMap<String, String> =
-                            ConcurrentHashMap()
-                        varNameValueStrMap.put(
+            loopKeyToVarNameValueStrMapMutex.writeLock().withLock {
+                loopKeyToVarNameValueStrMap.get(
+                    loopKey
+                ).let { curVarNameValueStrMap ->
+                    when (curVarNameValueStrMap.isNullOrEmpty()) {
+                        false -> curVarNameValueStrMap.put(
                             varName,
                             valueStr
                         )
-                        loopKeyToVarNameValueStrMap.put(
+
+                        else -> loopKeyToVarNameValueStrMap.put(
                             loopKey,
-                            varNameValueStrMap,
+                            mutableMapOf(varName to valueStr)
                         )
                     }
                 }
@@ -64,40 +49,34 @@ object SettingActionData {
         fun initPrivateLoopKeyVarNameValueStrMapMutex(
             loopKey: String
         ) {
-            loopKeyToVarNameValueStrMap.get(
+            return loopKeyToVarNameValueStrMapMutex.writeLock().withLock {
+                loopKeyToVarNameValueStrMap.get(
                     loopKey
                 )?.clear()
-//            loopKeyToVarNameValueStrMapMutex.writeLock().withLock {
-//                loopKeyToVarNameValueStrMap.get(
-//                    loopKey
-//                )?.clear()
-//            }
+            }
         }
 
         fun clearPrivateLoopKeyVarNameValueStrMapMutex(loopKey: String){
-//            loopKeyToVarNameValueStrMapMutex.writeLock().withLock {
+            loopKeyToVarNameValueStrMapMutex.writeLock().withLock {
                 loopKeyToVarNameValueStrMap.remove(
                     loopKey
                 )
-//            }
+            }
         }
     }
 
     class PrivateLoopKeyVarNameValueStrMap {
         private val privateLoopKeyVarNameValueStrMap =
-            ConcurrentHashMap<String, ConcurrentHashMap<String, String>>()
-//        private val privateLoopKeyVarNameValueStrMapMutex = ReentrantReadWriteLock()
+            mutableMapOf<String, MutableMap<String, String?>>()
+        private val privateLoopKeyVarNameValueStrMapMutex = ReentrantReadWriteLock()
         suspend fun getAsyncVarNameToValueStr(
             loopKey: String
-        ): ConcurrentHashMap<String, String>? {
-            return privateLoopKeyVarNameValueStrMap.get(
-                loopKey
-            )
-//    privateLoopKeyVarNameValueStrMapMutex.readLock().withLock {
-//                privateLoopKeyVarNameValueStrMap.get(
-//                    loopKey
-//                )
-//            }
+        ): MutableMap<String, String?>? {
+            return privateLoopKeyVarNameValueStrMapMutex.readLock().withLock {
+                privateLoopKeyVarNameValueStrMap.get(
+                    loopKey
+                )
+            }
         }
 
         fun put(
@@ -105,66 +84,48 @@ object SettingActionData {
             varName: String,
             valueStr: String?,
         ){
-//            privateLoopKeyVarNameValueStrMapMutex.writeLock().withLock {
-            if(
-                valueStr.isNullOrEmpty()
-
-            ) return
-            privateLoopKeyVarNameValueStrMap.get(
-                loopKey
-            ).let { curPrivateVarNameValueMap ->
-                when (curPrivateVarNameValueMap.isNullOrEmpty()) {
-                    false -> curPrivateVarNameValueMap.put(
-                        varName,
-                        valueStr
-                    )
-
-                    else -> {
-                        val vaNameToValueStrMap: ConcurrentHashMap<String, String> =
-                            ConcurrentHashMap()
-                        vaNameToValueStrMap.put(
+            privateLoopKeyVarNameValueStrMapMutex.writeLock().withLock {
+                privateLoopKeyVarNameValueStrMap.get(
+                    loopKey
+                ).let { curPrivateVarNameValueMap ->
+                    when (curPrivateVarNameValueMap.isNullOrEmpty()) {
+                        false -> curPrivateVarNameValueMap.put(
                             varName,
                             valueStr
                         )
-                        privateLoopKeyVarNameValueStrMap.put(
+
+                        else -> privateLoopKeyVarNameValueStrMap.put(
                             loopKey,
-                            vaNameToValueStrMap,
+                            mutableMapOf(varName to valueStr)
                         )
                     }
                 }
             }
-//            }
         }
 
         suspend fun initPrivateLoopKeyVarNameValueStrMapMutex(
             loopKey: String
         ) {
-            privateLoopKeyVarNameValueStrMap.get(
-                loopKey
-            )?.clear()
-//            privateLoopKeyVarNameValueStrMapMutex.writeLock().withLock {
-//                privateLoopKeyVarNameValueStrMap.get(
-//                    loopKey
-//                )?.clear()
-//            }
+            return privateLoopKeyVarNameValueStrMapMutex.writeLock().withLock {
+                privateLoopKeyVarNameValueStrMap.get(
+                    loopKey
+                )?.clear()
+            }
         }
 
         suspend fun clearPrivateLoopKeyVarNameValueStrMapMutex(loopKey: String){
-            privateLoopKeyVarNameValueStrMap.remove(
-                loopKey
-            )
-//            privateLoopKeyVarNameValueStrMapMutex.writeLock().withLock {
-//                privateLoopKeyVarNameValueStrMap.remove(
-//                    loopKey
-//                )
-//            }
+            privateLoopKeyVarNameValueStrMapMutex.writeLock().withLock {
+                privateLoopKeyVarNameValueStrMap.remove(
+                    loopKey
+                )
+            }
         }
     }
 
     class LoopKeyToAsyncDeferredVarNameValueStrMap {
-        private val loopKeyToAsyncDeferredVarNameValueStrMap = ConcurrentHashMap<
+        private val loopKeyToAsyncDeferredVarNameValueStrMap = mutableMapOf<
                 String,
-                ConcurrentHashMap <
+                MutableMap <
                         String,
                         Deferred<
                                 Pair<
@@ -174,7 +135,7 @@ object SettingActionData {
                                 >
                         >
                 >()
-//        private val asyncLoopKeyToVarNameValueStrMapMutex = ReentrantReadWriteLock()
+        private val asyncLoopKeyToVarNameValueStrMapMutex = ReentrantReadWriteLock()
         fun getAsyncVarNameToValueStrAndExitSignal(loopKey: String):  MutableMap <
                 String,
                 Deferred<
@@ -184,15 +145,11 @@ object SettingActionData {
                                 >?
                         >
                 >? {
-            return  loopKeyToAsyncDeferredVarNameValueStrMap.get(
-                loopKey
-            )
-
-//        asyncLoopKeyToVarNameValueStrMapMutex.readLock().withLock {
-//                loopKeyToAsyncDeferredVarNameValueStrMap.get(
-//                    loopKey
-//                )
-//            }
+            return asyncLoopKeyToVarNameValueStrMapMutex.readLock().withLock {
+                loopKeyToAsyncDeferredVarNameValueStrMap.get(
+                    loopKey
+                )
+            }
         }
 
         fun put(
@@ -205,7 +162,7 @@ object SettingActionData {
                             >?
                     >
         ){
-//            asyncLoopKeyToVarNameValueStrMapMutex.writeLock().withLock {
+            asyncLoopKeyToVarNameValueStrMapMutex.writeLock().withLock {
                 loopKeyToAsyncDeferredVarNameValueStrMap.get(
                     loopKey
                 ).let { curPrivateMapLoopKeyVarNameValueMap ->
@@ -221,48 +178,32 @@ object SettingActionData {
                             )
                         }
 
-                        else -> {
-                            val asyncDeferredVarNameValueStrMap: ConcurrentHashMap <
-                                    String,
-                                    Deferred<
-                                            Pair<
-                                                    Pair<String, String?>,
-                                                    SettingActionKeyManager.BreakSignal?
-                                                    >?
-                                            >
-                                    > = ConcurrentHashMap()
-                            asyncDeferredVarNameValueStrMap.put(
-                                varName,
-                                deferredVarNameValueStrMapAndBreakSignal
-                            )
-                            loopKeyToAsyncDeferredVarNameValueStrMap.put(
-                                loopKey,
-                                asyncDeferredVarNameValueStrMap
-//                                mutableMapOf(varName to deferredVarNameValueStrMapAndBreakSignal)
-                            )
-                        }
+                        else -> loopKeyToAsyncDeferredVarNameValueStrMap.put(
+                            loopKey,
+                            mutableMapOf(varName to deferredVarNameValueStrMapAndBreakSignal)
+                        )
                     }
                 }
-//            }
+            }
         }
 
         fun clearVarName(
             loopKey: String,
             varName: String,
         ) {
-//            asyncLoopKeyToVarNameValueStrMapMutex.writeLock().withLock {
+            asyncLoopKeyToVarNameValueStrMapMutex.writeLock().withLock {
                 loopKeyToAsyncDeferredVarNameValueStrMap.get(
                     loopKey
                 )?.remove(varName)
-//            }
+            }
         }
 
         fun clearAsyncVarNameToValueStrAndExitSignal(loopKey: String) {
-//            asyncLoopKeyToVarNameValueStrMapMutex.writeLock().withLock {
+            asyncLoopKeyToVarNameValueStrMapMutex.writeLock().withLock {
                 loopKeyToAsyncDeferredVarNameValueStrMap.remove(
                     loopKey
                 )
-//            }
+            }
         }
     }
 
