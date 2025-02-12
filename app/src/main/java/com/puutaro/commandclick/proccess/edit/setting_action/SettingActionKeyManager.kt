@@ -55,7 +55,7 @@ object SettingActionKeyManager {
             loopKeyToVarNameValueStrMap: SettingActionData.LoopKeyToVarNameValueStrMap?
         ): Map<String, String> {
             return loopKeyToVarNameValueStrMap
-                ?.getAsyncVarNameToValueStr(mapRoopKeyUnit)
+                ?.convertAsyncVarNameToValueStrMapToMap(mapRoopKeyUnit)
                 ?.map {
                     it.key to (it.value ?: String())
                 }?.toMap() ?: emptyMap()
@@ -162,10 +162,10 @@ object SettingActionKeyManager {
             (topVarNameToValueStrMap ?: emptyMap()) +
                     (importedVarNameToValueStrMap ?: emptyMap()) +
                     (loopKeyToVarNameValueStrMapClass
-                        ?.getAsyncVarNameToValueStr(curMapLoopKey)?.toMap()
+                        ?.convertAsyncVarNameToValueStrMapToMap(curMapLoopKey)
                         ?: emptyMap()) +
                     (privateLoopKeyVarNameValueStrMapClass
-                        .getAsyncVarNameToValueStr(curMapLoopKey)?.toMap()
+                        .convertAsyncVarNameToValueStrToMap(curMapLoopKey)
                         ?: emptyMap()) +
                     (curImportedVarNameToValueStrMap ?: emptyMap()) +
                     (itToBitmapMap ?: emptyMap())

@@ -12,12 +12,35 @@ object SettingActionData {
         private val loopKeyToVarNameValueStrMap =
             mutableMapOf<String, MutableMap<String, String?>>()
         private val loopKeyToVarNameValueStrMapMutex = ReentrantReadWriteLock()
-        fun getAsyncVarNameToValueStr(
+//        fun getAsyncVarNameToValueStrMap(
+//            loopKey: String
+//        ): MutableMap<String, String?>? {
+//            return loopKeyToVarNameValueStrMapMutex.readLock().withLock {
+//                loopKeyToVarNameValueStrMap.get(
+//                    loopKey
+//                )
+//            }
+//        }
+
+        fun convertAsyncVarNameToValueStrMapToMap(
             loopKey: String
-        ): MutableMap<String, String?>? {
+        ): Map<String, String?>? {
             return loopKeyToVarNameValueStrMapMutex.readLock().withLock {
                 loopKeyToVarNameValueStrMap.get(
                     loopKey
+                )?.toMap()
+            }
+        }
+
+        fun getAsyncVarNameToValueStrFromMap(
+            loopKey: String,
+            varName: String,
+        ): String? {
+            return loopKeyToVarNameValueStrMapMutex.readLock().withLock {
+                loopKeyToVarNameValueStrMap.get(
+                    loopKey
+                )?.get(
+                    varName
                 )
             }
         }
@@ -69,13 +92,34 @@ object SettingActionData {
         private val privateLoopKeyVarNameValueStrMap =
             mutableMapOf<String, MutableMap<String, String?>>()
         private val privateLoopKeyVarNameValueStrMapMutex = ReentrantReadWriteLock()
-        suspend fun getAsyncVarNameToValueStr(
-            loopKey: String
-        ): MutableMap<String, String?>? {
+//        suspend fun getAsyncVarNameToValueStrMap(
+//            loopKey: String
+//        ): MutableMap<String, String?>? {
+//            return privateLoopKeyVarNameValueStrMapMutex.readLock().withLock {
+//                privateLoopKeyVarNameValueStrMap.get(
+//                    loopKey
+//                )
+//            }
+//        }
+
+        suspend fun convertAsyncVarNameToValueStrToMap(
+            loopKey: String,
+        ): Map<String, String?>? {
             return privateLoopKeyVarNameValueStrMapMutex.readLock().withLock {
                 privateLoopKeyVarNameValueStrMap.get(
                     loopKey
-                )
+                )?.toMap()
+            }
+        }
+
+        suspend fun getAsyncVarNameToValueStrFromMap(
+            loopKey: String,
+            varName: String,
+        ): String? {
+            return privateLoopKeyVarNameValueStrMapMutex.readLock().withLock {
+                privateLoopKeyVarNameValueStrMap.get(
+                    loopKey
+                )?.get(varName)
             }
         }
 
@@ -136,19 +180,35 @@ object SettingActionData {
                         >
                 >()
         private val asyncLoopKeyToVarNameValueStrMapMutex = ReentrantReadWriteLock()
-        fun getAsyncVarNameToValueStrAndExitSignal(loopKey: String):  MutableMap <
-                String,
-                Deferred<
+//        fun getAsyncVarNameToValueStrAndExitSignalMap(loopKey: String):  MutableMap <
+//                String,
+//                Deferred<
+//                        Pair<
+//                                Pair<String, String?>,
+//                                SettingActionKeyManager.BreakSignal?
+//                                >?
+//                        >
+//                >? {
+//            return asyncLoopKeyToVarNameValueStrMapMutex.readLock().withLock {
+//                loopKeyToAsyncDeferredVarNameValueStrMap.get(
+//                    loopKey
+//                )
+//            }
+//        }
+
+        fun getAsyncVarNameToValueStrAndExitSignalFromMap(
+            loopKey: String,
+            varName: String,
+        ): Deferred<
                         Pair<
                                 Pair<String, String?>,
                                 SettingActionKeyManager.BreakSignal?
                                 >?
-                        >
-                >? {
+                        >? {
             return asyncLoopKeyToVarNameValueStrMapMutex.readLock().withLock {
                 loopKeyToAsyncDeferredVarNameValueStrMap.get(
                     loopKey
-                )
+                )?.get(varName)
             }
         }
 

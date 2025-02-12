@@ -578,11 +578,13 @@ class ImageActionManager {
                                         val downLoopKeyVarNameBitmapMap = loopMapClasses?.first
                                         val downPrivateLoopKeyVarNameBitmapMap = loopMapClasses?.second
                                         val proposalRenewalVarNameSrcInnerMapBitmap =
-                                            downPrivateLoopKeyVarNameBitmapMap?.getAsyncVarNameToBitmap(
+                                            downPrivateLoopKeyVarNameBitmapMap?.getAsyncVarNameToBitmapFromMap(
                                                 curMapLoopKey,
-                                            )?.get(
                                                 acIVarName
                                             )
+//                                                ?.get(
+//                                                acIVarName
+//                                            )
                                         if (
                                             proposalRenewalVarNameSrcInnerMapBitmap != null
                                         ) {
@@ -597,9 +599,11 @@ class ImageActionManager {
                                             || mapRoopKeyUnit != curMapLoopKey
                                         ) return@async null
                                         val proposalRenewalVarNameSrcMapBitmap =
-                                            downLoopKeyVarNameBitmapMap?.getAsyncVarNameToBitmap(
+                                            downLoopKeyVarNameBitmapMap?.getAsyncVarNameToBitmapFromMap(
                                                 curMapLoopKey,
-                                            )?.get(acIVarName)
+                                                acIVarName,
+                                            )
+//                                                ?.get(acIVarName)
                                         if (
                                             proposalRenewalVarNameSrcMapBitmap != null
                                         ) {
@@ -661,11 +665,13 @@ class ImageActionManager {
 //                            ).joinToString("\n")  + "\n\n========\n\n"
 //                        )
                         val proposalRenewalVarNameSrcInnerMapBitmap =
-                            downPrivateLoopKeyVarNameBitmapMap?.getAsyncVarNameToBitmap(
+                            downPrivateLoopKeyVarNameBitmapMap?.getAsyncVarNameToBitmapFromMap(
                                 curMapLoopKey,
-                            )?.get(
-                                acIVarName
+                                acIVarName,
                             )
+//                                ?.get(
+//                                acIVarName
+//                            )
                         if (
                             proposalRenewalVarNameSrcInnerMapBitmap != null
                         ) {
@@ -680,9 +686,11 @@ class ImageActionManager {
                             || mapRoopKeyUnit != curMapLoopKey
                         ) return@forEach
                         val proposalRenewalVarNameSrcMapBitmap =
-                            downLoopKeyVarNameBitmapMap?.getAsyncVarNameToBitmap(
+                            downLoopKeyVarNameBitmapMap?.getAsyncVarNameToBitmapFromMap(
                                 curMapLoopKey,
-                            )?.get(acIVarName)
+                                acIVarName,
+                            )
+                                //?.get(acIVarName)
                         if (
                             proposalRenewalVarNameSrcMapBitmap != null
                         ) {
@@ -1305,9 +1313,11 @@ class ImageActionManager {
                                 for (i in 1..awaitWaitTimes) {
                                     deferredVarNameToBitmapAndBreakSignal =
                                         loopKeyToAsyncDeferredVarNameBitmapMap
-                                            ?.getAsyncVarNameToBitmapAndExitSignal(
-                                                curMapLoopKey
-                                            )?.get(awaitVarName)
+                                            ?.getAsyncVarNameToBitmapAndExitSignalFromMap(
+                                                curMapLoopKey,
+                                                awaitVarName
+                                            )
+//                                            ?.get(awaitVarName)
 //                                    FileSystems.updateFile(
 //                                        File(
 //                                            UsePath.cmdclickDefaultIDebugAppDirPath,

@@ -9,7 +9,6 @@ import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.IfErrManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -148,9 +147,11 @@ object ImageActionImportManager {
             for (i in 1..awaitWaitTimes) {
                 deferredVarNameToBitmapAndBreakSignal =
                     loopKeyToAsyncDeferredVarNameBitmapMap
-                        ?.getAsyncVarNameToBitmapAndExitSignal(
-                            curMapLoopKey
-                        )?.get(awaitVarName)
+                        ?.getAsyncVarNameToBitmapAndExitSignalFromMap(
+                            curMapLoopKey,
+                            awaitVarName
+                        )
+//                        ?.get(awaitVarName)
                 if (
                     deferredVarNameToBitmapAndBreakSignal != null
                 ) {

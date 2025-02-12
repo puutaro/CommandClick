@@ -22,18 +22,36 @@ object ImageActionData {
                         >
                 >()
         private val asyncLoopKeyToVarNameBitmapMapMutex = ReentrantReadWriteLock()
-        suspend fun getAsyncVarNameToBitmapAndExitSignal(loopKey: String):  MutableMap <
-                String,
-                Deferred<
+//        suspend fun getAsyncVarNameToBitmapAndExitSignalMap(loopKey: String):  MutableMap <
+//                String,
+//                Deferred<
+//                        Pair<
+//                                Pair<String, Bitmap?>,
+//                                ImageActionKeyManager.BreakSignal?
+//                                >?
+//                        >
+//                >? {
+//            return asyncLoopKeyToVarNameBitmapMapMutex.readLock().withLock {
+//                loopKeyToAsyncDeferredVarNameBitmapMap.get(
+//                    loopKey
+//                )
+//            }
+//        }
+
+        suspend fun getAsyncVarNameToBitmapAndExitSignalFromMap(
+            loopKey: String,
+            varName: String,
+        ): Deferred<
                         Pair<
                                 Pair<String, Bitmap?>,
                                 ImageActionKeyManager.BreakSignal?
                                 >?
-                        >
-                >? {
+                        >? {
             return asyncLoopKeyToVarNameBitmapMapMutex.readLock().withLock {
                 loopKeyToAsyncDeferredVarNameBitmapMap.get(
                     loopKey
+                )?.get(
+                    varName
                 )
             }
         }
@@ -97,13 +115,34 @@ object ImageActionData {
         private val privateLoopKeyVarNameBitmapMap =
             mutableMapOf<String, MutableMap<String, Bitmap?>>()
         private val privateLoopKeyVarNameBitmapMapMutex = ReentrantReadWriteLock()
-        suspend fun getAsyncVarNameToBitmap(
-            loopKey: String
-        ): MutableMap<String, Bitmap?>? {
+//        suspend fun getAsyncVarNameToBitmapMap(
+//            loopKey: String
+//        ): MutableMap<String, Bitmap?>? {
+//            return privateLoopKeyVarNameBitmapMapMutex.readLock().withLock {
+//                privateLoopKeyVarNameBitmapMap.get(
+//                    loopKey
+//                )
+//            }
+//        }
+
+        suspend fun getAsyncVarNameToBitmapFromMap(
+            loopKey: String,
+            varName: String,
+        ): Bitmap? {
             return privateLoopKeyVarNameBitmapMapMutex.readLock().withLock {
                 privateLoopKeyVarNameBitmapMap.get(
                     loopKey
-                )
+                )?.get(varName)
+            }
+        }
+
+        suspend fun convertAsyncVarNameToBitmapToMap(
+            loopKey: String,
+        ): Map<String, Bitmap?>? {
+            return privateLoopKeyVarNameBitmapMapMutex.readLock().withLock {
+                privateLoopKeyVarNameBitmapMap.get(
+                    loopKey
+                )?.toMap()
             }
         }
 
@@ -154,13 +193,36 @@ object ImageActionData {
         private val loopKeyToVarNameBitmapMap =
             mutableMapOf<String, MutableMap<String, Bitmap?>>()
         private val loopKeyToVarNameBitmapMapMutex = ReentrantReadWriteLock()
-        suspend fun getAsyncVarNameToBitmap(
-            loopKey: String
-        ): MutableMap<String, Bitmap?>? {
+//        suspend fun getAsyncVarNameToBitmapMap(
+//            loopKey: String
+//        ): MutableMap<String, Bitmap?>? {
+//            return loopKeyToVarNameBitmapMapMutex.readLock().withLock {
+//                loopKeyToVarNameBitmapMap.get(
+//                    loopKey
+//                )
+//            }
+//        }
+
+        suspend fun getAsyncVarNameToBitmapFromMap(
+            loopKey: String,
+            varName: String,
+        ): Bitmap? {
             return loopKeyToVarNameBitmapMapMutex.readLock().withLock {
                 loopKeyToVarNameBitmapMap.get(
                     loopKey
+                )?.get(
+                    varName
                 )
+            }
+        }
+
+        suspend fun convertAsyncVarNameToBitmapToMap(
+            loopKey: String,
+        ): Map<String, Bitmap?>? {
+            return loopKeyToVarNameBitmapMapMutex.readLock().withLock {
+                loopKeyToVarNameBitmapMap.get(
+                    loopKey
+                )?.toMap()
             }
         }
 

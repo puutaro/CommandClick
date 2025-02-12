@@ -567,11 +567,13 @@ class SettingActionManager {
 //                                            !globalVarNameRegex.matches(acIVarName)
 //                                        ) return@async null
                                         val proposalRenewalVarNameSrcInnerMapValueStr =
-                                            downPrivateLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStr(
+                                            downPrivateLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStrFromMap(
                                                 curMapLoopKey,
-                                            )?.get(
                                                 acIVarName
                                             )
+//                                                ?.get(
+//                                                acIVarName
+//                                            )
 //                                        val removedLoopKey =
 //                                            SettingActionKeyManager.LoopKeyManager.removeLoopKey(curMapLoopKey)
                                         if (
@@ -642,9 +644,11 @@ class SettingActionManager {
                                             || mapRoopKeyUnit != curMapLoopKey
                                         ) return@async null
                                         val proposalRenewalVarNameSrcMapValueStr =
-                                            downLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStr(
+                                            downLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStrFromMap(
                                                 curMapLoopKey,
-                                            )?.get(acIVarName)
+                                                acIVarName,
+                                            )
+//                                                ?.get(acIVarName)
                                         if (
                                             proposalRenewalVarNameSrcMapValueStr != null
                                         ) {
@@ -720,12 +724,14 @@ class SettingActionManager {
 //                            ).joinToString("\n")  + "\n\n========\n\n"
 //                        )
                         val proposalRenewalVarNameSrcInnerMapValueStr =
-                            downPrivateLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStr(
+                            downPrivateLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStrFromMap(
                                 curMapLoopKey,
-//                                addLoopKey(curMapLoopKey)
-                            )?.get(
                                 acIVarName
+//                                addLoopKey(curMapLoopKey)
                             )
+//                                ?.get(
+//                                acIVarName
+//                            )
 //                        if(
 //                            !globalVarNameRegex.matches(acIVarName)
 //                        ) return@forEach
@@ -799,9 +805,11 @@ class SettingActionManager {
 //                            || mapRoopKeyUnit != removedLoopKey
                         ) return@forEachIndexed
                         val proposalRenewalVarNameSrcMapValueStr =
-                            downLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStr(
-                            curMapLoopKey,
-                        )?.get(acIVarName)
+                            downLoopKeyVarNameValueStrMap?.getAsyncVarNameToValueStrFromMap(
+                                curMapLoopKey,
+                                acIVarName
+                        )
+//                                ?.get(acIVarName)
                         if (
                             proposalRenewalVarNameSrcMapValueStr != null
                         ) {
@@ -1435,9 +1443,11 @@ class SettingActionManager {
                                 for (i in 1..awaitWaitTimes) {
                                     deferredVarNameToValueStrAndBreakSignal =
                                         loopKeyToAsyncDeferredVarNameValueStrMap
-                                            ?.getAsyncVarNameToValueStrAndExitSignal(
-                                                curMapLoopKey
-                                            )?.get(awaitVarName)
+                                            ?.getAsyncVarNameToValueStrAndExitSignalFromMap(
+                                                curMapLoopKey,
+                                                awaitVarName
+                                            )
+//                                            ?.get(awaitVarName)
 //                                    FileSystems.updateFile(
 //                                        File(
 //                                            UsePath.cmdclickDefaultSDebugAppDirPath,

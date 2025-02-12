@@ -54,7 +54,7 @@ object ImageActionKeyManager {
         suspend fun getResultLoopKeyToVarNameValueMap(
             loopKeyToVarNameBitmapMap: ImageActionData.LoopKeyToVarNameBitmapMap?
         ): Map<String, Bitmap?> {
-            return loopKeyToVarNameBitmapMap?.getAsyncVarNameToBitmap(mapRoopKeyUnit)
+            return loopKeyToVarNameBitmapMap?.convertAsyncVarNameToBitmapToMap(mapRoopKeyUnit)
                 ?: emptyMap()
         }
     }
@@ -244,13 +244,13 @@ object ImageActionKeyManager {
         return (topVarNameToVarNameBitmapMap ?: emptyMap()) +
                 (importedVarNameToBitmapMap ?: emptyMap()) +
                 (loopKeyToVarNameBitmapMapClass
-                    ?.getAsyncVarNameToBitmap(
+                    ?.convertAsyncVarNameToBitmapToMap(
                         curMapLoopKey
-                    )?.toMap() ?: emptyMap()) +
+                    ) ?: emptyMap()) +
                 (privateLoopKeyVarNameBitmapMapClass
-                    .getAsyncVarNameToBitmap(
+                    .convertAsyncVarNameToBitmapToMap(
                         curMapLoopKey
-                    )?.toMap() ?: emptyMap()) +
+                    ) ?: emptyMap()) +
                 (curImportedVarNameToBitmapMap ?: emptyMap()) +
                 (itToBitmapMap ?: emptyMap())
     }
