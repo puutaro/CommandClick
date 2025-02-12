@@ -7,9 +7,10 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.ShapeOverlayAssetsImages
 import kotlin.enums.EnumEntries
 
-object LineArtPngForImageAction {
+object ShapeOverlayForImageAction {
 
     private const val defaultZeroMacroStr = 0
 
@@ -144,7 +145,7 @@ object LineArtPngForImageAction {
         val str: String,
         val args: StrBkMethodArgClass,
     ){
-        MAKE("storm", StrBkMethodArgClass.MakeArgs),
+        MAKE("make", StrBkMethodArgClass.MakeArgs),
     }
     private sealed interface ArgType {
         val entries: EnumEntries<*>
@@ -178,8 +179,11 @@ object LineArtPngForImageAction {
             }
 
             enum class Shape(val path: String){
-                HORIZON(AssetsFileManager.fannelLineHorizonBkPngPath),
-                VERTICAL(AssetsFileManager.fannelLineVerticalPngPath),
+                HORIZON(ShapeOverlayAssetsImages.fannelLineHorizonBkPngPath),
+                VERTICAL(ShapeOverlayAssetsImages.fannelLineVerticalPngPath),
+                ORTHOGONAL(ShapeOverlayAssetsImages.fannelLineOrthogonalPngPath),
+                SF_RECT(ShapeOverlayAssetsImages.fannelSfRectPngPath),
+                DIAMOND(ShapeOverlayAssetsImages.fannelDiamondPngPath),
             }
         }
 

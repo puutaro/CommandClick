@@ -85,8 +85,6 @@ object StrPngForImageAction {
                             AssetsFileManager.fannelStrBkPngPath
                         StrBkMethodArgClass.MakeArgs.Shape.CIRCLE ->
                             AssetsFileManager.fannelCircleBkPngPath
-                        StrBkMethodArgClass.MakeArgs.Shape.LINE ->
-                            AssetsFileManager.fannelLineHorizonBkPngPath
                     }
                 }
                 val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -189,7 +187,6 @@ object StrPngForImageAction {
             enum class Shape{
                 STR,
                 CIRCLE,
-                LINE,
             }
         }
 

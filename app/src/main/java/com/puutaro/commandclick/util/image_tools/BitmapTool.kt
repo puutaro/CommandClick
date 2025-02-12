@@ -148,7 +148,7 @@ object BitmapTool {
             DIAGONAL,
             BOTH,
             VERTICAL_BOTTOM_TO_TOP,
-
+            LEFT_RIGHT,
         }
 
         private val linearGradOrientList = arrayOf(
@@ -167,6 +167,9 @@ object BitmapTool {
 
         private val bottomTopGradOrientList = arrayOf(
             GradientDrawable.Orientation.BOTTOM_TOP,
+        )
+        private val leftRightGradOrientList = arrayOf(
+            GradientDrawable.Orientation.LEFT_RIGHT,
         )
         fun addGradient(originalBitmap: Bitmap, startColor: Int, endColor: Int): Bitmap {
             val width = originalBitmap.width
@@ -210,6 +213,7 @@ object BitmapTool {
                 GradOrient.LINEAR -> linearGradOrientList
                 GradOrient.DIAGONAL -> diagonalGradOrientList
                 GradOrient.VERTICAL_BOTTOM_TO_TOP -> bottomTopGradOrientList
+                GradOrient.LEFT_RIGHT -> leftRightGradOrientList
             }
             val gradient = GradientDrawable(gradientOrientationList.random(), colorIntArray)
             gradient.cornerRadius = 0f
@@ -1359,6 +1363,68 @@ object BitmapTool {
             return resultBitmap
         }
 
+        fun convertAllToColorInTrans(
+            srcBitmap: Bitmap,
+            colorStr: String?
+        ): Bitmap {
+            val toColor = when(
+                colorStr == "#00000000"
+            ) {
+                true -> Color.TRANSPARENT
+                else -> Color.parseColor(colorStr)
+            }
+            val width = srcBitmap.width
+            val height = srcBitmap.height
+            val capacity = width * height
+//            val arrayList: ArrayList<Int> = ArrayList(capacity)
+            val pixels = IntArray(capacity)
+            // get pixel array from source
+            srcBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+            val bmOut = Bitmap.createBitmap(
+                width,
+                height,
+                srcBitmap.config!!
+            )
+
+//            var pixel: Int
+            val trans = Color.TRANSPARENT
+//            val toArgb = argb(
+//                toColor.alpha,
+//                toColor.red,
+//                toColor.green,
+//                toColor.blue,
+//            )
+            // iteration through pixels
+            val toColorRed = toColor.red
+            val toColorGreen = toColor.green
+            val toColorBlue = toColor.blue
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    // get current index in 2D-matrix
+                    val index = y * width + x
+                    val pixel = pixels[index]
+                    val alpha = Color.alpha(pixel)
+//                    val red = Color.red(pixel)
+//                    val green = Color.green(pixel)
+//                    val blue = Color.blue(pixel)
+                    if(pixel == trans){
+                        continue
+                    }
+                    pixels[index] =  argb(
+                        alpha,
+                        toColorRed,
+                        toColorGreen,
+                        toColorBlue,
+                    )
+
+                        /*or change the whole color
+                    pixels[index] = colorThatWillReplace;*/
+                }
+            }
+            bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+            return bmOut
+        }
 
 
         fun convertBlackToColor(

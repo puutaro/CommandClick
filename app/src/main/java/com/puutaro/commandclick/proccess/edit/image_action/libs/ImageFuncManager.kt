@@ -17,8 +17,9 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForIma
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FannelIconForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystemsForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FlipForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.GradForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImageAction
-import com.puutaro.commandclick.proccess.edit.image_action.libs.func.LineArtPngForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ShapeOverlayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.MaskForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OpacityForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OverlayForImageAction
@@ -106,8 +107,8 @@ object ImageFuncManager {
                     methodName,
                     baseArgsPairList,
                 )
-            FuncType.LINE_ART ->
-                LineArtPngForImageAction.handle(
+            FuncType.SHAPE_OVERLAY ->
+                ShapeOverlayForImageAction.handle(
                     fragment,
                     funcTypeStr,
                     methodName,
@@ -179,6 +180,13 @@ object ImageFuncManager {
                     baseArgsPairList,
                     varNameToBitmapMap,
                 )
+            FuncType.GRAD ->
+                GradForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
             FuncType.SIZE ->
                 SizeForImageAction.handle(
                     fragment,
@@ -225,12 +233,13 @@ object ImageFuncManager {
         VIEW("view"),
         DELAY("delay"),
         ARB("arb"),
-        LINE_ART("lineArt"),
+        SHAPE_OVERLAY("shapeOverlay"),
         CUT("cut"),
         OVERLAY("overlay"),
         OPACITY("opacity"),
         BLUR("blur"),
         COLOR("color"),
+        GRAD("grad"),
         SIZE("size"),
         MASK("mask"),
         FLIP("flip"),

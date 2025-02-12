@@ -734,6 +734,8 @@ object WithEditConstraintListView{
             (editBkConstraintLayout != null) -> SceneType.BK
             else -> return
         }
+        val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+        dateList.add("start" to LocalDateTime.now())
         val debugWhere = sceneType.name
         val layoutKey = when(sceneType){
             SceneType.TITLE -> EditListConfig.EditListConfigKey.TITLE_LAYOUT_PATH
@@ -749,6 +751,7 @@ object WithEditConstraintListView{
         )
         val isOnlyCmdValEdit =
             viewLayoutPath == EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name
+        dateList.add("raedLayout" to LocalDateTime.now())
         val frameMapAndFrameTagToContentsMapListToTagIdList = when(isOnlyCmdValEdit) {
             true -> ListSettingsForEditList.ViewLayoutPathManager.parseFromListForConstraint(
                 context,
@@ -764,6 +767,7 @@ object WithEditConstraintListView{
                 viewLayoutPath
             )
         }
+        dateList.add("makeMap" to LocalDateTime.now())
         val frameMap = frameMapAndFrameTagToContentsMapListToTagIdList?.first ?: emptyMap()
         val frameTagToContentsMapList =
             frameMapAndFrameTagToContentsMapListToTagIdList?.second
@@ -779,6 +783,7 @@ object WithEditConstraintListView{
 //                ).joinToString("\n\n\n")
 //            )
 //        }
+        dateList.add("visiblity gone" to LocalDateTime.now())
         if(
             frameMap.isEmpty()
         ){
@@ -839,6 +844,7 @@ object WithEditConstraintListView{
             false
         }
         if(isDuplicateFrameTagErr) return
+        dateList.add("make frame varNameToValueMap" to LocalDateTime.now())
         val frameKeyPairsConToVarNameValueMap = withContext(Dispatchers.IO) {
             val frameKeyPairsConSrc = frameMap.get(frameTag)
             EditComponent.Template.ReplaceHolder.replaceHolder(
@@ -874,11 +880,13 @@ object WithEditConstraintListView{
                 innerFrameKeyPairsCon to varNameToValueMap
             }
         }
+        dateList.add("make varNameToValueStrMap end" to LocalDateTime.now())
         val frameKeyPairsCon =
             frameKeyPairsConToVarNameValueMap?.first
                 ?: String()
         val frameVarNameValueMap =
             frameKeyPairsConToVarNameValueMap?.second ?: emptyMap()
+        dateList.add("make tagIdMap" to LocalDateTime.now())
         val tagIdMapSrc = withContext(Dispatchers.IO){
             tagToIdListSrc?.map {
                 val key = CmdClickMap.replace(
@@ -888,6 +896,7 @@ object WithEditConstraintListView{
                 key to it.value
             }?.toMap() ?: emptyMap()
         }
+        dateList.add("make varNameToBitmap" to LocalDateTime.now())
         val varNameToBitmapMapInFrame = withContext(Dispatchers.IO) {
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lglobal_frame.txt").absolutePath,
@@ -910,6 +919,16 @@ object WithEditConstraintListView{
                 frameKeyPairsCon,
                 totalMapListElInfo,
             )
+        }
+        dateList.add("make imagevitmap end" to LocalDateTime.now())
+        if(
+            sceneType == SceneType.BK
+//            && contentsTagSrc?.first != "titleBkFrameBk"
+        ) {
+           FileSystems.writeFile(
+               File(UsePath.cmdclickDefaultAppDirPath, "l${sceneType}.txt").absolutePath,
+               dateList.joinToString("\n")
+           )
         }
 
         val contentsChannel = Channel<
@@ -947,62 +966,69 @@ object WithEditConstraintListView{
                 val contentsKeyValues =
                     contentsMapToKeySubKeysPair.first
                 val contentsTagToKeyPairsList = contentsMapToKeySubKeysPair.second
-                contentsKeyValues.forEachIndexed execSetContents@{ execSetContentsIndex, contentsKeyPairsListConSrc ->
-                    CoroutineScope(Dispatchers.IO).launch execSetContentsCoroutine@{
-                        val contentsTagSrc =
-                            contentsTagToKeyPairsList.getOrNull(execSetContentsIndex)
-                        val mapListElInfoForExecContents =
-                            sequenceOf(
-                                "contentsTagSrc: ${contentsTagSrc}",
-                                totalMapListElInfo
-                            ).joinToString(", ")
-                        PairListTool.getValue(
-                            CmdClickMap.createMap(
-                                contentsKeyPairsListConSrc,
-                                typeSeparator
-                            ),
-                            enableKey,
-                        ).let { enableStr ->
-                            if (
-                                enableStr == switchOff
-                            ) return@execSetContentsCoroutine
-                        }
-                        val varNameToValueMap =
-                            withContext(Dispatchers.IO) updateLinearKeyParsListCon@{
-                                Template.ReplaceHolder.replaceHolder(
+                CoroutineScope(Dispatchers.IO).launch {
+                    contentsKeyValues.forEachIndexed execSetContents@{ execSetContentsIndex, contentsKeyPairsListConSrc ->
+                        CoroutineScope(Dispatchers.IO).launch execSetContentsCoroutine@{
+                            val contentsTagSrc =
+                                contentsTagToKeyPairsList.getOrNull(execSetContentsIndex)
+                            val mapListElInfoForExecContents =
+                                sequenceOf(
+                                    "contentsTagSrc: ${contentsTagSrc}",
+                                    totalMapListElInfo
+                                ).joinToString(", ")
+                            PairListTool.getValue(
+                                CmdClickMap.createMap(
                                     contentsKeyPairsListConSrc,
-                                    frameTag,
-                                    frameTag,
-                                    frameTag,
-                                    noIndexSign,
-                                ).let {
-                                        contentsKeyPairsListConSrcWithReplace ->
-                                    if(
-                                        contentsKeyPairsListConSrcWithReplace.isNullOrEmpty()
-                                    ) return@let emptyMap()
-                                    val topVarNameToValueMapForContents =
-                                        ((globalVarNameToValueMap ?: emptyMap()) + frameVarNameValueMap)
-                                    SettingActionManager().exec(
-                                        fragment,
-                                        fannelInfoMap,
-                                        setReplaceVariableMap,
-                                        busyboxExecutor,
-                                        settingActionAsyncCoroutine,
-                                        topVarNameToValueMapForContents.map{
-                                            it.key
-                                        },
-                                        topVarNameToValueMapForContents,
-                                        contentsKeyPairsListConSrcWithReplace,
-                                        mapListElInfoForExecContents,
-                                        editConstraintListAdapterArg = editConstraintListAdapter,
-                                    )
-                                }
+                                    typeSeparator
+                                ),
+                                enableKey,
+                            ).let { enableStr ->
+                                if (
+                                    enableStr == switchOff
+                                ) return@execSetContentsCoroutine
                             }
-                        val contentsVarNameToValueMap = frameVarNameValueMap + varNameToValueMap
-                        val contentsKeyPairsListCon = CmdClickMap.replace(
-                            contentsKeyPairsListConSrc,
-                            contentsVarNameToValueMap
-                        )
+//                        if(
+//                            sceneType == SceneType.BK
+//                            && contentsTagSrc?.first != "titleBkFrameBk"
+//                            ) {
+//                            return@execSetContentsCoroutine
+//                        }
+                            val varNameToValueMap =
+                                withContext(Dispatchers.IO) updateLinearKeyParsListCon@{
+                                    Template.ReplaceHolder.replaceHolder(
+                                        contentsKeyPairsListConSrc,
+                                        frameTag,
+                                        frameTag,
+                                        frameTag,
+                                        noIndexSign,
+                                    ).let { contentsKeyPairsListConSrcWithReplace ->
+                                        if (
+                                            contentsKeyPairsListConSrcWithReplace.isNullOrEmpty()
+                                        ) return@let emptyMap()
+                                        val topVarNameToValueMapForContents =
+                                            ((globalVarNameToValueMap
+                                                ?: emptyMap()) + frameVarNameValueMap)
+                                        SettingActionManager().exec(
+                                            fragment,
+                                            fannelInfoMap,
+                                            setReplaceVariableMap,
+                                            busyboxExecutor,
+                                            settingActionAsyncCoroutine,
+                                            topVarNameToValueMapForContents.map {
+                                                it.key
+                                            },
+                                            topVarNameToValueMapForContents,
+                                            contentsKeyPairsListConSrcWithReplace,
+                                            mapListElInfoForExecContents,
+                                            editConstraintListAdapterArg = editConstraintListAdapter,
+                                        )
+                                    }
+                                }
+                            val contentsVarNameToValueMap = frameVarNameValueMap + varNameToValueMap
+                            val contentsKeyPairsListCon = CmdClickMap.replace(
+                                contentsKeyPairsListConSrc,
+                                contentsVarNameToValueMap
+                            )
 //                        if(sceneType == SceneType.BK) {
 //                            FileSystems.updateFile(
 //                                File(UsePath.cmdclickDefaultAppDirPath, "lbk.txt").absolutePath,
@@ -1013,77 +1039,77 @@ object WithEditConstraintListView{
 //                                ).joinToString("\n")
 //                            )
 //                        }
-                        val contentsKeyPairsList = withContext(Dispatchers.IO) {
-                            CmdClickMap.createMap(
-                                contentsKeyPairsListCon,
-                                typeSeparator
-                            )
-                        }
-                        withContext(Dispatchers.IO) {
-                            PairListTool.getValue(
-                                contentsKeyPairsList,
-                                enableKey,
-                            )
-                        }.let { enableStr ->
-                            if (
-                                enableStr == switchOff
-                            ) return@execSetContentsCoroutine
-                        }
-                        val execContentsTag = withContext(Dispatchers.IO) {
-                            PairListTool.getValue(
-                                contentsKeyPairsList,
-                                tagKey,
-                            )?.let {
-                                CmdClickMap.replace(
-                                    it,
-                                    contentsVarNameToValueMap
+                            val contentsKeyPairsList = withContext(Dispatchers.IO) {
+                                CmdClickMap.createMap(
+                                    contentsKeyPairsListCon,
+                                    typeSeparator
                                 )
-                            } ?: String()
-                        }
-                        val mapListElInfoForContentsTagWithReplace =
-                            sequenceOf(
-                                "execContentsTag: ${execContentsTag}",
-                                totalMapListElInfo
-                            ).joinToString(", ")
-                        val isContentsTagErr =
-                            withContext(Dispatchers.IO) contentsTagCheck@{
-                                val tagGenre =
-                                    EditComponent.Template.TagManager.TagGenre.CONTENTS_TAG
-                                val alreadyUseTagListSrc =
-                                    EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
-                                        alreadyUseTagList,
-                                        alreadyUseTagListMutex
-                                    )
-                                val correctContentsTag =
-                                    EditComponent.AdapterSetter.tagDuplicateErrHandler(
-                                        context,
-                                        tagGenre,
-                                        execContentsTag,
-                                        alreadyUseTagListSrc,
-                                        mapListElInfoForContentsTagWithReplace,
-                                        String(),
-                                    )
-                                correctContentsTag?.let {
-                                    alreadyUseTagListMutex.withLock {
-                                        alreadyUseTagList.add(it)
-                                    }
-                                }
-                                val isDuplicateTagErr =
-                                    correctContentsTag.isNullOrEmpty()
-                                if (
-                                    isDuplicateTagErr
-                                ) return@contentsTagCheck true
-                                false
                             }
-                        if (isContentsTagErr) {
-                            return@execSetContentsCoroutine
-                        }
+                            withContext(Dispatchers.IO) {
+                                PairListTool.getValue(
+                                    contentsKeyPairsList,
+                                    enableKey,
+                                )
+                            }.let { enableStr ->
+                                if (
+                                    enableStr == switchOff
+                                ) return@execSetContentsCoroutine
+                            }
+                            val execContentsTag = withContext(Dispatchers.IO) {
+                                PairListTool.getValue(
+                                    contentsKeyPairsList,
+                                    tagKey,
+                                )?.let {
+                                    CmdClickMap.replace(
+                                        it,
+                                        contentsVarNameToValueMap
+                                    )
+                                } ?: String()
+                            }
+                            val mapListElInfoForContentsTagWithReplace =
+                                sequenceOf(
+                                    "execContentsTag: ${execContentsTag}",
+                                    totalMapListElInfo
+                                ).joinToString(", ")
+                            val isContentsTagErr =
+                                withContext(Dispatchers.IO) contentsTagCheck@{
+                                    val tagGenre =
+                                        EditComponent.Template.TagManager.TagGenre.CONTENTS_TAG
+                                    val alreadyUseTagListSrc =
+                                        EditComponent.AdapterSetter.AlreadyUseTagListHandler.get(
+                                            alreadyUseTagList,
+                                            alreadyUseTagListMutex
+                                        )
+                                    val correctContentsTag =
+                                        EditComponent.AdapterSetter.tagDuplicateErrHandler(
+                                            context,
+                                            tagGenre,
+                                            execContentsTag,
+                                            alreadyUseTagListSrc,
+                                            mapListElInfoForContentsTagWithReplace,
+                                            String(),
+                                        )
+                                    correctContentsTag?.let {
+                                        alreadyUseTagListMutex.withLock {
+                                            alreadyUseTagList.add(it)
+                                        }
+                                    }
+                                    val isDuplicateTagErr =
+                                        correctContentsTag.isNullOrEmpty()
+                                    if (
+                                        isDuplicateTagErr
+                                    ) return@contentsTagCheck true
+                                    false
+                                }
+                            if (isContentsTagErr) {
+                                return@execSetContentsCoroutine
+                            }
 
 
-                        editConstraintListAdapter?.footerKeyPairListConMap?.put(
-                            execContentsTag,
-                            contentsKeyPairsListCon
-                        )
+                            editConstraintListAdapter?.footerKeyPairListConMap?.put(
+                                execContentsTag,
+                                contentsKeyPairsListCon
+                            )
 //                        val enableClick =
 //                            withContext(Dispatchers.IO) {
 //                                EditComponent.Template.ClickManager.isClickEnable(
@@ -1095,100 +1121,102 @@ object WithEditConstraintListView{
 //                                contentsKeyPairsList
 //                            )
 //                        }
-                        val baseLayoutForAdd = makeBaseLayout(
-                            sceneType,
-                            editListTitleConstraintLayout,
-                            editListToolbarConstraintLayout,
-                            editListFooterConstraintLayout,
-                            editBkConstraintLayout,
-                        )
-                        val tagIdMap = withContext(Dispatchers.IO) {
-                            makeTagIdMap(
+                            val baseLayoutForAdd = makeBaseLayout(
                                 sceneType,
-                                tagIdMapSrc,
-                                eachLayoutIdMap,
+                                editListTitleConstraintLayout,
+                                editListToolbarConstraintLayout,
+                                editListFooterConstraintLayout,
+                                editBkConstraintLayout,
                             )
-                        }
-                        val idInt = withContext(Dispatchers.IO){
-                            tagIdMap.get(
-                                execContentsTag
-                            )
-                        }
-                        val viewType = Template.ViewTypeManager.getViewType(
-                            contentsKeyPairsList
-                        )
-                        when(viewType) {
-                            Template.ViewTypeManager.ViewType.TEXT ->
-                                setTextView(
-                                    fragment,
-                                    fannelInfoMap,
-                                    setReplaceVariableMap,
-                                    busyboxExecutor,
-                                    editListRecyclerView,
-                                    execContentsTag,
-                                    contentsKeyPairsList,
-                                    contentsKeyPairsListCon,
-                                    tagIdMap,
-                                    idInt,
+                            val tagIdMap = withContext(Dispatchers.IO) {
+                                makeTagIdMap(
                                     sceneType,
-                                    baseLayoutForAdd,
+                                    tagIdMapSrc,
+                                    eachLayoutIdMap,
+                                )
+                            }
+                            val idInt = withContext(Dispatchers.IO) {
+                                tagIdMap.get(
+                                    execContentsTag
+                                )
+                            }
+                            val viewType = Template.ViewTypeManager.getViewType(
+                                contentsKeyPairsList
+                            )
+                            when (viewType) {
+                                Template.ViewTypeManager.ViewType.TEXT ->
+                                    setTextView(
+                                        fragment,
+                                        fannelInfoMap,
+                                        setReplaceVariableMap,
+                                        busyboxExecutor,
+                                        editListRecyclerView,
+                                        execContentsTag,
+                                        contentsKeyPairsList,
+                                        contentsKeyPairsListCon,
+                                        tagIdMap,
+                                        idInt,
+                                        sceneType,
+                                        baseLayoutForAdd,
 //                                    enableClick,
 //                                    clickViewStrList,
-                                    outValue,
-                                    density,
-                                    mapListElInfoForContentsTagWithReplace,
-                                )
-                            Template.ViewTypeManager.ViewType.FRAME ->
-                                setFrameLayout(
-                                    fragment,
-                                    fannelInfoMap,
-                                    setReplaceVariableMap,
-                                    busyboxExecutor,
-                                    editListRecyclerView,
-                                    execContentsTag,
-                                    contentsKeyPairsList,
-                                    contentsKeyPairsListCon,
-                                    tagIdMap,
-                                    idInt,
-                                    sceneType,
-                                    alreadyUseTagList,
-                                    alreadyUseTagListMutex,
-                                    imageActionAsyncCoroutine,
-                                    globalVarNameToBitmapMap,
-                                    varNameToBitmapMapInFrame,
-                                    baseLayoutForAdd,
-//                                    enableClick,
-//                                    clickViewStrList,
-                                    outValue,
-                                    requestBuilderSrc,
-                                    density,
-                                    mapListElInfoForContentsTagWithReplace,
-                                )
+                                        outValue,
+                                        density,
+                                        mapListElInfoForContentsTagWithReplace,
+                                    )
 
-                            Template.ViewTypeManager.ViewType.IMAGE ->
-                                setImageView(
-                                    fragment,
-                                    fannelInfoMap,
-                                    setReplaceVariableMap,
-                                    busyboxExecutor,
-                                    editListRecyclerView,
-                                    execContentsTag,
-                                    contentsKeyPairsList,
-                                    contentsKeyPairsListCon,
-                                    tagIdMap,
-                                    idInt,
-                                    sceneType,
-                                    imageActionAsyncCoroutine,
-                                    globalVarNameToBitmapMap,
-                                    varNameToBitmapMapInFrame,
-                                    baseLayoutForAdd,
+                                Template.ViewTypeManager.ViewType.FRAME ->
+                                    setFrameLayout(
+                                        fragment,
+                                        fannelInfoMap,
+                                        setReplaceVariableMap,
+                                        busyboxExecutor,
+                                        editListRecyclerView,
+                                        execContentsTag,
+                                        contentsKeyPairsList,
+                                        contentsKeyPairsListCon,
+                                        tagIdMap,
+                                        idInt,
+                                        sceneType,
+                                        alreadyUseTagList,
+                                        alreadyUseTagListMutex,
+                                        imageActionAsyncCoroutine,
+                                        globalVarNameToBitmapMap,
+                                        varNameToBitmapMapInFrame,
+                                        baseLayoutForAdd,
 //                                    enableClick,
 //                                    clickViewStrList,
-                                    outValue,
-                                    requestBuilderSrc,
-                                    density,
-                                    mapListElInfoForContentsTagWithReplace,
-                                )
+                                        outValue,
+                                        requestBuilderSrc,
+                                        density,
+                                        mapListElInfoForContentsTagWithReplace,
+                                    )
+
+                                Template.ViewTypeManager.ViewType.IMAGE ->
+                                    setImageView(
+                                        fragment,
+                                        fannelInfoMap,
+                                        setReplaceVariableMap,
+                                        busyboxExecutor,
+                                        editListRecyclerView,
+                                        execContentsTag,
+                                        contentsKeyPairsList,
+                                        contentsKeyPairsListCon,
+                                        tagIdMap,
+                                        idInt,
+                                        sceneType,
+                                        imageActionAsyncCoroutine,
+                                        globalVarNameToBitmapMap,
+                                        varNameToBitmapMapInFrame,
+                                        baseLayoutForAdd,
+//                                    enableClick,
+//                                    clickViewStrList,
+                                        outValue,
+                                        requestBuilderSrc,
+                                        density,
+                                        mapListElInfoForContentsTagWithReplace,
+                                    )
+                            }
                         }
                     }
                 }
@@ -1209,6 +1237,8 @@ object WithEditConstraintListView{
                 >,
         totalMapListElInfo: String,
     ) {
+        val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+        dateList.add("make frameTagToContentsKeysListMapWithReplace" to LocalDateTime.now())
         val frameTagToContentsKeysListMapWithReplace =
             frameTagToContentsMapList?.map {
                 val key = CmdClickMap.replace(
@@ -1217,10 +1247,12 @@ object WithEditConstraintListView{
                 )
                 key to it.value
             }?.toMap()
+        dateList.add("make contentsKeysList" to LocalDateTime.now())
         val contentsKeysList =
             withContext(Dispatchers.IO) {
                 frameTagToContentsKeysListMapWithReplace?.get(frameTag)
             }
+        dateList.add("async publish" to LocalDateTime.now())
 //                    FileSystems.updateFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "smakeHorizonLinear_in_listview.txt").absolutePath,
 //                        listOf(
@@ -1262,6 +1294,13 @@ object WithEditConstraintListView{
                     }
                 }
             jobList?.forEach { it.await() }
+        }
+        dateList.add("end asyncpublish" to LocalDateTime.now())
+        if(frameTag == "bkFrame") {
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "lBkFrame.txt").absolutePath,
+                dateList.joinToString("\n")
+            )
         }
     }
 
