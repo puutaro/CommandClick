@@ -10,7 +10,7 @@ object SettingActionData {
 
     class LoopKeyToVarNameValueStrMap {
         private val loopKeyToVarNameValueStrMap =
-            mutableMapOf<String, MutableMap<String, String?>>()
+            hashMapOf<String, HashMap<String, String?>>()
         private val loopKeyToVarNameValueStrMapMutex = ReentrantReadWriteLock()
 //        fun getAsyncVarNameToValueStrMap(
 //            loopKey: String
@@ -62,7 +62,7 @@ object SettingActionData {
 
                         else -> loopKeyToVarNameValueStrMap.put(
                             loopKey,
-                            mutableMapOf(varName to valueStr)
+                            hashMapOf(varName to valueStr)
                         )
                     }
                 }
@@ -90,7 +90,7 @@ object SettingActionData {
 
     class PrivateLoopKeyVarNameValueStrMap {
         private val privateLoopKeyVarNameValueStrMap =
-            mutableMapOf<String, MutableMap<String, String?>>()
+            hashMapOf<String, HashMap<String, String?>>()
         private val privateLoopKeyVarNameValueStrMapMutex = ReentrantReadWriteLock()
 //        suspend fun getAsyncVarNameToValueStrMap(
 //            loopKey: String
@@ -140,7 +140,7 @@ object SettingActionData {
 
                         else -> privateLoopKeyVarNameValueStrMap.put(
                             loopKey,
-                            mutableMapOf(varName to valueStr)
+                            hashMapOf(varName to valueStr)
                         )
                     }
                 }
@@ -167,9 +167,9 @@ object SettingActionData {
     }
 
     class LoopKeyToAsyncDeferredVarNameValueStrMap {
-        private val loopKeyToAsyncDeferredVarNameValueStrMap = mutableMapOf<
+        private val loopKeyToAsyncDeferredVarNameValueStrMap = hashMapOf<
                 String,
-                MutableMap <
+                HashMap <
                         String,
                         Deferred<
                                 Pair<
@@ -240,7 +240,7 @@ object SettingActionData {
 
                         else -> loopKeyToAsyncDeferredVarNameValueStrMap.put(
                             loopKey,
-                            mutableMapOf(varName to deferredVarNameValueStrMapAndBreakSignal)
+                            hashMapOf(varName to deferredVarNameValueStrMapAndBreakSignal)
                         )
                     }
                 }

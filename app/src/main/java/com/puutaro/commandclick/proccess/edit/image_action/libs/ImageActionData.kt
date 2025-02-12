@@ -9,9 +9,9 @@ import kotlin.concurrent.withLock
 
 object ImageActionData {
     class LoopKeyToAsyncDeferredVarNameBitmapMap {
-        private val loopKeyToAsyncDeferredVarNameBitmapMap = mutableMapOf<
+        private val loopKeyToAsyncDeferredVarNameBitmapMap = hashMapOf<
                 String,
-                MutableMap <
+                HashMap <
                         String,
                         Deferred<
                                 Pair<
@@ -84,7 +84,7 @@ object ImageActionData {
 
                         else -> loopKeyToAsyncDeferredVarNameBitmapMap.put(
                             loopKey,
-                            mutableMapOf(varName to deferredVarNameBitmapMapAndBreakSignal)
+                            hashMapOf(varName to deferredVarNameBitmapMapAndBreakSignal)
                         )
                     }
                 }
@@ -113,7 +113,7 @@ object ImageActionData {
 
     class PrivateLoopKeyVarNameBitmapMap {
         private val privateLoopKeyVarNameBitmapMap =
-            mutableMapOf<String, MutableMap<String, Bitmap?>>()
+            hashMapOf<String, HashMap<String, Bitmap?>>()
         private val privateLoopKeyVarNameBitmapMapMutex = ReentrantReadWriteLock()
 //        suspend fun getAsyncVarNameToBitmapMap(
 //            loopKey: String
@@ -163,7 +163,7 @@ object ImageActionData {
 
                         else -> privateLoopKeyVarNameBitmapMap.put(
                             loopKey,
-                            mutableMapOf(varName to bitmap)
+                            hashMapOf(varName to bitmap)
                         )
                     }
                 }
@@ -191,7 +191,7 @@ object ImageActionData {
 
     class LoopKeyToVarNameBitmapMap {
         private val loopKeyToVarNameBitmapMap =
-            mutableMapOf<String, MutableMap<String, Bitmap?>>()
+            hashMapOf<String, HashMap<String, Bitmap?>>()
         private val loopKeyToVarNameBitmapMapMutex = ReentrantReadWriteLock()
 //        suspend fun getAsyncVarNameToBitmapMap(
 //            loopKey: String
@@ -243,7 +243,7 @@ object ImageActionData {
 
                         else -> loopKeyToVarNameBitmapMap.put(
                             loopKey,
-                            mutableMapOf(varName to bitmap)
+                            hashMapOf(varName to bitmap)
                         )
                     }
                 }
