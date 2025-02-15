@@ -2,6 +2,8 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
@@ -483,9 +485,12 @@ object ImageActionImportManager {
         val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         val actionImportSrcCon = SettingFile.read(
             context,
-            importPath,
             File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
             setReplaceVariableMap,
+            null,
+            null,
+            null,
+            importPath,
         )
         CoroutineScope(Dispatchers.IO).launch {
             BeforeActionImportMapManager.put(

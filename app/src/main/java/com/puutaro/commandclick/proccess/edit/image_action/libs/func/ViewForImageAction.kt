@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
@@ -24,7 +25,7 @@ object ViewForImageAction {
 //    private const val defaultNullMacroStr = FuncCheckerForSetting.defaultNullMacroStr
 
     suspend fun handle(
-        fragment: Fragment,
+        context: Context?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
@@ -38,9 +39,7 @@ object ViewForImageAction {
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
             >?{
-        val context =
-            fragment.context
-                ?: return Pair(Pair(null, null), null)
+        if(context == null) return null
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {

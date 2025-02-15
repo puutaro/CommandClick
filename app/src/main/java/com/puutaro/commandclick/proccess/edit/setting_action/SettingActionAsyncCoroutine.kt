@@ -13,16 +13,16 @@ class SettingActionAsyncCoroutine {
     suspend fun put(job: Job?){
         if(job == null) return
 //        settingActionAsyncCoroutineListMutex.withLock {
-            settingActionAsyncCoroutineList.add(job)
+        settingActionAsyncCoroutineList.add(job)
 //        }
     }
 
     suspend fun clean(){
 //        settingActionAsyncCoroutineListMutex.withLock {
-            settingActionAsyncCoroutineList.forEach {
-                it?.cancel()
-            }
-            settingActionAsyncCoroutineList.clear()
+        settingActionAsyncCoroutineList.forEach {
+            it?.cancel()
         }
+        settingActionAsyncCoroutineList.clear()
+    }
 //    }
 }

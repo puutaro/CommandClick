@@ -218,9 +218,12 @@ object ConfigFromPreferenceFileSetterForTerm {
             )
             terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
                 context,
-                CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
                 terminalFragment.fannelInfoMap,
                 terminalFragment.setReplaceVariableMap,
+                terminalFragment.busyboxExecutor,
+                terminalFragment.settingActionAsyncCoroutine,
+                terminalFragment.imageActionAsyncCoroutine,
+                CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
                 settingVariableListFromPreference,
             )
             terminalFragment.onLaunchUrlHistoryByBackstack = SettingVariableReader.getCbValue(
@@ -351,9 +354,12 @@ object ConfigFromPreferenceFileSetterForTerm {
         )
         terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
             context,
-            CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
             terminalFragment.fannelInfoMap,
             terminalFragment.setReplaceVariableMap,
+            terminalFragment.busyboxExecutor,
+            terminalFragment.settingActionAsyncCoroutine,
+            terminalFragment.imageActionAsyncCoroutine,
+            CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
             settingVariableList ?: emptyList(),
         )
         terminalFragment.onAdBlock = SettingVariableReader.getCbValue(

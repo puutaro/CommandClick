@@ -1,12 +1,16 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -81,7 +85,7 @@ object SettingActionImportManager {
 
 
     suspend fun makeImportPathAndRenewalVarNameToImportCon(
-        context: Context?,
+        context: Context,
         fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         curMapLoopKey: String,
@@ -102,6 +106,7 @@ object SettingActionImportManager {
                     >,
             Map<String,String?>,
             > {
+//        val context = fragment.context
         val keyToSubKeyContents = listOf(
             imageActionVarKey,
             keyToSubKeyCon?.second ?: String()
@@ -384,9 +389,12 @@ object SettingActionImportManager {
         ) return blankReturnValueStr
         val importSrcConBeforeReplace = makeActionImportSrcCon(
             context,
-            importPathSrc,
             fannelInfoMap,
             setReplaceVariableMap,
+            null,
+            null,
+            null,
+            importPathSrc,
         ).replace(
             Regex("[${SettingActionKeyManager.landSeparator}]+$"),
             String(),
@@ -488,11 +496,14 @@ object SettingActionImportManager {
     }
 
     private suspend fun makeActionImportSrcCon(
-        context: Context?,
-        importPath: String,
-//        currentAppDirPath: String,
+        context: Context,
         fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
+        importPath: String,
+//        currentAppDirPath: String,
     ): String {
         val beforeActionImportSrcCon = withContext(Dispatchers.IO) {
             BeforeActionImportMapManager.get(importPath)
@@ -519,9 +530,12 @@ object SettingActionImportManager {
         val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         val actionImportSrcCon = SettingFile.read(
             context,
-            importPath,
             File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
             setReplaceVariableMap,
+            busyboxExecutor,
+            settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
+            importPath,
         )
         CoroutineScope(Dispatchers.IO).launch {
             BeforeActionImportMapManager.put(

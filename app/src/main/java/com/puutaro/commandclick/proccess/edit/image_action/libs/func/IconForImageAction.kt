@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -21,7 +22,7 @@ object IconForImageAction {
     private const val intDefaultNullMacroStr = 0.toString()
 
     fun handle(
-        fragment: Fragment,
+        context: Context?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>
@@ -32,9 +33,9 @@ object IconForImageAction {
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
             >? {
-        val context =
-            fragment.context
-                ?: return null
+       if(
+           context == null
+       ) return null
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {

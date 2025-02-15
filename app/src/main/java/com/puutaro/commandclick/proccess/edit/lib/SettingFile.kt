@@ -1,13 +1,18 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
 import android.content.Context
+import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.SpeedReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,9 +28,12 @@ object SettingFile {
 
     fun read(
         context: Context?,
-        settingFilePath: String,
         fannelPath: String,
-        setReplaceVariableCompleteMap: Map<String, String>?,
+        setReplaceVariableMapSrc: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
+        settingFilePath: String,
     ): String {
         val fannelPathObj = File(fannelPath)
         if (!fannelPathObj.isFile) return String()
@@ -38,9 +46,12 @@ object SettingFile {
 //        ).textToList()
         val settingConList = ImportManager.import(
             context,
-            firstSettingConList,
             fannelName,
-            setReplaceVariableCompleteMap
+            setReplaceVariableMapSrc,
+            busyboxExecutor,
+            settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
+            firstSettingConList,
         ).split("\n")
 //        if(settingConList.joinToString("\n").contains("settingAction=")) {
 //            FileSystems.updateFile(
@@ -59,7 +70,7 @@ object SettingFile {
         }.let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
-                setReplaceVariableCompleteMap,
+                setReplaceVariableMapSrc,
                 fannelName
             )
         }
@@ -67,9 +78,12 @@ object SettingFile {
 
     fun readLayout(
         context: Context?,
-        settingFilePath: String,
         fannelPath: String,
-        setReplaceVariableCompleteMap: Map<String, String>?,
+        setReplaceVariableMapSrc: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
+        settingFilePath: String,
     ): String {
         val fannelPathObj = File(fannelPath)
         if (!fannelPathObj.isFile) return String()
@@ -97,9 +111,12 @@ object SettingFile {
 //        dateList.add("readLayoutFromList" to LocalDateTime.now())
         return readLayoutFromList(
             context,
-            firstSettingConList,
             fannelName,
-            setReplaceVariableCompleteMap,
+            setReplaceVariableMapSrc,
+            busyboxExecutor,
+            settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
+            firstSettingConList,
         )
 //            .let {
 //            dateList.add("readLayoutFromList_end" to LocalDateTime.now())
@@ -113,15 +130,21 @@ object SettingFile {
 
     fun readLayoutFromList(
         context: Context?,
-        firstSettingConList: List<String>,
         fannelName: String,
-        setReplaceVariableCompleteMap: Map<String, String>?,
+        setReplaceVariableMapSrc: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
+        firstSettingConList: List<String>,
     ): String {
         val settingConList = ImportManager.import(
             context,
-            firstSettingConList,
             fannelName,
-            setReplaceVariableCompleteMap
+            setReplaceVariableMapSrc,
+            busyboxExecutor,
+            settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
+            firstSettingConList,
         ).split("\n")
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "readLayoutFromList00.txt").absolutePath,
@@ -210,8 +233,8 @@ object SettingFile {
             SEPARATOR("separator"),
             PREFIX("prefix"),
             SUFFIX("suffix"),
-            SettingAction("settingAc"),
-            ImageAction("imageAc"),
+            SETTING_ACTION("settingAc"),
+            IMAGE_ACTION("imageAc"),
         }
         private const val startLoopIndex = 1
 
@@ -245,14 +268,17 @@ object SettingFile {
 
         fun import(
             context: Context?,
-            settingSrcConList: List<String>,
             fannelName: String,
-            setReplaceVariableCompleteMap: Map<String, String>? = null
+            setReplaceVariableMapSrc: Map<String, String>?,
+            busyboxExecutor: BusyboxExecutor?,
+            settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+            imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
+            settingSrcConList: List<String>,
         ): String {
 //            init()
             val settingConBeforeImport = SetReplaceVariabler.execReplaceByReplaceVariables(
                 trimImportSrcCon(settingSrcConList),
-                setReplaceVariableCompleteMap,
+                setReplaceVariableMapSrc,
                 fannelName
             )
             var settingCon = settingConBeforeImport
@@ -265,10 +291,13 @@ object SettingFile {
                 }
                 settingCon = execImport(
                     context,
+                    fannelName,
+                    setReplaceVariableMapSrc,
+                    busyboxExecutor,
+                    settingActionAsyncCoroutine,
+                    imageActionAsyncCoroutine,
                     settingCon,
                     result,
-                    setReplaceVariableCompleteMap,
-                    fannelName,
                 ).let {
                     trimImportSrcCon(it.split("\n"))
                 }
@@ -284,10 +313,13 @@ object SettingFile {
 
         private fun execImport(
             context: Context?,
+            fannelName: String,
+            setReplaceVariableMapSrc: Map<String, String>?,
+            busyboxExecutor: BusyboxExecutor?,
+            settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+            imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
             settingConBeforeImport: String,
             result: Sequence<MatchResult>,
-            setReplaceVariableCompleteMap: Map<String, String>?,
-            fannelName: String,
         ): String {
 //            val dateList = mutableListOf<Pair<String, LocalDateTime>>()
 //            dateList.add("init" to LocalDateTime.now())
@@ -475,6 +507,11 @@ object SettingFile {
                                 else -> {
                                     ImportExecutor.exec(
                                         context,
+                                        fannelName,
+                                        setReplaceVariableMapSrc,
+                                        busyboxExecutor,
+                                        settingActionAsyncCoroutine,
+                                        imageActionAsyncCoroutine,
                                         importMap,
                                         importPath,
                                         repValMap,
@@ -636,7 +673,7 @@ object SettingFile {
 //            )
             return SetReplaceVariabler.execReplaceByReplaceVariables(
                 settingCon,
-                setReplaceVariableCompleteMap,
+                setReplaceVariableMapSrc,
                 fannelName,
             )
         }
@@ -652,6 +689,11 @@ object SettingFile {
         private object ImportExecutor {
             suspend fun exec(
                 context: Context?,
+                fannelName: String,
+                setReplaceVariableMapSrc: Map<String, String>?,
+                busyboxExecutor: BusyboxExecutor?,
+                settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+                imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
                 importMap: Map<String, String>,
                 importPath: String,
                 repValMap: Map<String, String>,
@@ -662,7 +704,8 @@ object SettingFile {
                 prefix: String,
                 suffix: String,
                 separator: String,
-            ): String{
+            ): String {
+                if(context == null) return String()
                 val atRepValMap = rndVarNameToValueSeq?.map {
                         (varName, valueList) ->
                     varName to valueList.random()
@@ -693,14 +736,35 @@ object SettingFile {
                     repCon
                 }
                 val indexToImportConList = withContext(Dispatchers.IO) {
-                    val indexToImportConJobList = (startLoopIndex..loopTimes).mapIndexed { index, loopIndex ->
+                    val indexToImportConJobList = (startLoopIndex..loopTimes).map { loopIndex ->
                         async {
+                            if(
+                                !settingAcCon.isNullOrEmpty()
+                                || !imageAcCon.isNullOrEmpty()
+                            ){
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    launchAction(
+                                        context,
+                                        fannelName,
+                                        setReplaceVariableMapSrc,
+                                        busyboxExecutor,
+                                        settingActionAsyncCoroutine,
+                                        imageActionAsyncCoroutine,
+                                        settingAcCon,
+                                        imageAcCon,
+                                        atRepValMap,
+                                        loopVarName,
+                                        loopIndex,
+                                        "importPath: ${importPath}, importRawSrcCon: ${importRawSrcCon}"
+                                    )
+                                }
+                            }
                             if (loopTimes == startLoopIndex) {
-                                return@async index to innerImportCon
+                                return@async loopIndex to innerImportCon
                             }
                             if (
                                 loopVarName.isNullOrEmpty()
-                            ) return@async index to innerImportCon
+                            ) return@async loopIndex to innerImportCon
                             if (
                                 !innerImportCon.contains("@{${loopVarName}}")
                             ) {
@@ -721,20 +785,9 @@ object SettingFile {
                                     Jsoup.parse(errMessage).text(),
                                     errMessage,
                                 )
-                                return@async index to String()
+                                return@async loopIndex to String()
                             }
-                            if (
-                                !settingAcCon.isNullOrEmpty()
-                                || !imageAcCon.isNullOrEmpty()
-                            ) {
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    val loopVarMap =
-                                        (atRepValMap ?: emptyMap()) + mapOf(
-                                            loopVarName to loopIndex.toString()
-                                        )
-                                }
-                            }
-                            index to CmdClickMap.replaceByAtVar(
+                            loopIndex to CmdClickMap.replaceByAtVar(
                                 innerImportCon,
                                 mapOf(
                                     loopVarName to loopIndex.toString()
@@ -754,6 +807,75 @@ object SettingFile {
                         suffix
                     ).joinToString("\n")
                 }
+            }
+
+            suspend fun launchAction(
+                context: Context,
+                fannelName: String,
+                setReplaceVariableMapSrc: Map<String, String>?,
+                busyboxExecutor: BusyboxExecutor?,
+                settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+                imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
+                settingAcCon: String?,
+                imageAcCon: String?,
+                atRepValMap: Map<String, String>?,
+                loopVarName: String?,
+                loopIndex: Int,
+                where: String,
+            ){
+                val loopVarMap =
+                    when(
+                        loopVarName.isNullOrEmpty()
+                    ) {
+                        true -> emptyMap()
+                        else -> mapOf(
+                            loopVarName to loopIndex.toString()
+                        )
+                    } +  (atRepValMap ?: emptyMap())
+                val fannelInfoMap = FannelInfoTool.makeFannelInfoMapByString(
+                    currentFannelName = fannelName,
+                )
+                val varNameToValueStrMap = withContext(Dispatchers.IO) settingAc@ {
+                    if (
+                        settingAcCon.isNullOrEmpty()
+                    ) return@settingAc null
+                    SettingActionManager().exec(
+                        context,
+                        null,
+                        fannelInfoMap,
+                        setReplaceVariableMapSrc,
+                        busyboxExecutor,
+                        settingActionAsyncCoroutine,
+                        null,
+                        null,
+                        CmdClickMap.replaceByAtVar(
+                            settingAcCon ?: String(),
+                            loopVarMap
+                        ),
+                        where,
+                    )
+                }
+                if(
+                    imageAcCon.isNullOrEmpty()
+                ) return
+                ImageActionManager().exec(
+                    context,
+                    fannelInfoMap,
+                    setReplaceVariableMapSrc,
+                    busyboxExecutor,
+                    null,
+                    Glide.with(context)
+                        .asDrawable()
+                        .sizeMultiplier(0.1f),
+                    imageActionAsyncCoroutine,
+                    null,
+                    null,
+                    CmdClickMap.replace(
+                        imageAcCon,
+                        varNameToValueStrMap,
+                    ),
+                    where,
+                )
             }
         }
 
@@ -870,7 +992,7 @@ object SettingFile {
             loopVarMap: Map<String, String>?
         ): String? {
             return importMap.get(
-                ImportKey.SettingAction.key
+                ImportKey.SETTING_ACTION.key
             )?.let {
                 CmdClickMap.replaceByAtVar(
                     it,
@@ -884,7 +1006,7 @@ object SettingFile {
             loopVarMap: Map<String, String>?,
         ): String? {
             return importMap.get(
-                ImportKey.ImageAction.key
+                ImportKey.IMAGE_ACTION.key
             )?.let {
                 CmdClickMap.replaceByAtVar(
                     it,

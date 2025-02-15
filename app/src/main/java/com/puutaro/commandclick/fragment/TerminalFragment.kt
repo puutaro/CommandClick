@@ -38,7 +38,9 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.lib.FilePickerTool
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.history.fannel_history.FannelHistoryCaptureTool
 import com.puutaro.commandclick.proccess.pin.PinFannelHideShow
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -50,7 +52,10 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import java.lang.ref.WeakReference
@@ -115,6 +120,8 @@ class TerminalFragment:
     var pocketWebViewManager: WebViewJsDialog? = null
     var ggleWebViewManager: GgleSchDialog? = null
     var selectionText = String()
+    val imageActionAsyncCoroutine = ImageActionAsyncCoroutine()
+    val settingActionAsyncCoroutine = SettingActionAsyncCoroutine()
 //    var extraMapBitmapList: List<Bitmap?> = emptyList()
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -471,6 +478,10 @@ class TerminalFragment:
         this.onWebHistoryUpdaterJob?.cancel()
         onPocketWebHistoryUpdaterJob?.cancel()
         onRegisterPocketWebViewUrl?.cancel()
+        CoroutineScope(Dispatchers.IO).launch {
+            settingActionAsyncCoroutine.clean()
+            imageActionAsyncCoroutine.clean()
+        }
         pocketWebViewManager?.destroyWebView()
         ggleWebViewManager?.destroyWebView()
         val terminalWebView = binding.terminalWebView

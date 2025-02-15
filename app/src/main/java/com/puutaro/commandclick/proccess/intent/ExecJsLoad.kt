@@ -286,7 +286,7 @@ object ExecJsLoad {
             currentSettingFannelPath,
         )
         return ScriptArgsMapList.makeUpdateScriptArgsMapList(
-            context,
+            fragment,
 //            scriptDirPath,
             scriptName,
             settingSectionVariableList,

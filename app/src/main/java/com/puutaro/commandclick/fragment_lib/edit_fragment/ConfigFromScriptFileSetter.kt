@@ -7,8 +7,10 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.JsAcAlterIfTool
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
@@ -49,10 +51,14 @@ object ConfigFromScriptFileSetter {
 
         editFragment.editBoxTitleConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             context,
-            CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG,
-            settingVariableList,
             fannelInfoMap,
             setReplaceVariableMap,
+            editFragment.busyboxExecutor,
+            editFragment.settingActionAsyncCoroutine,
+            editFragment.imageActionAsyncCoroutine,
+            CommandClickScriptVariable.EDIT_BOX_TITLE_CONFIG,
+            settingVariableList,
+
             String(),
         ).let {
             AlterToolForSetValType.updateConfigMapByAlter(
@@ -77,10 +83,13 @@ object ConfigFromScriptFileSetter {
         )
         editFragment.editListConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             context,
-            CommandClickScriptVariable.EDIT_LIST_CONFIG,
-            settingVariableList,
             fannelInfoMap,
             setReplaceVariableMap,
+            editFragment.busyboxExecutor,
+            editFragment.settingActionAsyncCoroutine,
+            editFragment.imageActionAsyncCoroutine,
+            CommandClickScriptVariable.EDIT_LIST_CONFIG,
+            settingVariableList,
             String(),
         )
 //            .let {
@@ -277,6 +286,8 @@ object ConfigFromScriptFileSetter {
             mapOf(
                 ToolbarButtonBariantForEdit.SETTING to execMakeToolbarButtonConfigMap(
                     editFragment,
+                    editFragment.settingActionAsyncCoroutine,
+                    editFragment.imageActionAsyncCoroutine,
                     settingVariableList,
                     CommandClickScriptVariable.SETTING_BUTTON_CONFIG,
                     String(),
@@ -291,6 +302,8 @@ object ConfigFromScriptFileSetter {
                 },
                 ToolbarButtonBariantForEdit.EXTRA to execMakeToolbarButtonConfigMap(
                     editFragment,
+                    editFragment.settingActionAsyncCoroutine,
+                    editFragment.imageActionAsyncCoroutine,
                     settingVariableList,
                     CommandClickScriptVariable.EXTRA_BUTTON_CONFIG,
                     String(),
@@ -305,6 +318,8 @@ object ConfigFromScriptFileSetter {
                 },
                 ToolbarButtonBariantForEdit.EDIT to execMakeToolbarButtonConfigMap(
                     editFragment,
+                    editFragment.settingActionAsyncCoroutine,
+                    editFragment.imageActionAsyncCoroutine,
                     settingVariableList,
                     CommandClickScriptVariable.EDIT_BUTTON_CONFIG,
                     String(),
@@ -433,6 +448,8 @@ object ConfigFromScriptFileSetter {
 
     private fun execMakeToolbarButtonConfigMap(
         editFragment: EditFragment,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
         settingVariableList: List<String>?,
         targetSettingConfigValName: String,
         defaultButtonConfigCon: String,
@@ -444,10 +461,13 @@ object ConfigFromScriptFileSetter {
         val context = editFragment.context
         return ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             context,
-            targetSettingConfigValName,
-            settingVariableList,
             editFragment.fannelInfoMap,
             editFragment.setReplaceVariableMap,
+            editFragment.busyboxExecutor,
+            settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
+            targetSettingConfigValName,
+            settingVariableList,
             defaultButtonConfigCon,
         )
     }
@@ -463,10 +483,13 @@ object ConfigFromScriptFileSetter {
         val context = editFragment.context
         return ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             context,
-            CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
-            settingVariableList,
             editFragment.fannelInfoMap,
             editFragment.setReplaceVariableMap,
+            editFragment.busyboxExecutor,
+            editFragment.settingActionAsyncCoroutine,
+            editFragment.imageActionAsyncCoroutine,
+            CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
+            settingVariableList,
             String(),
         )
     }

@@ -105,7 +105,7 @@ object TextJsDialogV3{
             return
         }
         val setReplaceVariablesMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-            terminalFragment.context,
+            context,
             fannelPath
         )
         val configMapCon = SetReplaceVariabler.execReplaceByReplaceVariables(

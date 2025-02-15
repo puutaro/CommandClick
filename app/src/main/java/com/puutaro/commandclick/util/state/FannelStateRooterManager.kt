@@ -40,9 +40,12 @@ object FannelStateRooterManager {
         )
         val importDisableValList = ListSettingVariableListMaker.makeFromSettingVariableList(
             context,
-            CommandClickScriptVariable.IMPORT_DISABLE_VAL_LIST,
             fannelInfoMap,
             setReplaceVariableMap,
+            null,
+            null,
+            null,
+            CommandClickScriptVariable.IMPORT_DISABLE_VAL_LIST,
             settingVariableBeforeImportList
         )
         return SettingVariableImportManager.import(

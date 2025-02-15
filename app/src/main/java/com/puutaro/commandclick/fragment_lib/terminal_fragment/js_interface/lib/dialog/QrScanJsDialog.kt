@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blankj.utilcode.util.ToastUtils
 import com.budiyev.android.codescanner.AutoFocusMode
@@ -120,7 +121,7 @@ class QrScanJsDialog(
                 qrScanDialogObj = null
                 terminalViewModel.onDialog = false
                 loadJsForQrMenu(
-                    context,
+                    terminalFragment,
                     terminalViewModel,
                     currentFannelPath,
                     callBackJsPath,
@@ -282,9 +283,10 @@ class QrScanJsDialog(
         if (
             menuList.isEmpty()
         ) return
+        val terminalFragment = terminalFragmentRef.get() ?: return
         if(menuList.size == 1){
             loadJsForQrMenu(
-                contextSrc,
+                terminalFragment,
                 terminalViewModel,
                 currentScriptPath,
                 getJsPathFromMenuSrc(menuList.first()),
@@ -315,7 +317,6 @@ class QrScanJsDialog(
             )
         }
         popupMenuItemSelected(
-            context,
             terminalViewModel,
             popupMenu,
             menuList,
@@ -326,13 +327,14 @@ class QrScanJsDialog(
     }
 
     private fun popupMenuItemSelected(
-        context: Context,
         terminalViewModel: TerminalViewModel,
         popup: PopupMenu,
         menuList: List<String>,
         webView: WebView,
         currentScriptPath: String,
     ){
+        val terminalFragment =
+            terminalFragmentRef.get() ?: return
         popup.setOnMenuItemClickListener {
                 menuItem ->
             val selectedMenuStr = menuItem.title.toString()
@@ -341,7 +343,7 @@ class QrScanJsDialog(
                 menuList,
             )
             loadJsForQrMenu(
-                context,
+                terminalFragment,
                 terminalViewModel,
                 currentScriptPath,
                 selectedJsPath,
@@ -352,7 +354,7 @@ class QrScanJsDialog(
     }
 
     private fun loadJsForQrMenu(
-        context: Context?,
+        fragment: Fragment,
         terminalViewModel: TerminalViewModel,
         currentFannelPath: String,
         jsPath: String,
@@ -361,7 +363,7 @@ class QrScanJsDialog(
 //        replaceMapStr: String = String(),
     ){
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-            context,
+            fragment.context,
             currentFannelPath,
         )
         val fannelPath = CcPathTool.getMainFannelFilePath(
@@ -384,7 +386,7 @@ class QrScanJsDialog(
         )
         terminalViewModel.jsArguments = decodedText
         val jsScriptUrl = JavaScriptLoadUrl.make(
-            context,
+            fragment.context,
             execJsPath,
             makeJsList(
                 execJsPath,

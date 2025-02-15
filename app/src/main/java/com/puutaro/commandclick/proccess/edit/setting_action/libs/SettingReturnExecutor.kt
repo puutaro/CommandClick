@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
+import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
@@ -15,7 +16,7 @@ class SettingReturnExecutor {
     private val sIf = SettingActionKeyManager.SettingReturnManager.SettingReturnKey.S_IF
 
     suspend fun exec(
-        fragment: Fragment,
+        context: Context?,
         mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
         curMapLoopKey: String,
         topVarNameToValueStrMap: Map<String, String?>?,
@@ -32,7 +33,6 @@ class SettingReturnExecutor {
                     >?,
             SettingActionKeyManager.BreakSignal?
             >? {
-        val context = fragment.context
         val varNameToValueStrMap = SettingActionKeyManager.makeVarNameToValueStrMap(
             curMapLoopKey,
             topVarNameToValueStrMap,

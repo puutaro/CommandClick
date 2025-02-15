@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.common.variable.variant
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -17,7 +18,7 @@ object ScriptArgsMapList {
     private val jsNameKey = ScriptArgsKey.JS_NAME.key
 
     fun makeUpdateScriptArgsMapList(
-        context: Context?,
+        fragment: Fragment,
 //        scriptDirPath: String,
         scriptName: String,
         settingSectionVariableList: List<String>?,
@@ -39,7 +40,7 @@ object ScriptArgsMapList {
 //                ).joinToString("\n\n\n")
 //            )
             updateScriptArgsMapList = execUpdateScriptArgsMapList(
-                context,
+                fragment,
                 updateScriptArgsMapList,
 //                scriptDirPath,
                 scriptName,
@@ -51,7 +52,7 @@ object ScriptArgsMapList {
     }
 
     private fun execUpdateScriptArgsMapList(
-        context: Context?,
+        fragment: Fragment,
         scriptArgsMapList: Array<Map<String, String>>,
         scriptName: String,
         settingSectionVariableList: List<String>?,
@@ -80,7 +81,7 @@ object ScriptArgsMapList {
             settingPathSrc.isNullOrEmpty()
         ) return scriptArgsMapList
         val setReplaceVariable = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-            context,
+            fragment.context,
             scriptPath
         )
         val settingPath = SetReplaceVariabler.execReplaceByReplaceVariables(

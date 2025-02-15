@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
+import android.content.Context
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.func.EditComponentFunc
@@ -13,7 +15,8 @@ import kotlin.enums.EnumEntries
 
 object EditForSetting {
     suspend fun handle(
-        fragment: Fragment?,
+//        context: Context?,
+        fragmentActivity: FragmentActivity?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
@@ -55,7 +58,7 @@ object EditForSetting {
             methodNameClass.args
         val terminalFragment = withContext(Dispatchers.Main) {
             TargetFragmentInstance.getCurrentTerminalFragmentFromFrag(
-                fragment?.activity
+                fragmentActivity
             )
         } ?: return null to FuncCheckerForSetting.FuncCheckErr("Cannot get terminal fragment")
         return withContext(Dispatchers.Main) {

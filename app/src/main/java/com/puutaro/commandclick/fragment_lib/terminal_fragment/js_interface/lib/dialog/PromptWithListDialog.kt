@@ -3159,7 +3159,7 @@ private object EditTextMakerForPromptList {
             true -> emptyMap()
             else -> SetReplaceVariabler
                 .makeSetReplaceVariableMapFromSubFannel(
-                    context,
+                    terminalFragment.context,
                     mainOrSubFannelPath
                 )
         }

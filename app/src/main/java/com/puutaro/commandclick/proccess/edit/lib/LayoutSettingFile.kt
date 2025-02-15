@@ -2,6 +2,9 @@ package com.puutaro.commandclick.proccess.edit.lib
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import java.io.File
@@ -10,15 +13,21 @@ object LayoutSettingFile {
 
     fun read(
         context: Context?,
-        settingFilePath: String,
         fannelPath: String,
         setReplaceVariableCompleteMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
+        settingFilePath: String,
     ): List<String> {
         return SettingFile.readLayout(
             context,
-            settingFilePath,
             fannelPath,
             setReplaceVariableCompleteMap,
+            busyboxExecutor,
+            settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
+            settingFilePath,
         ).let {
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "layoutSettingFile.txt").absolutePath,
@@ -34,15 +43,21 @@ object LayoutSettingFile {
 
     fun readFromList(
         context: Context?,
-        firstSettingConList: List<String>,
         fannelName: String,
         setReplaceVariableCompleteMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
+        firstSettingConList: List<String>,
     ): List<String> {
         return SettingFile.readLayoutFromList(
             context,
-            firstSettingConList,
             fannelName,
             setReplaceVariableCompleteMap,
+            busyboxExecutor,
+            settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
+            firstSettingConList,
         ).let {
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "layoutSettingFile.txt").absolutePath,

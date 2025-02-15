@@ -13,7 +13,7 @@ import kotlin.enums.EnumEntries
 
 object GradForImageAction {
     fun handle(
-        fragment: Fragment,
+        context: Context?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
@@ -24,9 +24,7 @@ object GradForImageAction {
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
             >? {
-        val context =
-            fragment.context
-                ?: return null
+        if(context == null) return null
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {

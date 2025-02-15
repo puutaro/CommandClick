@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle

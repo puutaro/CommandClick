@@ -32,7 +32,7 @@ object ArbForImageAction {
 
     private const val transparentColorStr = "#00000000"
     suspend fun handle(
-        fragment: Fragment,
+        context: Context?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
@@ -43,9 +43,7 @@ object ArbForImageAction {
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
             >? {
-        val context =
-            fragment.context
-                ?: return Pair(Pair(null, null), null)
+        if(context == null) return null
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {

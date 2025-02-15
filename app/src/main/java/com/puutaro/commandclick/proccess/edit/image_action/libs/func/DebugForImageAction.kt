@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
@@ -9,7 +10,7 @@ import kotlin.enums.EnumEntries
 
 object DebugForImageAction {
     fun handle(
-        fragment: Fragment,
+        context: Context?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
@@ -21,9 +22,6 @@ object DebugForImageAction {
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
             >? {
-        val context =
-            fragment.context
-                ?: return null
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {

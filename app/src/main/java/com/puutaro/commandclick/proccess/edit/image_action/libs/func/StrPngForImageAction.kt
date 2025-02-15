@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.fragment.app.Fragment
@@ -14,7 +15,7 @@ object StrPngForImageAction {
     private const val defaultZeroMacroStr = 0
 
     suspend fun handle(
-        fragment: Fragment,
+        context: Context?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
@@ -25,9 +26,6 @@ object StrPngForImageAction {
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
             >? {
-        val context =
-            fragment.context
-                ?: return Pair(Pair(null, null), null)
         val methodNameClass = MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         } ?: let {
@@ -112,7 +110,7 @@ object StrPngForImageAction {
                     ) to funcErr
                 }
                 val returnBitmap = AssetsFileManager.assetsByteArray(
-                    fragment.context,
+                    context,
                     shapeAssetsPath
                 )?.let {
                   val innerBitmap = BitmapFactory.decodeByteArray(it, 0, it.size)

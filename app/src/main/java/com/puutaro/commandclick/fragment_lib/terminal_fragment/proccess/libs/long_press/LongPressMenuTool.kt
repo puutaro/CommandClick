@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -12,8 +13,11 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.PromptWithListDialog.Companion.PromptMapList
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
@@ -127,11 +131,15 @@ object LongPressMenuTool {
             }
         }
         fun makeMenuMapList(
-            context: Context?,
+            fragment: Fragment,
+            busyboxExecutor: BusyboxExecutor?,
+            settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+            imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
             longPressScriptList: List<String>,
             longPressType: LongPressType,
             linkUrlList: List<String>,
         ): List<Map<LongPressKey, String>> {
+            val context = fragment.context
             val indexTolongPressInfoMapList: MutableList<Pair<Int, Map<LongPressKey, String>>> =
                 mutableListOf()
             val semaphore = Semaphore(5)
@@ -191,9 +199,12 @@ object LongPressMenuTool {
                                         val longPressInfoMapCon =
                                             SettingFile.read(
                                                 context,
-                                                it,
                                                 curLongPressFannelPath,
                                                 setReplaceVariables,
+                                                busyboxExecutor,
+                                                settingActionAsyncCoroutine,
+                                                imageActionAsyncCoroutine,
+                                                it,
                                             )
 //                                            SetReplaceVariabler.execReplaceByReplaceVariables(
 //                                                ReadText(it).readText(),
@@ -237,9 +248,12 @@ object LongPressMenuTool {
                                         val longPressInfoMapCon =
                                             SettingFile.read(
                                                 context,
-                                                fannelNameOrOriginalLongPressInfoPath,
                                                 curLongPressFannelPath,
                                                 setReplaceVariables,
+                                                busyboxExecutor,
+                                                settingActionAsyncCoroutine,
+                                                imageActionAsyncCoroutine,
+                                                fannelNameOrOriginalLongPressInfoPath,
                                             )
 //                                            SetReplaceVariabler.execReplaceByReplaceVariables(
 //                                                ReadText(fannelNameOrOriginalLongPressInfoPath).readText(),
@@ -411,11 +425,11 @@ object LongPressMenuTool {
     }
 
     fun extractSettingValList(
-        context: Context?,
+        fragment: Fragment,
         srcFannelPath: String,
     ): List<String>? {
         val repValMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-            context,
+            fragment.context,
             srcFannelPath,
         )
 //        val longPressFannelMainAppDirPath = CcPathTool.getMainAppDirPath(srcFannelPath)

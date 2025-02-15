@@ -9,7 +9,6 @@ import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,12 +17,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestBuilder
-import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ListViewToolForEditListAdapter
-import com.puutaro.commandclick.custom_view.OutlineTextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.Template
@@ -31,6 +28,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndV
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ImportDataForImageAction
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
@@ -167,7 +165,8 @@ object WithEditConstraintListView{
                             "${key}: ${it.value}"
                         }.joinToString(", ")}"
                     settingActionManager.exec(
-                        fragment,
+                        context,
+                        fragment.activity,
                         fannelInfoMap,
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
@@ -214,7 +213,7 @@ object WithEditConstraintListView{
                             "${key}: ${it.value}"
                         }.joinToString(", ")}"
                     imageActionManager.exec(
-                        fragment,
+                        context,
                         fannelInfoMap,
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
@@ -230,6 +229,7 @@ object WithEditConstraintListView{
                 }
             }
         withContext(Dispatchers.IO) {
+            ImportDataForImageAction.clearImportData()
             ImageActionManager.init()
         }
 //        return
@@ -359,9 +359,12 @@ object WithEditConstraintListView{
                     )
                     dateList.add("setAdapter_ListSettingsForEditList.ViewLayoutPathManager.parseForConstraint" to LocalDateTime.now())
                     ListSettingsForEditList.ViewLayoutPathManager.parseForConstraint(
-                        context,
+                        fragment,
                         fannelInfoMap,
                         setReplaceVariableMap,
+                        busyboxExecutor,
+                        settingActionAsyncCoroutine,
+                        imageActionAsyncCoroutine,
                         viewLayoutPath
                     )
                 }
@@ -719,6 +722,8 @@ object WithEditConstraintListView{
         ) {
         val context = fragment.context
             ?: return
+        val fragmentActivityRef = WeakReference(fragment.activity)
+            ?: return
         val editConstraintListAdapter =
             editListRecyclerView.adapter as? EditConstraintListAdapter
         val plusKeyToSubKeyConWhere =
@@ -754,16 +759,22 @@ object WithEditConstraintListView{
         dateList.add("raedLayout" to LocalDateTime.now())
         val frameMapAndFrameTagToContentsMapListToTagIdList = when(isOnlyCmdValEdit) {
             true -> ListSettingsForEditList.ViewLayoutPathManager.parseFromListForConstraint(
-                context,
+                fragment,
                 fannelInfoMap,
                 setReplaceVariableMap,
+                busyboxExecutor,
+                settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
                 EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroConList,
                 "${EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name} in $plusKeyToSubKeyConWhere"
                 )
             else -> ListSettingsForEditList.ViewLayoutPathManager.parseForConstraint(
-                context,
+                fragment,
                 fannelInfoMap,
                 setReplaceVariableMap,
+                busyboxExecutor,
+                settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
                 viewLayoutPath
             )
         }
@@ -860,7 +871,8 @@ object WithEditConstraintListView{
                 ) return@let null
                 val settingActionManager = SettingActionManager()
                 val varNameToValueMap = settingActionManager.exec(
-                    fragment,
+                    context,
+                    fragmentActivityRef.get(),
                     fannelInfoMap,
                     setReplaceVariableMap,
                     busyboxExecutor,
@@ -905,7 +917,7 @@ object WithEditConstraintListView{
 //                ).joinToString("\n")
 //            )
             ImageActionManager().exec(
-                fragment,
+                context,
                 fannelInfoMap,
                 setReplaceVariableMap,
                 busyboxExecutor,
@@ -1021,7 +1033,8 @@ object WithEditConstraintListView{
                                             ((globalVarNameToValueMap
                                                 ?: emptyMap()) + frameVarNameValueMap)
                                         SettingActionManager().exec(
-                                            fragment,
+                                            context,
+                                            fragmentActivityRef.get(),
                                             fannelInfoMap,
                                             setReplaceVariableMap,
                                             busyboxExecutor,
@@ -1333,6 +1346,7 @@ object WithEditConstraintListView{
     ){
         val context = fragment?.context
             ?: return
+        val fragmentActivityRef = WeakReference(fragment.activity)
         val editConstraintListAdapter =
             editListRecyclerView?.adapter as? EditConstraintListAdapter
         withContext(Dispatchers.Main) setLinearFrameLayout@{
@@ -1437,7 +1451,7 @@ object WithEditConstraintListView{
 //                                            ).joinToString("\n")
 //                                        )
                     ImageActionManager().exec(
-                        fragment,
+                        context,
                         fannelInfoMap,
                         setReplaceVariableMap,
                         busyboxExecutor,
@@ -1560,7 +1574,7 @@ object WithEditConstraintListView{
 //                                            ).joinToString("\n")
 //                                        )
                 ImageActionManager().exec(
-                    fragment,
+                    context,
                     fannelInfoMap,
                     setReplaceVariableMap,
                     busyboxExecutor,

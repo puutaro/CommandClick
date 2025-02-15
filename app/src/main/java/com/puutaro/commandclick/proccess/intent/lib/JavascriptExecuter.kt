@@ -210,10 +210,9 @@ object JavascriptExecuter {
         extraMapCon: Map<String, String>?,
         webView: WebView?
     ){
-        val context = fragment.context
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-                context,
+                fragment.context,
                 execJsPath
             )
         val jsKeyToSubKeyListCon = SettingFile.readFromList(

@@ -1272,9 +1272,9 @@ class WebViewJsDialog(
         terminalFragment: TerminalFragment?,
         jsPath: String,
     ){
-        val context = terminalFragment?.context
+        if(terminalFragment == null) return
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-            context,
+            terminalFragment.context,
             currentScriptPath,
         )
         val fannelPath = CcPathTool.getMainFannelFilePath(
@@ -1288,7 +1288,6 @@ class WebViewJsDialog(
             setReplaceVariableMap,
             fannelName
         )
-        if(terminalFragment == null) return
         JavascriptExecuter.jsOrActionHandler(
             terminalFragment,
             execJsPath,

@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.pin
 import android.content.Context
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.broadcast.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -57,7 +58,7 @@ object PinFannelManager {
     }
 
     fun saveForPreInstall(
-        context: Context?
+        context: Context?,
     ){
         if(
             File(pinFannelTxtPath).isFile
@@ -203,9 +204,12 @@ object PinFannelManager {
                 pinInfoMapPath ->
             val pinInfoMapCon = SettingFile.read(
                 context,
-                pinInfoMapPath,
                 fannelPath,
                 setReplaceVariables,
+                null,
+                null,
+                null,
+                pinInfoMapPath,
             )
             val pinInfoMapSrc = CmdClickMap.createMap(
                 pinInfoMapCon,

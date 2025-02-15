@@ -67,7 +67,10 @@ class LongPressForSrcImageAnchor(
             )
         }.split("\n")
         val longPressMenuMapList = LongPressMenuTool.LongPressInfoMapList.makeMenuMapList(
-            context,
+            terminalFragment,
+            terminalFragment.busyboxExecutor,
+            terminalFragment.settingActionAsyncCoroutine,
+            terminalFragment.imageActionAsyncCoroutine,
             longPressScriptList,
             LongPressMenuTool.LongPressType.SRC_IMAGE_ANCHOR,
             listOf(longPressLinkUrl, longPressImageUrl)
@@ -156,7 +159,7 @@ class LongPressForSrcImageAnchor(
             selectedScriptNameOrPathObj,
         )
         val settingValList = LongPressMenuTool.extractSettingValList(
-            context,
+            terminalFragment,
             execJsPath,
         )
         val srcImageAnchorLongPressJsPath =  SettingVariableReader.getStrValue(

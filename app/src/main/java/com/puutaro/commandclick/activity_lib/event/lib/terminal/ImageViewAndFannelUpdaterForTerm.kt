@@ -335,9 +335,12 @@ object ImageViewAndFannelUpdaterForTerm {
         editConstraintListAdapter: EditConstraintListAdapter?,
         imageAcCon: String,
     ){
+        if(
+            terminalFragment == null
+        ) return
         val setReplaceVariableMapSrc = withContext(Dispatchers.IO) {
             SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-                activity,
+                terminalFragment.context,
                 fannelPath
             )
         }
@@ -360,10 +363,10 @@ object ImageViewAndFannelUpdaterForTerm {
         }
         withContext(Dispatchers.IO) {
             ImageActionManager().exec(
-                terminalFragment,
+                terminalFragment.context,
                 fannelInfoMap,
                 setReplaceVariableMapSrc,
-                terminalFragment?.busyboxExecutor,
+                terminalFragment.busyboxExecutor,
                 imageView,
                 requestBuilder,
                 ImageActionAsyncCoroutine(),

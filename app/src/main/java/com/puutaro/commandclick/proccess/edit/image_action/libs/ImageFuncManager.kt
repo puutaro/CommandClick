@@ -1,9 +1,11 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
@@ -19,6 +21,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystems
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FlipForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.GradForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ImportDataForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ShapeOverlayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.MaskForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OpacityForImageAction
@@ -36,7 +39,7 @@ object ImageFuncManager {
     private const val funcTypeAndMethodSeparatorDot = "."
 
     suspend fun handle(
-        fragment: Fragment,
+        context: Context?,
         funcTypeDotMethod: String,
         baseArgsPairList: List<Pair<String, String>>,
         busyboxExecutor: BusyboxExecutor?,
@@ -74,21 +77,21 @@ object ImageFuncManager {
         return when(funcType){
             FuncType.ICON ->
                 IconForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList
                 )
             FuncType.FANNEL_ICON ->
                 FannelIconForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList
                 )
             FuncType.FILE ->
                 FileSystemsForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -96,28 +99,28 @@ object ImageFuncManager {
                 )
             FuncType.WALL ->
                 WallForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
                 )
             FuncType.ARB ->
                 ArbForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
                 )
             FuncType.SHAPE_OVERLAY ->
                 ShapeOverlayForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
                 )
             FuncType.DEBUG ->
                 DebugForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -125,7 +128,7 @@ object ImageFuncManager {
                 )
             FuncType.DELAY ->
                 DelayForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -133,7 +136,7 @@ object ImageFuncManager {
                 )
             FuncType.VIEW ->
                 ViewForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -143,7 +146,7 @@ object ImageFuncManager {
                 )
             FuncType.CUT ->
                 CutForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -151,7 +154,7 @@ object ImageFuncManager {
                 )
             FuncType.OVERLAY ->
                 OverlayForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -159,7 +162,7 @@ object ImageFuncManager {
                 )
             FuncType.OPACITY ->
                 OpacityForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -167,7 +170,7 @@ object ImageFuncManager {
                 )
             FuncType.ROTATE ->
                 RotateForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -175,7 +178,7 @@ object ImageFuncManager {
                 )
             FuncType.BLUR ->
                 BlurForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -183,7 +186,7 @@ object ImageFuncManager {
                 )
             FuncType.COLOR ->
                 ColorForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -191,14 +194,14 @@ object ImageFuncManager {
                 )
             FuncType.GRAD ->
                 GradForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
                 )
             FuncType.SIZE ->
                 SizeForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -206,7 +209,7 @@ object ImageFuncManager {
                 )
             FuncType.MASK ->
                 MaskForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -214,7 +217,7 @@ object ImageFuncManager {
                 )
             FuncType.FLIP ->
                 FlipForImageAction.handle(
-                    fragment,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -222,11 +225,19 @@ object ImageFuncManager {
                 )
             FuncType.STR_PNG ->
                 StrPngForImageAction.handle(
-                        fragment,
+                        context,
                         funcTypeStr,
                         methodName,
                         baseArgsPairList,
                     )
+            FuncType.IMPORT_DATE ->
+                ImportDataForImageAction.handle(
+                    context,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
         }
 
     }
@@ -254,6 +265,7 @@ object ImageFuncManager {
         MASK("mask"),
         FLIP("flip"),
         STR_PNG("strPng"),
+        IMPORT_DATE("importData"),
     }
 
 }

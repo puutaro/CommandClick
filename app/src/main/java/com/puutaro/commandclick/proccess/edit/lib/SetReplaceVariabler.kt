@@ -31,8 +31,8 @@ object SetReplaceVariabler {
         )
         val noImportRepValMap = execMakeSetReplaceVariableMap(
             context,
-            settingVariableList,
             fannelInfoMap,
+            settingVariableList,
             null,
         )
 //        FileSystems.updateFile(
@@ -57,16 +57,16 @@ object SetReplaceVariabler {
         ) return noImportRepValMap
         return execMakeSetReplaceVariableMap(
             context,
-            settingVariableList,
             fannelInfoMap,
+            settingVariableList,
             noImportRepValMap,
         )
     }
 
     private fun execMakeSetReplaceVariableMap(
         context: Context?,
-        settingVariableList: List<String>?,
         fannelInfoMap: HashMap<String, String>,
+        settingVariableList: List<String>?,
         noImportRepValMap: Map<String, String>?,
     ): Map<String, String>? {
         if(
@@ -74,9 +74,12 @@ object SetReplaceVariabler {
         ) return null
         val setReplaceVariableMapBeforeRecursiveReplace = ListSettingVariableListMaker.makeFromSettingVariableList(
             context,
-            CommandClickScriptVariable.SET_REPLACE_VARIABLE,
             fannelInfoMap,
             noImportRepValMap,
+            null,
+            null,
+            null,
+            CommandClickScriptVariable.SET_REPLACE_VARIABLE,
             settingVariableList,
         ).joinToString(",")
             .let {

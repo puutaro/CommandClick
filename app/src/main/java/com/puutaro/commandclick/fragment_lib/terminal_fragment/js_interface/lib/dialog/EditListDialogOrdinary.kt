@@ -230,10 +230,13 @@ class EditListDialogOrdinary(
             val editListConfigMap = withContext(Dispatchers.IO) {
                 ListSettingVariableListMaker.makeConfigMapFromSettingValList(
                     context,
-                    CommandClickScriptVariable.EDIT_LIST_CONFIG,
-                    virtualSettingValsListForEditList,
                     fannelInfoMap,
                     setReplaceVariableMap,
+                    terminalFragment.busyboxExecutor,
+                    terminalFragment.settingActionAsyncCoroutine,
+                    terminalFragment.imageActionAsyncCoroutine,
+                    CommandClickScriptVariable.EDIT_LIST_CONFIG,
+                    virtualSettingValsListForEditList,
                     String()
                 )
             }

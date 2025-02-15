@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.setting_action
 
+import android.content.Context
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
@@ -67,11 +69,12 @@ class SettingActionManager {
     }
 
     suspend fun exec(
-        fragment: Fragment?,
+        context: Context?,
+        fragmentActivity: FragmentActivity?,
         fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
         topLevelValueStrKeyList: List<String>?,
         topVarNameToValueStrMap: Map<String, String?>?,
         keyToSubKeyCon: String?,
@@ -80,7 +83,7 @@ class SettingActionManager {
         topAcSVarName: String? = null,
     ): Map<String, String> {
         if(
-            fragment == null
+            context == null
             || keyToSubKeyCon.isNullOrEmpty()
         ) return emptyMap()
         val keyToSubKeyConList = makeSettingActionKeyToSubKeyList(
@@ -91,7 +94,8 @@ class SettingActionManager {
             keyToSubKeyConList.isNullOrEmpty()
         ) return emptyMap()
         val settingActionExecutor = SettingActionExecutor(
-            WeakReference(fragment),
+            context,
+            WeakReference(fragmentActivity),
             fannelInfoMap,
             setReplaceVariableMapSrc,
             busyboxExecutor,
@@ -174,7 +178,9 @@ class SettingActionManager {
 
 
     private class SettingActionExecutor(
-        private val fragmentRef: WeakReference<Fragment>,
+        private val context: Context?,
+        private val fragmentActivityRef: WeakReference<FragmentActivity?>,
+//        private val fragmentRef: WeakReference<Fragment>,
         private val fannelInfoMap: HashMap<String, String>,
         private val setReplaceVariableMapSrc: Map<String, String>?,
         private val busyboxExecutor: BusyboxExecutor?,
@@ -197,7 +203,7 @@ class SettingActionManager {
 
         suspend fun makeResultLoopKeyToVarNameValueMap(
             topVarNameToValueStrMap: Map<String, String?>?,
-            settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+            settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
             editConstraintListAdapterArg: EditConstraintListAdapter?,
             keyToSubKeyConList: List<Pair<String, String>>?,
             curMapLoopKey: String,
@@ -211,10 +217,13 @@ class SettingActionManager {
             SettingActionData.PrivateLoopKeyVarNameValueStrMap,
 //            SettingActionData.LoopKeyToAsyncDeferredVarNameValueStrMap,
         >? {
-            val fragment = fragmentRef.get()
-                ?: return null
-            val context = fragment.context
-                ?: return null
+//            val fragment = fragmentRef.get()
+//                ?: return null
+            if(
+                context == null
+            ) return null
+//            val context = fragment.context
+//                ?: return null
             val loopKeyToVarNameValueStrMap =
                 SettingActionData.LoopKeyToVarNameValueStrMap()
             val privateLoopKeyVarNameValueStrMap =
@@ -679,7 +688,7 @@ class SettingActionManager {
                                 }
                             }
                             CoroutineScope(Dispatchers.IO).launch {
-                                settingActionAsyncCoroutine.put(asyncJob)
+                                settingActionAsyncCoroutine?.put(asyncJob)
                             }
                             return@forEachIndexed
                         }
@@ -872,7 +881,8 @@ class SettingActionManager {
                             val asyncJob = CoroutineScope(Dispatchers.IO).launch {
                                 val deferred = async {
                                     SettingVarExecutor().exec(
-                                        fragment,
+                                        context,
+                                        fragmentActivityRef.get(),
                                         fannelInfoMap,
                                         setReplaceVariableMapSrc,
                                         mainSubKeyPairList,
@@ -972,12 +982,13 @@ class SettingActionManager {
 //                                )
                             }
                             CoroutineScope(Dispatchers.IO).launch {
-                                settingActionAsyncCoroutine.put(asyncJob)
+                                settingActionAsyncCoroutine?.put(asyncJob)
                             }
                             return@forEachIndexed
                         }
                         SettingVarExecutor().exec(
-                            fragment,
+                            context,
+                            fragmentActivityRef.get(),
                             fannelInfoMap,
                             setReplaceVariableMapSrc,
                             mainSubKeyPairList,
@@ -1070,7 +1081,7 @@ class SettingActionManager {
                         )?.get(settingReturnKey)
                             ?: String()
                         SettingReturnExecutor().exec(
-                            fragment,
+                            context,
                             mainSubKeyPairList,
                             curMapLoopKey,
                             topVarNameToValueStrMap,
@@ -1302,7 +1313,8 @@ class SettingActionManager {
             private val itPronoun = SettingActionKeyManager.ValueStrVar.itPronoun
 
             suspend fun exec(
-                fragment: Fragment,
+                context: Context?,
+                fragmentActivity: FragmentActivity?,
                 fannelInfoMap: HashMap<String, String>,
                 setReplaceVariableMapSrc: Map<String, String>?,
                 mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
@@ -1319,7 +1331,6 @@ class SettingActionManager {
                 renewalVarName: String?,
                 keyToSubKeyConWhere: String,
             ): Pair<Pair<String, String?>, SettingActionKeyManager.BreakSignal?>? {
-                val context = fragment.context
                 var itPronounValueStrToBreakSignal: Pair<
                         String?,
                         SettingActionKeyManager.BreakSignal?
@@ -1623,7 +1634,8 @@ class SettingActionManager {
 //                                )
 //                            }
                             val resultValueStrToExitMacroAndCheckErr = SettingFuncManager.handle(
-                                fragment,
+                                context,
+                                fragmentActivity,
                                 fannelInfoMap,
                                 setReplaceVariableMapSrc,
                                 busyboxExecutor,
@@ -1816,7 +1828,8 @@ private object SettingFuncManager {
     private const val funcTypeAndMethodSeparatorDot = "."
 
     suspend fun handle(
-        fragment: Fragment?,
+        context: Context?,
+        fragmentActivity: FragmentActivity?,
         fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
@@ -1863,7 +1876,7 @@ private object SettingFuncManager {
                 )
             FuncType.TOAST -> {
                 ToastForSetting.handle(
-                    fragment?.context,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -1872,7 +1885,7 @@ private object SettingFuncManager {
             }
             FuncType.DEBUG -> {
                 DebugForSetting.handle(
-                    fragment?.context,
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -1916,7 +1929,7 @@ private object SettingFuncManager {
                 )
             FuncType.EDIT ->
                 EditForSetting.handle(
-                    fragment,
+                    fragmentActivity,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -1954,7 +1967,7 @@ private object SettingFuncManager {
                 )
             FuncType.SYSTEM_INFO ->
                 SystemInfoForSetting.handle(
-                    fragment,
+                    fragmentActivity,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,
@@ -1962,7 +1975,8 @@ private object SettingFuncManager {
                 )
             FuncType.EVAL ->
                 EvalForSetting.handle(
-                    fragment,
+                    context,
+                    fragmentActivity,
                     fannelInfoMap,
                     setReplaceVariableMapSrc,
                     busyboxExecutor,
@@ -2012,7 +2026,8 @@ object EvalForSetting {
     private const val defaultNullMacroStr = FuncCheckerForSetting.defaultNullMacroStr
 
     suspend fun handle(
-        fragment: Fragment?,
+        context: Context?,
+        fragmentActivity: FragmentActivity?,
         fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
@@ -2218,7 +2233,8 @@ object EvalForSetting {
                         )
                     }
                     MapOperator.map(
-                        fragment,
+                        context,
+                        fragmentActivity,
                         fannelInfoMap,
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
@@ -2250,7 +2266,8 @@ object EvalForSetting {
         private val itPronoun = SettingActionKeyManager.ValueStrVar.itPronoun
 
         suspend fun map(
-            fragment: Fragment?,
+            context: Context?,
+            fragmentActivity: FragmentActivity?,
             fannelInfoMap: HashMap<String, String>,
             setReplaceVariableMapSrc: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
@@ -2325,7 +2342,8 @@ object EvalForSetting {
 //                        )
                         when(semaphore == null) {
                             true -> execAction(
-                                fragment,
+                                context,
+                                fragmentActivity,
                                 fannelInfoMap,
                                 setReplaceVariableMapSrc,
                                 busyboxExecutor,
@@ -2341,7 +2359,8 @@ object EvalForSetting {
                             )
                             else -> semaphore.withPermit {
                                 execAction(
-                                    fragment,
+                                    context,
+                                    fragmentActivity,
                                     fannelInfoMap,
                                     setReplaceVariableMapSrc,
                                     busyboxExecutor,
@@ -2410,7 +2429,8 @@ object EvalForSetting {
         }
 
         private suspend fun execAction(
-            fragment: Fragment?,
+            context: Context?,
+            fragmentActivity: FragmentActivity?,
             fannelInfoMap: HashMap<String, String>,
             setReplaceVariableMapSrc: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
@@ -2429,7 +2449,8 @@ object EvalForSetting {
                 indexVarName to index.toString(),
             ) + fieldVarMarkToValueStrMap
             val outputVarNameToValueStrMap = SettingActionManager().exec(
-                fragment,
+                context,
+                fragmentActivity,
                 fannelInfoMap,
                 setReplaceVariableMapSrc,
                 busyboxExecutor,

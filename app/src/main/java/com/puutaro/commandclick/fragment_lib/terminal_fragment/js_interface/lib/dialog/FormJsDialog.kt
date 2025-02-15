@@ -123,16 +123,16 @@ class FormJsDialog(
                 settingSectionEnd,
             )
 
-        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
-            context,
-            CommandClickVariables.extractValListFromHolder(
-                virtualJsContentsList,
-                settingSectionStart,
-                settingSectionEnd
-            ),
+//        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
+//            context,
+//            CommandClickVariables.extractValListFromHolder(
+//                virtualJsContentsList,
+//                settingSectionStart,
+//                settingSectionEnd
+//            ),
+////            String(),
 //            String(),
-            String(),
-        )
+//        )
 
 //        val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
 //            recordNumToMapNameValueInSettingHolder,

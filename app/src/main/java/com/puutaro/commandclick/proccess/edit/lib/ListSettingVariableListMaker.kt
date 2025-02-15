@@ -1,9 +1,13 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SettingVariableReader
@@ -20,18 +24,25 @@ object ListSettingVariableListMaker {
 
     fun makeConfigMapFromSettingValList(
         context: Context?,
-        targetSettingConfigValName: String,
-        settingVariableList: List<String>?,
         fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
+        targetSettingConfigValName: String,
+        settingVariableList: List<String>?,
         defaultButtonConfigCon: String,
     ): Map<String, String> {
         val settingButtonConfigMapStr =
             makeFromSettingVariableList(
                 context,
-                targetSettingConfigValName,
                 fannelInfoMap,
                 setReplaceVariableMap,
+                busyboxExecutor,
+                settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
+                targetSettingConfigValName,
+
                 settingVariableList
             ).joinToString(",")
                 .let {
@@ -49,9 +60,12 @@ object ListSettingVariableListMaker {
     }
     fun makeFromSettingVariableList(
         context: Context?,
-        settingVariableName: String,
         fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
+        settingVariableName: String,
         settingVariablesList: List<String>?,
     ): List<String> {
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(
@@ -84,9 +98,12 @@ object ListSettingVariableListMaker {
                         )
                     SettingFile.read(
                         context,
-                        listSettingVariablePath,
                         File(cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
                         setReplaceVariableMap,
+                        busyboxExecutor,
+                        settingActionAsyncCoroutine,
+                        imageActionAsyncCoroutine,
+                        listSettingVariablePath,
                     )
                 }
             }.let {
@@ -113,16 +130,22 @@ object ListSettingVariableListMaker {
 
     fun makeFromSettingPath(
         context: Context?,
-        settingPath: String,
         fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
+        settingPath: String,
     ): Map<String, String> {
         val currentFannelName = FannelInfoTool.getCurrentFannelName(fannelInfoMap)
         val configMapStr = SettingFile.read(
             context,
-            settingPath,
             File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
             setReplaceVariableMap,
+            busyboxExecutor,
+            settingActionAsyncCoroutine,
+            imageActionAsyncCoroutine,
+            settingPath,
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "ltitleSetting.txt").absolutePath,

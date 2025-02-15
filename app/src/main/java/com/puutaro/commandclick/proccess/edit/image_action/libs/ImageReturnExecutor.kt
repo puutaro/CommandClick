@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.image_action.libs
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
@@ -19,7 +20,7 @@ class ImageReturnExecutor {
     private val iIf = ImageActionKeyManager.ImageReturnManager.ImageReturnKey.I_IF
 
     suspend fun exec(
-        fragment: Fragment,
+        context: Context?,
         imageActionExitManager: ImageActionData.ImageActionExitManager,
         mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
         returnBitmap: Bitmap?,
@@ -31,7 +32,6 @@ class ImageReturnExecutor {
                     >?,
             ImageActionKeyManager.BreakSignal?
             >? {
-        val context = fragment.context
 //        val isIIf = mainSubKeyPairList.any {
 //            val mainSubKey = it.first
 //            mainSubKey == iIf.key

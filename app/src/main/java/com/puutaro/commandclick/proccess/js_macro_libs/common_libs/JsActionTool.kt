@@ -207,7 +207,7 @@ object JsActionTool {
             null
         )
         val keyToSubMapTypeMapToKeyToSubKeyConListByValidKey = createKeyToSubMapTypeMap(
-            fragment.context,
+            fragment,
             fannelInfoMap,
             keyToSubKeyConWithReflectRepValDefalt,
             setReplaceVariableMap,
@@ -611,7 +611,7 @@ object JsActionTool {
     }
 
     private fun createKeyToSubMapTypeMap(
-        context: Context?,
+        fragment: Fragment,
         fannelInfoMap: HashMap<String, String>,
         keyToSubKeyCon: String?,
         setReplaceVariableMap: Map<String, String>?,
@@ -620,7 +620,7 @@ object JsActionTool {
             List<Pair<String, String>>
             >? {
         val keyToSubKeyMapListToKeyToSubKeyConListByValidKey = KeyToSubKeyMapListMaker.make(
-            context,
+            fragment,
             keyToSubKeyCon,
             fannelInfoMap,
             setReplaceVariableMap,
@@ -858,7 +858,7 @@ private object KeyToSubKeyMapListMaker {
         }
 
     fun make(
-        context: Context?,
+        fragment: Fragment,
         keyToSubKeyCon: String?,
         fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMap: Map<String, String>?,
@@ -891,7 +891,7 @@ private object KeyToSubKeyMapListMaker {
                 ) return@map listOf(keyToSubKeyPair)
                 val putKeyToSubKeyConToErrType =
                     ActionImportPutter.put(
-                        context,
+                        fragment,
                         currentFannelName,
                         setReplaceVariableMap,
                         keyToSubKeyPair
@@ -1106,7 +1106,7 @@ private object ActionImportPutter {
         }.joinToString("\n") + "\n"
     }
     fun put(
-        context: Context?,
+        fragment: Fragment,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyPair: Pair<String, String>,
@@ -1161,7 +1161,7 @@ private object ActionImportPutter {
                 "${jsMainKey}=?${actionImportVirtualSubKey}=${pathNotRegisterInRepValErrSignal}" to ErrSignal.NO_ERR
             else -> {
                 val importConListToErrType = makeImportConSrcToErrType(
-                    context,
+                    fragment,
                     actionImportMap,
                     importPath,
 //                    currentAppDirPath,
@@ -1199,7 +1199,7 @@ private object ActionImportPutter {
     }
 
     private fun makeImportConSrcToErrType(
-        context: Context?,
+        fragment: Fragment,
         actionImportMap: Map<String, String>,
         importPath: String,
 //        currentAppDirPath: String,
@@ -1207,7 +1207,7 @@ private object ActionImportPutter {
         setReplaceVariableMap: Map<String, String>?,
     ): Pair<List<String>, ErrSignal> {
         val importSrcConBeforeReplace = makeActionImportSrcCon(
-            context,
+            fragment,
             importPath,
 //            currentAppDirPath,
             currentFannelName,
@@ -1596,7 +1596,7 @@ private object ActionImportPutter {
     }
 
     private fun makeActionImportSrcCon(
-        context: Context?,
+        fragment: Fragment,
         importPath: String,
 //        currentAppDirPath: String,
         currentFannelName: String,
@@ -1616,11 +1616,14 @@ private object ActionImportPutter {
 //            ).joinToString("\n\n") + "\n-----\n"
 //        )
         val actionImportSrcCon = SettingFile.read(
-            context,
-            importPath,
+            fragment.context,
             File(UsePath.cmdclickDefaultAppDirPath, currentFannelName).absolutePath,
             setReplaceVariableMap,
-        )
+            null,
+            null,
+            null,
+            importPath,
+            )
         beforeActionImportMap.put(
             importPath,
             actionImportSrcCon,

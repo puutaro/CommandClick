@@ -88,6 +88,7 @@ class EditConstraintListAdapter(
 ): RecyclerView.Adapter<EditConstraintListAdapter.EditListViewHolder>()
 {
     private val context = fragmentRef.get()?.context
+    private val fragmentActivity = fragmentRef.get()?.activity
     private val listLimitSize = 300
     private var initSettingValMap = RecordNumToMapNameValueInHolder.parse(
         fannelContentsList,
@@ -525,7 +526,8 @@ class EditConstraintListAdapter(
                     ) return@let String() to emptyMap()
                     val settingActionManager = SettingActionManager()
                     val varNameToValueMap = settingActionManager.exec(
-                        fragment,
+                        context,
+                        fragmentActivity,
                         fannelInfoMap,
                         setReplaceVariableMap,
                         busyboxExecutor,
@@ -566,7 +568,7 @@ class EditConstraintListAdapter(
             dateList.add("frameImageActionStart" to LocalDateTime.now())
             val varNameToBitmapMapInFrame = withContext(Dispatchers.IO){
                 ImageActionManager().exec(
-                    fragment,
+                    context,
                     fannelInfoMap,
                     setReplaceVariableMap,
                     busyboxExecutor,
@@ -784,7 +786,8 @@ class EditConstraintListAdapter(
                                             contentsKeyPairsListConSrcWithReplace.isNullOrEmpty()
                                         ) return@let emptyMap()
                                         SettingActionManager().exec(
-                                            fragment,
+                                            context,
+                                            fragmentActivity,
                                             fannelInfoMap,
                                             setReplaceVariableMap,
                                             busyboxExecutor,
@@ -1035,7 +1038,7 @@ class EditConstraintListAdapter(
                 val topLevelVarNameToBitmapMap =
                     globalVarNameToBitmapMap + varNameToBitmapMapInFrame
                 ImageActionManager().exec(
-                    fragment,
+                    context,
                     fannelInfoMap,
                     setReplaceVariableMap,
                     busyboxExecutor,
@@ -1333,7 +1336,7 @@ class EditConstraintListAdapter(
                 val topLevelVarNameToBitmapMap =
                     globalVarNameToBitmapMap + varNameToBitmapMapInFrame
                 ImageActionManager().exec(
-                    fragment,
+                    context,
                     fannelInfoMap,
                     setReplaceVariableMap,
                     busyboxExecutor,

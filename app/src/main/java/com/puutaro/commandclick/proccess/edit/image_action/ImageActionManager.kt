@@ -1,9 +1,11 @@
 package com.puutaro.commandclick.proccess.edit.image_action
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
@@ -76,13 +78,13 @@ class ImageActionManager {
     }
 
     suspend fun exec(
-        fragment: Fragment?,
+        context: Context?,
         fannelInfoMap: HashMap<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         imageView: AppCompatImageView?,
         requestBuilder: RequestBuilder<Drawable>?,
-        imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
+        imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
         topLevelBitmapStrKeyList: List<String>?,
         topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
         keyToSubKeyCon: String?,
@@ -90,27 +92,23 @@ class ImageActionManager {
         editConstraintListAdapterArg: EditConstraintListAdapter? = null,
     ): Map<String, Bitmap?> {
         if(
-            fragment == null
-            || keyToSubKeyCon.isNullOrEmpty()
+            keyToSubKeyCon.isNullOrEmpty()
         ) return emptyMap()
         val keyToSubKeyConList = makeImageActionKeyToSubKeyList(
-            fragment,
-            fannelInfoMap,
             keyToSubKeyCon,
             setReplaceVariableMapSrc,
-            null,
         )
         if(
             keyToSubKeyConList.isNullOrEmpty()
         ) return emptyMap()
         val imageActionExecutor = ImageActionExecutor(
-            WeakReference(fragment),
             fannelInfoMap,
             setReplaceVariableMapSrc,
             busyboxExecutor,
             topLevelBitmapStrKeyList,
         )
         val loopClasses = imageActionExecutor.makeResultLoopKeyToVarNameValueMap(
+            context,
             imageView,
             requestBuilder,
             topVarNameToVarNameBitmapMap,
@@ -163,10 +161,7 @@ class ImageActionManager {
     }
 
     private fun makeImageActionKeyToSubKeyList(
-        fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
         keyToSubKeyCon: String?,
-        setReplaceVariableMapSrc: Map<String, String>?,
         repValsMap: Map<String, String>?
     ): List<Pair<String, String>>? {
 //        val setReplaceVariableMap = makeSetRepValMap(
@@ -189,7 +184,7 @@ class ImageActionManager {
 
 
     private class ImageActionExecutor(
-        private val fragmentRef: WeakReference<Fragment>,
+//        private val fragmentRef: WeakReference<Fragment>,
         private val fannelInfoMap: HashMap<String, String>,
         private val setReplaceVariableMapSrc: Map<String, String>?,
         private val busyboxExecutor: BusyboxExecutor?,
@@ -207,10 +202,11 @@ class ImageActionManager {
 
 
         suspend fun makeResultLoopKeyToVarNameValueMap(
+            context: Context?,
             imageView: AppCompatImageView?,
             requestBuilder: RequestBuilder<Drawable>?,
             topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
-            imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
+            imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
             editConstraintListAdapterArg: EditConstraintListAdapter?,
             keyToSubKeyConList: List<Pair<String, String>>?,
             curMapLoopKey: String,
@@ -223,10 +219,13 @@ class ImageActionManager {
                 ImageActionData.LoopKeyToVarNameBitmapMap,
                 ImageActionData.PrivateLoopKeyVarNameBitmapMap,
         >? {
-            val fragment = fragmentRef.get()
-                ?: return null
-            val context = fragment.context
-                ?: return null
+//            val fragment = fragmentRef.get()
+//                ?: return null
+//            val context = fragment.context
+//                ?: return null
+            if(
+                context == null
+            ) return null
             val loopKeyToVarNameBitmapMap =
                 ImageActionData.LoopKeyToVarNameBitmapMap()
             val privateLoopKeyVarNameBitmapMap =
@@ -562,6 +561,7 @@ class ImageActionManager {
 //                                            ).joinToString("\n")  + "\n\n========\n\n"
 //                                        )
                                         val loopMapClasses = makeResultLoopKeyToVarNameValueMap(
+                                            context,
                                             imageView,
                                             requestBuilder,
                                             topVarNameToVarNameBitmapMap,
@@ -623,7 +623,7 @@ class ImageActionManager {
                                 }
                             }
                             CoroutineScope(Dispatchers.IO).launch {
-                                    imageActionAsyncCoroutine.put(asyncJob)
+                                    imageActionAsyncCoroutine?.put(asyncJob)
                             }
                             return@forEach
                         }
@@ -633,6 +633,7 @@ class ImageActionManager {
                                 it.key
                             }
                         val loopMapClasses = makeResultLoopKeyToVarNameValueMap(
+                            context,
                             imageView,
                             requestBuilder,
                             topVarNameToVarNameBitmapMap,
@@ -745,7 +746,7 @@ class ImageActionManager {
                             val asyncJob = CoroutineScope(Dispatchers.IO).launch {
                                 val deferred = async {
                                     ImageVarExecutor().exec(
-                                        fragment,
+                                        context,
                                         mainSubKeyPairList,
                                         busyboxExecutor,
                                         imageView,
@@ -864,12 +865,12 @@ class ImageActionManager {
 //                                )
                             }
                             CoroutineScope(Dispatchers.IO).launch {
-                                imageActionAsyncCoroutine.put(asyncJob)
+                                imageActionAsyncCoroutine?.put(asyncJob)
                             }
                             return@forEach
                         }
                         ImageVarExecutor().exec(
-                            fragment,
+                            context,
                             mainSubKeyPairList,
                             busyboxExecutor,
                             imageView,
@@ -991,7 +992,7 @@ class ImageActionManager {
 
                         }
                         ImageReturnExecutor().exec(
-                            fragment,
+                            context,
                             imageActionExitManager,
                             mainSubKeyPairList,
                             returnBitmap,
@@ -1236,7 +1237,7 @@ class ImageActionManager {
             private val itPronoun = ImageActionKeyManager.BitmapVar.itPronoun
 
             suspend fun exec(
-                fragment: Fragment,
+                context: Context?,
                 mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
                 busyboxExecutor: BusyboxExecutor?,
                 imageView: AppCompatImageView?,
@@ -1253,7 +1254,6 @@ class ImageActionManager {
                 renewalVarName: String?,
                 keyToSubKeyConWhere: String,
             ): Pair<Pair<String, Bitmap?>, ImageActionKeyManager.BreakSignal?>? {
-                val context = fragment.context
                 val ifStackList =
                     arrayListOf<SettingIfManager.IfStack>()
                 mainSubKeyPairList.forEach {
@@ -1488,7 +1488,7 @@ class ImageActionManager {
 //                                ).joinToString("\n")  + "\n\n========\n\n"
 //                            )
                             val resultBitmapToExitMacroAndCheckErr = ImageFuncManager.handle(
-                                fragment,
+                                context,
                                 funcTypeDotMethod,
                                 argsPairList,
                                 busyboxExecutor,

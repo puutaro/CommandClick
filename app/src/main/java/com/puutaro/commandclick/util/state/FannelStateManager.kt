@@ -76,10 +76,13 @@ object FannelStateManager {
 
         val fannelStateConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             context,
-            CommandClickScriptVariable.FANNEL_STATE_CONFIG,
-            mainFannelSettingConList,
             fannelInfoMap,
             setReplaceVariableMap,
+            null,
+            null,
+            null,
+            CommandClickScriptVariable.FANNEL_STATE_CONFIG,
+            mainFannelSettingConList,
             String()
         )
         val noRegisterFannelStateList = QuoteTool.trimBothEdgeQuote(
@@ -113,10 +116,13 @@ object FannelStateManager {
         )
         val fannelStateConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             context,
-            CommandClickScriptVariable.FANNEL_STATE_CONFIG,
-            mainFannelSettingConList,
             fannelInfoMap,
             setReplaceVariableMap,
+            null,
+            null,
+            null,
+            CommandClickScriptVariable.FANNEL_STATE_CONFIG,
+            mainFannelSettingConList,
             String()
         )
         val firstStateEntry = fannelStateConfigMap.get(

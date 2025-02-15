@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
+import android.content.Context
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -9,7 +11,7 @@ import kotlinx.coroutines.withContext
 
 object SystemInfoForSetting {
     suspend fun handle(
-        fragment: Fragment?,
+        fragmentActivity: FragmentActivity?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
@@ -46,8 +48,7 @@ object SystemInfoForSetting {
         val settingValueStr = withContext(Dispatchers.Main) {
             when (methodNameClass) {
                 MethodNameClass.GET_BACKSTACK_COUNT -> {
-                    fragment
-                        ?.activity
+                    fragmentActivity
                         ?.supportFragmentManager
                         ?.backStackEntryCount
                         ?.toString()

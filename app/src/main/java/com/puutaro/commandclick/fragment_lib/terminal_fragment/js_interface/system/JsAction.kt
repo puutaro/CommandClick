@@ -19,9 +19,8 @@ class JsAction(
     ){
         val terminalFragment = terminalFragmentRef.get()
             ?: return
-        val context = terminalFragment.context
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-            context,
+            terminalFragment.context,
             jsActionPath,
         )
         val jsActionPairListCon = SettingFile.readFromList(
@@ -48,15 +47,13 @@ class JsAction(
     ){
         val terminalFragment = terminalFragmentRef.get()
             ?: return
-        val context = terminalFragment.context
-
         val fannelInfoMap = FannelInfoTool.getFannelInfoMap(
             terminalFragment,
             mainOrSubFannelPath
         )
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-                context,
+                terminalFragment.context,
                 mainOrSubFannelPath
             )
         JsActionHandler.handle(

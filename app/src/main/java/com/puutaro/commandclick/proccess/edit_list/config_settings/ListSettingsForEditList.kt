@@ -1,12 +1,15 @@
 package com.puutaro.commandclick.proccess.edit_list.config_settings
 
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.lib.LayoutSettingFile
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.CcFilterTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.ShellTool
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -68,9 +71,12 @@ object ListSettingsForEditList  {
         }
 
         suspend fun parseForConstraint(
-            context: Context?,
+            fragment: Fragment,
             fannelInfoMap: HashMap<String, String>,
             setReplaceVariableMap: Map<String, String>?,
+            busyboxExecutor: BusyboxExecutor?,
+            settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+            imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
             viewLayoutPath: String,
         ):  Triple<
                 Map<String, String >,
@@ -90,10 +96,14 @@ object ListSettingsForEditList  {
             val fannelPath = File(UsePath.cmdclickDefaultAppDirPath, fannelName).absolutePath
 //            dateList.add("viewLayoutListSrc" to LocalDateTime.now())
             val viewLayoutListSrc = LayoutSettingFile.read(
-                context,
-                viewLayoutPathObj.absolutePath,
+                fragment.context,
                 fannelPath,
                 setReplaceVariableMap,
+                busyboxExecutor,
+                settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
+
+                viewLayoutPathObj.absolutePath,
             )
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout.txt").absolutePath,
@@ -112,7 +122,7 @@ object ListSettingsForEditList  {
                 }.joinToString(", ")
 //            dateList.add("execConstraintParse" to LocalDateTime.now())
             return execConstraintParse(
-                context,
+                fragment.context,
                 viewLayoutListSrc,
                 plusKeyToSubKeyConWhere,
             )
@@ -127,9 +137,12 @@ object ListSettingsForEditList  {
         }
 
         suspend fun parseFromListForConstraint(
-            context: Context?,
+            fragment: Fragment,
             fannelInfoMap: HashMap<String, String>,
             setReplaceVariableMap: Map<String, String>?,
+            busyboxExecutor: BusyboxExecutor?,
+            settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
+            imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
             viewLayoutConList: List<String>,
             whereForLog: String,
         ): Triple<
@@ -143,10 +156,13 @@ object ListSettingsForEditList  {
                 fannelInfoMap
             )
             val viewLayoutListSrc = LayoutSettingFile.readFromList(
-                context,
-                viewLayoutConList,
+                fragment.context,
                 fannelName,
                 setReplaceVariableMap,
+                busyboxExecutor,
+                settingActionAsyncCoroutine,
+                imageActionAsyncCoroutine,
+                viewLayoutConList,
             )
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout.txt").absolutePath,
@@ -159,7 +175,7 @@ object ListSettingsForEditList  {
 //                ).joinToString("\n\n") + "\n\n-----------\n\n"
 //            )
             return execConstraintParse(
-                context,
+                fragment.context,
                 viewLayoutListSrc,
                 whereForLog,
             )

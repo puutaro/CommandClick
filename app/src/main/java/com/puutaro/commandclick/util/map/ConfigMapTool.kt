@@ -37,9 +37,13 @@ object ConfigMapTool {
             true -> {
                 SettingFile.read(
                     context,
-                    settingMenuSettingFilePathObj.absolutePath,
                     File(UsePath.cmdclickDefaultAppDirPath, currentScriptFileName).absolutePath,
                     setReplaceVariableMap,
+                    null,
+                    null,
+                    null,
+                    settingMenuSettingFilePathObj.absolutePath,
+
                 )
             }
 

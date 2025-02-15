@@ -65,7 +65,10 @@ class LongPressForImage(
            )
        }.split("\n")
         val longPressMenuMapList = LongPressMenuTool.LongPressInfoMapList.makeMenuMapList(
-            context,
+            terminalFragment,
+            terminalFragment.busyboxExecutor,
+            terminalFragment.settingActionAsyncCoroutine,
+            terminalFragment.imageActionAsyncCoroutine,
             longPressScriptList,
             LongPressMenuTool.LongPressType.IMAGE,
             listOf(longPressImageUrl)
@@ -137,7 +140,7 @@ class LongPressForImage(
             selectedScriptNameOrPathObj,
         )
         val settingValList = LongPressMenuTool.extractSettingValList(
-            context,
+            terminalFragment,
             execJsPath,
         )
         val imageLongPressJsPath =  SettingVariableReader.getStrValue(
