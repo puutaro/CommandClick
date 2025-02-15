@@ -84,10 +84,7 @@ class SettingActionManager {
             || keyToSubKeyCon.isNullOrEmpty()
         ) return emptyMap()
         val keyToSubKeyConList = makeSettingActionKeyToSubKeyList(
-            fragment,
-            fannelInfoMap,
             keyToSubKeyCon,
-            setReplaceVariableMapSrc,
             null,
         )
         if(
@@ -154,10 +151,7 @@ class SettingActionManager {
     }
 
     private fun makeSettingActionKeyToSubKeyList(
-        fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
         keyToSubKeyCon: String?,
-        setReplaceVariableMapSrc: Map<String, String>?,
         repValsMap: Map<String, String>?
     ): List<Pair<String, String>>? {
 //        val setReplaceVariableMap = makeSetRepValMap(
