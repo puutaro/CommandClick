@@ -60,7 +60,7 @@ object CcDotArt {
     suspend fun makeMatrixStorm(
 //        pieceWidth: Int,
 //        pieceHeight: Int,
-        pieceBitmapSrc: Bitmap,
+        pieceBitmapSrcArray: Array<Bitmap>,
         widthMulti: Int,
         heightMulti: Int,
         xDup: Int,
@@ -89,6 +89,7 @@ object CcDotArt {
                             it
                         }
                         val firstOpacity = (fistLowerOpacity..maxOpacity).random()
+                        val pieceBitmapSrc = pieceBitmapSrcArray.random()
                         var horizontalRect = ImageTransformer.ajustOpacity(
                             pieceBitmapSrc,
                             firstOpacity
@@ -174,7 +175,7 @@ object CcDotArt {
             width: Int,
             height: Int,
             backgroundColorStr: String,
-            peaceBitmap: Bitmap,
+            peaceBitmapArray: Array<Bitmap>,
             times: Int,
         ): Bitmap {
             val rectBitmap = ImageTransformer.makeRect(
@@ -186,6 +187,7 @@ object CcDotArt {
             val addTimes = (1..times).random()
             for (i in 1..addTimes) {
                 val logoBitmapRate = (5..10).random() / 10f
+                val peaceBitmap = peaceBitmapArray.random()
                 val rateLogoBitmap = Bitmap.createScaledBitmap(
                     peaceBitmap,
                     (peaceBitmap.width * logoBitmapRate).toInt(),
@@ -214,7 +216,7 @@ object CcDotArt {
             width: Int,
             height: Int,
             backgroundColorStr: String,
-            peaceBitmap: Bitmap,
+            peaceBitmapArray: Array<Bitmap>,
             times: Int,
         ): Bitmap {
             val rectBitmap = ImageTransformer.makeRect(
@@ -228,6 +230,7 @@ object CcDotArt {
             val addTimes = (1..times).random()
             for (i in 1..addTimes) {
                 val logoBitmapRate = (5..10).random() / 10f
+                val peaceBitmap = peaceBitmapArray.random()
                 val rateLogoBitmap = Bitmap.createScaledBitmap(
                     peaceBitmap,
                     (peaceBitmap.width * logoBitmapRate).toInt(),
@@ -282,7 +285,7 @@ object CcDotArt {
             width: Int,
             height: Int,
             backgroundColorStr: String,
-            peaceBitmap: Bitmap,
+            peaceBitmapList: Array<Bitmap>,
             times: Int,
             basePivotXSrc: Int?,
             xRndDenoSrc: Int?,
@@ -300,6 +303,7 @@ object CcDotArt {
             val addTimes = (1..times).random()
             for (i in 1..addTimes) {
                 val logoBitmapRate = (5..10).random() / 10f
+                val peaceBitmap = peaceBitmapList.random()
                 val rateLogoBitmap = Bitmap.createScaledBitmap(
                     peaceBitmap,
                     (peaceBitmap.width * logoBitmapRate).toInt(),
@@ -375,7 +379,7 @@ object CcDotArt {
         fun makeLeftRndBitmaps(
             width: Int,
             height: Int,
-            pieceBitmap: Bitmap,
+            pieceBitmapList: Array<Bitmap>,
             startAngle: Int,
             endAngle: Int,
             times: Int,
@@ -391,6 +395,7 @@ object CcDotArt {
                 times <= 0
             ) return baseRect
             for (i in 1..times) {
+                val pieceBitmap = pieceBitmapList.random()
                 val curPieceRectSrc = rotate(
                     pieceBitmap,
                     (startAngle..endAngle).random().toFloat()
