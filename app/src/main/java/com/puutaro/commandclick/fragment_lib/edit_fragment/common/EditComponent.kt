@@ -1656,7 +1656,10 @@ object EditComponent {
                                                                 ListSettingsForEditList.ViewLayoutCheck.isTagBlankErr(
                                                                         context,
                                                                         contentsTag,
-                                                                        mapListElInfo,
+                                                                        sequenceOf(
+                                                                                mapListElInfo,
+                                                                                "contentsKeyPairsListCon: ${contentsKeyPairsListCon}",
+                                                                        ).joinToString(", "),
                                                                         EditComponent.Template.TagManager.TagGenre.CONTENTS_TAG
                                                                 ).let {
                                                                         isTagBlankErrJob ->

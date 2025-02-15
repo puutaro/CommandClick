@@ -7,4 +7,5 @@ object ShapeOverlayAssetsImages {
     const val fannelLineOrthogonalPngPath = "$fannelBkDirPath/line_orthogonal.png"
     const val fannelSfRectPngPath = "${AssetsFileManager.fannelBkDirPath}/sf_rect2.png"
     const val fannelDiamondPngPath = "${AssetsFileManager.fannelBkDirPath}/diamond_center2.png"
+    const val fannelRectRotateGradPngPath = "${AssetsFileManager.fannelBkDirPath}/rect_rotate_grad2.png"
 }

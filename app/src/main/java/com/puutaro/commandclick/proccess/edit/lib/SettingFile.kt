@@ -208,26 +208,34 @@ object SettingFile {
             PREFIX("prefix"),
             SUFFIX("suffix"),
         }
-        object RndVarManager {
-            const val rndVarMapSeparator = ','
-            const val rndValueSeparator = '|'
-        }
         private const val startLoopIndex = 1
-        private val alreadyUseLoopVarNameList = mutableListOf<String>()
 
-        private fun init(){
-            alreadyUseLoopVarNameList.clear()
+        class RndVarManager {
+
+            companion object {
+                const val rndVarMapSeparator = ','
+                const val rndValueSeparator = '|'
+            }
+            private val alreadyUseLoopVarNameList = arrayListOf<String>()
+
+            fun getAlreadyUseLoopVarNameList(): ArrayList<String> {
+                return alreadyUseLoopVarNameList
+            }
+
+            private fun init(){
+                alreadyUseLoopVarNameList.clear()
+            }
+
+            fun addToAlreadyUseLoopVarNameList(loopVarName: String?){
+                if(loopVarName.isNullOrEmpty()) return
+                alreadyUseLoopVarNameList.add(loopVarName)
+            }
+            fun isAlreadyUseLoopVarNameList(loopVarName: String?): Boolean {
+                if(loopVarName.isNullOrEmpty()) return false
+                return alreadyUseLoopVarNameList.contains(loopVarName)
+            }
         }
 
-        private fun addToAlreadyUseLoopVarNameList(loopVarName: String?){
-            if(loopVarName.isNullOrEmpty()) return
-            alreadyUseLoopVarNameList.add(loopVarName)
-        }
-
-        private fun isAlreadyUseLoopVarNameList(loopVarName: String?): Boolean {
-            if(loopVarName.isNullOrEmpty()) return false
-            return alreadyUseLoopVarNameList.contains(loopVarName)
-        }
 
 
         fun import(
@@ -236,7 +244,7 @@ object SettingFile {
             fannelName: String,
             setReplaceVariableCompleteMap: Map<String, String>? = null
         ): String {
-            init()
+//            init()
             val settingConBeforeImport = SetReplaceVariabler.execReplaceByReplaceVariables(
                 trimImportSrcCon(settingSrcConList),
                 setReplaceVariableCompleteMap,
@@ -382,42 +390,45 @@ object SettingFile {
 //                        "settingCon: ${settingCon}",
 //                    ).joinToString("\n\n\n\n") + "\n\n========\n\n"
 //                )
+                            val rndVarManager = RndVarManager()
                             if (
                                 isLoop
-                                && isAlreadyUseLoopVarNameList(loopVarName)
+                                && rndVarManager.isAlreadyUseLoopVarNameList(loopVarName)
                             ) {
                                 SettingImportErrManager.raiseAlreadyUsedVarNameErrLog(
                                     context,
                                     loopVarName,
                                     importRawSrcCon,
+                                    rndVarManager.getAlreadyUseLoopVarNameList()
                                 )
                                 return@async Pair(
                                     String(),
                                     String(),
                                 )
                             }
-                            addToAlreadyUseLoopVarNameList(loopVarName)
+                            rndVarManager.addToAlreadyUseLoopVarNameList(loopVarName)
                             val rndVarNameToValueSeq = getRndVarNameToValueSeq(
                                 importMap,
                             )
-                            if(rndVarNameToValueSeq?.any() == true){
-                                FileSystems.updateFile(
-                                    File(UsePath.cmdclickDefaultAppDirPath, "l_import.txt").absolutePath,
-                                    "importPath: ${importPath}\n" + rndVarNameToValueSeq.joinToString("\n") + "\n\n=====\n\n"
-                                )
-                            }
+//                            if(rndVarNameToValueSeq?.any() == true){
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "l_import.txt").absolutePath,
+//                                    "importPath: ${importPath}\n" + rndVarNameToValueSeq.joinToString("\n") + "\n\n=====\n\n"
+//                                )
+//                            }
                             rndVarNameToValueSeq?.forEach {
                                 (varName, _) ->
                                 if(
-                                    !isAlreadyUseLoopVarNameList(varName)
+                                    !rndVarManager.isAlreadyUseLoopVarNameList(varName)
                                 ) {
-                                    addToAlreadyUseLoopVarNameList(varName)
+                                    rndVarManager.addToAlreadyUseLoopVarNameList(varName)
                                     return@forEach
                                 }
                                 SettingImportErrManager.raiseAlreadyUsedVarNameErrLog(
                                     context,
                                     varName,
                                     importRawSrcCon,
+                                    rndVarManager.getAlreadyUseLoopVarNameList(),
                                 )
                                 return@async Pair(
                                     String(),
@@ -605,6 +616,7 @@ object SettingFile {
                 context: Context?,
                 varName: String?,
                 importRawSrcCon: String,
+                alreadyUseLoopVarNameList: List<String>,
             ){
                 val spanLoopVarNameKey =
                     CheckTool.LogVisualManager.execMakeSpanTagHolder(

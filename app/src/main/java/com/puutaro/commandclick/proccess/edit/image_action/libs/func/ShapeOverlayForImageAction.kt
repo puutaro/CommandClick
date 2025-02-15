@@ -184,6 +184,7 @@ object ShapeOverlayForImageAction {
                 ORTHOGONAL(ShapeOverlayAssetsImages.fannelLineOrthogonalPngPath),
                 SF_RECT(ShapeOverlayAssetsImages.fannelSfRectPngPath),
                 DIAMOND(ShapeOverlayAssetsImages.fannelDiamondPngPath),
+                RECT_ROTATE_GRAD(ShapeOverlayAssetsImages.fannelRectRotateGradPngPath),
             }
         }
 

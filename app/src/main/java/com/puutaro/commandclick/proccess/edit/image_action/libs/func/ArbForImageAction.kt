@@ -15,12 +15,12 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.Font
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.IconType
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
-import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction.ArbMethodArgClass.StringsArgs.StringsEnumArgs
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
+import com.puutaro.commandclick.util.str.PairListTool
 import java.io.File
 import kotlin.enums.EnumEntries
 
@@ -423,6 +423,8 @@ object ArbForImageAction {
                 }
                 val returnBitmap = RndIcons.make(
                     context,
+                    args,
+                    argsPairList,
                     width,
                     height,
                     pieceOneSide,
@@ -434,7 +436,17 @@ object ArbForImageAction {
                     iconColorStr,
                     bkColorStr,
                     layout,
-                )
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                    ) to err
+                }
                 Pair(
                     returnBitmap,
                     null,
@@ -729,7 +741,17 @@ object ArbForImageAction {
                     strokeWidthFloat,
                     letterSpacingFloat,
                     layout,
-                )
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                    ) to err
+                }
                 Pair(
                     returnBitmap,
                     null,
@@ -758,7 +780,8 @@ object ArbForImageAction {
             strokeWidthFloat: Float,
             letterSpacingFloat: Float,
             layout: ArbMethodArgClass.StringsArgs.Layout,
-        ): Bitmap {
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lstringsp.txt").absolutePath,
 //                listOf(
@@ -781,67 +804,68 @@ object ArbForImageAction {
 //                    "layout: ${layout}",
 //                ).joinToString("\n"),
 //            )
-            val stringBitmap = BitmapTool.DrawText.drawTextToBitmap(
-                string,
-                pieceWidthFloat,
-                pieceHeightFloat,
-                null,
-                fontSizeFloat,
-                fontColor,
-                strokeColor,
-                strokeWidthFloat,
-                null,
-                letterSpacingFloat,
-                font = Typeface.create(
-                    fontType,
-                    fontStyle
-                ),
-                isAntiAlias = true,
-            ).let {
-                val cutWidth = (pieceWidthFloat * 0.8).toInt()
-                val cutHeight = (pieceHeightFloat * 0.8).toInt()
-                BitmapTool.ImageTransformer.cutCenter2(
-                    it,
-                    cutWidth,
-                    cutHeight
-                )
-            }
+            return try {
+                val stringBitmap = BitmapTool.DrawText.drawTextToBitmap(
+                    string,
+                    pieceWidthFloat,
+                    pieceHeightFloat,
+                    null,
+                    fontSizeFloat,
+                    fontColor,
+                    strokeColor,
+                    strokeWidthFloat,
+                    null,
+                    letterSpacingFloat,
+                    font = Typeface.create(
+                        fontType,
+                        fontStyle
+                    ),
+                    isAntiAlias = true,
+                ).let {
+                    val cutWidth = (pieceWidthFloat * 0.8).toInt()
+                    val cutHeight = (pieceHeightFloat * 0.8).toInt()
+                    BitmapTool.ImageTransformer.cutCenter2(
+                        it,
+                        cutWidth,
+                        cutHeight
+                    )
+                }
 //            FileSystems.writeFromByteArray(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lstring.png").absolutePath,
 //                BitmapTool.convertBitmapToByteArray(
 //                    stringBitmap
 //                )
 //            )
-            val autoRndStringsBitmap = when(layout) {
-                ArbMethodArgClass.StringsArgs.Layout.LEFT -> {
-                    CcDotArt.MistMaker.makeLeftRndBitmaps(
-                        baseWidth,
-                        baseHeight,
-                        stringBitmap,
-                        startAngle,
-                        endAngle,
-                        times
-                    ).let {
-                        val cutWidth = (baseWidth * 0.8).toInt()
-                        val cutHeight = (baseHeight * 0.8).toInt()
-                        BitmapTool.ImageTransformer.cutByTarget(
-                            it,
-                            cutWidth,
-                            cutHeight,
-                            it.width - cutWidth,
-                            (it.height - cutHeight) / 2
-                        )
+                val autoRndStringsBitmap = when (layout) {
+                    ArbMethodArgClass.StringsArgs.Layout.LEFT -> {
+                        CcDotArt.MistMaker.makeLeftRndBitmaps(
+                            baseWidth,
+                            baseHeight,
+                            stringBitmap,
+                            startAngle,
+                            endAngle,
+                            times
+                        ).let {
+                            val cutWidth = (baseWidth * 0.8).toInt()
+                            val cutHeight = (baseHeight * 0.8).toInt()
+                            BitmapTool.ImageTransformer.cutByTarget(
+                                it,
+                                cutWidth,
+                                cutHeight,
+                                it.width - cutWidth,
+                                (it.height - cutHeight) / 2
+                            )
+                        }
                     }
-                }
 
-                ArbMethodArgClass.StringsArgs.Layout.RND -> {
-                    CcDotArt.MistMaker.makeRndBitmap(
-                        baseWidth,
-                        baseHeight,
-                        bkColorStr,
-                        stringBitmap,
-                        times
-                    )
+                    ArbMethodArgClass.StringsArgs.Layout.RND -> {
+                        CcDotArt.MistMaker.makeRndBitmap(
+                            baseWidth,
+                            baseHeight,
+                            bkColorStr,
+                            stringBitmap,
+                            times
+                        )
 //                        .let {
 //                        val cutWidth = (baseWidth * 0.8).toInt()
 //                        val cutHeight = (baseHeight * 0.8).toInt()
@@ -850,15 +874,24 @@ object ArbForImageAction {
 //                            cutWidth,
 //                            cutHeight,
 //                        )
+                    }
                 }
+                autoRndStringsBitmap to null
+            } catch (e: Exception){
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
             }
-            return autoRndStringsBitmap
         }
     }
 
     private object RndIcons {
         suspend fun make(
             context: Context,
+            args: ArbMethodArgClass.IconsArgs,
+            argsPairList: List<Pair<String, String>>,
             width: Int,
             height: Int,
             pieceOneSide: Int,
@@ -870,15 +903,17 @@ object ArbForImageAction {
             iconColorStr: String,
             bkColorStr: String,
             layout: ArbMethodArgClass.IconsArgs.Layout,
-        ): Bitmap {
-            val pieceBitmap = makePieceBitmap(
-                context,
-                pieceOneSide,
-                pieceOneSide,
-                shapeStr,
-                iconType,
-                iconColorStr,
-            )
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val pieceBitmap = makePieceBitmap(
+                    context,
+                    pieceOneSide,
+                    pieceOneSide,
+                    shapeStr,
+                    iconType,
+                    iconColorStr,
+                )
 //            if(endAngle == 0)
 //            FileSystems.writeFromByteArray(
 //                File(UsePath.cmdclickDefaultAppDirPath, "rpiece.png").absolutePath,
@@ -887,39 +922,129 @@ object ArbForImageAction {
 //                )
 //            )
 
-            val autoRndIcons = when(layout) {
-                ArbForImageAction.ArbMethodArgClass.IconsArgs.Layout.LEFT -> {
-                    CcDotArt.MistMaker.makeLeftRndBitmaps(
-                        width,
-                        height,
-                        pieceBitmap,
-                        startAngle,
-                        endAngle,
-                        times
-                    ).let {
-                        val cutWidth = (width * 0.8).toInt()
-                        val cutHeight = (height * 0.8).toInt()
-                        BitmapTool.ImageTransformer.cutByTarget(
-                            it,
-                            cutWidth,
-                            cutHeight,
-                            it.width - cutWidth,
-                            (it.height - cutHeight) / 2
+                val autoRndIcons = when (layout) {
+                    ArbForImageAction.ArbMethodArgClass.IconsArgs.Layout.LEFT -> {
+                        CcDotArt.MistMaker.makeLeftRndBitmaps(
+                            width,
+                            height,
+                            pieceBitmap,
+                            startAngle,
+                            endAngle,
+                            times
+                        ).let {
+                            val cutWidth = (width * 0.8).toInt()
+                            val cutHeight = (height * 0.8).toInt()
+                            BitmapTool.ImageTransformer.cutByTarget(
+                                it,
+                                cutWidth,
+                                cutHeight,
+                                it.width - cutWidth,
+                                (it.height - cutHeight) / 2
+                            )
+                        }
+                    }
+
+                    ArbForImageAction.ArbMethodArgClass.IconsArgs.Layout.RND -> {
+                        CcDotArt.MistMaker.makeRndBitmap(
+                            width,
+                            height,
+                            bkColorStr,
+                            pieceBitmap,
+                            times
+                        )
+                    }
+
+                    ArbForImageAction.ArbMethodArgClass.IconsArgs.Layout.DIAGONAL ->
+                        CcDotArt.MistMaker.makeRndDiagonalBitmap(
+                            width,
+                            height,
+                            bkColorStr,
+                            pieceBitmap,
+                            times
+                        )
+
+                    ArbForImageAction.ArbMethodArgClass.IconsArgs.Layout.PIVOT_VERTICAL -> {
+                        val basePivotX = let basePivotX@{
+                            val pivotXKey = args.pivotXKeyToDefaultValueStr.first
+                            PairListTool.getValue(
+                                argsPairList,
+                                pivotXKey
+                            ).let { pivotXSrc ->
+                                if (
+                                    pivotXSrc == null
+                                    || pivotXSrc == args.pivotXDeafultValue.toString()
+                                ) return@let null
+                                pivotXSrc.toInt()
+                            }
+                        }
+                        val xRndDeno = let xRndDeno@{
+                            val xRndDenoKey = args.xRndDenoKeyToDefaultValueStr.first
+                            PairListTool.getValue(
+                                argsPairList,
+                                xRndDenoKey
+                            ).let { xRndDenoSrc ->
+                                if (
+                                    xRndDenoSrc == null
+                                    || xRndDenoSrc == args.xRndDenoDeafultValue.toString()
+                                ) return@let null
+                                xRndDenoSrc.toInt()
+                            }
+                        }
+                        val yRange = let basePivotX@{
+                            val yRangeKey = args.yRangeKeyToDefaultValueStr.first
+                            PairListTool.getValue(
+                                argsPairList,
+                                yRangeKey
+                            ).let { yRangeSrc ->
+                                if (
+                                    yRangeSrc == null
+                                    || yRangeSrc == args.yRangeDeafultValue.toString()
+                                ) return@let null
+                                yRangeSrc.toInt()
+                            }
+                        }
+                        val pivotInWidthTimes = let basePivotX@{
+                            val yRangeKey = args.pivotInWidthTimsKeyToDefaultValueStr.first
+                            PairListTool.getValue(
+                                argsPairList,
+                                yRangeKey
+                            )?.let { pivotInWidthTimesSrc ->
+                                try {
+                                    pivotInWidthTimesSrc.toInt()
+                                } catch (e: Exception){
+                                    null
+                                }
+                            } ?: 0
+                        }
+                        FileSystems.updateFile(
+                            File(UsePath.cmdclickDefaultAppDirPath, "larb.txt").absolutePath,
+                            listOf(
+                                "xRndDeno: ${xRndDeno}",
+                                "yRange: ${yRange}",
+                                "isPivotInWidth: ${pivotInWidthTimes}",
+                            ).joinToString("\n\n") + "\n\n=====\n\n"
+                        )
+                        CcDotArt.MistMaker.makePivotVerticalBitmap(
+                            width,
+                            height,
+                            bkColorStr,
+                            pieceBitmap,
+                            times,
+                            basePivotX,
+                            xRndDeno,
+                            yRange,
+                            pivotInWidthTimes,
                         )
                     }
                 }
-
-                ArbForImageAction.ArbMethodArgClass.IconsArgs.Layout.RND -> {
-                    CcDotArt.MistMaker.makeRndBitmap(
-                        width,
-                        height,
-                        bkColorStr,
-                        pieceBitmap,
-                        times
-                    )
-                }
+                autoRndIcons to null
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
             }
-            return autoRndIcons
         }
     }
 
@@ -1158,9 +1283,31 @@ object ArbForImageAction {
                 IconsEnumArgs.LAYOUT.key,
                 IconsEnumArgs.LAYOUT.defaultValueStr
             )
+            val pivotXKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.PIVOT_X.key,
+                IconsEnumArgs.PIVOT_X.defaultValueStr
+            )
+            val xRndDenoKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.X_RND_DENO.key,
+                IconsEnumArgs.X_RND_DENO.defaultValueStr
+            )
+            val yRangeKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.Y_RANGE.key,
+                IconsEnumArgs.Y_RANGE.defaultValueStr
+            )
+            val pivotInWidthTimsKeyToDefaultValueStr = Pair(
+                IconsEnumArgs.PIVOT_IN_WIDTH_TIMES.key,
+                IconsEnumArgs.PIVOT_IN_WIDTH_TIMES.defaultValueStr
+            )
+            const val pivotXDeafultValue = -1
+            const val xRndDenoDeafultValue = -1
+            const val yRangeDeafultValue = -1
+            const val pivotInWidthTimesDefaultValue = 0
             enum class Layout {
                 LEFT,
                 RND,
+                DIAGONAL,
+                PIVOT_VERTICAL,
             }
             private const val widthSrc = 300
             private const val heightSrc = widthSrc * 2
@@ -1181,6 +1328,10 @@ object ArbForImageAction {
                 ICON_COLOR("iconColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
                 BK_COLOR("bkColor", transparentColorStr, FuncCheckerForSetting.ArgType.STRING),
                 LAYOUT("layout", Layout.LEFT.name, FuncCheckerForSetting.ArgType.STRING),
+                PIVOT_X("pivotX", pivotXDeafultValue.toString(), FuncCheckerForSetting.ArgType.INT),
+                X_RND_DENO("xRndDeno", xRndDenoDeafultValue.toString(), FuncCheckerForSetting.ArgType.INT),
+                Y_RANGE("yRange", yRangeDeafultValue.toString(), FuncCheckerForSetting.ArgType.INT),
+                PIVOT_IN_WIDTH_TIMES("pivotInWidthTimes", pivotInWidthTimesDefaultValue.toString(), FuncCheckerForSetting.ArgType.INT),
             }
         }
         data object StringsArgs : ArbMethodArgClass(), ArgType {

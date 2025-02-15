@@ -23,6 +23,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ShapeOverla
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.MaskForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OpacityForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OverlayForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.RotateForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.SizeForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.StrPngForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ViewForImageAction
@@ -164,6 +165,14 @@ object ImageFuncManager {
                     baseArgsPairList,
                     varNameToBitmapMap,
                 )
+            FuncType.ROTATE ->
+                RotateForImageAction.handle(
+                    fragment,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
             FuncType.BLUR ->
                 BlurForImageAction.handle(
                     fragment,
@@ -237,6 +246,7 @@ object ImageFuncManager {
         CUT("cut"),
         OVERLAY("overlay"),
         OPACITY("opacity"),
+        ROTATE("rotate"),
         BLUR("blur"),
         COLOR("color"),
         GRAD("grad"),

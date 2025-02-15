@@ -993,6 +993,18 @@ object WithEditConstraintListView{
 //                            ) {
 //                            return@execSetContentsCoroutine
 //                        }
+//                            if(sceneType == SceneType.BK) {
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "lbk_contens.txt").absolutePath,
+//                                    listOf(
+//                                        "contentsTag: ${contentsTagSrc}",
+//                                        "frameVarNameValueMap: ${frameVarNameValueMap}",
+////                                        "varNameToValueMap: ${varNameToValueMap}",
+////                                        "contentsVarNameToValueMap: ${contentsVarNameToValueMap}",
+//                                        "time: ${LocalDateTime.now()}",
+//                                    ).joinToString("\n") + "\n\n=========\n\n"
+//                                )
+//                            }
                             val varNameToValueMap =
                                 withContext(Dispatchers.IO) updateLinearKeyParsListCon@{
                                     Template.ReplaceHolder.replaceHolder(
@@ -1029,16 +1041,6 @@ object WithEditConstraintListView{
                                 contentsKeyPairsListConSrc,
                                 contentsVarNameToValueMap
                             )
-//                        if(sceneType == SceneType.BK) {
-//                            FileSystems.updateFile(
-//                                File(UsePath.cmdclickDefaultAppDirPath, "lbk.txt").absolutePath,
-//                                listOf(
-//                                    "frameVarNameValueMap: ${frameVarNameValueMap}",
-//                                    "varNameToValueMap: ${varNameToValueMap}",
-//                                    "contentsVarNameToValueMap: ${contentsVarNameToValueMap}",
-//                                ).joinToString("\n")
-//                            )
-//                        }
                             val contentsKeyPairsList = withContext(Dispatchers.IO) {
                                 CmdClickMap.createMap(
                                     contentsKeyPairsListCon,

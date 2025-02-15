@@ -144,12 +144,24 @@ object BitmapTool {
     object GradientBitmap {
 
         enum class GradOrient{
+            HORIZON_LINER,
+            VERTICAL_LINER,
             LINEAR,
             DIAGONAL,
             BOTH,
             VERTICAL_BOTTOM_TO_TOP,
             LEFT_RIGHT,
         }
+
+        private val horizonLinearGradOrientList = arrayOf(
+            GradientDrawable.Orientation.LEFT_RIGHT,
+            GradientDrawable.Orientation.RIGHT_LEFT,
+        )
+
+        private val verticalLinearGradOrientList = arrayOf(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            GradientDrawable.Orientation.BOTTOM_TOP,
+        )
 
         private val linearGradOrientList = arrayOf(
             GradientDrawable.Orientation.TOP_BOTTOM,
@@ -209,6 +221,8 @@ object BitmapTool {
 //                Color.parseColor(endColor),
 //            )
             val gradientOrientationList = when(gradOrient){
+                GradOrient.HORIZON_LINER -> horizonLinearGradOrientList
+                GradOrient.VERTICAL_LINER -> verticalLinearGradOrientList
                 GradOrient.BOTH -> linearGradOrientList + diagonalGradOrientList
                 GradOrient.LINEAR -> linearGradOrientList
                 GradOrient.DIAGONAL -> diagonalGradOrientList

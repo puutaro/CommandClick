@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 
 object CcDotArt {
 
@@ -204,6 +205,168 @@ object CcDotArt {
                 updatedRectBitmap = ImageTransformer.overlayOnBkBitmap(
                     updatedRectBitmap,
                     rateLogoBitmap
+                )
+            }
+            return updatedRectBitmap
+        }
+
+        fun makeRndDiagonalBitmap(
+            width: Int,
+            height: Int,
+            backgroundColorStr: String,
+            peaceBitmap: Bitmap,
+            times: Int,
+        ): Bitmap {
+            val rectBitmap = ImageTransformer.makeRect(
+                backgroundColorStr,
+                width,
+                height,
+            )
+            val totalWidth = rectBitmap.width
+            val totalHeight = rectBitmap.height
+            var updatedRectBitmap = rectBitmap
+            val addTimes = (1..times).random()
+            for (i in 1..addTimes) {
+                val logoBitmapRate = (5..10).random() / 10f
+                val rateLogoBitmap = Bitmap.createScaledBitmap(
+                    peaceBitmap,
+                    (peaceBitmap.width * logoBitmapRate).toInt(),
+                    (peaceBitmap.height * logoBitmapRate).toInt(),
+                    false,
+                ).let {
+                    rotate(
+                        it,
+                        (0..180).random().toFloat()
+                    )
+                }.let {
+                    ImageTransformer.ajustOpacity(
+                        it,
+                        (150..255).random()
+                    )
+                }
+                val marginX = totalWidth - rateLogoBitmap.width
+                val marginY = totalHeight - rateLogoBitmap.height
+                val rndX = (0..marginX).random()
+                val basePivotY = let {
+                    val baseWidth = 0
+                    val minY = 0
+                    val maxY = totalHeight
+                    val incline = (maxY - minY) / (totalWidth - baseWidth)
+                    val culcSize =
+                        incline * rndX + minY
+                        //incline * (totalWidth - baseWidth) + minY
+                    if (
+                        culcSize <= minY
+                    ) return@let minY
+                    culcSize
+                }.toInt()
+                val pivotX = let {
+                    val rndBandX = marginX / 10
+                    (rndX + (-rndBandX..rndBandX).random())
+                }
+                val pivotY = let {
+                    val rndBandY = marginY / 10
+                   (basePivotY + (-rndBandY..rndBandY).random())
+                }
+                updatedRectBitmap = ImageTransformer.overlayOnBkBitmapByPivot(
+                    updatedRectBitmap,
+                    rateLogoBitmap,
+                    pivotX.toFloat(),
+                    pivotY.toFloat(),
+                )
+            }
+            return updatedRectBitmap
+        }
+
+        fun makePivotVerticalBitmap(
+            width: Int,
+            height: Int,
+            backgroundColorStr: String,
+            peaceBitmap: Bitmap,
+            times: Int,
+            basePivotXSrc: Int?,
+            xRndDenoSrc: Int?,
+            yRangeSrc: Int?,
+            pivotInWidthTimes: Int
+        ): Bitmap {
+            val rectBitmap = ImageTransformer.makeRect(
+                backgroundColorStr,
+                width,
+                height,
+            )
+            val totalWidth = rectBitmap.width
+            val totalHeight = rectBitmap.height
+            var updatedRectBitmap = rectBitmap
+            val addTimes = (1..times).random()
+            for (i in 1..addTimes) {
+                val logoBitmapRate = (5..10).random() / 10f
+                val rateLogoBitmap = Bitmap.createScaledBitmap(
+                    peaceBitmap,
+                    (peaceBitmap.width * logoBitmapRate).toInt(),
+                    (peaceBitmap.height * logoBitmapRate).toInt(),
+                    false,
+                ).let {
+                    rotate(
+                        it,
+                        (0..180).random().toFloat()
+                    )
+                }.let {
+                    ImageTransformer.ajustOpacity(
+                        it,
+                        (150..255).random()
+                    )
+                }
+                val pivotX = let {
+                    val endOrder = when(pivotInWidthTimes > 0){
+                        false -> 0
+                        else -> pivotInWidthTimes
+                    }
+                    var pivotXSrc: Int = 0
+                    for (l in 0..endOrder) {
+                        val marginX = totalWidth - rateLogoBitmap.width
+                        val rndBandX = marginX / (xRndDenoSrc ?: 10)
+                        val rndX = basePivotXSrc ?: 0
+                        pivotXSrc = (rndX + (-rndBandX..rndBandX).random())
+                        if(
+                            pivotXSrc in 1..<marginX
+                        ) {
+                            return@let pivotXSrc
+                        }
+                    }
+                    pivotXSrc
+                }
+                val pivotY = let pivotY@ {
+                    val basePivotYToRndBandY = yRangeSrc?.let {
+                        yRangeInt ->
+                        when(yRangeInt > 0){
+                            false -> {
+                                val marginY = totalHeight - rateLogoBitmap.height
+                                val rndBandY = marginY / 10
+                                val basePivotY = (abs(yRangeInt)..marginY).random()
+                                basePivotY to rndBandY
+                            }
+                            else -> {
+                                val marginY = yRangeInt - rateLogoBitmap.height
+                                val rndBandY = marginY / 10
+                                val basePivotY = (0..marginY).random()
+                                basePivotY to rndBandY
+                            }
+                        }
+                    } ?: let {
+                        val marginY = totalHeight - rateLogoBitmap.height
+                        val rndBandY = marginY / 10
+                        val basePivotY = (0..marginY).random()
+                        basePivotY to rndBandY
+                    }
+                    val basePivotY = basePivotYToRndBandY.first
+                    val rndBandY = basePivotYToRndBandY.second
+                    (basePivotY + (-rndBandY..rndBandY).random())
+                }
+                updatedRectBitmap = ImageTransformer.overlayOnBkBitmapByPivot(
+                    updatedRectBitmap,
+                    rateLogoBitmap,
+                    pivotX.toFloat(),
+                    pivotY.toFloat(),
                 )
             }
             return updatedRectBitmap
