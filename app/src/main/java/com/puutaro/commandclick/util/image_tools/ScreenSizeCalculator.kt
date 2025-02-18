@@ -68,18 +68,17 @@ object ScreenSizeCalculator {
     }
 
     fun pxWidth(
-        fragment: Fragment
+        fragmentActivity: FragmentActivity?,
     ): Int {
         val defaultDpheight = 600
         return if(
             Build.VERSION.SDK_INT > 30
         ) {
-            val windowMetrics =
-                fragment.activity?.windowManager?.currentWindowMetrics
+            val windowMetrics = fragmentActivity?.windowManager?.currentWindowMetrics
                     ?: return defaultDpheight
             windowMetrics.bounds.width()
         } else {
-            val display = fragment.activity?.windowManager?.getDefaultDisplay()
+            val display = fragmentActivity?.windowManager?.getDefaultDisplay()
             val outMetrics = DisplayMetrics()
             display?.getMetrics(outMetrics)
             outMetrics.widthPixels
@@ -87,18 +86,18 @@ object ScreenSizeCalculator {
     }
 
     fun pxHeight(
-        fragment: Fragment
+        fragmentActivity: FragmentActivity?,
     ): Int {
         val defaultDpheight = 600
         return if(
             Build.VERSION.SDK_INT > 30
         ) {
             val windowMetrics =
-                fragment.activity?.windowManager?.currentWindowMetrics
+                fragmentActivity?.windowManager?.currentWindowMetrics
                     ?: return defaultDpheight
             windowMetrics.bounds.width()
         } else {
-            val display = fragment.activity?.windowManager?.getDefaultDisplay()
+            val display = fragmentActivity?.windowManager?.getDefaultDisplay()
             val outMetrics = DisplayMetrics()
             display?.getMetrics(outMetrics)
             outMetrics.heightPixels

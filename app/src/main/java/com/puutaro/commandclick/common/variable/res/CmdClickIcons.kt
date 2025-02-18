@@ -64,5 +64,5 @@ enum class CmdClickIcons(
     TOP("top", R.drawable.ic_top_allow, ButtonAssetsImage.topPingPath),
     BLACK_HISTORY("black_history", R.drawable.black_history_icons, ButtonAssetsImage.blackHistoryPath),
     UPDATE("update", R.drawable.icons8_update, ButtonAssetsImage.updatePingPath),
-    WHEEL("wheel", com.skydoves.colorpickerview.R.drawable.wheel, ButtonAssetsImage.wheelPingPath),
+    WHEEL("wheel", com.skydoves.colorpickerview.R.drawable.wheel, ButtonAssetsImage.wheelFillPath),
 }

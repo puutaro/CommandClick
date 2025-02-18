@@ -3,10 +3,13 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 import android.content.Context
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.delay
+import java.io.File
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.withLock
 import kotlin.enums.EnumEntries
@@ -114,6 +117,20 @@ object ImportDataForImageAction {
                     if(returnBitmap != null) break
                     delay(delayMill)
                 }
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "ldata_get.txt").absolutePath,
+//                    listOf(
+//                        "importPath: ${importPath}",
+//                        "key: ${key}",
+//                        "bitmap: ${returnBitmap}",
+//                        "mapArgMapList: ${mapArgMapList}",
+//                        "varNameToBitmapMap: ${varNameToBitmapMap}",
+//                        "Data: ${Data.get(
+//                            importPath,
+//                            key,
+//                        )}"
+//                    ).joinToString("\n")
+//                )
                 Pair(
                     returnBitmap,
                     null
@@ -162,6 +179,20 @@ object ImportDataForImageAction {
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "ldata_put.txt").absolutePath,
+//                    listOf(
+//                        "importPath: ${importPath}",
+//                        "key: ${key}",
+//                        "mapArgMapList: ${mapArgMapList}",
+//                        "varNameToBitmapMap: ${varNameToBitmapMap}",
+////                        "bitmap: ${bitmap}",
+////                        "Data: ${Data.get(
+////                            importPath,
+////                            key,
+////                        )}"
+//                    ).joinToString("\n")
+//                )
                 val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
                     mapArgMapList,
                     args.bitmapKeyToIndex,
@@ -180,6 +211,7 @@ object ImportDataForImageAction {
                     key,
                     bitmap
                 )
+
                 Pair(
                     bitmap,
                     null

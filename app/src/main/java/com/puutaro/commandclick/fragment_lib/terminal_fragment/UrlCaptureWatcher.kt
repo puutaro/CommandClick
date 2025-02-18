@@ -41,7 +41,7 @@ object UrlCaptureWatcher {
                 }
             } ?: return@launch
             val pxWidth = withContext(Dispatchers.IO){
-                ScreenSizeCalculator.pxWidth(terminalFragment)
+                ScreenSizeCalculator.pxWidth(terminalFragment.activity)
             }
             val previousUrl = withContext(Dispatchers.Main) {
                 terminalWebView.url

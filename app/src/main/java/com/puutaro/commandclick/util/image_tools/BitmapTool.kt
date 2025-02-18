@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Color.argb
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.graphics.LinearGradient
 import android.graphics.Matrix
 import android.graphics.Paint
@@ -1629,53 +1631,6 @@ object BitmapTool {
                 toParsedColor,
                 fromParsedColor
             )
-//            val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-//            FileSystems.writeFromByteArray(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lcolor_in.png").absolutePath,
-//                convertBitmapToByteArray(originalBitmap)
-//            )
-//            for (x in 0 until width) {
-//                for (y in 0 until height) {
-//                    val pixel = originalBitmap.getPixel(x, y)
-//                    if(
-//                        (x == 5
-//                        && y == 5)
-//                        || (x == 10
-//                                && y == 10)
-//                    ){
-//                        FileSystems.updateFile(
-//                            File(UsePath.cmdclickDefaultAppDirPath, "lcolor_in.txt").absolutePath,
-//                            listOf(
-//                                "x, y: ${x}, ${y}",
-//                                "toColorStr: ${toColorStr}",
-//                                "toArgb: ${toArgb}",
-//                                "fromColorStr: ${fromColorStr}",
-//                                "fromArgb: ${fromArgb}",
-//                                "pixel: ${pixel}",
-//                            ).joinToString("\n") + "\n\n=======\n\n"
-//                        )
-//                    }
-//                    if (
-//                        pixel == fromParsedColor
-//                    ) {
-//                        // Set the pixel to fully transparent
-//                        resultBitmap.setPixel(
-//                            x,
-//                            y,
-//                            toArgb,
-//                        )
-//                        continue
-//                    }
-//                    resultBitmap.setPixel(
-//                        x,
-//                        y,
-//                        pixel,
-//                    )
-//
-//                }
-//            }
-//
-//            return resultBitmap
         }
 
         private fun changeColor(
@@ -1782,6 +1737,21 @@ object BitmapTool {
             }
             bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
             return bmOut
+        }
+
+        fun convertGrayScaleBitmap(original: Bitmap): Bitmap {
+            // You have to make the Bitmap mutable when changing the config because there will be a crash
+            // That only mutable Bitmap's should be allowed to change config.
+            val bmp = original.copy(Bitmap.Config.ARGB_8888, true)
+            val bmpGrayscale = Bitmap.createBitmap(bmp.width, bmp.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bmpGrayscale)
+            val paint = Paint()
+            val colorMatrix = ColorMatrix()
+            colorMatrix.setSaturation(0f)
+            val colorMatrixFilter = ColorMatrixColorFilter(colorMatrix)
+            paint.colorFilter = colorMatrixFilter
+            canvas.drawBitmap(bmp, 0F, 0F, paint)
+            return bmpGrayscale
         }
 
         private fun isWhite(pixel: Int): Boolean {

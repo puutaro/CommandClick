@@ -105,7 +105,7 @@ class ColorPickerJsDialog(
             context,
 //            R.style.FullScreenRoundCornerDialogTheme
         ).apply {
-            val screenWidth = ScreenSizeCalculator.pxWidth(terminalFragment)
+            val screenWidth = ScreenSizeCalculator.pxWidth(terminalFragment.activity)
             val colorPickerView: ColorPickerView = this.colorPickerView
             colorPickerView.apply {
                 setFlagView(

@@ -117,7 +117,7 @@ class JsConfirmV2(
                 .sizeMultiplier(0.1f)
         val leftRightBitmapChannel = Channel<Pair<Int, Bitmap?>>(2)
         val screenWidth = ScreenSizeCalculator.pxWidth(
-                terminalFragment
+                terminalFragment.activity
             )
         val xOPairToMakeType = ConfirmDialogAssets.xOPairPngToMakeTypeList.random()
         val xOPair = xOPairToMakeType.first

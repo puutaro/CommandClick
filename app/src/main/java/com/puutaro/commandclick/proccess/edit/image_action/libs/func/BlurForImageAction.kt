@@ -153,7 +153,7 @@ object BlurForImageAction {
 
 
                 val overlayBitmap = HokoBlur.with(context)
-                    .scheme(HokoBlur.SCHEME_OPENGL) //different implementation, RenderScript、OpenGL、Native(default) and Java
+                    .scheme(HokoBlur.SCHEME_JAVA) //different implementation, RenderScript、OpenGL、Native(default) and Java
                     .mode(HokoBlur.MODE_STACK) //blur algorithms，Gaussian、Stack(default) and Box
                     .radius(radius) //blur radius，max=25，default=5
                     .sampleFactor(samplingFloat) //scale factor，if factor=2，the width and height of a bitmap will be scale to 1/2 sizes，default=5

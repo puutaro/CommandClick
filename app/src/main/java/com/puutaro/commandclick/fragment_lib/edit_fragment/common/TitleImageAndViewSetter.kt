@@ -1140,7 +1140,7 @@ object TitleImageAndViewSetter {
                 }
                 val screenWidth = withContext(Dispatchers.Main) {
                     ScreenSizeCalculator.pxWidth(
-                        fragment
+                        fragment.activity
                     )
                 }
                 val backstackCountBitmap = withContext(Dispatchers.IO) {

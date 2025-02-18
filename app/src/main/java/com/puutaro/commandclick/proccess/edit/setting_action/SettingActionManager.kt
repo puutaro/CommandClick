@@ -20,12 +20,14 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.DebugForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.EditForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ExitForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FileSystemsForSettingHandler
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.InclineForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ListForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.LocalDatetimeForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.MathCulcForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.PathForSettingHandler
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ReplaceForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.RndForSetting
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ScreenForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.SettingFuncTool
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ShellToolManagerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.SystemInfoForSetting
@@ -1993,7 +1995,19 @@ private object SettingFuncManager {
                     methodName,
                     baseArgsPairList,
                 )
-
+            FuncType.INCLINE ->
+                InclineForSetting.handle(
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
+            FuncType.SCREEN ->
+                ScreenForSetting.handle(
+                    fragmentActivity,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
         }
 
     }
@@ -2017,6 +2031,8 @@ private object SettingFuncManager {
         SYSTEM_INFO("systemInfo"),
         EVAL("eval"),
         REPLACE("replace"),
+        INCLINE("incline"),
+        SCREEN("screen"),
     }
 
 }
