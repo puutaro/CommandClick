@@ -418,6 +418,77 @@ object ColorForImageAction {
                     null
                 ) to null
             }
+            is ColorMethodArgClass.SwapTransAndAllArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
+                    mapArgMapList,
+                    args.bitmapKeyToIndex,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                val colorStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
+                    mapArgMapList,
+                    args.colorKeyToIndex,
+                    where
+                ).let { colorToErr ->
+                    val funcErr = colorToErr.second
+                        ?: return@let colorToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                        colorStr ->
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        args.colorKeyToIndex.first,
+                        where,
+                    )
+                }
+                val returnBitmap = ColorManager.swapTransAndAll(
+                    bitmap,
+                    colorStr,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    returnBitmap,
+                    null
+                ) to null
+            }
             is ColorMethodArgClass.ToGrayArgs -> {
                 val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
                         index, formalArgsNameToType ->
@@ -466,6 +537,108 @@ object ColorForImageAction {
                 }
                 Pair(
                     grayBitmap,
+                    null
+                ) to null
+            }
+            is ColorMethodArgClass.InvertMonoArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
+                    mapArgMapList,
+                    args.bitmapKeyToIndex,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+
+                val inertedBitmap = ColorManager.invertMono(
+                    bitmap,
+                    where,
+                ).let {
+                        (grayBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let grayBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    inertedBitmap,
+                    null
+                ) to null
+            }
+            is ColorMethodArgClass.ReduceContrastArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
+                    mapArgMapList,
+                    args.bitmapKeyToIndex,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+
+                val reduceBitmap = ColorManager.reduceContrast(
+                    bitmap,
+                    where,
+                ).let {
+                        (grayBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let grayBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    reduceBitmap,
                     null
                 ) to null
             }
@@ -545,6 +718,93 @@ object ColorForImageAction {
 //                )
                 Pair(
                     glayBitmap,
+                    null
+                )
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
+
+
+        fun swapTransAndAll(
+            bitmap: Bitmap,
+            colorStr: String,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val changedBitmap = BitmapTool.ImageTransformer.changeAllToTrans(
+                    bitmap,
+                    colorStr,
+                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lcolor.txt").absolutePath,
+//                    listOf(
+//                        "toColorStr: ${toColorStr}",
+//                        "fromColorStr: ${fromColorStr}",
+//                    ).joinToString("\n")
+//                )
+                Pair(
+                    changedBitmap,
+                    null
+                )
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
+
+        suspend fun invertMono(
+            bitmap: Bitmap,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val inevrtedBitmap = BitmapTool.ImageTransformer.invertMonoBitmap(
+                    bitmap,
+                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lcolor.txt").absolutePath,
+//                    listOf(
+//                        "toColorStr: ${toColorStr}",
+//                        "fromColorStr: ${fromColorStr}",
+//                    ).joinToString("\n")
+//                )
+                Pair(
+                    inevrtedBitmap,
+                    null
+                )
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
+
+        suspend fun reduceContrast(
+            bitmap: Bitmap,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val reduceBitmap = BitmapTool.ImageTransformer.reduceContrast(
+                    bitmap,
+                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lcolor.txt").absolutePath,
+//                    listOf(
+//                        "toColorStr: ${toColorStr}",
+//                        "fromColorStr: ${fromColorStr}",
+//                    ).joinToString("\n")
+//                )
+                Pair(
+                    reduceBitmap,
                     null
                 )
             } catch (e: Exception) {
@@ -641,7 +901,10 @@ object ColorForImageAction {
         ALL_TO("allToInTrans", ColorMethodArgClass.AllToInTarns),
         SWAP_TRANS_AND_BLACK("swapTransAndBlack", ColorMethodArgClass.SwapBlackAndTransArgs),
         SWAP("swap", ColorMethodArgClass.SwapArgs),
+        SWAP_TRANS_AND_ALL("swapTransAndAll", ColorMethodArgClass.SwapTransAndAllArgs),
         TO_GRAY("toGray", ColorMethodArgClass.ToGrayArgs),
+        INVERT_MONO("invertMono", ColorMethodArgClass.InvertMonoArgs),
+        REDUCE_CONTRAST("reduceContrast", ColorMethodArgClass.ReduceContrastArgs),
     }
     private sealed interface ArgType {
         val entries: EnumEntries<*>
@@ -749,12 +1012,60 @@ object ColorForImageAction {
         }
 
         data object ToGrayArgs : ColorMethodArgClass(), ArgType {
-            override val entries = SwapTransAndBlackArgs.entries
+            override val entries = ToGrayTransAndBlackArgs.entries
             val bitmapKeyToIndex = Pair(
-                SwapTransAndBlackArgs.BITMAP.key,
-                SwapTransAndBlackArgs.BITMAP.index
+                ToGrayTransAndBlackArgs.BITMAP.key,
+                ToGrayTransAndBlackArgs.BITMAP.index
             )
-            enum class SwapTransAndBlackArgs(
+            enum class ToGrayTransAndBlackArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", 0, FuncCheckerForSetting.ArgType.BITMAP),
+            }
+        }
+        data object SwapTransAndAllArgs : ColorMethodArgClass(), ArgType {
+            override val entries = SwapTransAndAllArgs.entries
+            val bitmapKeyToIndex = Pair(
+                SwapTransAndAllArgs.BITMAP.key,
+                SwapTransAndAllArgs.BITMAP.index
+            )
+            val colorKeyToIndex = Pair(
+                SwapTransAndAllArgs.COLOR.key,
+                SwapTransAndAllArgs.COLOR.index
+            )
+            enum class SwapTransAndAllArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", 0, FuncCheckerForSetting.ArgType.BITMAP),
+                COLOR("color", 1, FuncCheckerForSetting.ArgType.STRING),
+            }
+        }
+
+        data object InvertMonoArgs : ColorMethodArgClass(), ArgType {
+            override val entries = InvertMonoArgs.entries
+            val bitmapKeyToIndex = Pair(
+                InvertMonoArgs.BITMAP.key,
+                InvertMonoArgs.BITMAP.index
+            )
+            enum class InvertMonoArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", 0, FuncCheckerForSetting.ArgType.BITMAP),
+            }
+        }
+        data object ReduceContrastArgs : ColorMethodArgClass(), ArgType {
+            override val entries = ReduceContrastArgs.entries
+            val bitmapKeyToIndex = Pair(
+                ReduceContrastArgs.BITMAP.key,
+                ReduceContrastArgs.BITMAP.index
+            )
+            enum class ReduceContrastArgs(
                 val key: String,
                 val index: Int,
                 val type: FuncCheckerForSetting.ArgType,

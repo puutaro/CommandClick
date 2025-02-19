@@ -1739,6 +1739,43 @@ object BitmapTool {
             return bmOut
         }
 
+        fun changeAllToTrans(
+            src: Bitmap,
+            colorStr: String,
+        ): Bitmap {
+            val width = src.width
+            val height = src.height
+            val pixels = IntArray(width * height)
+            // get pixel array from source
+            src.getPixels(pixels, 0, width, 0, 0, width, height)
+
+            val bmOut = Bitmap.createBitmap(
+                width,
+                height,
+                src.config!!
+            )
+
+//            var pixel: Int
+            val colorInt = Color.parseColor(colorStr)
+            val trans = Color.TRANSPARENT
+            // iteration through pixels
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    // get current index in 2D-matrix
+                    val index = y * width + x
+                    val pixel = pixels[index]
+                    val alpha = Color.alpha(pixel)
+                    if(alpha == 0){
+                        pixels[index] = colorInt
+                        continue
+                    }
+                    pixels[index] = trans
+                }
+            }
+            bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+            return bmOut
+        }
+
         fun convertGrayScaleBitmap(original: Bitmap): Bitmap {
             // You have to make the Bitmap mutable when changing the config because there will be a crash
             // That only mutable Bitmap's should be allowed to change config.
@@ -1752,6 +1789,44 @@ object BitmapTool {
             paint.colorFilter = colorMatrixFilter
             canvas.drawBitmap(bmp, 0F, 0F, paint)
             return bmpGrayscale
+        }
+
+        fun invertMonoBitmap(bitmap: Bitmap): Bitmap {
+            val resultBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(resultBitmap)
+
+            val paint = Paint()
+            val colorMatrix = ColorMatrix().apply {
+                set(floatArrayOf(
+                    -1f, 0f, 0f, 0f, 255f,
+                    0f, -1f, 0f, 0f, 255f,
+                    0f, 0f, -1f, 0f, 255f,
+                    0f, 0f, 0f, 1f, 0f
+                ))
+            }
+            paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
+            canvas.drawBitmap(bitmap, 0f, 0f, paint)
+
+            return resultBitmap
+        }
+
+        fun reduceContrast(bitmap: Bitmap): Bitmap {
+            val resultBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(resultBitmap)
+
+            val paint = Paint()
+            val colorMatrix = ColorMatrix().apply {
+                set(floatArrayOf(
+                    0.8f, 0f, 0f, 0f, 32f,
+                    0f, 0.8f, 0f, 0f, 32f,
+                    0f, 0f, 0.8f, 0f, 32f,
+                    0f, 0f, 0f, 1f, 0f
+                ))
+            }
+            paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
+            canvas.drawBitmap(bitmap, 0f, 0f, paint)
+
+            return resultBitmap
         }
 
         private fun isWhite(pixel: Int): Boolean {

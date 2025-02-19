@@ -24,6 +24,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImag
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ImportDataForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ShapeOverlayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.MaskForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.MonoArtForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OpacityForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OverlayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.RotateForImageAction
@@ -238,6 +239,14 @@ object ImageFuncManager {
                     baseArgsPairList,
                     varNameToBitmapMap,
                 )
+            FuncType.MONO_ART ->
+                MonoArtForImageAction.handle(
+                    context,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                    varNameToBitmapMap,
+                )
         }
 
     }
@@ -266,6 +275,7 @@ object ImageFuncManager {
         FLIP("flip"),
         STR_PNG("strPng"),
         IMPORT_DATE("importData"),
+        MONO_ART("monoArt"),
     }
 
 }
