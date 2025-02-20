@@ -2,11 +2,12 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toBitmap
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -48,6 +49,200 @@ object MonoArtForImageAction {
         val args =
             methodNameClass.args
         return when(args){
+            is MonoArtMethodArgClass.RndIconArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val shape = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.shapeKeyToDefaultValueStr,
+                    where
+                ).let { shapeToErr ->
+                    val funcErr = shapeToErr.second
+                        ?: return@let shapeToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.widthKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.heightKeyToDefaultValueStr,
+                    where
+                ).let { heightToErr ->
+                    val funcErr = heightToErr.second
+                        ?: return@let heightToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.timesKeyToDefaultValueStr,
+                    where
+                ).let { timesToErr ->
+                    val funcErr = timesToErr.second
+                        ?: return@let timesToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val borderRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.borderRateKeyToDefaultValueStr,
+                    where
+                ).let { borderRateToErr ->
+                    val funcErr = borderRateToErr.second
+                        ?: return@let borderRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val minWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.minWidthRateKeyToDefaultValueStr,
+                    where
+                ).let { widthRateToErr ->
+                    val funcErr = widthRateToErr.second
+                        ?: return@let widthRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val maxWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.maxWidthRateKeyToDefaultValueStr,
+                    where
+                ).let { widthRateToErr ->
+                    val funcErr = widthRateToErr.second
+                        ?: return@let widthRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                if(minWidthRate > maxWidthRate) {
+                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        minWidthRate.toString()
+                    )
+                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        maxWidthRate.toString()
+                    )
+                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        where
+                    )
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to FuncCheckerForSetting.FuncCheckErr(
+                        "Must be minWidthRate(${spanMinWidthRate}) <= maxWidthRate(${spanMaxWidthRate}): ${spanWhere}"
+                    )
+                }
+                val minHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.minHeightRateKeyToDefaultValueStr,
+                    where
+                ).let { heightRateToErr ->
+                    val funcErr = heightRateToErr.second
+                        ?: return@let heightRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val maxHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.maxHeightRateKeyToDefaultValueStr,
+                    where
+                ).let { heightRateToErr ->
+                    val funcErr = heightRateToErr.second
+                        ?: return@let heightRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }
+                if(minHeightRate > maxHeightRate) {
+                    val spanMinHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        minHeightRate.toString()
+                    )
+                    val spanMaxHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        maxHeightRate.toString()
+                    )
+                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        where
+                    )
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to FuncCheckerForSetting.FuncCheckErr(
+                        "Must be minWidthRate(${spanMinHeightRate}) <= maxWidthRate(${spanMaxHeightRate}): ${spanWhere}"
+                    )
+                }
+                val bitmapArt = MonoArt.rndIcon(
+                    context,
+                    shape,
+                    width,
+                    height,
+                    times,
+                    borderRate,
+                    minWidthRate,
+                    maxWidthRate,
+                    minHeightRate,
+                    maxHeightRate,
+                    where,
+                ).let {
+                        (bitmapArtSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let bitmapArtSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    bitmapArt,
+                    null
+                ) to null
+            }
             is MonoArtMethodArgClass.RndRectArgs -> {
                 val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
                         index, formalArgsNameToType ->
@@ -67,6 +262,18 @@ object MonoArtForImageAction {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
+//                val shape = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+//                    mapArgMapList,
+//                    args.shapeKeyToDefaultValueStr,
+//                    where
+//                ).let { shapeToErr ->
+//                    val funcErr = shapeToErr.second
+//                        ?: return@let shapeToErr.first
+//                    return Pair(
+//                        null,
+//                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                    ) to funcErr
+//                }
                 val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
@@ -204,6 +411,7 @@ object MonoArtForImageAction {
                     )
                 }
                 val bitmapArt = MonoArt.rndRect(
+//                    shape,
                     width,
                     height,
                     times,
@@ -676,6 +884,7 @@ object MonoArtForImageAction {
 
         }
         suspend fun rndRect(
+//            shape: String,
             baseWidth: Int,
             baseHeight: Int,
 //            baseBitmap: Bitmap,
@@ -689,6 +898,7 @@ object MonoArtForImageAction {
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
                 execRndRect(
+//                    shape,
                     baseWidth,
                     baseHeight,
 //                    baseBitmap,
@@ -708,6 +918,8 @@ object MonoArtForImageAction {
             }
         }
         private suspend fun execRndRect(
+//            context: Context?,
+//            shape: String,
             baseWidth: Int,
             baseHeight: Int,
 //            baseBitmap: Bitmap,
@@ -719,6 +931,14 @@ object MonoArtForImageAction {
             maxHeightRate: Float,
         ): Bitmap {
             val baseBitmap =
+//                CmdClickIcons.entries.first { it.str == shape }.let {
+//                    AssetsFileManager.assetsByteArray(
+//                        context,
+//                        it.assetsPath
+//                    ).let {
+//                        Bitmap.createScaledBitmap()
+//                    }
+//                }
                 BitmapTool.ImageTransformer.makeRect(
                 "#ffffff",
                 baseWidth,
@@ -783,6 +1003,160 @@ object MonoArtForImageAction {
                 var resultBitmap = baseBitmap
                 bitmapToOffsetPairList.forEach {
                     (cutBitmap, offsetPair) ->
+                    resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                        resultBitmap,
+                        cutBitmap,
+                        offsetPair.first.toFloat(),
+                        offsetPair.second.toFloat(),
+                    )
+                }
+                resultBitmap
+            }
+
+        }
+        suspend fun rndIcon(
+            context: Context,
+            shape: String,
+            baseWidth: Int,
+            baseHeight: Int,
+//            baseBitmap: Bitmap,
+            times: Int,
+            borderRate: Float,
+            minWidthRate: Float,
+            maxWidthRate: Float,
+            minHeightRate: Float,
+            maxHeightRate: Float,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                execRndIcon(
+                    context,
+                    shape,
+                    baseWidth,
+                    baseHeight,
+//                    baseBitmap,
+                    times,
+                    borderRate,
+                    minWidthRate,
+                    maxWidthRate,
+                    minHeightRate,
+                    maxHeightRate,
+                ) to null
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
+        private suspend fun execRndIcon(
+            context: Context,
+            shape: String,
+            baseWidth: Int,
+            baseHeight: Int,
+//            baseBitmap: Bitmap,
+            times: Int,
+            borderRate: Float,
+            minWidthRate: Float,
+            maxWidthRate: Float,
+            minHeightRate: Float,
+            maxHeightRate: Float,
+        ): Bitmap {
+            val icon = CmdClickIcons.entries.first { it.str == shape }
+            val baseBitmap =
+                AppCompatResources.getDrawable(
+                    context,
+                    icon.id
+                )?.toBitmap(
+                    baseWidth,
+                    baseHeight,
+                )?.let {
+                    BitmapTool.ImageTransformer.convertBlackToColor(
+                        it,
+                        "#ffffff",
+                    )
+                } as Bitmap
+//                CmdClickIcons.entries.first { it.str == shape }.let {
+//                    AssetsFileManager.assetsByteArray(
+//                        context,
+//                        it.assetsPath
+//                    ).let {
+//                        Bitmap.createScaledBitmap()
+//                    }
+//                }
+//                BitmapTool.ImageTransformer.makeRect(
+//                    "#ffffff",
+//                    baseWidth,
+//                    baseHeight,
+//                )
+//            val baseWidth = baseBitmap.width
+////            val halfBaseWidth = baseWidth / 2
+//            val baseHeight = baseBitmap.height
+//            val halfBaseHeight = baseHeight / 2
+            return withContext(Dispatchers.IO) {
+                val bitmapToOffsetPairListJob = (0..times).map {
+                    async {
+                        val cutWidth =
+                            ((baseWidth * minWidthRate).toInt()
+                                    ..
+                                    (baseWidth * maxWidthRate).toInt()
+                                    ).random()
+                        val cutHeight =
+                            ((baseHeight * minHeightRate).toInt()
+                                    ..
+                                    (baseHeight * maxHeightRate).toInt()
+                                    ).random()
+                        val offsetX = (0..(baseWidth - cutWidth)).random()
+                        val offsetY = (0..(baseHeight - cutHeight)).random()
+                        BitmapTool.ImageTransformer.cutByTarget(
+                            baseBitmap,
+                            cutWidth,
+                            cutHeight,
+                            offsetX,
+                            offsetY,
+                        ).let {
+                                baseRect ->
+                            val bkRect = AppCompatResources.getDrawable(
+                                context,
+                                icon.id
+                            )?.toBitmap(
+                                baseRect.width,
+                                baseRect.height
+                            ) as Bitmap
+
+//                                BitmapTool.ImageTransformer.makeRect(
+//                                "#000000",
+//                                baseRect.width,
+//                                baseRect.height
+//                            )
+                            val shrinkBitmap = Bitmap.createScaledBitmap(
+                                baseRect,
+                                (baseRect.width * borderRate).toInt().let { if(it <= 0) 1 else it },
+                                (baseRect.height * borderRate).toInt().let { if(it <= 0) 1 else it },
+                                true,
+                            )
+//                            val grayBitmap = BitmapTool.ImageTransformer.convertGrayScaleBitmap(
+//                                shrinkBitmap
+//                            )
+//                            val invertedBitmap = BitmapTool.ImageTransformer.invertMonoBitmap(
+//                                grayBitmap
+//                            )
+                            val concatInvertedBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapCenter(
+                                bkRect,
+                                shrinkBitmap,
+                            )
+                            Pair(
+                                concatInvertedBitmap,
+                                offsetX to offsetY
+                            )
+                        }
+                    }
+                }
+                val bitmapToOffsetPairList = bitmapToOffsetPairListJob.awaitAll()
+                var resultBitmap = baseBitmap
+                bitmapToOffsetPairList.forEach {
+                        (cutBitmap, offsetPair) ->
                     resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
                         resultBitmap,
                         cutBitmap,
@@ -914,6 +1288,7 @@ object MonoArtForImageAction {
         val str: String,
         val args: MonoArtMethodArgClass
     ){
+        RND_ICON("rndIcon", MonoArtMethodArgClass.RndIconArgs),
         RND_RECT_BY_RECT("rndRectByRect", MonoArtMethodArgClass.RndRectByGrayArgs),
         RND_RECT("rndRect", MonoArtMethodArgClass.RndRectArgs),
         RND_COLOR_RECT("rndColorRect", MonoArtMethodArgClass.RndColorRectArgs),
@@ -923,6 +1298,63 @@ object MonoArtForImageAction {
     }
 
     private sealed class MonoArtMethodArgClass {
+        data object RndIconArgs : MonoArtMethodArgClass(), ArgType {
+            override val entries = RndIconEnumArgs.entries
+            val widthKeyToDefaultValueStr = Pair(
+                RndIconEnumArgs.WIDTH.key,
+                RndIconEnumArgs.WIDTH.defaultValueStr
+            )
+            val heightKeyToDefaultValueStr = Pair(
+                RndIconEnumArgs.HEIGHT.key,
+                RndIconEnumArgs.HEIGHT.defaultValueStr
+            )
+            val shapeKeyToDefaultValueStr = Pair(
+                RndIconEnumArgs.SHAPE.key,
+                RndIconEnumArgs.SHAPE.defaultValueStr
+            )
+            val timesKeyToDefaultValueStr = Pair(
+                RndIconEnumArgs.TIMES.key,
+                RndIconEnumArgs.TIMES.defaultValueStr
+            )
+            val borderRateKeyToDefaultValueStr = Pair(
+                RndIconEnumArgs.BORDER_RATE.key,
+                RndIconEnumArgs.BORDER_RATE.defaultValueStr
+            )
+            val minWidthRateKeyToDefaultValueStr = Pair(
+                RndIconEnumArgs.MIN_WIDTH_RATE.key,
+                RndIconEnumArgs.MIN_WIDTH_RATE.defaultValueStr
+            )
+            val maxWidthRateKeyToDefaultValueStr = Pair(
+                RndIconEnumArgs.MAX_WIDTH_RATE.key,
+                RndIconEnumArgs.MAX_WIDTH_RATE.defaultValueStr
+            )
+            val minHeightRateKeyToDefaultValueStr = Pair(
+                RndIconEnumArgs.MIN_HEIGHT_RATE.key,
+                RndIconEnumArgs.MIN_HEIGHT_RATE.defaultValueStr
+            )
+            val maxHeightRateKeyToDefaultValueStr = Pair(
+                RndIconEnumArgs.MAX_HEIGHT_RATE.key,
+                RndIconEnumArgs.MAX_HEIGHT_RATE.defaultValueStr
+            )
+
+
+            enum class RndIconEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                //                BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
+                SHAPE("shape", CmdClickIcons.RECT.str, FuncCheckerForSetting.ArgType.STRING),
+                WIDTH("width", null, FuncCheckerForSetting.ArgType.INT),
+                HEIGHT("height", null, FuncCheckerForSetting.ArgType.INT),
+                TIMES("times", 5.toString(), FuncCheckerForSetting.ArgType.INT),
+                BORDER_RATE("borderRate", 0.9.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                MIN_WIDTH_RATE("minWidthRate", (0.1).toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                MAX_WIDTH_RATE("maxWidthRate", 1.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                MIN_HEIGHT_RATE("minHeightRate", (0.1).toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                MAX_HEIGHT_RATE("maxHeightRate", (0.5).toString(), FuncCheckerForSetting.ArgType.FLOAT),
+            }
+        }
         data object RndRectArgs : MonoArtMethodArgClass(), ArgType {
             override val entries = RndRectEnumArgs.entries
             val widthKeyToDefaultValueStr = Pair(
