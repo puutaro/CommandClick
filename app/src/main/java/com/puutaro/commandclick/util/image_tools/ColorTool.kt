@@ -160,4 +160,15 @@ object ColorTool {
             null
         }
     }
+
+    fun removeAlpha(hexColor: String): String {
+        return if (hexColor.length == 9) {
+            val colorHexBody =
+                hexColor.removePrefix("#")
+                    .substring(2) // アルファ値部分を削除
+            "#${colorHexBody}"
+        } else {
+            hexColor // 元の文字列をそのまま返す (アルファ値がない場合)
+        }
+    }
 }
