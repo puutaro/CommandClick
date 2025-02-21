@@ -1669,7 +1669,7 @@ class SettingActionManager {
                                 renewalVarName ?: settingVarName,
                                 resultValueStrToExitMacro?.first,
                                 privateSubKeyClass,
-                                keyToSubKeyConWhere,
+                                "funcTypeDotMethod: ${funcTypeDotMethod} argsPairList: ${argsPairList}, $keyToSubKeyConWhere",
                             ).let {
                                     isGlobalVarFuncNullResultErr ->
                                 if(
@@ -2037,7 +2037,7 @@ private object SettingFuncManager {
 
 }
 
-object EvalForSetting {
+private object EvalForSetting {
 
     private const val defaultNullMacroStr = FuncCheckerForSetting.defaultNullMacroStr
 
@@ -2133,13 +2133,13 @@ object EvalForSetting {
 //                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
 //                        ) to funcErr
 //                    }
-                    val settingActionCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    val imageActionCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                         mapArgMapList,
                         args.actionKeyToDefaultValueStr,
                         where
-                    ).let { settingActionConToErr ->
-                        val funcErr = settingActionConToErr.second
-                            ?: return@let settingActionConToErr.first
+                    ).let { imageActionConToErr ->
+                        val funcErr = imageActionConToErr.second
+                            ?: return@let imageActionConToErr.first
                         return@withContext Pair(
                             null,
                             SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
@@ -2262,7 +2262,7 @@ object EvalForSetting {
                         separator,
                         indexVarName,
 //                        elVarName,
-                        settingActionCon,
+                        imageActionCon,
                         joinStr,
                         semaphoreLimit,
                         delimiter,
@@ -2476,7 +2476,7 @@ object EvalForSetting {
                 },
                 curTopVarNameToValueStrMap,
                 settingActionCon,
-                "eval: indexVarName: ${indexVarName}, ${keyToSubKeyConWhere}",
+                "index: ${index}, eval: indexVarName: ${indexVarName}, ${keyToSubKeyConWhere}",
                 editConstraintListAdapterArg,
                 returnTopAcVarNameMacro
             )

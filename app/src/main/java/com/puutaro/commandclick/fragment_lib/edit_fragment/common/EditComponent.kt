@@ -160,6 +160,9 @@ object EditComponent {
                         VISIBLE("visible"),
                         ENABLE("enable"),
                         ELEVATION("elevation"),
+                        TRANSLATION_X("translationX"),
+                        TRANSLATION_Y("translationY"),
+                        TRANSLATION_Z("translationZ"),
 //                        CLICK_VIEWS("clickViews"),
 
                         TOP_TO_TOP("topToTop"),

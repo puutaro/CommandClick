@@ -269,6 +269,69 @@ object ImageActionData {
         }
     }
 
+    class ForVarNameBitmapMap {
+        private val forVarNameBitmapMap =
+            hashMapOf<String, Bitmap?>()
+        private val forVarNameBitmapMapMutex = ReentrantReadWriteLock()
+//        suspend fun getAsyncVarNameToBitmapMap(
+//            loopKey: String
+//        ): MutableMap<String, Bitmap?>? {
+//            return loopKeyToVarNameBitmapMapMutex.readLock().withLock {
+//                loopKeyToVarNameBitmapMap.get(
+//                    loopKey
+//                )
+//            }
+//        }
+
+        suspend fun get(
+            varName: String,
+        ): Bitmap? {
+            return forVarNameBitmapMapMutex.readLock().withLock {
+                forVarNameBitmapMap.get(
+                    varName
+                )
+            }
+        }
+
+//        suspend fun convertAsyncVarNameToBitmapToMap(
+//            loopKey: String,
+//        ): Map<String, Bitmap?>? {
+//            return forVarNameBitmapMapMutex.readLock().withLock {
+//                forVarNameBitmapMap.get(
+//                    loopKey
+//                )?.toMap()
+//            }
+//        }
+
+        suspend fun put(
+//            loopKey: String,
+            varName: String,
+            bitmap: Bitmap?,
+        ){
+            forVarNameBitmapMapMutex.writeLock().withLock {
+                forVarNameBitmapMap.put(
+                            varName,
+                            bitmap
+                        )
+            }
+        }
+
+
+        suspend fun initPrivateLoopKeyVarNameBitmapMapMutex() {
+            forVarNameBitmapMapMutex.writeLock().withLock{
+                forVarNameBitmapMap.clear()
+            }
+        }
+
+//        suspend fun clearPrivateLoopKeyVarNameBitmapMapMutex(loopKey: String){
+//            forVarNameBitmapMapMutex.writeLock().withLock {
+//                forVarNameBitmapMap.remove(
+//                    loopKey
+//                )
+//            }
+//        }
+    }
+
     class ImageActionExitManager {
         private var exitSignal = AtomicBoolean(false)
         //        private val exitSignalMutex = Mutex()

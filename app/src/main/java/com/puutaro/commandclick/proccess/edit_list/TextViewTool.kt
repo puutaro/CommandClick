@@ -41,6 +41,9 @@ object TextViewTool {
     private val textShadowYKey = EditComponent.Template.TextManager.PropertyKey.SHADOW_Y.key
     private val letterSpacingKey = EditComponent.Template.TextManager.PropertyKey.LETTER_SPACING.key
     private val elevationKey = EditComponent.Template.EditComponentKey.ELEVATION.key
+    private val translationXKey = EditComponent.Template.EditComponentKey.TRANSLATION_X.key
+    private val translationYKey = EditComponent.Template.EditComponentKey.TRANSLATION_Y.key
+    private val translationZKey = EditComponent.Template.EditComponentKey.TRANSLATION_Z.key
 
     suspend fun setVisibility(
         textView: OutlineTextView,
@@ -130,6 +133,60 @@ object TextViewTool {
             }?.let {
                 withContext(Dispatchers.Main) {
                     elevation = it
+                }
+            }
+            withContext(Dispatchers.IO) {
+                textMap.get(
+                    translationXKey,
+                )?.let {
+                    try {
+                        ScreenSizeCalculator.toDpByDensity(
+                            it.toInt(),
+                            density,
+                        ).toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    translationX = it
+                }
+            }
+            withContext(Dispatchers.IO) {
+                textMap.get(
+                    translationYKey,
+                )?.let {
+                    try {
+                        ScreenSizeCalculator.toDpByDensity(
+                            it.toInt(),
+                            density,
+                        ).toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    translationY = it
+                }
+            }
+            withContext(Dispatchers.IO) {
+                textMap.get(
+                    translationZKey,
+                )?.let {
+                    try {
+                        ScreenSizeCalculator.toDpByDensity(
+                            it.toInt(),
+                            density,
+                        ).toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    translationZ = it
                 }
             }
 //            val paddingData = withContext(Dispatchers.IO) {

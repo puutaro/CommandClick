@@ -5,36 +5,65 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionData
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionErrLogger
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionImportManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionReturnErrManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionVarErrManager
-import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageFuncManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageReturnExecutor
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.BlurForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ColorForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.CutForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FannelIconForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystemsForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FlipForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.GradForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ImportDataForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.LoopResultForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.MaskForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.MonoArtForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OpacityForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OverlayForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.RotateForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ShapeOverlayForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.SizeForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.StrPngForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ViewForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.WallForImageAction
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.IfErrManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionErrLogger
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.SettingFuncTool
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
+import com.puutaro.commandclick.util.str.BackslashTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import java.lang.ref.WeakReference
+import java.io.File
+import kotlin.enums.EnumEntries
 
 class ImageActionManager {
     companion object {
@@ -90,6 +119,8 @@ class ImageActionManager {
         keyToSubKeyCon: String?,
         keyToSubKeyConWhere: String,
         editConstraintListAdapterArg: EditConstraintListAdapter? = null,
+        topAcIVarName: String? = null,
+        forVarNameBitmapMap: ImageActionData.ForVarNameBitmapMap? = null
     ): Map<String, Bitmap?> {
         if(
             keyToSubKeyCon.isNullOrEmpty()
@@ -118,9 +149,10 @@ class ImageActionManager {
             mapRoopKeyUnit,
             null,
             keyToSubKeyConWhere,
-            null,
+            topAcIVarName,
             null,
             topLevelBitmapStrKeyList,
+            forVarNameBitmapMap,
         )
         return ImageActionKeyManager.LoopKeyManager.getResultLoopKeyToVarNameValueMap(
             loopClasses?.first
@@ -199,6 +231,7 @@ class ImageActionManager {
         private val escapeRunPrefix = ImageActionKeyManager.VarPrefix.RUN.prefix
         private val runAsyncPrefix = ImageActionKeyManager.VarPrefix.RUN_ASYNC.prefix
         private val asyncPrefix = ImageActionKeyManager.VarPrefix.ASYNC.prefix
+        private val returnTopAcVarNameMacro = ImageActionKeyManager.returnTopAcVarNameMacro
 
 
         suspend fun makeResultLoopKeyToVarNameValueMap(
@@ -215,6 +248,7 @@ class ImageActionManager {
             topAcIVarName: String?,
             importedVarNameToBitmapMap: Map<String, Bitmap?>?,
             bitmapVarKeyList: List<String>?,
+            forVarNameBitmapMap: ImageActionData.ForVarNameBitmapMap?
         ): Pair<
                 ImageActionData.LoopKeyToVarNameBitmapMap,
                 ImageActionData.PrivateLoopKeyVarNameBitmapMap,
@@ -574,6 +608,7 @@ class ImageActionManager {
                                             acIVarName,
                                             importVarNameToBitmapMap,
                                             curBitmapVarKeyList,
+                                            null
                                         )
                                         val downLoopKeyVarNameBitmapMap = loopMapClasses?.first
                                         val downPrivateLoopKeyVarNameBitmapMap = loopMapClasses?.second
@@ -646,6 +681,7 @@ class ImageActionManager {
                             acIVarName,
                             importVarNameToBitmapMap,
                             curBitmapVarKeyList,
+                            forVarNameBitmapMap,
                         )
                         val downLoopKeyVarNameBitmapMap = loopMapClasses?.first
                         val downPrivateLoopKeyVarNameBitmapMap = loopMapClasses?.second
@@ -747,8 +783,10 @@ class ImageActionManager {
                                 val deferred = async {
                                     ImageVarExecutor().exec(
                                         context,
-                                        mainSubKeyPairList,
+                                        fannelInfoMap,
+                                        setReplaceVariableMapSrc,
                                         busyboxExecutor,
+                                        mainSubKeyPairList,
                                         imageView,
                                         requestBuilder,
                                         editConstraintListAdapterArg,
@@ -761,6 +799,7 @@ class ImageActionManager {
                                         imageActionExitManager,
                                         settingVarName,
                                         topAcIVarName,
+                                        forVarNameBitmapMap,
                                         keyToSubKeyConWhere,
                                     )
                                 }
@@ -871,8 +910,10 @@ class ImageActionManager {
                         }
                         ImageVarExecutor().exec(
                             context,
-                            mainSubKeyPairList,
+                            fannelInfoMap,
+                            setReplaceVariableMapSrc,
                             busyboxExecutor,
+                            mainSubKeyPairList,
                             imageView,
                             requestBuilder,
                             editConstraintListAdapterArg,
@@ -885,6 +926,7 @@ class ImageActionManager {
                             imageActionExitManager,
                             settingVarName,
                             topAcIVarName,
+                            forVarNameBitmapMap,
                             keyToSubKeyConWhere,
                         )?.let {
                             varNameToBitmapAndExitSignal ->
@@ -1073,6 +1115,16 @@ class ImageActionManager {
                                     varNameToBitmap.second
                                 )
                             }
+                            if(
+                                topAcIVarName == returnTopAcVarNameMacro
+                                && varNameToBitmap != null
+                            ){
+                                forVarNameBitmapMap?.put(
+//                                    removedLoopKey,
+                                    topAcIVarName,
+                                    varNameToBitmap.second
+                                )
+                            }
 //                            FileSystems.updateFile(
 //                                File(
 //                                    UsePath.cmdclickDefaultSDebugAppDirPath,
@@ -1238,8 +1290,10 @@ class ImageActionManager {
 
             suspend fun exec(
                 context: Context?,
-                mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
+                fannelInfoMap: HashMap<String, String>,
+                setReplaceVariableMapSrc: Map<String, String>?,
                 busyboxExecutor: BusyboxExecutor?,
+                mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
                 imageView: AppCompatImageView?,
                 requestBuilder: RequestBuilder<Drawable>?,
                 editConstraintListAdapterArg: EditConstraintListAdapter?,
@@ -1252,6 +1306,7 @@ class ImageActionManager {
                 imageActionExitManager: ImageActionData.ImageActionExitManager,
                 settingVarName: String,
                 renewalVarName: String?,
+                forVarNameBitmapMap: ImageActionData.ForVarNameBitmapMap?,
                 keyToSubKeyConWhere: String,
             ): Pair<Pair<String, Bitmap?>, ImageActionKeyManager.BreakSignal?>? {
                 val ifStackList =
@@ -1489,13 +1544,17 @@ class ImageActionManager {
 //                            )
                             val resultBitmapToExitMacroAndCheckErr = ImageFuncManager.handle(
                                 context,
+                                fannelInfoMap,
+                                setReplaceVariableMapSrc,
+                                busyboxExecutor,
                                 funcTypeDotMethod,
                                 argsPairList,
-                                busyboxExecutor,
                                 editConstraintListAdapterArg,
                                 varNameToBitmapMap,
                                 imageView,
-                                requestBuilder
+                                requestBuilder,
+                                forVarNameBitmapMap,
+                                keyToSubKeyConWhere,
                             )
                             val checkErr = resultBitmapToExitMacroAndCheckErr?.second
                             if(checkErr != null){
@@ -1517,7 +1576,7 @@ class ImageActionManager {
                                 renewalVarName ?: settingVarName,
                                 resultBitmapToExitMacro?.first,
                                 privateSubKeyClass,
-                                keyToSubKeyConWhere,
+                                "funcTypeDotMethod: ${funcTypeDotMethod} argsPairList: ${argsPairList}, $keyToSubKeyConWhere",
                             ).let {
                                     isGlobalVarFuncNullResultErr ->
                                 if(
@@ -1570,9 +1629,9 @@ class ImageActionManager {
                                     errMsg == null
                                 ) return@let ifProcName
                                 runBlocking {
-                                    SettingActionErrLogger.sendErrLog(
+                                    ImageActionErrLogger.sendErrLog(
                                         context,
-                                        SettingActionErrLogger.SettingActionErrType.S_IF,
+                                        ImageActionErrLogger.ImageActionErrType.I_IF,
                                         errMsg,
                                         keyToSubKeyConWhere
                                     )
@@ -1599,9 +1658,9 @@ class ImageActionManager {
                                     errMsg == null
                                 ) return@let ifProcName
                                 runBlocking {
-                                    SettingActionErrLogger.sendErrLog(
+                                    ImageActionErrLogger.sendErrLog(
                                         context,
-                                        SettingActionErrLogger.SettingActionErrType.S_IF,
+                                        ImageActionErrLogger.ImageActionErrType.I_IF,
                                         errMsg,
                                         keyToSubKeyConWhere
                                     )
@@ -1640,6 +1699,820 @@ class ImageActionManager {
                             ),
                         itPronounBitmapToBreakSignal?.second,
                         )
+                }
+            }
+        }
+    }
+
+    private object ImageFuncManager {
+
+        private const val funcTypeAndMethodSeparatorDot = "."
+
+        suspend fun handle(
+            context: Context?,
+            fannelInfoMap: HashMap<String, String>,
+            setReplaceVariableMapSrc: Map<String, String>?,
+            busyboxExecutor: BusyboxExecutor?,
+            funcTypeDotMethod: String,
+            baseArgsPairList: List<Pair<String, String>>,
+            editConstraintListAdapter: EditConstraintListAdapter?,
+            varNameToBitmapMap: Map<String, Bitmap?>,
+            imageView: AppCompatImageView?,
+            requestBuilder: RequestBuilder<Drawable>?,
+            forVarNameBitmapMap: ImageActionData.ForVarNameBitmapMap?,
+            keyToSubKeyConWhere: String,
+        ): Pair<
+                Pair<
+                        Bitmap?,
+                        ImageActionKeyManager.BreakSignal?
+                        >?,
+                FuncCheckerForSetting.FuncCheckErr?
+                >? {
+            val funcTypeAndMethodList =
+                funcTypeDotMethod.split(funcTypeAndMethodSeparatorDot)
+            val funcTypeStr = funcTypeAndMethodList.first()
+            val funcType = FuncType.entries.firstOrNull {
+                it.key == funcTypeStr
+            } ?: let {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    funcTypeStr
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("Irregular func name: ${spanFuncTypeStr}")
+            }
+            val methodName = funcTypeAndMethodList.getOrNull(1)
+                ?: let {
+                    val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        funcTypeStr
+                    )
+                    return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}")
+                }
+            return when(funcType){
+                FuncType.ICON ->
+                    IconForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList
+                    )
+                FuncType.FANNEL_ICON ->
+                    FannelIconForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList
+                    )
+                FuncType.FILE ->
+                    FileSystemsForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.WALL ->
+                    WallForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                    )
+                FuncType.ARB ->
+                    ArbForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                    )
+                FuncType.SHAPE_OVERLAY ->
+                    ShapeOverlayForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                    )
+                FuncType.DEBUG ->
+                    DebugForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.DELAY ->
+                    DelayForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.VIEW ->
+                    ViewForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                        imageView,
+                        requestBuilder
+                    )
+                FuncType.CUT ->
+                    CutForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.OVERLAY ->
+                    OverlayForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.OPACITY ->
+                    OpacityForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.ROTATE ->
+                    RotateForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.BLUR ->
+                    BlurForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.COLOR ->
+                    ColorForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.GRAD ->
+                    GradForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                    )
+                FuncType.SIZE ->
+                    SizeForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.MASK ->
+                    MaskForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.FLIP ->
+                    FlipForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.STR_PNG ->
+                    StrPngForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                    )
+                FuncType.IMPORT_DATE ->
+                    ImportDataForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.MONO_ART ->
+                    MonoArtForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.LOOP_RESULT ->
+                    LoopResultForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        forVarNameBitmapMap,
+                    )
+                FuncType.EVAL ->
+                    EvalForSetting.handle(
+                        context,
+                        fannelInfoMap,
+                        setReplaceVariableMapSrc,
+                        busyboxExecutor,
+                        varNameToBitmapMap,
+                        keyToSubKeyConWhere,
+                        editConstraintListAdapter,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                    )
+            }
+
+        }
+
+        private enum class FuncType(
+            val key: String,
+        ) {
+            ICON("icon"),
+            FANNEL_ICON("fannelIcon"),
+            FILE("file"),
+            WALL("wall"),
+            DEBUG("debug"),
+            VIEW("view"),
+            DELAY("delay"),
+            ARB("arb"),
+            SHAPE_OVERLAY("shapeOverlay"),
+            CUT("cut"),
+            OVERLAY("overlay"),
+            OPACITY("opacity"),
+            ROTATE("rotate"),
+            BLUR("blur"),
+            COLOR("color"),
+            GRAD("grad"),
+            SIZE("size"),
+            MASK("mask"),
+            FLIP("flip"),
+            STR_PNG("strPng"),
+            IMPORT_DATE("importData"),
+            LOOP_RESULT("loopResult"),
+            MONO_ART("monoArt"),
+            EVAL("eval"),
+        }
+    }
+
+    private object EvalForSetting {
+
+        private const val defaultNullMacroStr = FuncCheckerForSetting.defaultNullMacroStr
+
+        suspend fun handle(
+            context: Context?,
+            fannelInfoMap: HashMap<String, String>,
+            setReplaceVariableMapSrc: Map<String, String>?,
+            busyboxExecutor: BusyboxExecutor?,
+            topVarNameToBitmapMap: Map<String, Bitmap?>?,
+            keyToSubKeyConWhere: String,
+            editConstraintListAdapterArg: EditConstraintListAdapter? = null,
+            funcName: String,
+            methodNameStr: String,
+            argsPairList: List<Pair<String, String>>,
+        ): Pair<
+                Pair<
+                        Bitmap?,
+                        ImageActionKeyManager.BreakSignal?
+                        >?,
+                FuncCheckerForSetting.FuncCheckErr?
+                >? {
+
+            val methodNameClass = MethodNameClass.entries.firstOrNull {
+                it.str == methodNameStr
+            } ?: let {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errBrown,
+                    funcName
+                )
+                val spanMethodNameStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    methodNameStr
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}")
+            }
+
+            val args = methodNameClass.args
+            return withContext(Dispatchers.Main) {
+                when (args) {
+                    is EvalArgClass.EvalEvalArgs -> {
+                        val formalArgIndexToNameToTypeList =
+                            args.entries.mapIndexed { index, formalArgsNameToType ->
+                                Triple(
+                                    index,
+                                    formalArgsNameToType.key,
+                                    formalArgsNameToType.type,
+                                )
+                            }
+                        val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                            formalArgIndexToNameToTypeList,
+                            argsPairList
+                        )
+                        val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                            funcName,
+                            methodNameStr,
+                            argsPairList,
+                            formalArgIndexToNameToTypeList
+                        )
+                        val inputCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                            mapArgMapList,
+                            args.inputKeyToDefaultValueStr,
+                            where
+                        ).let { inputConToErr ->
+                            val funcErr = inputConToErr.second
+                                ?: return@let inputConToErr.first
+                            return@withContext Pair(
+                                null,
+                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            ) to funcErr
+                        }
+                        val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                            mapArgMapList,
+                            args.fieldVarPrefixKeyToDefaultValueStr,
+                            where
+                        ).let { fieldVarPrefixToErr ->
+                            val funcErr = fieldVarPrefixToErr.second
+                                ?: return@let fieldVarPrefixToErr.first
+                            return@withContext Pair(
+                                null,
+                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            ) to funcErr
+                        }
+//                    val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+//                        mapArgMapList,
+//                        args.elVarNameKeyToDefaultValueStr,
+//                        where
+//                    ).let { elVarNameToErr ->
+//                        val funcErr = elVarNameToErr.second
+//                            ?: return@let elVarNameToErr.first
+//                        return@withContext Pair(
+//                            null,
+//                            ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                        ) to funcErr
+//                    }
+                        val settingActionCon =
+                            FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                                mapArgMapList,
+                                args.actionKeyToDefaultValueStr,
+                                where
+                            ).let { settingActionConToErr ->
+                                val funcErr = settingActionConToErr.second
+                                    ?: return@let settingActionConToErr.first
+                                return@withContext Pair(
+                                    null,
+                                    ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ) to funcErr
+                            }
+                        val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                            mapArgMapList,
+                            args.indexVarNameKeyToDefaultValueStr,
+                            where
+                        ).let { indexVarNameToErr ->
+                            val funcErr = indexVarNameToErr.second
+                                ?: return@let indexVarNameToErr.first
+                            return@withContext Pair(
+                                null,
+                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            ) to funcErr
+                        }
+                        val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                            mapArgMapList,
+                            args.separatorKeyToDefaultValueStr,
+                            where
+                        ).let { inputConToErr ->
+                            val funcErr = inputConToErr.second
+                                ?: return@let inputConToErr.first
+                            return@withContext Pair(
+                                null,
+                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            ) to funcErr
+                        }
+//                        val joinStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+//                            mapArgMapList,
+//                            args.joinStrKeyToDefaultValueStr,
+//                            where
+//                        ).let { joinStrToErr ->
+//                            val funcErr = joinStrToErr.second
+//                                ?: return@let joinStrToErr.first
+//                            return@withContext Pair(
+//                                null,
+//                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                            ) to funcErr
+//                        }
+                        val semaphoreLimit = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                            mapArgMapList,
+                            args.semaphoreKeyToDefaultValueStr,
+                            where
+                        ).let { semaphoreToErr ->
+                            val funcErr = semaphoreToErr.second
+                                ?: return@let semaphoreToErr.first
+                            return@withContext Pair(
+                                null,
+                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            ) to funcErr
+                        }
+                        val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                            mapArgMapList,
+                            args.delimiterKeyToDefaultValueStr,
+                            where
+                        ).let { delimiterToErr ->
+                            val funcErr = delimiterToErr.second
+                                ?: return@let delimiterToErr.first
+                            return@withContext Pair(
+                                null,
+                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            ) to funcErr
+                        }
+                        val alreadyUseVarNameList = listOf(
+//                        elVarName,
+                            fieldVarPrefix,
+                            indexVarName,
+                        ).filter {
+                            it != defaultNullMacroStr
+                        }
+                        val isDuplicate =
+                            let {
+                                val sortedAlreadyUseVarNameList =
+                                    alreadyUseVarNameList.sortedBy { it }
+                                sortedAlreadyUseVarNameList !=
+                                        sortedAlreadyUseVarNameList.distinct()
+                            }
+                        if (isDuplicate) {
+//                        val spanElVarNameKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+//                            CheckTool.ligthBlue,
+//                            args.elVarNameKeyToDefaultValueStr.first
+//                        )
+                            val spanIndexVarName = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.lightBlue,
+                                args.indexVarNameKeyToDefaultValueStr.first
+                            )
+                            val spanFieldVarPrefix =
+                                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                    CheckTool.lightBlue,
+                                    args.fieldVarPrefixKeyToDefaultValueStr.first
+                                )
+                            val alreadyUseVarListCon = alreadyUseVarNameList.joinToString(", ")
+                            val spanAlreadyUseVarListCon =
+                                CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                    CheckTool.lightBlue,
+                                    alreadyUseVarListCon
+                                )
+                            val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.errBrown,
+                                where
+                            )
+                            return@withContext Pair(
+                                null,
+                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            ) to FuncCheckerForSetting.FuncCheckErr(
+                                "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
+                            )
+                        }
+                        MapOperator.map(
+                            context,
+                            fannelInfoMap,
+                            setReplaceVariableMapSrc,
+                            busyboxExecutor,
+                            topVarNameToBitmapMap,
+                            keyToSubKeyConWhere,
+                            editConstraintListAdapterArg,
+                            args,
+                            inputCon,
+                            separator,
+                            indexVarName,
+//                        elVarName,
+                            settingActionCon,
+//                            joinStr,
+                            semaphoreLimit,
+                            delimiter,
+                            fieldVarPrefix,
+                        )
+                    }
+                }
+            }
+        }
+
+        private object MapOperator {
+
+            private const val returnTopAcVarNameMacro =
+                ImageActionKeyManager.returnTopAcVarNameMacro
+            private const val defaultNullMacroStr =
+                FuncCheckerForSetting.defaultNullMacroStr
+            private const val itPronoun = ImageActionKeyManager.BitmapVar.itPronoun
+
+            suspend fun map(
+                context: Context?,
+                fannelInfoMap: HashMap<String, String>,
+                setReplaceVariableMapSrc: Map<String, String>?,
+                busyboxExecutor: BusyboxExecutor?,
+                topVarNameToBitmapMapSrc: Map<String, Bitmap?>?,
+                keyToSubKeyConWhereSrc: String,
+                editConstraintListAdapterArg: EditConstraintListAdapter? = null,
+                args: EvalArgClass.EvalEvalArgs,
+                inputCon: String,
+                separator: String,
+                indexVarName: String,
+//            elVarName: String,
+                imageActionCon: String,
+//                joinStr: String,
+                semaphoreLimit: Int,
+                delimiter: String,
+                fieldVarPrefix: String,
+            ): Pair<
+                    Pair<
+                            Bitmap?,
+                            ImageActionKeyManager.BreakSignal?
+                            >?,
+                    FuncCheckerForSetting.FuncCheckErr?
+                    >
+            {
+                val info = sequenceOf(
+                    "inputCon ${inputCon}",
+                    "separator: ${separator}",
+                    "indexVarName: ${indexVarName}",
+//                "elVarName: ${elVarName}",
+                    "settingActionCon $imageActionCon",
+//                    "joinStr: ${joinStr}",
+                    "semaphoreLimit: ${semaphoreLimit}",
+                    "delimiter: ${delimiter}",
+                    "fieldVarPrefix: ${fieldVarPrefix}",
+                ).joinToString(",")
+                val keyToSubKeyConWhere = listOf(
+                    keyToSubKeyConWhereSrc,
+                    info
+                ).joinToString(",")
+                val topVarNameToBitmapMap = topVarNameToBitmapMapSrc?.filterKeys {
+                    it != itPronoun
+                }
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "leval_func.txt").absolutePath,
+//                listOf(
+//                    "separator: ${separator}",
+//                    "inputCon: ${inputCon}",
+//                    "inputCon.split(separator): ${inputCon.split(separator)}"
+//                ).joinToString("\n\n")
+//            )
+                val forVarNameBitmapMap = ImageActionData.ForVarNameBitmapMap()
+                return withContext(Dispatchers.IO) {
+                    val semaphore = when (semaphoreLimit > 0) {
+                        false -> null
+                        else -> Semaphore(semaphoreLimit)
+                    }
+//                    val indexToResultBitmapJobList =
+                    val indexToResultBitmapJobList = ArrayList<Deferred<Unit>>()
+                    when (
+                        separator == defaultNullMacroStr
+                    ) {
+                        true -> listOf(inputCon)
+                        else -> inputCon.split(separator)
+                    }.forEachIndexed { index, el ->
+                        val asyncJob = async {
+                            val fieldVarNameToValueStrMap =
+                                SettingFuncTool.FieldVarPrefix.makeFieldVarNameToValueStrList(
+                                    el,
+                                    delimiter,
+                                    fieldVarPrefix,
+                                )?.map { (fieldVarName, valueStr) ->
+                                    fieldVarName to valueStr
+                                }?.toMap() ?: emptyMap()
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "leval_replace.txt").absolutePath,
+//                            listOf(
+//                                "fieldVarMarkToValueStrMap: ${fieldVarMarkToValueStrMap}",
+//                            ).joinToString("\n\n")
+//                        )
+                            when (semaphore == null) {
+                                true -> execAction(
+                                    context,
+                                    fannelInfoMap,
+                                    setReplaceVariableMapSrc,
+                                    busyboxExecutor,
+                                    topVarNameToBitmapMap,
+                                    keyToSubKeyConWhere,
+                                    editConstraintListAdapterArg,
+                                    index,
+                                    indexVarName,
+//                                el,
+//                                elVarName,
+                                    imageActionCon,
+                                    fieldVarNameToValueStrMap,
+                                    forVarNameBitmapMap,
+                                )
+
+                                else -> semaphore.withPermit {
+                                    execAction(
+                                        context,
+                                        fannelInfoMap,
+                                        setReplaceVariableMapSrc,
+                                        busyboxExecutor,
+                                        topVarNameToBitmapMap,
+                                        keyToSubKeyConWhere,
+                                        editConstraintListAdapterArg,
+                                        index,
+                                        indexVarName,
+//                                    el,
+//                                    elVarName,
+                                        imageActionCon,
+                                        fieldVarNameToValueStrMap,
+                                        forVarNameBitmapMap,
+                                    )
+                                }
+                            }
+                        }
+                        when(true) {
+                            (semaphoreLimit > 1) -> indexToResultBitmapJobList.add(asyncJob)
+                            (semaphoreLimit == 1) -> asyncJob.await()
+                            else -> {}
+                        }
+                    }
+                    indexToResultBitmapJobList.awaitAll()
+//                    val resultStrList =
+//                        indexToResultBitmapJobList.awaitAll().sortedBy { indexToResultStr ->
+//                            indexToResultStr.first
+//                        }.map { indexToResultStr ->
+//                            indexToResultStr.second
+//                        }
+//                    val isJoin =
+//                        joinStr != defaultNullMacroStr
+//                    if (!isJoin) {
+//                        return@withContext null to null
+//                    }
+                    val resultBitmap = forVarNameBitmapMap.get(
+                        returnTopAcVarNameMacro
+                    )
+                    Pair(
+                        resultBitmap,
+                        null,
+                    ) to null
+                }
+            }
+
+            private suspend fun execAction(
+                context: Context?,
+                fannelInfoMap: HashMap<String, String>,
+                setReplaceVariableMapSrc: Map<String, String>?,
+                busyboxExecutor: BusyboxExecutor?,
+                topVarNameToBitmapMap: Map<String, Bitmap?>?,
+                keyToSubKeyConWhere: String,
+                editConstraintListAdapterArg: EditConstraintListAdapter? = null,
+                index: Int,
+                indexVarName: String,
+//            el: String,
+//            elVarName: String,
+                imageActionCon: String,
+                fieldVarMarkToValueStrMap: Map<String, String>,
+                forVarNameBitmapMap: ImageActionData.ForVarNameBitmapMap?,
+            )
+            //: Pair<Int, Bitmap?>
+            {
+//                val curTopVarNameToValueStrMap = (topVarNameToBitmapMap ?: emptyMap())
+                val loopVarNameToValueStrMap = mapOf(
+//                elVarName to el,
+                    indexVarName to index.toString(),
+                ) + fieldVarMarkToValueStrMap
+                FileSystems.writeFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "lexecAc.txt").absolutePath,
+                    listOf(
+                        "fieldVarMarkToValueStrMap: ${fieldVarMarkToValueStrMap}",
+                        "imageActionCon: ${imageActionCon}",
+                        "loopVarNameToValueStrMap: ${loopVarNameToValueStrMap}",
+                        "rep imageActionCon: ${CmdClickMap.replace(
+                            BackslashTool.toNormal(imageActionCon),
+                            loopVarNameToValueStrMap,
+                        )}"
+                    ).joinToString("\n")
+                )
+//                val outputVarNameToBitmapMap =
+                ImageActionManager().exec(
+                    context,
+                    fannelInfoMap,
+                    setReplaceVariableMapSrc,
+                    busyboxExecutor,
+                    null,
+                    null,
+                    ImageActionAsyncCoroutine(),
+                    topVarNameToBitmapMap?.map {
+                        it.key
+                    },
+                    topVarNameToBitmapMap,
+                    CmdClickMap.replace(
+                        BackslashTool.toNormal(imageActionCon),
+                        loopVarNameToValueStrMap,
+                    ),
+                    "index: ${index}, eval: indexVarName: ${indexVarName}, ${keyToSubKeyConWhere}",
+                    editConstraintListAdapterArg,
+                    returnTopAcVarNameMacro,
+                    forVarNameBitmapMap,
+                )
+                FileSystems.updateFile(
+                    File(UsePath.cmdclickDefaultAppDirPath, "loop.txt").absolutePath,
+                    listOf(
+                        "index: ${index}",
+                        "forVarNameBitmapMap: ${forVarNameBitmapMap?.get(ImageActionKeyManager.returnTopAcVarNameMacro)}"
+                    ).joinToString("\n") + "\n\n==========-\n\n"
+                )
+//                return index to outputVarNameToBitmapMap.get(returnTopAcVarNameMacro)
+            }
+        }
+
+        private enum class MethodNameClass(
+            val str: String,
+            val args: EvalArgClass
+        ) {
+            MAP("map", EvalArgClass.EvalEvalArgs),
+        }
+
+        private sealed interface ArgType {
+            val entries: EnumEntries<*>
+        }
+
+        private sealed class EvalArgClass {
+            data object EvalEvalArgs : EvalArgClass(), ArgType {
+                override val entries = MapEnumArgs.entries
+                val inputKeyToDefaultValueStr = Pair(
+                    MapEnumArgs.INPUT.key,
+                    MapEnumArgs.INPUT.defaultValueStr
+                )
+
+                //            val elVarNameKeyToDefaultValueStr = Pair(
+//                MapEnumArgs.EL_VAR_NAME.key,
+//                MapEnumArgs.EL_VAR_NAME.defaultValueStr
+//            )
+                val fieldVarPrefixKeyToDefaultValueStr = Pair(
+                    MapEnumArgs.FIELD_VAR_PREFIX.key,
+                    MapEnumArgs.FIELD_VAR_PREFIX.defaultValueStr
+                )
+                val actionKeyToDefaultValueStr = Pair(
+                    MapEnumArgs.ACTION.key,
+                    MapEnumArgs.ACTION.defaultValueStr
+                )
+                val separatorKeyToDefaultValueStr = Pair(
+                    MapEnumArgs.SEPARATOR.key,
+                    MapEnumArgs.SEPARATOR.defaultValueStr
+                )
+                val indexVarNameKeyToDefaultValueStr = Pair(
+                    MapEnumArgs.INDEX_VAR_NAME.key,
+                    MapEnumArgs.INDEX_VAR_NAME.defaultValueStr
+                )
+//                val joinStrKeyToDefaultValueStr = Pair(
+//                    MapEnumArgs.JOIN_STR.key,
+//                    MapEnumArgs.JOIN_STR.defaultValueStr
+//                )
+                val semaphoreKeyToDefaultValueStr = Pair(
+                    MapEnumArgs.SEMAPHORE.key,
+                    MapEnumArgs.SEMAPHORE.defaultValueStr
+                )
+                val delimiterKeyToDefaultValueStr = Pair(
+                    MapEnumArgs.DELIMITER.key,
+                    MapEnumArgs.DELIMITER.defaultValueStr
+                )
+
+                enum class MapEnumArgs(
+                    val key: String,
+                    val defaultValueStr: String?,
+                    val type: FuncCheckerForSetting.ArgType,
+                ) {
+                    INPUT("inputCon", String(), FuncCheckerForSetting.ArgType.STRING),
+
+                    //                EL_VAR_NAME("elVarName", null, FuncCheckerForSetting.ArgType.STRING),
+                    FIELD_VAR_PREFIX("fieldVarPrefix", null, FuncCheckerForSetting.ArgType.STRING),
+                    ACTION("action", null, FuncCheckerForSetting.ArgType.STRING),
+                    SEPARATOR(
+                        "separator",
+                        null,
+                        FuncCheckerForSetting.ArgType.STRING
+                    ),
+                    INDEX_VAR_NAME(
+                        "indexVarName",
+                        defaultNullMacroStr,
+                        FuncCheckerForSetting.ArgType.STRING
+                    ),
+//                    JOIN_STR("joinStr", defaultNullMacroStr, FuncCheckerForSetting.ArgType.STRING),
+                    SEMAPHORE("semaphore", 1.toString(), FuncCheckerForSetting.ArgType.INT),
+                    DELIMITER(
+                        "delimiter",
+                        defaultNullMacroStr,
+                        FuncCheckerForSetting.ArgType.STRING
+                    ),
                 }
             }
         }

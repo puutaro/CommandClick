@@ -200,6 +200,70 @@ object OverlayForImageAction {
                     null
                 ) to null
             }
+            is OverlayMethodArgClass.ByRndArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bkBitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
+                    mapArgMapList,
+                    args.bkBitmapKeyToIndex,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
+                    mapArgMapList,
+                    args.bitmapKeyToIndex,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                val returnBitmap = Overlay.byRnd(
+                    bkBitmap,
+                    bitmap,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    returnBitmap,
+                    null
+                ) to null
+            }
         }
     }
 
@@ -260,6 +324,29 @@ object OverlayForImageAction {
                 return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
             }
         }
+
+        fun byRnd(
+            bkBitmap: Bitmap,
+            bitmap: Bitmap,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val overlayBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmap(
+                    bkBitmap,
+                    bitmap,
+                )
+                Pair(
+                    overlayBitmap,
+                    null
+                )
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
     }
 
     private enum class MethodNameClass(
@@ -268,6 +355,7 @@ object OverlayForImageAction {
     ){
         BY_CENTER("byCenter", OverlayMethodArgClass.ByCenterArgs),
         BY_OFFSET("byOffset", OverlayMethodArgClass.ByOffsetArgs),
+        BY_RND("byRnd", OverlayMethodArgClass.ByRndArgs),
     }
     private sealed interface ArgType {
         val entries: EnumEntries<*>
@@ -319,6 +407,25 @@ object OverlayForImageAction {
                 BITMAP("bitmap", 1, FuncCheckerForSetting.ArgType.BITMAP),
                 OFFSET_X("offsetX", 2, FuncCheckerForSetting.ArgType.FLOAT),
                 OFFSET_Y("offsetY", 3, FuncCheckerForSetting.ArgType.FLOAT),
+            }
+        }
+        data object ByRndArgs : OverlayMethodArgClass(), ArgType {
+            override val entries = ByRndArgs.entries
+            val bkBitmapKeyToIndex = Pair(
+                ByRndArgs.BK_BITMAP.key,
+                ByRndArgs.BK_BITMAP.index
+            )
+            val bitmapKeyToIndex = Pair(
+                ByRndArgs.BITMAP.key,
+                ByRndArgs.BITMAP.index
+            )
+            enum class ByRndArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BK_BITMAP("bkBitmap", 0, FuncCheckerForSetting.ArgType.BITMAP),
+                BITMAP("bitmap", 1, FuncCheckerForSetting.ArgType.BITMAP),
             }
         }
     }

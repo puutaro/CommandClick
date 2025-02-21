@@ -15,7 +15,7 @@ object BackslashTool {
                 val backslash = "\\"
                 hexConvertedStr
                     .replace(
-                        Regex("${backslash}${backslash}([\"'`$${backslash}${backslash}])"),
+                        Regex("${backslash}${backslash}([\"'`$#${backslash}${backslash}])"),
                         "$1"
                     )
             }

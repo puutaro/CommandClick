@@ -12,6 +12,7 @@ object ImageActionKeyManager {
     const val valueSeparator = '&'
     val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
     const val awaitWaitTimes = 5//10
+    const val returnTopAcVarNameMacro = "RESULT_OUTPUT"
 
     enum class ImageActionsKey(
         val key: String

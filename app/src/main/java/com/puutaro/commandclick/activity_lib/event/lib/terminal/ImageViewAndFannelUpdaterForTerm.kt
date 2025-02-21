@@ -374,7 +374,9 @@ object ImageViewAndFannelUpdaterForTerm {
                 null,
                 imageAcCon,
                 errWhere,
-                editConstraintListAdapter
+                editConstraintListAdapter,
+                null,
+                null,
             )
         }
     }

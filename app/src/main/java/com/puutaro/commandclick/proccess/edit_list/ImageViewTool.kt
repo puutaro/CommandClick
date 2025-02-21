@@ -22,6 +22,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
+import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +59,9 @@ object ImageViewTool {
     private val imageScaleXKey = EditComponent.Template.ImageManager.PropertyKey.SCALE_X.key
     private val imageScaleYKey = EditComponent.Template.ImageManager.PropertyKey.SCALE_Y.key
     private val elevationKey = EditComponent.Template.EditComponentKey.ELEVATION.key
+    private val translationXKey = EditComponent.Template.EditComponentKey.TRANSLATION_X.key
+    private val translationYKey = EditComponent.Template.EditComponentKey.TRANSLATION_Y.key
+    private val translationZKey = EditComponent.Template.EditComponentKey.TRANSLATION_Z.key
 
     suspend fun setVisibility(
         imageView: AppCompatImageView?,
@@ -185,6 +189,60 @@ object ImageViewTool {
             }?.let {
                 withContext(Dispatchers.Main) {
                     elevation = it
+                }
+            }
+            withContext(Dispatchers.IO) {
+                imageMap.get(
+                    translationXKey,
+                )?.let {
+                    try {
+                        ScreenSizeCalculator.toDpByDensity(
+                            it.toInt(),
+                            density,
+                        ).toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    translationX = it
+                }
+            }
+            withContext(Dispatchers.IO) {
+                imageMap.get(
+                    translationYKey,
+                )?.let {
+                    try {
+                        ScreenSizeCalculator.toDpByDensity(
+                            it.toInt(),
+                            density,
+                        ).toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    translationY = it
+                }
+            }
+            withContext(Dispatchers.IO) {
+                imageMap.get(
+                    translationZKey,
+                )?.let {
+                    try {
+                        ScreenSizeCalculator.toDpByDensity(
+                            it.toInt(),
+                            density,
+                        ).toFloat()
+                    }catch (e: Exception){
+                        null
+                    }
+                }
+            }?.let {
+                withContext(Dispatchers.Main) {
+                    translationZ = it
                 }
             }
             withContext(Dispatchers.IO) {
