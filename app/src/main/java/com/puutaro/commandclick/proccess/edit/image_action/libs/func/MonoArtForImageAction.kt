@@ -495,6 +495,23 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
+                val direction = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.directionKeyToDefaultValueStr,
+                    where
+                ).let { colorListToErr ->
+                    val funcErr = colorListToErr.second
+                        ?: return@let colorListToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    directionStr ->
+                    args.directionEntries.firstOrNull {
+                        it.name == directionStr
+                    } ?: args.defaultDirection
+                }
                 val colorList = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
                     args.colorListKeyToDefaultValueStr,
@@ -656,6 +673,7 @@ object MonoArtForImageAction {
 //                    shape,
                     width,
                     height,
+                    direction,
                     times,
                     minOpacityRate,
                     maxOpacityRate,
@@ -1261,6 +1279,7 @@ object MonoArtForImageAction {
         suspend fun rndOrthogonalRect(
             baseWidth: Int,
             baseHeight: Int,
+            direction: MonoArtMethodArgClass.RndOrthogonalRectArgs.Direction,
             times: Int,
             minOpacityRate: Float,
             maxOpacityRate: Float,
@@ -1277,6 +1296,7 @@ object MonoArtForImageAction {
                     baseWidth,
                     baseHeight,
 //                    baseBitmap,
+                    direction,
                     times,
                     minOpacityRate,
                     maxOpacityRate,
@@ -1297,6 +1317,7 @@ object MonoArtForImageAction {
         private suspend fun execRndOrthogonalRect(
             baseWidth: Int,
             baseHeight: Int,
+            direction: MonoArtMethodArgClass.RndOrthogonalRectArgs.Direction,
             times: Int,
             minWidthShrinkRate: Float,
             maxWidthShrinkRate: Float,
@@ -1312,6 +1333,12 @@ object MonoArtForImageAction {
                     baseWidth,
                     baseHeight,
                 )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "tclow.txt").absolutePath,
+//                listOf(
+//                    "direction: ${direction}"
+//                ).joinToString("\n")
+//            )
             return withContext(Dispatchers.IO) {
                 val bitmapToOffsetPairListJob = (0..times).map {
                     async {
@@ -1324,7 +1351,14 @@ object MonoArtForImageAction {
                         }
                         val widthSrc = baseWidth - x
                         val heightSrc = baseHeight - y
-                        val isShrinkWidth = (0..1).random() == 1
+                        val isShrinkWidth = when(direction) {
+                            MonoArtMethodArgClass.RndOrthogonalRectArgs.Direction.RND
+                                -> (0..1).random() == 1
+                            MonoArtMethodArgClass.RndOrthogonalRectArgs.Direction.HORIZON
+                                -> false
+                            MonoArtMethodArgClass.RndOrthogonalRectArgs.Direction.VERTICAL
+                                -> true
+                        }
                         val width = when(isShrinkWidth){
                             true -> (
                                     (widthSrc * minWidthShrinkRate).toInt()
@@ -1867,6 +1901,8 @@ object MonoArtForImageAction {
         }
         data object RndOrthogonalRectArgs : MonoArtMethodArgClass(), ArgType {
             override val entries = RndOrthogonalRectEnumArgs.entries
+            val directionEntries = Direction.entries
+            val defaultDirection = Direction.RND
             val widthKeyToDefaultValueStr = Pair(
                 RndOrthogonalRectEnumArgs.WIDTH.key,
                 RndOrthogonalRectEnumArgs.WIDTH.defaultValueStr
@@ -1874,6 +1910,10 @@ object MonoArtForImageAction {
             val heightKeyToDefaultValueStr = Pair(
                 RndOrthogonalRectEnumArgs.HEIGHT.key,
                 RndOrthogonalRectEnumArgs.HEIGHT.defaultValueStr
+            )
+            val directionKeyToDefaultValueStr = Pair(
+                RndOrthogonalRectEnumArgs.DIRECTION.key,
+                RndOrthogonalRectEnumArgs.DIRECTION.defaultValueStr
             )
             val colorListKeyToDefaultValueStr = Pair(
                 RndOrthogonalRectEnumArgs.COLOR_LIST.key,
@@ -1917,6 +1957,7 @@ object MonoArtForImageAction {
                 HEIGHT("height", null, FuncCheckerForSetting.ArgType.INT),
                 COLOR_LIST("colorList", null, FuncCheckerForSetting.ArgType.STRING),
                 TIMES("times", 5.toString(), FuncCheckerForSetting.ArgType.INT),
+                DIRECTION("direction", Direction.RND.name, FuncCheckerForSetting.ArgType.STRING),
                 MIN_OPACITY_RATE(
                     "minOpacityRate",
                     (0.1).toString(),
@@ -1947,6 +1988,12 @@ object MonoArtForImageAction {
                     (0.5).toString(),
                     FuncCheckerForSetting.ArgType.FLOAT
                 ),
+            }
+
+            enum class Direction {
+                HORIZON,
+                VERTICAL,
+                RND,
             }
         }
     }
