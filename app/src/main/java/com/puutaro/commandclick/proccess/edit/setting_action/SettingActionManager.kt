@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -20,6 +21,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.DebugForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.EditForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ExitForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.FileSystemsForSettingHandler
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ImportDataForSettingAction
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.InclineForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ListForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.LocalDatetimeForSetting
@@ -35,6 +37,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -52,6 +55,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDateTime
+import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.enums.EnumEntries
 
@@ -65,6 +69,9 @@ class SettingActionManager {
 
         fun init(){
             SettingActionImportManager.BeforeActionImportMapManager.init()
+        }
+        suspend fun dataInit(){
+            ImportDataForSettingAction.clearImportData()
         }
         private val mapRoopKeyUnit =
             SettingActionKeyManager.LoopKeyManager.mapRoopKeyUnit
@@ -2008,6 +2015,13 @@ private object SettingFuncManager {
                     methodName,
                     baseArgsPairList,
                 )
+            FuncType.IMPORT_DATA ->
+                ImportDataForSettingAction.handle(
+                    context,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
         }
 
     }
@@ -2033,6 +2047,7 @@ private object SettingFuncManager {
         REPLACE("replace"),
         INCLINE("incline"),
         SCREEN("screen"),
+        IMPORT_DATA("importData"),
     }
 
 }

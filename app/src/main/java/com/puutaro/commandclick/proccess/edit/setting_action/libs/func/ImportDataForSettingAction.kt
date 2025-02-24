@@ -1,30 +1,27 @@
-package com.puutaro.commandclick.proccess.edit.image_action.libs.func
+package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import android.content.Context
-import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlinx.coroutines.delay
 import java.io.File
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.withLock
 import kotlin.enums.EnumEntries
 
-object ImportDataForImageAction {
+object ImportDataForSettingAction {
     suspend fun handle(
         context: Context?,
         funcName: String,
         methodNameStr: String,
         argsPairList: List<Pair<String, String>>,
-        varNameToBitmapMap: Map<String, Bitmap?>?,
     ): Pair<
             Pair<
-                    Bitmap?,
-                    ImageActionKeyManager.BreakSignal?
+                    String?,
+                    SettingActionKeyManager.BreakSignal?
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
             >? {
@@ -76,7 +73,7 @@ object ImportDataForImageAction {
                         ?: return@let importPathToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val key = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -88,7 +85,7 @@ object ImportDataForImageAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val waitMill = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
@@ -100,7 +97,7 @@ object ImportDataForImageAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(it <= 0) return@let args.defaultWaitMill
@@ -108,13 +105,13 @@ object ImportDataForImageAction {
                 }
                 val delayMill = 50L
                 val waitLoopNum = waitMill / delayMill
-                var returnBitmap: Bitmap? = null
+                var returnStr: String? = null
                 for(i in 0..waitLoopNum) {
-                    returnBitmap = Data.get(
+                    returnStr = Data.get(
                         importPath,
                         key,
                     )
-                    if(returnBitmap != null) break
+                    if(returnStr != null) break
                     delay(delayMill)
                 }
 //                FileSystems.writeFile(
@@ -132,7 +129,7 @@ object ImportDataForImageAction {
 //                    ).joinToString("\n")
 //                )
                 Pair(
-                    returnBitmap,
+                    returnStr,
                     null
                 ) to null
             }
@@ -164,7 +161,7 @@ object ImportDataForImageAction {
                         ?: return@let importPathToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
                 val key = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -176,44 +173,30 @@ object ImportDataForImageAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 }
-//                FileSystems.writeFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "ldata_put.txt").absolutePath,
-//                    listOf(
-//                        "importPath: ${importPath}",
-//                        "key: ${key}",
-//                        "mapArgMapList: ${mapArgMapList}",
-//                        "varNameToBitmapMap: ${varNameToBitmapMap}",
-////                        "bitmap: ${bitmap}",
-////                        "Data: ${Data.get(
-////                            importPath,
-////                            key,
-////                        )}"
-//                    ).joinToString("\n")
-//                )
-                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
+
+                val str = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
                     mapArgMapList,
-                    args.bitmapKeyToIndex,
-                    varNameToBitmapMap,
+                    args.strKeyToIndex,
                     where
                 ).let { keyToErr ->
                     val funcErr = keyToErr.second
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 Data.put(
                     importPath,
                     key,
-                    bitmap
+                    str
                 )
 
                 Pair(
-                    bitmap,
+                    str,
                     null
                 ) to null
             }
@@ -265,9 +248,9 @@ object ImportDataForImageAction {
                 PutArgs.KEY.key,
                 PutArgs.KEY.index
             )
-            val bitmapKeyToIndex = Pair(
-                PutArgs.BITMAP.key,
-                PutArgs.BITMAP.index
+            val strKeyToIndex = Pair(
+                PutArgs.STR.key,
+                PutArgs.STR.index
             )
             enum class PutArgs(
                 val key: String,
@@ -276,7 +259,7 @@ object ImportDataForImageAction {
             ){
                 IMPORT_PATH("importPath", 0, FuncCheckerForSetting.ArgType.FILE),
                 KEY("key", 1, FuncCheckerForSetting.ArgType.STRING),
-                BITMAP("bitmap", 2, FuncCheckerForSetting.ArgType.BITMAP),
+                STR("str", 2, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }
@@ -290,42 +273,42 @@ object ImportDataForImageAction {
         data class ImportData(
             val importPath: String,
             val key: String,
-            val bitmap: Bitmap?,
+            val str: String?,
         )
-        private val asyncImportKeyToBitmapMutex = ReentrantReadWriteLock()
-        private val importKeyToBitmap: HashSet<ImportData> = hashSetOf()
+        private val asyncImportKeyToValueStrMutex = ReentrantReadWriteLock()
+        private val importKeyToValueStr: HashSet<ImportData> = hashSetOf()
         suspend fun get(
             importPath: String,
             key: String,
-        ): Bitmap? {
-            return asyncImportKeyToBitmapMutex.readLock().withLock {
-                importKeyToBitmap.firstOrNull {
+        ): String? {
+            return asyncImportKeyToValueStrMutex.readLock().withLock {
+                importKeyToValueStr.firstOrNull {
                     importData ->
                     importData.importPath == importPath
                             && importData.key == key
-                }?.bitmap
+                }?.str
             }
         }
 
         suspend fun put(
             importPath: String,
             key: String,
-            bitmap: Bitmap?,
+            str: String?,
         ){
-            asyncImportKeyToBitmapMutex.writeLock().withLock {
-                importKeyToBitmap.add(
+            asyncImportKeyToValueStrMutex.writeLock().withLock {
+                importKeyToValueStr.add(
                     ImportData(
                         importPath,
                         key,
-                        bitmap,
+                        str,
                     )
                 )
             }
         }
 
         suspend fun clear(){
-            asyncImportKeyToBitmapMutex.writeLock().withLock {
-                importKeyToBitmap.clear()
+            asyncImportKeyToValueStrMutex.writeLock().withLock {
+                importKeyToValueStr.clear()
             }
         }
     }

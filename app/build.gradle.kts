@@ -160,6 +160,8 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.github.gleb8k:Android-PathShapeView:1.3.2")
     implementation("com.daimajia.androidanimations:library:2.4@aar")
+    implementation("androidx.vectordrawable:vectordrawable:1.2.0")
+//    implementation("org.opencv:opencv-android:4.11.0:lite")
 //    val htextview_version = "0.1.2"
 //    implementation("com.github.kibotu:htextview:0.1.28")
 //    implementation("com.github.takusemba:spotlight:2.0.5")

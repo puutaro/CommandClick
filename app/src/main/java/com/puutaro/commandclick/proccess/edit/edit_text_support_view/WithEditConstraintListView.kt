@@ -149,6 +149,8 @@ object WithEditConstraintListView{
         withContext(Dispatchers.IO) {
 //            SettingActionManager.Companion.GlobalExitManager.init()
             SettingActionManager.init()
+            SettingActionManager.dataInit()
+            ImageActionManager.dataInit()
 //            FileSystems.removeAndCreateDir(
 //                UsePath.cmdclickDefaultSDebugAppDirPath
 //            )

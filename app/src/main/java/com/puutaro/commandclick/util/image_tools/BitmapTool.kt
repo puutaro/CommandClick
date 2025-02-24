@@ -1183,7 +1183,7 @@ object BitmapTool {
                 Bitmap.Config.ARGB_8888
             )
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
+                paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
             val canvas = Canvas(output)
             canvas.drawBitmap(bkBitmap, 0f, 0f, null)
 //        val paint = Paint(Paint.ANTI_ALIAS_FLAG)

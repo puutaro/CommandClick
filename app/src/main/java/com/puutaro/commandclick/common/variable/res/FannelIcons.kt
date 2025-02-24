@@ -283,7 +283,7 @@ enum class FannelIcons(
         R.drawable.fannel_skull
     ),
     SKULL_HORIZON(
-        "skull",
+        "skull_horizon",
         R.drawable.fannel_skull_horizon
     ),
     SNAKE(

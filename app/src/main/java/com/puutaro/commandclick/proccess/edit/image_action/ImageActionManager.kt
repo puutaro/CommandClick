@@ -18,6 +18,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageReturnExecu
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.BlurForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ColorForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ConcatForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.CutForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForImageAction
@@ -27,6 +28,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FlipForImag
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.GradForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ImportDataForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.LineArtForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.LoopResultForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.MaskForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.MonoArtForImageAction
@@ -76,6 +78,10 @@ class ImageActionManager {
 
         fun init(){
             ImageActionImportManager.BeforeActionImportMapManager.init()
+        }
+
+        suspend fun dataInit(){
+            ImportDataForImageAction.clearImportData()
         }
 
         private fun makeSettingKeyToVarNameList(
@@ -1940,6 +1946,23 @@ class ImageActionManager {
                         methodName,
                         baseArgsPairList,
                     )
+                FuncType.LINE_ART -> {
+                    LineArtForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                }
+                FuncType.CONCAT ->
+                    ConcatForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
             }
 
         }
@@ -1971,6 +1994,8 @@ class ImageActionManager {
             LOOP_RESULT("loopResult"),
             MONO_ART("monoArt"),
             EVAL("eval"),
+            LINE_ART("lineArt"),
+            CONCAT("concat"),
         }
     }
 
