@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.edit.setting_action
 
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionData
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
 
@@ -8,7 +7,7 @@ object SettingActionKeyManager {
 
     const val landSeparator = ','
     const val mainKeySeparator = '|'
-    const val subKeySepartor = '?'
+    const val subKeySeparator = '?'
     const val valueSeparator = '&'
     val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
     const val returnTopAcVarNameMacro = "CMDCLICK_OUTPUT_MACRO"
@@ -49,16 +48,6 @@ object SettingActionKeyManager {
             return curMapLoopKey.removeSuffix(
                 "${mapLoopKeySeparator}${mapRoopKeyUnit}"
             )
-        }
-
-        fun getResultLoopKeyToVarNameValueMap(
-            loopKeyToVarNameValueStrMap: SettingActionData.LoopKeyToVarNameValueStrMap?
-        ): Map<String, String> {
-            return loopKeyToVarNameValueStrMap
-                ?.convertAsyncVarNameToValueStrMapToMap(mapRoopKeyUnit)
-                ?.map {
-                    it.key to (it.value ?: String())
-                }?.toMap() ?: emptyMap()
         }
     }
 
@@ -146,37 +135,15 @@ object SettingActionKeyManager {
 
     enum class BreakSignal {
         EXIT_SIGNAL,
+        ERR_EXIT_SIGNAL,
+        EXIT_WITH_IMAGE_SIGNAL,
         RETURN_SIGNAL
-    }
-
-    suspend fun makeVarNameToValueStrMap(
-        curMapLoopKey: String,
-        topVarNameToValueStrMap: Map<String, String?>?,
-        importedVarNameToValueStrMap: Map<String, String?>?,
-        loopKeyToVarNameValueStrMapClass: SettingActionData.LoopKeyToVarNameValueStrMap?,
-        privateLoopKeyVarNameValueStrMapClass: SettingActionData.PrivateLoopKeyVarNameValueStrMap,
-        curImportedVarNameToValueStrMap: Map<String, String?>?,
-        itToBitmapMap: Map<String, String?>?,
-    ):  Map<String, String?> {
-        val varNameToValueStrMap =
-            (topVarNameToValueStrMap ?: emptyMap()) +
-                    (importedVarNameToValueStrMap ?: emptyMap()) +
-                    (loopKeyToVarNameValueStrMapClass
-                        ?.convertAsyncVarNameToValueStrMapToMap(curMapLoopKey)
-                        ?: emptyMap()) +
-                    (privateLoopKeyVarNameValueStrMapClass
-                        .convertAsyncVarNameToValueStrToMap(curMapLoopKey)
-                        ?: emptyMap()) +
-                    (curImportedVarNameToValueStrMap ?: emptyMap()) +
-                    (itToBitmapMap ?: emptyMap())
-        return varNameToValueStrMap
     }
 
     fun makeSettingKeyToVarNameListForReturn(
         keyToSubKeyConList: List<Pair<String, String>>,
     ): List<Pair<String, String>> {
         val defaultReturnPair = String() to String()
-        val subKeySeparator = SettingActionKeyManager.subKeySepartor
         val imageKeyList =
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key

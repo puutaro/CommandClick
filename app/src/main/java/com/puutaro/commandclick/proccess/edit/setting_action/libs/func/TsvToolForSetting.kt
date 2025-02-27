@@ -63,7 +63,7 @@ object TsvToolForSetting {
                         ?: return@let tsvPathToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val key = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -75,7 +75,7 @@ object TsvToolForSetting {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(
@@ -114,7 +114,7 @@ object TsvToolForSetting {
                         ?: return@let tsvConToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val key = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -126,7 +126,7 @@ object TsvToolForSetting {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(

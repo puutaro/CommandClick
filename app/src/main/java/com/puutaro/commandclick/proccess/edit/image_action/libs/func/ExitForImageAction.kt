@@ -1,17 +1,18 @@
-package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
+package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
+import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 
-object ExitForSetting {
+object ExitForImageAction {
     fun handle(
         funcName: String,
         methodNameStr: String,
     ): Pair<
             Pair<
-                    String?,
-                    SettingActionKeyManager.BreakSignal?
+                    Bitmap?,
+                    ImageActionKeyManager.BreakSignal?
                     >?,
             FuncCheckerForSetting.FuncCheckErr?
             >? {
@@ -24,7 +25,7 @@ object ExitForSetting {
 //                }}",
 //            ).joinToString("\n") + "\n\n==========\n\n"
 //        )
-        val method = MethodNameClass.entries.firstOrNull {
+        MethodNameClass.entries.firstOrNull {
             it.str == methodNameStr
         }  ?: let {
             val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -37,28 +38,16 @@ object ExitForSetting {
             )
             return null to FuncCheckerForSetting.FuncCheckErr("Method name not found: ${spanFuncTypeStr}.${spanMethodNameStr}")
         }
-        return when(method){
-            MethodNameClass.EXIT -> {
-                Pair(
-                    null,
-                    SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
-                ) to null
-            }
-            MethodNameClass.EXIT_WITH_IMAGE -> {
-                Pair(
-                    null,
-                    SettingActionKeyManager.BreakSignal.EXIT_WITH_IMAGE_SIGNAL
-                ) to null
-            }
-        }
-
+        return Pair(
+            null,
+            ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+        ) to null
     }
 
     private enum class MethodNameClass(
         val str: String,
     ){
         EXIT("exit"),
-        EXIT_WITH_IMAGE("exitWithImage"),
     }
 
 }

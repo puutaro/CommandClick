@@ -72,7 +72,7 @@ object ReplaceForSetting {
                         ?: return@let inputConToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val defaultSeparator =
@@ -98,7 +98,7 @@ object ReplaceForSetting {
                         if (funcErr != null) {
                             return Pair(
                                 null,
-                                SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                         SettingFuncTool.makeJoinStrBySeparator(
@@ -123,7 +123,7 @@ object ReplaceForSetting {
                         ?: return@let joinStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -135,7 +135,7 @@ object ReplaceForSetting {
                         ?: return@let indexVarNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -147,7 +147,7 @@ object ReplaceForSetting {
                         ?: return@let delimiterToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -160,7 +160,7 @@ object ReplaceForSetting {
                         ?: return@let fieldVarPrefixToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val alreadyUseVarNameList = listOf(
@@ -196,7 +196,7 @@ object ReplaceForSetting {
                     )
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to  FuncCheckerForSetting. FuncCheckErr(
                         "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}, ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
                     )
@@ -210,7 +210,7 @@ object ReplaceForSetting {
                         ?: return@let removeRegexConToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val inputConList = when(separator == defaultNullMacroStr){

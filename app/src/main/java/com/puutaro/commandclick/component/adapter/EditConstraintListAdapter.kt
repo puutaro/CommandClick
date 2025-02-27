@@ -33,7 +33,9 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionData
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.edit_list.EditImageViewSetter
 import com.puutaro.commandclick.proccess.edit_list.EditListConfig
@@ -511,7 +513,7 @@ class EditConstraintListAdapter(
                     plusKeyToSubKeyConWhere
                 ).joinToString(", ")
             dateList.add("1firstSettingAc" to LocalDateTime.now())
-            val frameKeyPairsConToVarNameValueMap = withContext(Dispatchers.IO) {
+            val frameKeyPairsConToVarNameValueMapToSignal = withContext(Dispatchers.IO) {
                 val frameKeyPairsConSrc = frameMap.get(frameTag)
                 EditComponent.Template.ReplaceHolder.replaceHolder(
                     frameKeyPairsConSrc,
@@ -523,9 +525,9 @@ class EditConstraintListAdapter(
                     innerFrameKeyPairsConSrc ->
                     if(
                         innerFrameKeyPairsConSrc.isNullOrEmpty()
-                    ) return@let String() to emptyMap()
+                    ) return@let String() to Pair(emptyMap<String, String>(), null)
                     val settingActionManager = SettingActionManager()
-                    val varNameToValueMap = settingActionManager.exec(
+                    val varNameToValueMapToSignal = settingActionManager.exec(
                         context,
                         fragmentActivity,
                         fannelInfoMap,
@@ -539,16 +541,21 @@ class EditConstraintListAdapter(
                         innerFrameKeyPairsConSrc,
                         totalMapListElInfo,
                         editConstraintListAdapterArg = this@EditConstraintListAdapter
-                    ) + (globalVarNameToValueMap ?: emptyMap())
+                    )
+                    val varNameToValueMap =
+                        varNameToValueMapToSignal.first + (globalVarNameToValueMap ?: emptyMap())
                     CmdClickMap.replace(
                         innerFrameKeyPairsConSrc,
                         varNameToValueMap
-                    ) to varNameToValueMap
+                    ) to varNameToValueMapToSignal
                 }
             }
             dateList.add("firstSettingAcEnd" to LocalDateTime.now())
-            val frameKeyPairsCon = frameKeyPairsConToVarNameValueMap.first
-            val frameVarNameValueMap = frameKeyPairsConToVarNameValueMap.second
+            val frameKeyPairsCon = frameKeyPairsConToVarNameValueMapToSignal.first
+            val frameKeyVarNameValueMapToSignal =
+                frameKeyPairsConToVarNameValueMapToSignal.second
+            val frameVarNameValueMap = frameKeyVarNameValueMapToSignal.first
+            val frameSettingAcSignal = frameKeyVarNameValueMapToSignal.second
             val tagIdMap = withContext(Dispatchers.IO){
                 tagToIdListSrc?.map {
                     val key = CmdClickMap.replace(
@@ -567,6 +574,9 @@ class EditConstraintListAdapter(
             }
             dateList.add("frameImageActionStart" to LocalDateTime.now())
             val varNameToBitmapMapInFrame = withContext(Dispatchers.IO){
+                if(
+                    SettingActionData.SettingActionExitManager.isStopImageAc(frameSettingAcSignal)
+                ) return@withContext emptyMap()
                 ImageActionManager().exec(
                     context,
                     fannelInfoMap,
@@ -775,7 +785,7 @@ class EditConstraintListAdapter(
 //                                        "contentsTag: ${contentsTagSrc}",
 //                                    ).joinToString("\n") + "\n\n============\n\n\n"
 //                                )
-                            val varNameToValueMap =
+                            val varNameToValueMapToSignal =
                                 withContext(Dispatchers.IO) updateLinearKeyParsListCon@{
                                     Template.ReplaceHolder.replaceHolder(
                                         contentsKeyPairsListConSrc,
@@ -787,7 +797,7 @@ class EditConstraintListAdapter(
                                             contentsKeyPairsListConSrcWithReplace ->
                                         if(
                                             contentsKeyPairsListConSrcWithReplace.isNullOrEmpty()
-                                        ) return@let emptyMap()
+                                        ) return@let emptyMap<String, String>() to null
                                         SettingActionManager().exec(
                                             context,
                                             fragmentActivity,
@@ -806,6 +816,8 @@ class EditConstraintListAdapter(
                                         )
                                     }
                                 }
+                            val varNameToValueMap = varNameToValueMapToSignal.first
+                            val contentsSettingAcSignal = varNameToValueMapToSignal.second
                             val contentsVarNameToValueMap =
                                 frameVarNameValueMap + varNameToValueMap
                             val contentsTag = CmdClickMap.replace(
@@ -918,6 +930,7 @@ class EditConstraintListAdapter(
                                             tagIdMap,
                                             totalMapListElInfo,
                                             varNameToBitmapMapInFrame,
+                                            contentsSettingAcSignal,
                                         )
                                     Template.ViewTypeManager.ViewType.FRAME -> setFrameLayout(
                                         fragment,
@@ -1018,6 +1031,7 @@ class EditConstraintListAdapter(
         tagIdMap: Map<String, Int>?,
         totalMapListElInfo: String,
         varNameToBitmapMapInFrame: Map<String, Bitmap?>,
+        contentsSettingAcSignal: SettingActionKeyManager.BreakSignal?,
     ){
         val context =
             fragment?.context ?: return
@@ -1039,6 +1053,9 @@ class EditConstraintListAdapter(
         CoroutineScope(Dispatchers.IO).launch {
 //                                    val varNameToBitmapMapInContents =
             withContext(Dispatchers.IO){
+                if(
+                    SettingActionData.SettingActionExitManager.isStopImageAc(contentsSettingAcSignal)
+                ) return@withContext
                 val topLevelVarNameToBitmapMap =
                     globalVarNameToBitmapMap + varNameToBitmapMapInFrame
                 ImageActionManager().exec(

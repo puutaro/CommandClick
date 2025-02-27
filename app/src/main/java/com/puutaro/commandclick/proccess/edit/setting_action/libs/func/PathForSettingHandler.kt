@@ -77,7 +77,7 @@ object PathForSettingHandler {
                         ?: return@let fannelNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(
@@ -113,7 +113,7 @@ object PathForSettingHandler {
                         ?: return@let fannelNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(
@@ -149,7 +149,7 @@ object PathForSettingHandler {
                         ?: return@let fannelNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(
@@ -185,7 +185,7 @@ object PathForSettingHandler {
                         ?: return@let pathStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(
@@ -221,7 +221,7 @@ object PathForSettingHandler {
                         ?: return@let pathStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(
@@ -257,7 +257,7 @@ object PathForSettingHandler {
                         ?: return@let pathStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(
@@ -293,7 +293,7 @@ object PathForSettingHandler {
                         ?: return@let pathStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(
@@ -329,7 +329,7 @@ object PathForSettingHandler {
                         ?: return@let pathStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(
@@ -365,7 +365,7 @@ object PathForSettingHandler {
                         ?: return@let pathStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(
@@ -401,7 +401,7 @@ object PathForSettingHandler {
                         ?: return@let pathStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(

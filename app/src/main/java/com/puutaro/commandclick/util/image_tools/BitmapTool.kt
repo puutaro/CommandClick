@@ -1633,6 +1633,52 @@ object BitmapTool {
             )
         }
 
+        fun otherToColor(
+            src: Bitmap,
+            saveColor: Int,
+            toColor: Int,
+        ): Bitmap {
+            val width = src.width
+            val height = src.height
+            val pixels = IntArray(width * height)
+            // get pixel array from source
+            src.getPixels(pixels, 0, width, 0, 0, width, height)
+
+            val bmOut = Bitmap.createBitmap(
+                width,
+                height,
+                src.config!!
+            )
+
+//            var pixel: Int
+//            val toArgb = argb(
+//                toColor.alpha,
+//                toColor.red,
+//                toColor.green,
+//                toColor.blue,
+//            )
+            // iteration through pixels
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    // get current index in 2D-matrix
+                    val index = y * width + x
+                    val pixel = pixels[index]
+                    val alpha = Color.alpha(pixel)
+                    if (
+                        pixel != saveColor
+                        && alpha != 0
+                        ) {
+                        pixels[index] = toColor
+
+                        /*or change the whole color
+                    pixels[index] = colorThatWillReplace;*/
+                    }
+                }
+            }
+            bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+            return bmOut
+        }
+
         private fun changeColor(
             src: Bitmap,
             fromColor: Int,
@@ -2014,6 +2060,76 @@ object BitmapTool {
             paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
             canvas.drawBitmap(bitmap, rect, rect, paint)
             return output
+        }
+
+        fun trimEdge2(bitmap: Bitmap, trimSize: Int): Bitmap {
+            val width = bitmap.width
+            val height = bitmap.height
+            val trimmedBitmap = bitmap.copy(bitmap.config!!, true)
+
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    val pixel = bitmap.getPixel(x, y)
+                    if (pixel == Color.TRANSPARENT) continue
+                        // 透明でないピクセルの場合、周囲のピクセルをチェック
+                    var isEdge = false
+                    for (dy in -trimSize..trimSize) {
+                        for (dx in -trimSize..trimSize) {
+                            if (
+                                dx == 0
+                                && dy == 0
+                            ) continue
+                            val nx = x + dx
+                            val ny = y + dy
+                            if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue
+                            val neighborPixel = bitmap.getPixel(nx, ny)
+                            if (neighborPixel != Color.TRANSPARENT) continue
+                            isEdge = true
+                            break
+                        }
+                        if (isEdge) break
+                    }
+                    // 輪郭のピクセルの場合、透明にする
+                    if (!isEdge) continue
+                    trimmedBitmap.setPixel(x, y, Color.TRANSPARENT)
+                }
+            }
+            return trimmedBitmap
+        }
+
+        fun trimEdge(bitmap: Bitmap, trimSize: Int): Bitmap {
+            val width = bitmap.width
+            val height = bitmap.height
+            val trimmedBitmap = bitmap.copy(bitmap.config!!, true)
+
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    val pixel = bitmap.getPixel(x, y)
+                    if (pixel == Color.TRANSPARENT) continue
+                    // 透明でないピクセルの場合、周囲のピクセルをチェック
+                    var isEdge = false
+                    for (dy in -trimSize..trimSize) {
+                        for (dx in -trimSize..trimSize) {
+                            if (
+                                dx == 0
+                                && dy == 0
+                            ) continue
+                            val nx = x + dx
+                            val ny = y + dy
+                            if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue
+                            val neighborPixel = bitmap.getPixel(nx, ny)
+                            if (neighborPixel != Color.TRANSPARENT) continue
+                            isEdge = true
+                            break
+                        }
+                        if (isEdge) break
+                    }
+                    // 輪郭のピクセルの場合、透明にする
+                    if (!isEdge) continue
+                    trimmedBitmap.setPixel(x, y, Color.TRANSPARENT)
+                }
+            }
+            return trimmedBitmap
         }
 
     }

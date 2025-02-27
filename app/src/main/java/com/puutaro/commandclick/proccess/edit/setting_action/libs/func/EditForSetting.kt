@@ -1,7 +1,5 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
-import android.content.Context
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
@@ -91,7 +89,7 @@ object EditForSetting {
                             ?: return@let targetVariableNameToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val srcFragmentStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -103,7 +101,7 @@ object EditForSetting {
                             ?: return@let srcFragmentToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     Pair (

@@ -1,15 +1,10 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
-import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 import kotlin.enums.EnumEntries
 
 object InclineForSetting {
@@ -81,7 +76,7 @@ object InclineForSetting {
                             ?: return@let minIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val y1 = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
@@ -93,7 +88,7 @@ object InclineForSetting {
                             ?: return@let maxIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val x2 = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
@@ -105,7 +100,7 @@ object InclineForSetting {
                             ?: return@let x2ToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val y2 = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
@@ -117,7 +112,7 @@ object InclineForSetting {
                             ?: return@let y2ToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val x = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
@@ -129,7 +124,7 @@ object InclineForSetting {
                             ?: return@let xToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val y = let {

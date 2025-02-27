@@ -83,7 +83,7 @@ object FileSystemsForSettingHandler {
                             ?: return@let filePathToErr.first
                         return Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                 Pair(
@@ -119,7 +119,7 @@ object FileSystemsForSettingHandler {
                         ?: return@let filePathToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val contents = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -131,7 +131,7 @@ object FileSystemsForSettingHandler {
                         ?: return@let contentsToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
 //                FileSystems.writeFile(
@@ -175,7 +175,7 @@ object FileSystemsForSettingHandler {
                         ?: return@let filePathToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val contents = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -187,7 +187,7 @@ object FileSystemsForSettingHandler {
                         ?: return@let contentsToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 FileSystems.updateFile(
@@ -224,7 +224,7 @@ object FileSystemsForSettingHandler {
                         ?: return@let filePathToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 FileSystems.removeFiles(

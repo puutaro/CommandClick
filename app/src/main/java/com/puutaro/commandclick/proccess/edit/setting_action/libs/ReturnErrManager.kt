@@ -288,7 +288,7 @@ object ReturnErrManager {
         keyToSubKeyConList: List<Pair<String, String>>,
     ): List<Pair<String, String>> {
         val defaultReturnPair = String() to String()
-        val subKeySeparator = SettingActionKeyManager.subKeySepartor
+        val subKeySeparator = SettingActionKeyManager.subKeySeparator
         return keyToSubKeyConList.asSequence().map {
                 keyToSubKeyCon ->
             val settingKey = keyToSubKeyCon.first

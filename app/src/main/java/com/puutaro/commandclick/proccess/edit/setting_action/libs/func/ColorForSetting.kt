@@ -65,7 +65,7 @@ object ColorForSetting {
                         ?: return@let rndMacroStr
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 Pair(

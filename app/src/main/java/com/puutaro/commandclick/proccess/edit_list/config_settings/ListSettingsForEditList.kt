@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit_list.config_settings
 
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -75,6 +76,8 @@ object ListSettingsForEditList  {
             fannelInfoMap: HashMap<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
+            globalVarNameToValueMap: Map<String, String>?,
+            globalVarNameToBitmapMap: Map<String, Bitmap?>?,
             settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
             imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
             viewLayoutPath: String,
@@ -100,6 +103,8 @@ object ListSettingsForEditList  {
                 fannelPath,
                 setReplaceVariableMap,
                 busyboxExecutor,
+                globalVarNameToValueMap,
+                globalVarNameToBitmapMap,
                 settingActionAsyncCoroutine,
                 imageActionAsyncCoroutine,
 
@@ -141,6 +146,8 @@ object ListSettingsForEditList  {
             fannelInfoMap: HashMap<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
+            globalVarNameToValueMap: Map<String, String>?,
+            globalVarNameToBitmapMap: Map<String, Bitmap?>,
             settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
             imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
             viewLayoutConList: List<String>,
@@ -160,6 +167,8 @@ object ListSettingsForEditList  {
                 fannelName,
                 setReplaceVariableMap,
                 busyboxExecutor,
+                globalVarNameToValueMap,
+                globalVarNameToBitmapMap,
                 settingActionAsyncCoroutine,
                 imageActionAsyncCoroutine,
                 viewLayoutConList,

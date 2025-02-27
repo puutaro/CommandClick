@@ -1326,18 +1326,6 @@ object ArbForImageAction {
                 MatrixStormEnumArgs.Y_MULTI.key,
                 MatrixStormEnumArgs.Y_MULTI.defaultValueStr
             )
-//            val shapeKeyToDefaultValueStr = Pair(
-//                MatrixStormEnumArgs.SHAPE.key,
-//                MatrixStormEnumArgs.SHAPE.defaultValueStr
-//            )
-//            val iconColorKeyToDefaultValueStr = Pair(
-//                MatrixStormEnumArgs.ICON_COLOR.key,
-//                MatrixStormEnumArgs.ICON_COLOR.defaultValueStr
-//            )
-//            val iconTypeKeyToDefaultValueStr = Pair(
-//                MatrixStormEnumArgs.ICON_TYPE.key,
-//                MatrixStormEnumArgs.ICON_TYPE.defaultValueStr
-//            )
             val xDupKeyToDefaultValueStr = Pair(
                 MatrixStormEnumArgs.X_DUP.key,
                 MatrixStormEnumArgs.X_DUP.defaultValueStr
@@ -1346,10 +1334,6 @@ object ArbForImageAction {
                 MatrixStormEnumArgs.Y_DUP.key,
                 MatrixStormEnumArgs.Y_DUP.defaultValueStr
             )
-//            val pieceRotateKeyToDefaultValueStr = Pair(
-//                MatrixStormEnumArgs.PIECE_ROTATE.key,
-//                MatrixStormEnumArgs.PIECE_ROTATE.defaultValueStr
-//            )
             val pieceKeyToDefaultValueStr = Pair(
                 MatrixStormEnumArgs.PIECE.key,
                 MatrixStormEnumArgs.PIECE.defaultValueStr
@@ -1368,12 +1352,8 @@ object ArbForImageAction {
                 X_MULTI("xMulti", xMultiSrc.toString(), FuncCheckerForSetting.ArgType.INT),
                 Y_MULTI("yMulti", yMultiSrc.toString(), FuncCheckerForSetting.ArgType.INT),
                 PIECE("piece", String(), FuncCheckerForSetting.ArgType.STRING),
-//                SHAPE("shape", CmdClickIcons.RECT.str, FuncCheckerForSetting.ArgType.STRING),
-//                ICON_TYPE("iconType", IconType.SVG.name, FuncCheckerForSetting.ArgType.STRING),
-//                ICON_COLOR("iconColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
                 X_DUP("xDup", 0.toString(), FuncCheckerForSetting.ArgType.INT),
                 Y_DUP("yDup", 0.toString(), FuncCheckerForSetting.ArgType.INT),
-//                PIECE_ROTATE("pieceRotate", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
             }
         }
         object IconsArgs: ArbMethodArgClass(), ArgType {
@@ -1402,22 +1382,6 @@ object ArbForImageAction {
                 IconsEnumArgs.PIECE.key,
                 IconsEnumArgs.PIECE.defaultValueStr
             )
-//            val pieceOneSideKeyToDefaultValueStr = Pair(
-//                IconsEnumArgs.PIECE_ONE_SIDE.key,
-//                IconsEnumArgs.PIECE_ONE_SIDE.defaultValueStr
-//            )
-//            val shapeKeyToDefaultValueStr = Pair(
-//                IconsEnumArgs.SHAPE.key,
-//                IconsEnumArgs.SHAPE.defaultValueStr
-//            )
-//            val iconColorKeyToDefaultValueStr = Pair(
-//                IconsEnumArgs.ICON_COLOR.key,
-//                IconsEnumArgs.ICON_COLOR.defaultValueStr
-//            )
-//            val iconTypeKeyToDefaultValueStr = Pair(
-//                IconsEnumArgs.ICON_TYPE.key,
-//                IconsEnumArgs.ICON_TYPE.defaultValueStr
-//            )
             val bkColorKeyToDefaultValueStr = Pair(
                 IconsEnumArgs.BK_COLOR.key,
                 IconsEnumArgs.BK_COLOR.defaultValueStr
@@ -1467,10 +1431,6 @@ object ArbForImageAction {
                 BK_COLOR("bkColor", transparentColorStr, FuncCheckerForSetting.ArgType.STRING),
                 LAYOUT("layout", Layout.LEFT.name, FuncCheckerForSetting.ArgType.STRING),
                 PIECE("piece", String(), FuncCheckerForSetting.ArgType.STRING),
-//                PIECE_ONE_SIDE("pieceOneSide", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
-//                SHAPE("shape", CmdClickIcons.RECT.str, FuncCheckerForSetting.ArgType.STRING),
-//                ICON_TYPE("iconType", IconType.SVG.name, FuncCheckerForSetting.ArgType.STRING),
-//                ICON_COLOR("iconColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
                 PIVOT_X("pivotX", pivotXDeafultValue.toString(), FuncCheckerForSetting.ArgType.INT),
                 X_RND_DENO("xRndDeno", xRndDenoDeafultValue.toString(), FuncCheckerForSetting.ArgType.INT),
                 Y_RANGE("yRange", yRangeDeafultValue.toString(), FuncCheckerForSetting.ArgType.INT),
@@ -1487,14 +1447,6 @@ object ArbForImageAction {
                 StringsEnumArgs.HEIGHT.key,
                 StringsEnumArgs.HEIGHT.defaultValueStr
             )
-//            val pieceWidthKeyToDefaultValueStr = Pair(
-//                StringsEnumArgs.PIECE_WIDTH.key,
-//                StringsEnumArgs.PIECE_WIDTH.defaultValueStr
-//            )
-//            val pieceHeightKeyToDefaultValueStr = Pair(
-//                StringsEnumArgs.PIECE_HEIGHT.key,
-//                StringsEnumArgs.PIECE_HEIGHT.defaultValueStr
-//            )
             val startAngleKeyToDefaultValueStr = Pair(
                 StringsEnumArgs.START_ANGLE.key,
                 StringsEnumArgs.START_ANGLE.defaultValueStr
@@ -1519,39 +1471,6 @@ object ArbForImageAction {
                 StringsEnumArgs.PIECE.key,
                 StringsEnumArgs.PIECE.defaultValueStr
             )
-//            val stringKeyToDefaultValueStr = Pair(
-//                StringsEnumArgs.STRING.key,
-//                StringsEnumArgs.STRING.defaultValueStr
-//            )
-//            val fontSizeKeyToDefaultValueStr = Pair(
-//                StringsEnumArgs.FONT_SIZE.key,
-//                StringsEnumArgs.FONT_SIZE.defaultValueStr
-//            )
-//            val fontTypeKeyToDefaultValueStr = Pair(
-//                StringsEnumArgs.FONT_TYPE.key,
-//                StringsEnumArgs.FONT_TYPE.defaultValueStr
-//            )
-//            val fontStyleKeyToDefaultValueStr = Pair(
-//                StringsEnumArgs.FONT_STYLE.key,
-//                StringsEnumArgs.FONT_STYLE.defaultValueStr
-//            )
-//            val fontColorKeyToDefaultValueStr = Pair(
-//                StringsEnumArgs.FONT_COLOR.key,
-//                StringsEnumArgs.FONT_COLOR.defaultValueStr
-//            )
-//            val strokeColorKeyToDefaultValueStr = Pair(
-//                StringsEnumArgs.STROKE_COLOR.key,
-//                StringsEnumArgs.STROKE_COLOR.defaultValueStr
-//            )
-//           val strokeWidthKeyToDefaultValueStr = Pair(
-//               StringsEnumArgs.STROKE_WIDTH.key,
-//               StringsEnumArgs.STROKE_WIDTH.defaultValueStr
-//           )
-//            val letterSpacingKeyToDefaultValueStr = Pair(
-//                StringsEnumArgs.LETTER_SPACING.key,
-//                StringsEnumArgs.LETTER_SPACING.defaultValueStr
-//            )
-//
             private const val widthSrc = 300
             private const val heightSrc = widthSrc * 2
             enum class Layout {
@@ -1565,21 +1484,11 @@ object ArbForImageAction {
             ){
                 WIDTH("width", widthSrc.toString(), FuncCheckerForSetting.ArgType.INT),
                 HEIGHT("height", heightSrc.toString(), FuncCheckerForSetting.ArgType.INT),
-//                PIECE_WIDTH("pieceWidth", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
-//                PIECE_HEIGHT("pieceHeight", pieceOneSide.toString(), FuncCheckerForSetting.ArgType.INT),
                 START_ANGLE("startAngle", 0.toString(), FuncCheckerForSetting.ArgType.INT),
                 END_ANGLE("endAngle", 180.toString(), FuncCheckerForSetting.ArgType.INT),
                 TIMES("times", 10.toString(), FuncCheckerForSetting.ArgType.INT),
                 PIECE("piece", String(), FuncCheckerForSetting.ArgType.STRING),
-//                STRING("string", "C", FuncCheckerForSetting.ArgType.STRING),
-//                FONT_SIZE("fontSize", 20.toString(), FuncCheckerForSetting.ArgType.STRING),
-//                FONT_TYPE("fontType", Font.SANS_SERIF.key, FuncCheckerForSetting.ArgType.STRING),
-//                FONT_STYLE("fontStyle", EditComponent.Template.TextManager.TextStyle.NORMAL.key, FuncCheckerForSetting.ArgType.STRING),
-//                FONT_COLOR("fontColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
                 BK_COLOR("bkColor", transparentColorStr, FuncCheckerForSetting.ArgType.STRING),
-//                STROKE_COLOR("strokeColor", ColorTool.convertColorToHex(Color.BLACK), FuncCheckerForSetting.ArgType.STRING),
-//                STROKE_WIDTH("strokeWidth", 0.toString(), FuncCheckerForSetting.ArgType.INT),
-//                LETTER_SPACING("letterSpacing", 0.toString(), FuncCheckerForSetting.ArgType.INT),
                 LAYOUT("layout", Layout.LEFT.name, FuncCheckerForSetting.ArgType.STRING),
             }
         }

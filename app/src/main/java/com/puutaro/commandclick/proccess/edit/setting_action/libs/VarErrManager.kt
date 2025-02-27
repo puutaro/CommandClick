@@ -221,7 +221,7 @@ object VarErrManager {
         val awaitKey = SettingActionKeyManager.SettingSubKey.AWAIT.key
         val asyncPrefix = SettingActionKeyManager.VarPrefix.ASYNC.prefix
         val subKeySeparator =
-            SettingActionKeyManager.subKeySepartor
+            SettingActionKeyManager.subKeySeparator
 
         keyToSubKeyConList.forEach {
                 keyToSubKeyCon ->
@@ -967,7 +967,7 @@ object VarErrManager {
         keyToSubKeyConList: List<Pair<String, String>>,
     ): List<Pair<String, String>> {
         val defaultReturnPair = String() to String()
-        val subKeySeparator = SettingActionKeyManager.subKeySepartor
+        val subKeySeparator = SettingActionKeyManager.subKeySeparator
         val settingKeyList =
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key
@@ -1000,7 +1000,7 @@ object VarErrManager {
         keyToSubKeyConList: List<Pair<String, String>>,
     ): List<Pair<String, String>> {
         val defaultReturnPair = String() to String()
-        val subKeySeparator = SettingActionKeyManager.subKeySepartor
+        val subKeySeparator = SettingActionKeyManager.subKeySeparator
         val settingKeyList =
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key
@@ -1036,7 +1036,7 @@ object VarErrManager {
         keyToSubKeyConList: List<Pair<String, String>>,
     ): List<Pair<String, String>> {
         val defaultReturnPair = String() to String()
-        val subKeySeparator = SettingActionKeyManager.subKeySepartor
+        val subKeySeparator = SettingActionKeyManager.subKeySeparator
         val imageActionKeyList =
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key
@@ -1061,7 +1061,7 @@ object VarErrManager {
     ): List<Pair<String, Pair<String, List<String>?>>> {
         val defaultReturnPair =
             String() to Pair(String(), null)
-        val subKeySeparator = SettingActionKeyManager.subKeySepartor
+        val subKeySeparator = SettingActionKeyManager.subKeySeparator
         val imageActionKeyList =
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key
@@ -1132,7 +1132,7 @@ object VarErrManager {
     ): List<Pair<String, Pair<String, List<String>?>>> {
         val defaultReturnPair =
             String() to Pair(String(), null)
-        val subKeySeparator = SettingActionKeyManager.subKeySepartor
+        val subKeySeparator = SettingActionKeyManager.subKeySeparator
         val imageActionKeyList =
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key
@@ -1209,7 +1209,7 @@ object VarErrManager {
         keyToSubKeyConList: List<Pair<String, String>>,
     ): List<Pair<String, String>> {
         val defaultReturnPair = String() to String()
-        val subKeySeparator = SettingActionKeyManager.subKeySepartor
+        val subKeySeparator = SettingActionKeyManager.subKeySeparator
         val imageActionKeyList =
             SettingActionKeyManager.SettingActionsKey.entries.map {
                 it.key

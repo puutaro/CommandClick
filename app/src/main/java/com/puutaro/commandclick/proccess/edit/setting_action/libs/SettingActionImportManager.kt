@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import android.content.Context
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
@@ -9,7 +8,6 @@ import com.puutaro.commandclick.proccess.edit.lib.ImportMapMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -122,7 +120,7 @@ object SettingActionImportManager {
                 emptyMap<String, String?>(),
             )
         val varNameToValueStrMap =
-            makeVarNameToValueStrMap(
+            SettingActionMapTool.makeVarNameToValueStrMap(
                 curMapLoopKey,
                 topVarNameToValueStrMap,
                 importedVarNameToValueStrMap,
@@ -263,7 +261,9 @@ object SettingActionImportManager {
             if(
                 !isMultipleSpecifyErr
             ) return@let
-            settingActionExitManager.setExit()
+            settingActionExitManager.setExitSignal(
+                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+            )
             return blankReturnValueStr
         }
         val ifProcName = QuoteTool.trimBothEdgeQuote(
@@ -309,7 +309,9 @@ object SettingActionImportManager {
                 errType.errMessage,
                 keyToSubKeyConWhere
             )
-            settingActionExitManager.setExit()
+            settingActionExitManager.setExitSignal(
+                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+            )
             return blankReturnValueStr
         }
         val isImport = isImportToErrType.first ?: false

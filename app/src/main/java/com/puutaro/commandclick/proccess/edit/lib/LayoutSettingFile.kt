@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
 import android.content.Context
+import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
@@ -16,6 +17,8 @@ object LayoutSettingFile {
         fannelPath: String,
         setReplaceVariableCompleteMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        globalVarNameToValueMap: Map<String, String>?,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         settingFilePath: String,
@@ -25,6 +28,8 @@ object LayoutSettingFile {
             fannelPath,
             setReplaceVariableCompleteMap,
             busyboxExecutor,
+            globalVarNameToValueMap,
+            globalVarNameToBitmapMap,
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
             settingFilePath,
@@ -46,6 +51,8 @@ object LayoutSettingFile {
         fannelName: String,
         setReplaceVariableCompleteMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        globalVarNameToValueMap: Map<String, String>?,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         firstSettingConList: List<String>,
@@ -55,6 +62,8 @@ object LayoutSettingFile {
             fannelName,
             setReplaceVariableCompleteMap,
             busyboxExecutor,
+            globalVarNameToValueMap,
+            globalVarNameToBitmapMap,
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
             firstSettingConList,

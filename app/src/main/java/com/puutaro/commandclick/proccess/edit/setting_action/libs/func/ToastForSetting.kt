@@ -69,7 +69,7 @@ object ToastForSetting {
                             ?: return@let msgToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
 //                    SettingFuncTool.getValueStrFromMapOrIt(
@@ -124,7 +124,7 @@ object ToastForSetting {
                             ?: return@let msgToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     ToastUtils.showLong(

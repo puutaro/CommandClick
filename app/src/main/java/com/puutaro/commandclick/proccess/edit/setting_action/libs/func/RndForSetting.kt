@@ -3,11 +3,14 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.res.FannelIcons
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.UrlImageDownloader
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.util.file.ImageFile
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 import kotlin.enums.EnumEntries
 
 object RndForSetting {
@@ -80,7 +83,7 @@ object RndForSetting {
                             ?: return@let minIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val maxInt = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
@@ -92,7 +95,7 @@ object RndForSetting {
                             ?: return@let maxIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     if(
@@ -152,7 +155,7 @@ object RndForSetting {
                             ?: return@let minIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }.let {
                         colorMacroStr ->
@@ -180,6 +183,23 @@ object RndForSetting {
                 is RndMethodArgClass.BkIconArgs -> {
                     Pair(
                         makeBkIconStr(),
+                        null,
+                    ) to null
+                }
+                is RndMethodArgClass.WallPathArgs -> {
+                    val wallPath =
+                        File(
+                            UrlImageDownloader.fannelWallDirPath
+                        ).walk().asSequence().filter{
+                            ImageFile.isImageFile(
+                                it.absolutePath
+                            )
+                        }.shuffled()
+                            .firstOrNull()?.absolutePath?.removePrefix(
+                                "${UrlImageDownloader.imageDirObj.absolutePath}/",
+                            )
+                    Pair(
+                        wallPath,
                         null,
                     ) to null
                 }
@@ -227,6 +247,10 @@ object RndForSetting {
         COLOR(
             "color",
             RndMethodArgClass.ColorArgs,
+        ),
+        WALL_PATH(
+            "wallPath",
+            RndMethodArgClass.WallPathArgs,
         )
     }
 
@@ -274,5 +298,6 @@ object RndForSetting {
         data object IconArgs : RndMethodArgClass()
         data object FannelIconArgs : RndMethodArgClass()
         data object BkIconArgs : RndMethodArgClass()
+        data object WallPathArgs : RndMethodArgClass()
     }
 }

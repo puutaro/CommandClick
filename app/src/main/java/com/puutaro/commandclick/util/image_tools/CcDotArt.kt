@@ -73,7 +73,7 @@ object CcDotArt {
         return withContext(Dispatchers.IO){
             val horizonRectList = let {
                 val maxOpacity = 255
-//                val pieceRectSrc = ImageTransformer.makeRect(
+    //                val pieceRectSrc = ImageTransformer.makeRect(
 //                    "#000000",
 //                    pieceWidth,
 //                    pieceHeight,

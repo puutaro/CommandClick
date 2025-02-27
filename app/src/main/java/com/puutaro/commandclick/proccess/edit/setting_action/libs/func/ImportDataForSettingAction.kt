@@ -2,12 +2,9 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.delay
-import java.io.File
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.withLock
 import kotlin.enums.EnumEntries
@@ -73,7 +70,7 @@ object ImportDataForSettingAction {
                         ?: return@let importPathToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val key = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -85,7 +82,7 @@ object ImportDataForSettingAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val waitMill = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
@@ -97,7 +94,7 @@ object ImportDataForSettingAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(it <= 0) return@let args.defaultWaitMill
@@ -161,7 +158,7 @@ object ImportDataForSettingAction {
                         ?: return@let importPathToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val key = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -173,7 +170,7 @@ object ImportDataForSettingAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
 
@@ -186,7 +183,7 @@ object ImportDataForSettingAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 Data.put(

@@ -31,6 +31,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ImportDataForImageAction
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionData
 import com.puutaro.commandclick.proccess.edit_list.EditConstraintFrameMaker
 import com.puutaro.commandclick.proccess.edit_list.EditImageViewSetter
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
@@ -155,7 +156,7 @@ object WithEditConstraintListView{
 //                UsePath.cmdclickDefaultSDebugAppDirPath
 //            )
         }
-        val globalVarNameToValueMap = let {
+        val globalVarNameToValueMapToSignal = let {
             SettingActionForEditList.getSettingConfigCon(
                 editListConfigMapSrc,
             ).let {
@@ -182,6 +183,12 @@ object WithEditConstraintListView{
                 }
             }
         }
+        val globalVarNameToValueMap =
+            globalVarNameToValueMapToSignal.first
+        val settingAcSignal = globalVarNameToValueMapToSignal.second
+        if(
+            SettingActionData.SettingActionExitManager.isStopImageAc(settingAcSignal)
+        ) return
         withContext(Dispatchers.IO) {
             SettingActionManager.init()
 //            FileSystems.writeFile(
@@ -207,6 +214,9 @@ object WithEditConstraintListView{
                     globalVarNameToValueMap
                 )
             }.let {
+                if(
+                    SettingActionData.SettingActionExitManager.isStopImageAc(settingAcSignal)
+                ) return@let emptyMap()
                 val imageActionManager = ImageActionManager()
                 runBlocking {
                     val keyToSubKeyConWhere =
@@ -365,6 +375,8 @@ object WithEditConstraintListView{
                         fannelInfoMap,
                         setReplaceVariableMap,
                         busyboxExecutor,
+                        globalVarNameToValueMap,
+                        globalVarNameToBitmapMap,
                         settingActionAsyncCoroutine,
                         imageActionAsyncCoroutine,
                         viewLayoutPath
@@ -765,6 +777,8 @@ object WithEditConstraintListView{
                 fannelInfoMap,
                 setReplaceVariableMap,
                 busyboxExecutor,
+                globalVarNameToValueMap,
+                globalVarNameToBitmapMap,
                 settingActionAsyncCoroutine,
                 imageActionAsyncCoroutine,
                 EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroConList,
@@ -775,9 +789,11 @@ object WithEditConstraintListView{
                 fannelInfoMap,
                 setReplaceVariableMap,
                 busyboxExecutor,
+                globalVarNameToValueMap,
+                globalVarNameToBitmapMap,
                 settingActionAsyncCoroutine,
                 imageActionAsyncCoroutine,
-                viewLayoutPath
+                viewLayoutPath,
             )
         }
         dateList.add("makeMap" to LocalDateTime.now())
@@ -858,7 +874,7 @@ object WithEditConstraintListView{
         }
         if(isDuplicateFrameTagErr) return
         dateList.add("make frame varNameToValueMap" to LocalDateTime.now())
-        val frameKeyPairsConToVarNameValueMap = withContext(Dispatchers.IO) {
+        val frameKeyPairsConToVarNameValueMapToSignal = withContext(Dispatchers.IO) {
             val frameKeyPairsConSrc = frameMap.get(frameTag)
             EditComponent.Template.ReplaceHolder.replaceHolder(
                 frameKeyPairsConSrc,
@@ -870,9 +886,9 @@ object WithEditConstraintListView{
                     innerFrameKeyPairsConSrc ->
                 if(
                     innerFrameKeyPairsConSrc.isNullOrEmpty()
-                ) return@let null
+                ) return@let null to null
                 val settingActionManager = SettingActionManager()
-                val varNameToValueMap = settingActionManager.exec(
+                val varNameToValueMapToSignal = settingActionManager.exec(
                     context,
                     fragmentActivityRef.get(),
                     fannelInfoMap,
@@ -886,20 +902,26 @@ object WithEditConstraintListView{
                     innerFrameKeyPairsConSrc,
                     "frameTag: ${frameTag}, ${plusKeyToSubKeyConWhere}",
                     editConstraintListAdapterArg = editConstraintListAdapter
-                ) + (globalVarNameToValueMap ?: emptyMap())
+                )
+                val varNameToValueMap = varNameToValueMapToSignal.first +
+                        (globalVarNameToValueMap ?: emptyMap())
+                val signal = varNameToValueMapToSignal.second
                 val innerFrameKeyPairsCon = CmdClickMap.replace(
                     innerFrameKeyPairsConSrc,
                     varNameToValueMap
                 )
-                innerFrameKeyPairsCon to varNameToValueMap
+                innerFrameKeyPairsCon to Pair(varNameToValueMap, signal)
             }
         }
         dateList.add("make varNameToValueStrMap end" to LocalDateTime.now())
         val frameKeyPairsCon =
-            frameKeyPairsConToVarNameValueMap?.first
+            frameKeyPairsConToVarNameValueMapToSignal.first
                 ?: String()
+        val frameVarNameValueMapToSignal =
+            frameKeyPairsConToVarNameValueMapToSignal.second
         val frameVarNameValueMap =
-            frameKeyPairsConToVarNameValueMap?.second ?: emptyMap()
+            frameVarNameValueMapToSignal?.first ?: emptyMap()
+        val frameSettingAcSignal = frameVarNameValueMapToSignal?.second
         dateList.add("make tagIdMap" to LocalDateTime.now())
         val tagIdMapSrc = withContext(Dispatchers.IO){
             tagToIdListSrc?.map {
@@ -912,6 +934,9 @@ object WithEditConstraintListView{
         }
         dateList.add("make varNameToBitmap" to LocalDateTime.now())
         val varNameToBitmapMapInFrame = withContext(Dispatchers.IO) {
+            if(
+                SettingActionData.SettingActionExitManager.isStopImageAc(frameSettingAcSignal)
+            ) return@withContext null
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lglobal_frame.txt").absolutePath,
 //                listOf(
@@ -1019,7 +1044,7 @@ object WithEditConstraintListView{
 //                                    ).joinToString("\n") + "\n\n=========\n\n"
 //                                )
 //                            }
-                            val varNameToValueMap =
+                            val varNameToValueMapToSignal =
                                 withContext(Dispatchers.IO) updateLinearKeyParsListCon@{
                                     Template.ReplaceHolder.replaceHolder(
                                         contentsKeyPairsListConSrc,
@@ -1030,7 +1055,7 @@ object WithEditConstraintListView{
                                     ).let { contentsKeyPairsListConSrcWithReplace ->
                                         if (
                                             contentsKeyPairsListConSrcWithReplace.isNullOrEmpty()
-                                        ) return@let emptyMap()
+                                        ) return@let emptyMap<String, String>() to null
                                         val topVarNameToValueMapForContents =
                                             ((globalVarNameToValueMap
                                                 ?: emptyMap()) + frameVarNameValueMap)
@@ -1051,6 +1076,8 @@ object WithEditConstraintListView{
                                         )
                                     }
                                 }
+                            val varNameToValueMap = varNameToValueMapToSignal.first
+                            val contentsSettingAcSignal = varNameToValueMapToSignal.second
                             val contentsVarNameToValueMap = frameVarNameValueMap + varNameToValueMap
                             val contentsKeyPairsListCon = CmdClickMap.replace(
                                 contentsKeyPairsListConSrc,
@@ -1337,7 +1364,7 @@ object WithEditConstraintListView{
         alreadyUseTagListMutex: Mutex,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         globalVarNameToBitmapMap: Map<String, Bitmap?>,
-        varNameToBitmapMapInFrame: Map<String, Bitmap?>,
+        varNameToBitmapMapInFrame: Map<String, Bitmap?>?,
         baseLayoutForAdd: ConstraintLayout?,
 //        enableClick: Boolean,
 //        clickViewStrList: List<String>,
@@ -1445,7 +1472,7 @@ object WithEditConstraintListView{
                 }
                 withContext(Dispatchers.IO){
                     val topLevelVarNameToBitmapMap =
-                        globalVarNameToBitmapMap + varNameToBitmapMapInFrame
+                        globalVarNameToBitmapMap + (varNameToBitmapMapInFrame ?: emptyMap())
 //                                        FileSystems.updateFile(
 //                                            File(UsePath.cmdclickDefaultAppDirPath, "lglobal.txt").absolutePath,
 //                                            listOf(
@@ -1541,7 +1568,7 @@ object WithEditConstraintListView{
         sceneType: SceneType,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         globalVarNameToBitmapMap: Map<String, Bitmap?>,
-        varNameToBitmapMapInFrame: Map<String, Bitmap?>,
+        varNameToBitmapMapInFrame: Map<String, Bitmap?>?,
         baseLayoutForAdd: ConstraintLayout?,
 //        enableClick: Boolean,
 //        clickViewStrList: List<String>,
@@ -1568,7 +1595,7 @@ object WithEditConstraintListView{
 //                                    val varNameToBitmapMapInContents =
             withContext(Dispatchers.IO){
                 val topLevelVarNameToBitmapMap =
-                    globalVarNameToBitmapMap + varNameToBitmapMapInFrame
+                    globalVarNameToBitmapMap + (varNameToBitmapMapInFrame ?: emptyMap())
 //                                        FileSystems.updateFile(
 //                                            File(UsePath.cmdclickDefaultAppDirPath, "lglobal.txt").absolutePath,
 //                                            listOf(

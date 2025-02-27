@@ -16,17 +16,20 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionRetur
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionVarErrManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageReturnExecutor
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.BitmapArtForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.BlurForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ColorForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ConcatForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.CutForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ExitForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FannelIconForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FileSystemsForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.FlipForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.GradForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.IconForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ImageToolForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ImportDataForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.LineArtForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.LoopResultForImageAction
@@ -1293,6 +1296,7 @@ class ImageActionManager {
 //            private var isNext = true
             private val valueSeparator = ImageActionKeyManager.valueSeparator
             private val itPronoun = ImageActionKeyManager.BitmapVar.itPronoun
+            private val exitSignal = ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
 
             suspend fun exec(
                 context: Context?,
@@ -1492,8 +1496,12 @@ class ImageActionManager {
                             ).let {
                                     isGlobalVarFuncNullResultErr ->
                                 if(
-                                    isGlobalVarFuncNullResultErr
-                                ) return null
+                                    !isGlobalVarFuncNullResultErr
+                                ) return@let
+                                imageActionExitManager.setExit()
+                                return null
+                                //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                                return null
                             }
                             return Pair(
                                 Pair(
@@ -1573,10 +1581,20 @@ class ImageActionManager {
                                     )
                                 }
                                 itPronounBitmapToBreakSignal = null
+                                imageActionExitManager.setExit()
+                                return null
+                                //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
 //                                isNext = false
-                                return@forEach
+//                                return@forEach
                             }
                             val resultBitmapToExitMacro = resultBitmapToExitMacroAndCheckErr?.first
+                            val isExitSignal =
+                                resultBitmapToExitMacro?.second == exitSignal
+                            if(isExitSignal){
+                                imageActionExitManager.setExit()
+                                return null
+                                //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            }
                             ImageActionVarErrManager.isGlobalVarNullResultErr(
                                 context,
                                 renewalVarName ?: settingVarName,
@@ -1586,8 +1604,13 @@ class ImageActionManager {
                             ).let {
                                     isGlobalVarFuncNullResultErr ->
                                 if(
-                                    isGlobalVarFuncNullResultErr
-                                ) return null
+                                    !isGlobalVarFuncNullResultErr
+                                ) return@let
+                                imageActionExitManager.setExit()
+                                return null
+                                //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                                    return null
+//                                }
                             }
                             itPronounBitmapToBreakSignal = resultBitmapToExitMacro
 
@@ -1643,7 +1666,9 @@ class ImageActionManager {
                                     )
                                 }
                                 imageActionExitManager.setExit()
-                                return@forEach
+                                return null
+                                //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                                return@forEach
                             }
                             val isImport = isImportToErrType.first ?: false
                             ifStackList.add(
@@ -1672,7 +1697,9 @@ class ImageActionManager {
                                     )
                                 }
                                 imageActionExitManager.setExit()
-                                return@forEach
+                                return null
+                                //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+//                                return@forEach
                             }
                             if(
                                 ifStackList.lastOrNull()?.ifProcName != sIfProcName
@@ -1963,6 +1990,27 @@ class ImageActionManager {
                         baseArgsPairList,
                         varNameToBitmapMap,
                     )
+                FuncType.BITMAP_STORM ->
+                    BitmapArtForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.IMAGE_TOOL ->
+                    ImageToolForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
+                FuncType.EXIT ->
+                        ExitForImageAction.handle(
+                            funcTypeStr,
+                            methodName,
+                        )
             }
 
         }
@@ -1996,6 +2044,9 @@ class ImageActionManager {
             EVAL("eval"),
             LINE_ART("lineArt"),
             CONCAT("concat"),
+            BITMAP_STORM("bitmapArt"),
+            IMAGE_TOOL("imageTool"),
+            EXIT("exit"),
         }
     }
 

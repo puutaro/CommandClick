@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import android.content.Context
-import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.util.map.CmdClickMap
 import kotlinx.coroutines.runBlocking
@@ -33,7 +31,7 @@ class SettingReturnExecutor {
                     >?,
             SettingActionKeyManager.BreakSignal?
             >? {
-        val varNameToValueStrMap = SettingActionKeyManager.makeVarNameToValueStrMap(
+        val varNameToValueStrMap = SettingActionMapTool.makeVarNameToValueStrMap(
             curMapLoopKey,
             topVarNameToValueStrMap,
             importedVarNameToValueStrMap,
@@ -75,8 +73,10 @@ class SettingReturnExecutor {
             if(
                 !isMultipleSpecifyErr
             ) return@let
-            settingActionExitManager.setExit()
-            return null to SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+            settingActionExitManager.setExitSignal(
+                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+            )
+            return null to SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
         }
         val ifMap =
             ifMapList
@@ -137,8 +137,10 @@ class SettingReturnExecutor {
                 )
             }
 //                        isNext = false
-            settingActionExitManager.setExit()
-            return null to SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+            settingActionExitManager.setExitSignal(
+                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+            )
+            return null to SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
         }
         IfErrManager.makeIfProcNameNotExistInRuntime(
             sIfKey,
@@ -156,7 +158,7 @@ class SettingReturnExecutor {
                     keyToSubKeyConWhere
                 )
             }
-            settingActionExitManager.setExit()
+            settingActionExitManager.setExitSignal(SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL)
             return Pair(
                 null,
                 null

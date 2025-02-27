@@ -91,7 +91,7 @@ object ListForSetting {
                             ?: return@let listConToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val separator =
@@ -104,7 +104,7 @@ object ListForSetting {
                             ?: return@let separatorToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     Pair(
@@ -142,7 +142,7 @@ object ListForSetting {
                             ?: return@let listConToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val separator =
@@ -155,7 +155,7 @@ object ListForSetting {
                             ?: return@let separatorToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     Pair(
@@ -194,7 +194,7 @@ object ListForSetting {
                             ?: return@let listConToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val separator =
@@ -207,7 +207,7 @@ object ListForSetting {
                             ?: return@let separatorToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val takeNum =
@@ -220,7 +220,7 @@ object ListForSetting {
                             ?: return@let takeNumToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     Pair(
@@ -258,7 +258,7 @@ object ListForSetting {
                             ?: return@let listConToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -270,7 +270,7 @@ object ListForSetting {
                             ?: return@let separatorToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val takeLastNum = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
@@ -282,7 +282,7 @@ object ListForSetting {
                             ?: return@let takeLastNumToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     Pair(
@@ -320,7 +320,7 @@ object ListForSetting {
                             ?: return@let conToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -332,7 +332,7 @@ object ListForSetting {
                             ?: return@let separatorToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val joinStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -344,7 +344,7 @@ object ListForSetting {
                             ?: return@let joinStrToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     Pair(
@@ -380,7 +380,7 @@ object ListForSetting {
                             ?: return@let inputConToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -392,7 +392,7 @@ object ListForSetting {
                             ?: return@let targetStrToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -404,7 +404,7 @@ object ListForSetting {
                             ?: return@let matchTypeStrToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -416,7 +416,7 @@ object ListForSetting {
                             ?: return@let separatorToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val defaultSeparator =
@@ -434,7 +434,7 @@ object ListForSetting {
                             if (funcErr != null) {
                                 return@withContext Pair(
                                     null,
-                                    SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                    SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                                 ) to funcErr
                             }
                             SettingFuncTool.makeJoinStrBySeparator(
@@ -453,7 +453,7 @@ object ListForSetting {
                             ?: return@let semaphoreIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
 //                    val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -477,7 +477,7 @@ object ListForSetting {
                             ?: return@let indexVarNameToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -489,7 +489,7 @@ object ListForSetting {
                             ?: return@let delimiterToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -501,7 +501,7 @@ object ListForSetting {
                             ?: return@let fieldVarNameToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val alreadyUseVarNameList = listOf(
@@ -542,7 +542,7 @@ object ListForSetting {
                         )
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to  FuncCheckerForSetting. FuncCheckErr(
                             "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
                         )
@@ -603,7 +603,7 @@ object ListForSetting {
                             ?: return@let inputConToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -615,7 +615,7 @@ object ListForSetting {
                             ?: return@let separatorToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val defaultSeparator =
@@ -633,7 +633,7 @@ object ListForSetting {
                             if (funcErr != null) {
                                 return@withContext Pair(
                                     null,
-                                    SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                    SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                                 ) to funcErr
                             }
                             SettingFuncTool.makeJoinStrBySeparator(
@@ -652,7 +652,7 @@ object ListForSetting {
                             ?: return@let delimiterToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val sortTypeStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -664,7 +664,7 @@ object ListForSetting {
                             ?: return@let sortTypeToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val fieldInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -676,7 +676,7 @@ object ListForSetting {
                             ?: return@let targetFieldToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     Sort.sort(
@@ -717,7 +717,7 @@ object ListForSetting {
                             ?: return@let inputConToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -729,7 +729,7 @@ object ListForSetting {
                             ?: return@let separatorToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val defaultSeparator =
@@ -747,7 +747,7 @@ object ListForSetting {
                             if (funcErr != null) {
                                 return@withContext Pair(
                                     null,
-                                    SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                    SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                                 ) to funcErr
                             }
                             SettingFuncTool.makeJoinStrBySeparator(
@@ -766,7 +766,7 @@ object ListForSetting {
                             ?: return@let delimiterToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val uniqTypeStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -778,7 +778,7 @@ object ListForSetting {
                             ?: return@let uniqTypeStrToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val startFieldInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -790,7 +790,7 @@ object ListForSetting {
                             ?: return@let startFieldIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     } - 1
                     val endFieldInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -802,7 +802,7 @@ object ListForSetting {
                             ?: return@let endFieldIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     } - 1
                     if(
@@ -873,7 +873,7 @@ object ListForSetting {
                             ?: return@let startIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val endInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -885,7 +885,7 @@ object ListForSetting {
                             ?: return@let endIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val stepInt = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -897,7 +897,7 @@ object ListForSetting {
                             ?: return@let stepIntToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     if(
@@ -928,7 +928,7 @@ object ListForSetting {
                                 ?: return@let joinStrToErr.first
                             return@withContext Pair(
                                 null,
-                                SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                     Range.range(

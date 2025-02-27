@@ -86,7 +86,7 @@ object ShellToolManagerForSetting {
                         ?: return@let cmdStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val inputCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -98,7 +98,7 @@ object ShellToolManagerForSetting {
                         ?: return@let inputConToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
 //                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -122,7 +122,7 @@ object ShellToolManagerForSetting {
                         ?: return@let separatorToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val defaultSeparator =
@@ -140,7 +140,7 @@ object ShellToolManagerForSetting {
                         if (funcErr != null) {
                             return Pair(
                                 null,
-                                SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                         SettingFuncTool.makeJoinStrBySeparator(
@@ -159,7 +159,7 @@ object ShellToolManagerForSetting {
                     if(funcErr != null){
                         return Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val timeoutIntSrc =
@@ -175,7 +175,7 @@ object ShellToolManagerForSetting {
                         ?: return@let semaphoreIntToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val enableEscape = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -187,7 +187,7 @@ object ShellToolManagerForSetting {
                         ?: return@let onEscapeToErr.first != switchOff
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -199,7 +199,7 @@ object ShellToolManagerForSetting {
                         ?: return@let indexVarNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -211,7 +211,7 @@ object ShellToolManagerForSetting {
                         ?: return@let delimiterToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -223,7 +223,7 @@ object ShellToolManagerForSetting {
                         ?: return@let fieldVarNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val alreadyUseVarNameList = listOf(
@@ -260,7 +260,7 @@ object ShellToolManagerForSetting {
                     )
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to  FuncCheckerForSetting. FuncCheckErr(
                         "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}, ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
                     )
@@ -274,7 +274,7 @@ object ShellToolManagerForSetting {
                         ?: return@let chDirToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     chDirPathSrc ->
@@ -356,7 +356,7 @@ object ShellToolManagerForSetting {
                         ?: return@let inputConToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
 //                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -380,7 +380,7 @@ object ShellToolManagerForSetting {
                         ?: return@let separatorToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val defaultSeparator =
@@ -398,7 +398,7 @@ object ShellToolManagerForSetting {
                         if (funcErr != null) {
                             return Pair(
                                 null,
-                                SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                         SettingFuncTool.makeJoinStrBySeparator(
@@ -417,7 +417,7 @@ object ShellToolManagerForSetting {
                     if(funcErr != null){
                         return Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val timeoutIntSrc =
@@ -433,7 +433,7 @@ object ShellToolManagerForSetting {
                         ?: return@let semaphoreIntToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val enableEscape = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -445,7 +445,7 @@ object ShellToolManagerForSetting {
                         ?: return@let escapeToErr.first != switchOff
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -457,7 +457,7 @@ object ShellToolManagerForSetting {
                         ?: return@let indexVarNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -469,7 +469,7 @@ object ShellToolManagerForSetting {
                         ?: return@let delimiterToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -481,7 +481,7 @@ object ShellToolManagerForSetting {
                         ?: return@let fieldVarNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val alreadyUseVarNameList = listOf(
@@ -517,7 +517,7 @@ object ShellToolManagerForSetting {
                     )
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to  FuncCheckerForSetting. FuncCheckErr(
                         "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}, ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
                     )
@@ -531,7 +531,7 @@ object ShellToolManagerForSetting {
                         ?: return@let chDirToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         chDirPathSrc ->
@@ -674,7 +674,7 @@ object ShellToolManagerForSetting {
                         funcErr ->
                     return@withContext Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val replaceStr = replaceStrToFuncErrList.filter {
@@ -934,7 +934,7 @@ object ShellToolManagerForSetting {
                 )
                 return Pair(
                     null,
-                    SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                 ) to FuncCheckerForSetting.FuncCheckErr(
                     "${spanCmdDescriptionKey} key not exist: ${spanWhere}"
                 )
@@ -1009,7 +1009,7 @@ object ShellToolManagerForSetting {
                         funcErr ->
                     return@withContext Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val replaceStr = replaceStrToFuncErrList.filter {

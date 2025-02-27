@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.makeVarNameToValueStrMap
+import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.LoopKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.IfErrManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.ReturnErrManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionData
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionErrLogger
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionImportManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionMapTool
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingReturnExecutor
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.VarErrManager
@@ -37,7 +37,6 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -55,7 +54,6 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDateTime
-import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.enums.EnumEntries
 
@@ -90,21 +88,27 @@ class SettingActionManager {
         keyToSubKeyConWhere: String,
         editConstraintListAdapterArg: EditConstraintListAdapter? = null,
         topAcSVarName: String? = null,
-    ): Map<String, String> {
+    ): Pair<
+            Map<String, String>,
+            SettingActionKeyManager.BreakSignal?,
+            > {
+        val nullReturnPair = emptyMap<String, String>() to null
         if(
             context == null
             || keyToSubKeyCon.isNullOrEmpty()
-        ) return emptyMap()
+        ) return nullReturnPair
         val keyToSubKeyConList = makeSettingActionKeyToSubKeyList(
             keyToSubKeyCon,
             null,
         )
         if(
             keyToSubKeyConList.isNullOrEmpty()
-        ) return emptyMap()
+        ) return nullReturnPair
+        val settingActionExitManager = SettingActionData.SettingActionExitManager()
         val settingActionExecutor = SettingActionExecutor(
             context,
             WeakReference(fragmentActivity),
+            settingActionExitManager,
             fannelInfoMap,
             setReplaceVariableMapSrc,
             busyboxExecutor,
@@ -125,9 +129,21 @@ class SettingActionManager {
             null,
         )
         val returnLoopKeyToVarNameValueStrMap = loopClasses?.first
-        return SettingActionKeyManager.LoopKeyManager.getResultLoopKeyToVarNameValueMap(
+        val resultVarNameToValueStrMap = getResultLoopKeyToVarNameValueMap(
             returnLoopKeyToVarNameValueStrMap,
         )
+        val signal = settingActionExitManager.get()
+        return resultVarNameToValueStrMap to signal
+    }
+
+    private fun getResultLoopKeyToVarNameValueMap(
+        loopKeyToVarNameValueStrMap: SettingActionData.LoopKeyToVarNameValueStrMap?
+    ): Map<String, String> {
+        return loopKeyToVarNameValueStrMap
+            ?.convertAsyncVarNameToValueStrMapToMap(LoopKeyManager.mapRoopKeyUnit)
+            ?.map {
+                it.key to (it.value ?: String())
+            }?.toMap() ?: emptyMap()
     }
 
     private fun makeSetRepValMap(
@@ -189,20 +205,18 @@ class SettingActionManager {
     private class SettingActionExecutor(
         private val context: Context?,
         private val fragmentActivityRef: WeakReference<FragmentActivity?>,
+        private val settingActionExitManager: SettingActionData.SettingActionExitManager,
 //        private val fragmentRef: WeakReference<Fragment>,
         private val fannelInfoMap: HashMap<String, String>,
         private val setReplaceVariableMapSrc: Map<String, String>?,
         private val busyboxExecutor: BusyboxExecutor?,
         private val topLevelValueStrKeyList: List<String>?,
     ) {
-
-        private val loopKeyToVarNameValueStrMap = SettingActionData.LoopKeyToVarNameValueStrMap()
 //        mutableMapOf<String, MutableMap<String, Bitmap?>>()
 //        private val privateLoopKeyVarNameValueStrMap =
 //    SettingActionData.PrivateLoopKeyVarNameValueStrMap()
 //        private val loopKeyToAsyncDeferredVarNameValueStrMap =
 //            SettingActionData.LoopKeyToAsyncDeferredVarNameValueStrMap()
-        private var settingActionExitManager = SettingActionData.SettingActionExitManager()
         private val escapeRunPrefix = SettingActionKeyManager.VarPrefix.RUN.prefix
         private val runAsyncPrefix = SettingActionKeyManager.VarPrefix.RUN_ASYNC.prefix
         private val asyncPrefix = SettingActionKeyManager.VarPrefix.ASYNC.prefix
@@ -421,7 +435,9 @@ class SettingActionManager {
 //                        || isRunOrAsyncDifinitionErrInReturnJob.await()
             }
             if(isErr) {
-                settingActionExitManager.setExit()
+                settingActionExitManager.setExitSignal(
+                    SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                )
                 return Pair(
                     loopKeyToVarNameValueStrMap,
                     privateLoopKeyVarNameValueStrMap,
@@ -433,7 +449,7 @@ class SettingActionManager {
             keyToSubKeyConList.forEachIndexed { index, keyToSubKeyConSrc ->
                 dateList.add("get exit ${index}" to LocalDateTime.now())
                 if (
-                    settingActionExitManager.get()
+                    settingActionExitManager.isExit()
                 ) return Pair(
                     loopKeyToVarNameValueStrMap,
                     privateLoopKeyVarNameValueStrMap,
@@ -1017,9 +1033,10 @@ class SettingActionManager {
                             varNameToStrValueAndExitSignal ->
                             val exitSignalClass = varNameToStrValueAndExitSignal.second
                             if (
-                                exitSignalClass == SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                settingActionExitManager.isExitBySignal(exitSignalClass)
+//                                exitSignalClass == SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
                             ) {
-                                settingActionExitManager.setExit()
+                                settingActionExitManager.setExitSignal(exitSignalClass)
                                 return Pair(
                                     loopKeyToVarNameValueStrMap,
                                     privateLoopKeyVarNameValueStrMap,
@@ -1197,14 +1214,6 @@ class SettingActionManager {
 //                                ).joinToString("\n\n\n")
 //                            )
                             when(breakSignalClass){
-                                SettingActionKeyManager.BreakSignal.EXIT_SIGNAL -> {
-                                    settingActionExitManager.setExit()
-                                    return Pair(
-                                        loopKeyToVarNameValueStrMap,
-                                        privateLoopKeyVarNameValueStrMap,
-//                                        loopKeyToAsyncDeferredVarNameValueStrMap,
-                                    )
-                                }
                                 SettingActionKeyManager.BreakSignal.RETURN_SIGNAL -> {
                                     return Pair(
                                         loopKeyToVarNameValueStrMap,
@@ -1212,7 +1221,14 @@ class SettingActionManager {
 //                                        loopKeyToAsyncDeferredVarNameValueStrMap,
                                     )
                                 }
-                                else -> {}
+                                else -> {
+                                    settingActionExitManager.setExitSignal(breakSignalClass)
+                                    return Pair(
+                                        loopKeyToVarNameValueStrMap,
+                                        privateLoopKeyVarNameValueStrMap,
+//                                        loopKeyToAsyncDeferredVarNameValueStrMap,
+                                    )
+                                }
                             }
                         }
 
@@ -1240,7 +1256,7 @@ class SettingActionManager {
                         Map<String, String>
                         >
                 > {
-            val subKeySeparator = SettingActionKeyManager.subKeySepartor
+            val subKeySeparator = SettingActionKeyManager.subKeySeparator
             val landSeparator = SettingActionKeyManager.landSeparator
             val subKeyToConList = CmdClickMap.createMap(
                 "${settingVarKey}=${
@@ -1350,7 +1366,7 @@ class SettingActionManager {
                 dateList.add("start" to LocalDateTime.now())
                 mainSubKeyPairList.forEach {
                         mainSubKeyPair ->
-                    val varNameToValueStrMap = makeVarNameToValueStrMap(
+                    val varNameToValueStrMap = SettingActionMapTool.makeVarNameToValueStrMap(
                         curMapLoopKey,
                         topVarNameToValueStrMap,
                         importedVarNameToValueStrMap,
@@ -1511,7 +1527,9 @@ class SettingActionManager {
                                             keyToSubKeyConWhere,
                                         )
                                     }
-                                    settingActionExitManager.setExit()
+                                    settingActionExitManager.setExitSignal(
+                                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                    )
                                     return@awaitVarNameList
                                 }
                                 val varNameToValueStrAndExitSignal =
@@ -1579,7 +1597,9 @@ class SettingActionManager {
                                 if(
                                     isGlobalVarFuncNullResultErr
                                 ) {
-                                    settingActionExitManager.setExit()
+                                    settingActionExitManager.setExitSignal(
+                                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                    )
                                     return null
                                 }
                             }
@@ -1618,7 +1638,7 @@ class SettingActionManager {
                                 argsPairListBeforeBsEscape,
                                 varNameToValueStrMap
                             )
-                            val quoteStr = """"aaa\"""""
+//                            val quoteStr = """"aaa\"""""
 //                            if(funcTypeDotMethod.contains("eval")) {
 //                                FileSystems.updateFile(
 //                                    File(
@@ -1666,15 +1686,25 @@ class SettingActionManager {
                                     )
                                 }
                                 itPronounValueStrToBreakSignal = null
-                                settingActionExitManager.setExit()
+                                settingActionExitManager.setExitSignal(
+                                    SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                )
                                 return null
                             }
                             val resultValueStrToExitMacro =
                                 resultValueStrToExitMacroAndCheckErr?.first
+                            val resultValueStr = resultValueStrToExitMacro?.first
+                            val signal = resultValueStrToExitMacro?.second
+                            if(
+                                settingActionExitManager.isExitBySignal(signal)
+                            ) {
+                                settingActionExitManager.setExitSignal(signal)
+                                return null
+                            }
                             VarErrManager.isGlobalVarNullResultErr(
                                 context,
                                 renewalVarName ?: settingVarName,
-                                resultValueStrToExitMacro?.first,
+                                resultValueStr,
                                 privateSubKeyClass,
                                 "funcTypeDotMethod: ${funcTypeDotMethod} argsPairList: ${argsPairList}, $keyToSubKeyConWhere",
                             ).let {
@@ -1682,7 +1712,9 @@ class SettingActionManager {
                                 if(
                                     isGlobalVarFuncNullResultErr
                                 ) {
-                                    settingActionExitManager.setExit()
+                                    settingActionExitManager.setExitSignal(
+                                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                    )
                                     return null
                                 }
                             }
@@ -1730,8 +1762,11 @@ class SettingActionManager {
                                 }
                                 itPronounValueStrToBreakSignal = null
 //                                isNext = false
-                                settingActionExitManager.setExit()
-                                return@forEach
+                                settingActionExitManager.setExitSignal(
+                                    SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                )
+                                return null
+//                                return@forEach
                             }
                             dateListInSIf.add("makeIfProcNameNotExistInRuntime" to java.time.LocalDateTime.now())
                             val sIfProcName = IfErrManager.makeIfProcNameNotExistInRuntime(
@@ -1750,8 +1785,11 @@ class SettingActionManager {
                                         keyToSubKeyConWhere
                                     )
                                 }
-                                settingActionExitManager.setExit()
-                                return@forEach
+                                settingActionExitManager.setExitSignal(
+                                    SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                )
+                                return null
+//                                return@forEach
                             }
                             val isNextBool = isNextToErrType.first ?: false
                             dateListInSIf.add("ifStackList.add" to java.time.LocalDateTime.now())
@@ -1785,8 +1823,11 @@ class SettingActionManager {
                                         keyToSubKeyConWhere
                                     )
                                 }
-                                settingActionExitManager.setExit()
-                                return@forEach
+                                settingActionExitManager.setExitSignal(
+                                    SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                )
+                                return null
+//                                return@forEach
                             }
                             if(
                                 ifStackList.lastOrNull()?.ifProcName != sIfProcName
@@ -1809,7 +1850,10 @@ class SettingActionManager {
                             || settingVarName.startsWith(asyncRunPrefix)
                 val isEscape =
                     isNoImageVar
-                            && itPronounValueStrToBreakSignal?.second != SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            && settingActionExitManager.isExitBySignal(
+                        itPronounValueStrToBreakSignal?.second
+                            )
+                //itPronounValueStrToBreakSignal?.second != SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "lvar.txt").absolutePath,
 //                    dateList.joinToString("\n") + "\n\n=========\n\n"
@@ -2121,7 +2165,7 @@ private object EvalForSetting {
                                 ?: return@let inputConToErr.first
                             return@withContext Pair(
                                 null,
-                                SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                     val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2133,7 +2177,7 @@ private object EvalForSetting {
                             ?: return@let fieldVarPrefixToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
 //                    val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2157,7 +2201,7 @@ private object EvalForSetting {
                             ?: return@let imageActionConToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2169,7 +2213,7 @@ private object EvalForSetting {
                             ?: return@let indexVarNameToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2181,7 +2225,7 @@ private object EvalForSetting {
                             ?: return@let inputConToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val joinStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2193,7 +2237,7 @@ private object EvalForSetting {
                             ?: return@let joinStrToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val semaphoreLimit = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -2205,7 +2249,7 @@ private object EvalForSetting {
                             ?: return@let semaphoreToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2217,7 +2261,7 @@ private object EvalForSetting {
                             ?: return@let delimiterToErr.first
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
                     val alreadyUseVarNameList = listOf(
@@ -2258,7 +2302,7 @@ private object EvalForSetting {
                         )
                         return@withContext Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to  FuncCheckerForSetting. FuncCheckErr(
                             "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
                         )
@@ -2445,7 +2489,7 @@ private object EvalForSetting {
                         }
                         return@withContext  Pair(
                             null,
-                            SettingActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                         ) to  FuncCheckerForSetting.FuncCheckErr(
                             "When ${spanJoinStrArgName} is not ${spanDefaultMacroStr}, result must exist: ${spanInfo}, ${keyToSubKeyConWhere}"
                         )
@@ -2494,7 +2538,7 @@ private object EvalForSetting {
                 "index: ${index}, eval: indexVarName: ${indexVarName}, ${keyToSubKeyConWhere}",
                 editConstraintListAdapterArg,
                 returnTopAcVarNameMacro
-            )
+            ).first
             return index to outputVarNameToValueStrMap.get(returnTopAcVarNameMacro)
         }
     }

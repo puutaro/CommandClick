@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
 import android.content.Context
+import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
@@ -8,6 +9,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCorou
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionData
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -49,6 +51,8 @@ object SettingFile {
             fannelName,
             setReplaceVariableMapSrc,
             busyboxExecutor,
+            null,
+            null,
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
             firstSettingConList,
@@ -81,6 +85,8 @@ object SettingFile {
         fannelPath: String,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        globalVarNameToValueMap: Map<String, String>?,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         settingFilePath: String,
@@ -114,6 +120,8 @@ object SettingFile {
             fannelName,
             setReplaceVariableMapSrc,
             busyboxExecutor,
+            globalVarNameToValueMap,
+            globalVarNameToBitmapMap,
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
             firstSettingConList,
@@ -133,6 +141,8 @@ object SettingFile {
         fannelName: String,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
+        globalVarNameToValueMap: Map<String, String>?,
+        globalVarNameToBitmapMap: Map<String, Bitmap?>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         firstSettingConList: List<String>,
@@ -142,6 +152,8 @@ object SettingFile {
             fannelName,
             setReplaceVariableMapSrc,
             busyboxExecutor,
+            globalVarNameToValueMap,
+            globalVarNameToBitmapMap,
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
             firstSettingConList,
@@ -271,6 +283,8 @@ object SettingFile {
             fannelName: String,
             setReplaceVariableMapSrc: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
+            globalVarNameToValueMap: Map<String, String>?,
+            globalVarNameToBitmapMap: Map<String, Bitmap?>?,
             settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
             imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
             settingSrcConList: List<String>,
@@ -294,6 +308,8 @@ object SettingFile {
                     fannelName,
                     setReplaceVariableMapSrc,
                     busyboxExecutor,
+                    globalVarNameToValueMap,
+                    globalVarNameToBitmapMap,
                     settingActionAsyncCoroutine,
                     imageActionAsyncCoroutine,
                     settingCon,
@@ -316,6 +332,8 @@ object SettingFile {
             fannelName: String,
             setReplaceVariableMapSrc: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
+            globalVarNameToValueMap: Map<String, String>?,
+            globalVarNameToBitmapMap: Map<String, Bitmap?>?,
             settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
             imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
             settingConBeforeImport: String,
@@ -510,6 +528,8 @@ object SettingFile {
                                         fannelName,
                                         setReplaceVariableMapSrc,
                                         busyboxExecutor,
+                                        globalVarNameToValueMap,
+                                        globalVarNameToBitmapMap,
                                         settingActionAsyncCoroutine,
                                         imageActionAsyncCoroutine,
                                         importMap,
@@ -692,6 +712,8 @@ object SettingFile {
                 fannelName: String,
                 setReplaceVariableMapSrc: Map<String, String>?,
                 busyboxExecutor: BusyboxExecutor?,
+                globalVarNameToValueMap: Map<String, String>?,
+                globalVarNameToBitmapMap: Map<String, Bitmap?>?,
                 settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
                 imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
                 importMap: Map<String, String>,
@@ -748,6 +770,8 @@ object SettingFile {
                                         fannelName,
                                         setReplaceVariableMapSrc,
                                         busyboxExecutor,
+                                        globalVarNameToValueMap,
+                                        globalVarNameToBitmapMap,
                                         settingActionAsyncCoroutine,
                                         imageActionAsyncCoroutine,
                                         settingAcCon,
@@ -814,10 +838,12 @@ object SettingFile {
                 fannelName: String,
                 setReplaceVariableMapSrc: Map<String, String>?,
                 busyboxExecutor: BusyboxExecutor?,
+                globalVarNameToValueMap: Map<String, String>?,
+                globalVarNameToBitmapMap: Map<String, Bitmap?>?,
                 settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
                 imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
                 settingAcCon: String?,
-                imageAcCon: String?,
+                imageAcConSrc: String?,
                 atRepValMap: Map<String, String>?,
                 loopVarName: String?,
                 loopIndex: Int,
@@ -835,7 +861,7 @@ object SettingFile {
                 val fannelInfoMap = FannelInfoTool.makeFannelInfoMapByString(
                     currentFannelName = fannelName,
                 )
-                val varNameToValueStrMap = withContext(Dispatchers.IO) settingAc@ {
+                val varNameToValueStrMapToSignal = withContext(Dispatchers.IO) settingAc@ {
                     if (
                         settingAcCon.isNullOrEmpty()
                     ) return@settingAc null
@@ -846,8 +872,8 @@ object SettingFile {
                         setReplaceVariableMapSrc,
                         busyboxExecutor,
                         settingActionAsyncCoroutine,
-                        null,
-                        null,
+                        globalVarNameToValueMap?.map{ it.key },
+                        globalVarNameToValueMap,
                         CmdClickMap.replaceByAtVar(
                             settingAcCon ?: String(),
                             loopVarMap
@@ -855,9 +881,17 @@ object SettingFile {
                         where,
                     )
                 }
+                val varNameToValueStrMap = varNameToValueStrMapToSignal?.first
+                val settingAcSignal = varNameToValueStrMapToSignal?.second
                 if(
-                    imageAcCon.isNullOrEmpty()
+                    imageAcConSrc.isNullOrEmpty()
+                    || SettingActionData.SettingActionExitManager.isStopImageAc(settingAcSignal)
                 ) return
+                val imageActionCon = CmdClickMap.replace(
+                    imageAcConSrc,
+                    (varNameToValueStrMap ?: emptyMap()) +
+                            (globalVarNameToValueMap ?: emptyMap()),
+                )
                 ImageActionManager().exec(
                     context,
                     fannelInfoMap,
@@ -868,12 +902,11 @@ object SettingFile {
                         .asDrawable()
                         .sizeMultiplier(0.1f),
                     imageActionAsyncCoroutine,
-                    null,
-                    null,
-                    CmdClickMap.replace(
-                        imageAcCon,
-                        varNameToValueStrMap,
-                    ),
+                    globalVarNameToBitmapMap?.map {
+                        it.key
+                    },
+                    globalVarNameToBitmapMap,
+                    imageActionCon,
                     where,
                     null,
                     null,

@@ -86,7 +86,7 @@ object MathCulcForSetting {
                         ?: return@let formulaStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val inputCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -98,7 +98,7 @@ object MathCulcForSetting {
                         ?: return@let inputConToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -110,7 +110,7 @@ object MathCulcForSetting {
                         ?: return@let elVarNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -122,7 +122,7 @@ object MathCulcForSetting {
                         ?: return@let indexVarNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 if(
@@ -143,7 +143,7 @@ object MathCulcForSetting {
                     )
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to  FuncCheckerForSetting. FuncCheckErr(
                         "Must be different from ${spanIndexVarName} and ${spanElVarName}: ${spanWhere} "
                     )
@@ -157,7 +157,7 @@ object MathCulcForSetting {
                         ?: return@let separatorToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val defaultSeparator =
@@ -175,7 +175,7 @@ object MathCulcForSetting {
                         if (funcErr != null) {
                             return Pair(
                                 null,
-                                SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                         SettingFuncTool.makeJoinStrBySeparator(
@@ -194,7 +194,7 @@ object MathCulcForSetting {
                         ?: return@let semaphoreIntToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 return Culc.culc(
@@ -238,7 +238,7 @@ object MathCulcForSetting {
                         ?: return@let formulaStrToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val inputCon = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -250,7 +250,7 @@ object MathCulcForSetting {
                         ?: return@let inputConToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -262,7 +262,7 @@ object MathCulcForSetting {
                         ?: return@let elVarNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -274,7 +274,7 @@ object MathCulcForSetting {
                         ?: return@let indexVarNameToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 if(
@@ -295,7 +295,7 @@ object MathCulcForSetting {
                     )
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to  FuncCheckerForSetting. FuncCheckErr(
                         "Must be different from ${spanIndexVarName} and ${spanElVarName}: ${spanWhere} "
                     )
@@ -309,7 +309,7 @@ object MathCulcForSetting {
                         ?: return@let separatorToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val defaultSeparator =
@@ -327,7 +327,7 @@ object MathCulcForSetting {
                         if (funcErr != null) {
                             return Pair(
                                 null,
-                                SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                         SettingFuncTool.makeJoinStrBySeparator(
@@ -346,7 +346,7 @@ object MathCulcForSetting {
                         ?: return@let semaphoreIntToErr.first
                     return Pair(
                         null,
-                        SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 return Culc.culc(
@@ -425,7 +425,7 @@ object MathCulcForSetting {
               )
               Pair(
                   null,
-                  SettingActionKeyManager.BreakSignal.EXIT_SIGNAL
+                  SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
               ) to err
           }
         }

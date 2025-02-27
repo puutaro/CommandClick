@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import kotlinx.coroutines.Deferred
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.withLock
 
@@ -268,17 +267,70 @@ object SettingActionData {
     }
 
     class SettingActionExitManager {
-        private var exitSignal = AtomicBoolean(false)
-        //        private val exitSignalMutex = ReentrantReadWriteLock()
-        fun setExit(){
-
-//            exitSignalMutex.writeLock().withLock{
-            exitSignal = AtomicBoolean(true)
-//            }
+        private var exitSignal:  SettingActionKeyManager.BreakSignal? = null
+        private val exitSignalMutex = ReentrantReadWriteLock()
+        fun setExitSignal(
+            signal: SettingActionKeyManager.BreakSignal?
+        ){
+            if(
+                signal == null
+                || signal == SettingActionKeyManager.BreakSignal.RETURN_SIGNAL
+                ) return
+            val curSignal = get()
+            if(
+                curSignal != null
+                ) return
+            exitSignalMutex.writeLock().withLock{
+                exitSignal = signal
+            }
         }
 
-        fun get(): Boolean {
-            return exitSignal.get()
+        fun get(): SettingActionKeyManager.BreakSignal? {
+            return exitSignalMutex.writeLock().withLock {
+                exitSignal
+            }
+        }
+
+        fun isExit(): Boolean {
+            val signal = get()
+            return isExitBySignal(
+                signal
+            )
+        }
+
+        fun isExitBySignal(
+            signal: SettingActionKeyManager.BreakSignal?
+        ): Boolean {
+            val okSignalSequence = sequenceOf(
+                null,
+                SettingActionKeyManager.BreakSignal.RETURN_SIGNAL,
+            )
+            if(
+                okSignalSequence.contains(signal)
+            ) return false
+            return true
+        }
+
+        companion object {
+            fun isStopImageAc(
+                signal: SettingActionKeyManager.BreakSignal?
+            ): Boolean {
+                val okSignalSeq = sequenceOf(
+                    null,
+                    SettingActionKeyManager.BreakSignal.RETURN_SIGNAL,
+                )
+                if(
+                    okSignalSeq.contains(signal)
+                ) return false
+                val stopSignalSeq = sequenceOf(
+                    null,
+                    SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    SettingActionKeyManager.BreakSignal.EXIT_WITH_IMAGE_SIGNAL,
+                )
+                return stopSignalSeq.contains(
+                    signal
+                )
+            }
         }
     }
 
