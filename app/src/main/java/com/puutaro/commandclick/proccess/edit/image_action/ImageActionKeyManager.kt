@@ -1,7 +1,5 @@
 package com.puutaro.commandclick.proccess.edit.image_action
 
-import android.graphics.Bitmap
-import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionData
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
 
@@ -50,13 +48,6 @@ object ImageActionKeyManager {
             return curMapLoopKey.removeSuffix(
                 "${mapLoopKeySeparator}${mapRoopKeyUnit}"
             )
-        }
-
-        suspend fun getResultLoopKeyToVarNameValueMap(
-            loopKeyToVarNameBitmapMap: ImageActionData.LoopKeyToVarNameBitmapMap?
-        ): Map<String, Bitmap?> {
-            return loopKeyToVarNameBitmapMap?.convertAsyncVarNameToBitmapToMap(mapRoopKeyUnit)
-                ?: emptyMap()
         }
     }
 
@@ -142,6 +133,7 @@ object ImageActionKeyManager {
 
     enum class BreakSignal {
         EXIT_SIGNAL,
+        ERR_EXIT_SIGNAL,
         RETURN_SIGNAL,
     }
 
@@ -231,28 +223,5 @@ object ImageActionKeyManager {
                 mainKey to subKeyAfterStr
             }.toList()
         }
-    }
-
-    suspend fun makeValueToBitmapMap(
-        curMapLoopKey: String,
-        topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
-        importedVarNameToBitmapMap: Map<String, Bitmap?>?,
-        loopKeyToVarNameBitmapMapClass: ImageActionData.LoopKeyToVarNameBitmapMap?,
-        privateLoopKeyVarNameBitmapMapClass: ImageActionData.PrivateLoopKeyVarNameBitmapMap,
-        curImportedVarNameToBitmapMap: Map<String, Bitmap?>?,
-        itToBitmapMap: Map<String, Bitmap?>?,
-    ): Map<String, Bitmap?> {
-        return (topVarNameToVarNameBitmapMap ?: emptyMap()) +
-                (importedVarNameToBitmapMap ?: emptyMap()) +
-                (loopKeyToVarNameBitmapMapClass
-                    ?.convertAsyncVarNameToBitmapToMap(
-                        curMapLoopKey
-                    ) ?: emptyMap()) +
-                (privateLoopKeyVarNameBitmapMapClass
-                    .convertAsyncVarNameToBitmapToMap(
-                        curMapLoopKey
-                    ) ?: emptyMap()) +
-                (curImportedVarNameToBitmapMap ?: emptyMap()) +
-                (itToBitmapMap ?: emptyMap())
     }
 }

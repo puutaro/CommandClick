@@ -72,7 +72,7 @@ object CutForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -84,7 +84,7 @@ object CutForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -96,7 +96,7 @@ object CutForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val offsetX = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -108,7 +108,7 @@ object CutForImageAction {
                         ?: return@let offsetXToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val offsetY = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -120,7 +120,7 @@ object CutForImageAction {
                         ?: return@let offsetYToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val returnBitmap = Cut.cut(
@@ -137,7 +137,7 @@ object CutForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(

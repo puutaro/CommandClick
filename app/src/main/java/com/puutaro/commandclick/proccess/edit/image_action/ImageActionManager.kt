@@ -9,9 +9,11 @@ import com.bumptech.glide.RequestBuilder
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager.LoopKeyManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionData
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionErrLogger
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionImportManager
+import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionMapTool
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionReturnErrManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionVarErrManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageReturnExecutor
@@ -130,22 +132,29 @@ class ImageActionManager {
         editConstraintListAdapterArg: EditConstraintListAdapter? = null,
         topAcIVarName: String? = null,
         forVarNameBitmapMap: ImageActionData.ForVarNameBitmapMap? = null
-    ): Map<String, Bitmap?> {
+    ): Pair<
+            Map<String, Bitmap?>,
+            ImageActionKeyManager. BreakSignal?,
+            > {
+        val blankReturnPair = emptyMap<String, Bitmap?>() to null
         if(
             keyToSubKeyCon.isNullOrEmpty()
-        ) return emptyMap()
+        ) return blankReturnPair
         val keyToSubKeyConList = makeImageActionKeyToSubKeyList(
             keyToSubKeyCon,
             setReplaceVariableMapSrc,
         )
         if(
             keyToSubKeyConList.isNullOrEmpty()
-        ) return emptyMap()
+        ) return blankReturnPair
+        val imageActionExitManager =
+            ImageActionData.ImageActionExitManager()
         val imageActionExecutor = ImageActionExecutor(
             fannelInfoMap,
             setReplaceVariableMapSrc,
             busyboxExecutor,
             topLevelBitmapStrKeyList,
+            imageActionExitManager,
         )
         val loopClasses = imageActionExecutor.makeResultLoopKeyToVarNameValueMap(
             context,
@@ -163,9 +172,18 @@ class ImageActionManager {
             topLevelBitmapStrKeyList,
             forVarNameBitmapMap,
         )
-        return ImageActionKeyManager.LoopKeyManager.getResultLoopKeyToVarNameValueMap(
+        val varNameToBitmapMap = getResultLoopKeyToVarNameValueMap(
             loopClasses?.first
         )
+        val signal = imageActionExitManager.get()
+        return varNameToBitmapMap to signal
+    }
+
+    suspend fun getResultLoopKeyToVarNameValueMap(
+        loopKeyToVarNameBitmapMap: ImageActionData.LoopKeyToVarNameBitmapMap?
+    ): Map<String, Bitmap?> {
+        return loopKeyToVarNameBitmapMap?.convertAsyncVarNameToBitmapToMap(LoopKeyManager.mapRoopKeyUnit)
+            ?: emptyMap()
     }
 
     private fun makeSetRepValMap(
@@ -230,13 +248,13 @@ class ImageActionManager {
         private val setReplaceVariableMapSrc: Map<String, String>?,
         private val busyboxExecutor: BusyboxExecutor?,
         private val topLevelBitmapStrKeyList: List<String>?,
+        private val imageActionExitManager: ImageActionData.ImageActionExitManager,
     ) {
 
 //        private val loopKeyToVarNameBitmapMap = ImageActionData.LoopKeyToVarNameBitmapMap()
 ////        mutableMapOf<String, MutableMap<String, Bitmap?>>()
 //        private val privateLoopKeyVarNameBitmapMap = ImageActionData.PrivateLoopKeyVarNameBitmapMap()
 //        private val loopKeyToAsyncDeferredVarNameBitmapMap = ImageActionData.LoopKeyToAsyncDeferredVarNameBitmapMap()
-        private var imageActionExitManager = ImageActionData.ImageActionExitManager()
         private val escapeRunPrefix = ImageActionKeyManager.VarPrefix.RUN.prefix
         private val runAsyncPrefix = ImageActionKeyManager.VarPrefix.RUN_ASYNC.prefix
         private val asyncPrefix = ImageActionKeyManager.VarPrefix.ASYNC.prefix
@@ -449,7 +467,7 @@ class ImageActionManager {
                         || isBlankReturnErrWithoutRunPrefixJob.await()
             }
             if(isErr) {
-                imageActionExitManager.setExit()
+                imageActionExitManager.setExitSignal(ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL)
                 return Pair(
                     loopKeyToVarNameBitmapMap,
                     privateLoopKeyVarNameBitmapMap,
@@ -457,7 +475,7 @@ class ImageActionManager {
             }
             keyToSubKeyConList.forEach { keyToSubKeyConSrc ->
                 if (
-                    imageActionExitManager.get()
+                    imageActionExitManager.isExit()
                 ) return Pair(
                     loopKeyToVarNameBitmapMap,
                     privateLoopKeyVarNameBitmapMap,
@@ -941,9 +959,10 @@ class ImageActionManager {
                             varNameToBitmapAndExitSignal ->
                             val exitSignalClass = varNameToBitmapAndExitSignal.second
                             if (
-                                exitSignalClass == ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                imageActionExitManager.isExitBySignal(exitSignalClass)
+//                                exitSignalClass == ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                             ) {
-                                imageActionExitManager.setExit()
+                                imageActionExitManager.setExitSignal(exitSignalClass)
                                 return Pair(
                                     loopKeyToVarNameBitmapMap,
                                     privateLoopKeyVarNameBitmapMap,
@@ -1026,7 +1045,7 @@ class ImageActionManager {
                             ?: String()
                         val returnBitmap = let {
                             val varNameToBitmapMap =
-                                ImageActionKeyManager.makeValueToBitmapMap(
+                                ImageActionMapTool.makeValueToBitmapMap(
                                     curMapLoopKey,
                                     topVarNameToVarNameBitmapMap,
                                     importedVarNameToBitmapMap,
@@ -1180,20 +1199,19 @@ class ImageActionManager {
 //                                ).joinToString("\n\n\n")
 //                            )
                             when(breakSignalClass){
-                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL -> {
-                                    imageActionExitManager.setExit()
-                                    return Pair(
-                                        loopKeyToVarNameBitmapMap,
-                                        privateLoopKeyVarNameBitmapMap,
-                                    )
-                                }
                                 ImageActionKeyManager.BreakSignal.RETURN_SIGNAL -> {
                                     return Pair(
                                         loopKeyToVarNameBitmapMap,
                                         privateLoopKeyVarNameBitmapMap,
                                     )
                                 }
-                                else -> {}
+                                else -> {
+                                    imageActionExitManager.setExitSignal(breakSignalClass)
+                                    return Pair(
+                                        loopKeyToVarNameBitmapMap,
+                                        privateLoopKeyVarNameBitmapMap,
+                                    )
+                                }
                             }
                         }
                     }
@@ -1296,7 +1314,6 @@ class ImageActionManager {
 //            private var isNext = true
             private val valueSeparator = ImageActionKeyManager.valueSeparator
             private val itPronoun = ImageActionKeyManager.BitmapVar.itPronoun
-            private val exitSignal = ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
 
             suspend fun exec(
                 context: Context?,
@@ -1463,7 +1480,7 @@ class ImageActionManager {
                                 return@forEach
                             }
                             val varNameToBitmapMap =
-                                ImageActionKeyManager.makeValueToBitmapMap(
+                                ImageActionMapTool.makeValueToBitmapMap(
                                     curMapLoopKey,
                                     topVarNameToVarNameBitmapMap,
                                     importedVarNameToBitmapMap,
@@ -1498,7 +1515,9 @@ class ImageActionManager {
                                 if(
                                     !isGlobalVarFuncNullResultErr
                                 ) return@let
-                                imageActionExitManager.setExit()
+                                imageActionExitManager.setExitSignal(
+                                    ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                )
                                 return null
                                 //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
 //                                return null
@@ -1527,7 +1546,7 @@ class ImageActionManager {
                                 it.first.isNotEmpty()
                             }
                             val varNameToBitmapMap =
-                                ImageActionKeyManager.makeValueToBitmapMap(
+                                ImageActionMapTool.makeValueToBitmapMap(
                                     curMapLoopKey,
                                     topVarNameToVarNameBitmapMap,
                                     importedVarNameToBitmapMap,
@@ -1581,24 +1600,31 @@ class ImageActionManager {
                                     )
                                 }
                                 itPronounBitmapToBreakSignal = null
-                                imageActionExitManager.setExit()
+                                imageActionExitManager.setExitSignal(
+                                    ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                )
                                 return null
                                 //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
 //                                isNext = false
 //                                return@forEach
                             }
-                            val resultBitmapToExitMacro = resultBitmapToExitMacroAndCheckErr?.first
-                            val isExitSignal =
-                                resultBitmapToExitMacro?.second == exitSignal
-                            if(isExitSignal){
-                                imageActionExitManager.setExit()
+                            val resultBitmapToExitMacro =
+                                resultBitmapToExitMacroAndCheckErr?.first
+                            val resultBitmap =
+                                resultBitmapToExitMacro?.first
+                            val signal =
+                                resultBitmapToExitMacro?.second
+//                            val isExitSignal =
+//                                signal == exitSignal
+                            if(imageActionExitManager.isExitBySignal(signal)){
+                                imageActionExitManager.setExitSignal(signal)
                                 return null
                                 //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                             }
                             ImageActionVarErrManager.isGlobalVarNullResultErr(
                                 context,
                                 renewalVarName ?: settingVarName,
-                                resultBitmapToExitMacro?.first,
+                                resultBitmap,
                                 privateSubKeyClass,
                                 "funcTypeDotMethod: ${funcTypeDotMethod} argsPairList: ${argsPairList}, $keyToSubKeyConWhere",
                             ).let {
@@ -1606,7 +1632,9 @@ class ImageActionManager {
                                 if(
                                     !isGlobalVarFuncNullResultErr
                                 ) return@let
-                                imageActionExitManager.setExit()
+                                imageActionExitManager.setExitSignal(
+                                    ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                )
                                 return null
                                 //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
 //                                    return null
@@ -1646,8 +1674,10 @@ class ImageActionManager {
                                         keyToSubKeyConWhere
                                     )
                                 }
-                                imageActionExitManager.setExit()
-                                return Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                imageActionExitManager.setExitSignal(
+                                    ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                )
+                                return Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             }
                             val sIfProcName = IfErrManager.makeIfProcNameNotExistInRuntime(
                                 mainSubKey,
@@ -1665,7 +1695,9 @@ class ImageActionManager {
                                         keyToSubKeyConWhere
                                     )
                                 }
-                                imageActionExitManager.setExit()
+                                imageActionExitManager.setExitSignal(
+                                    ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                )
                                 return null
                                 //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
 //                                return@forEach
@@ -1696,7 +1728,9 @@ class ImageActionManager {
                                         keyToSubKeyConWhere
                                     )
                                 }
-                                imageActionExitManager.setExit()
+                                imageActionExitManager.setExitSignal(
+                                    ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                                )
                                 return null
                                 //Pair(settingVarName, null) to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
 //                                return@forEach
@@ -1722,7 +1756,10 @@ class ImageActionManager {
                             || settingVarName.startsWith(asyncRunPrefix)
                 val isEscape =
                     isNoImageVar
-                            && itPronounBitmapToBreakSignal?.second != ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                            && imageActionExitManager.isExitBySignal(
+                        itPronounBitmapToBreakSignal?.second
+                            )
+//                            && itPronounBitmapToBreakSignal?.second != ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
                 return when(isEscape){
                     true -> null
                     else -> Pair(
@@ -2118,7 +2155,7 @@ class ImageActionManager {
                                 ?: return@let inputConToErr.first
                             return@withContext Pair(
                                 null,
-                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                         val fieldVarPrefix = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2130,7 +2167,7 @@ class ImageActionManager {
                                 ?: return@let fieldVarPrefixToErr.first
                             return@withContext Pair(
                                 null,
-                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
 //                    val elVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2155,7 +2192,7 @@ class ImageActionManager {
                                     ?: return@let settingActionConToErr.first
                                 return@withContext Pair(
                                     null,
-                                    ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                    ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                                 ) to funcErr
                             }
                         val indexVarName = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2167,7 +2204,7 @@ class ImageActionManager {
                                 ?: return@let indexVarNameToErr.first
                             return@withContext Pair(
                                 null,
-                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                         val separator = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2179,7 +2216,7 @@ class ImageActionManager {
                                 ?: return@let inputConToErr.first
                             return@withContext Pair(
                                 null,
-                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
 //                        val joinStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2203,7 +2240,7 @@ class ImageActionManager {
                                 ?: return@let semaphoreToErr.first
                             return@withContext Pair(
                                 null,
-                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                         val delimiter = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -2215,7 +2252,7 @@ class ImageActionManager {
                                 ?: return@let delimiterToErr.first
                             return@withContext Pair(
                                 null,
-                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to funcErr
                         }
                         val alreadyUseVarNameList = listOf(
@@ -2258,7 +2295,7 @@ class ImageActionManager {
                             )
                             return@withContext Pair(
                                 null,
-                                ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                             ) to FuncCheckerForSetting.FuncCheckErr(
                                 "Must be different from ${spanIndexVarName} and ${spanFieldVarPrefix}: ${spanAlreadyUseVarListCon}, ${spanWhere} "
                             )

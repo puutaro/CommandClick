@@ -885,7 +885,7 @@ object SettingFile {
                 val settingAcSignal = varNameToValueStrMapToSignal?.second
                 if(
                     imageAcConSrc.isNullOrEmpty()
-                    || SettingActionData.SettingActionExitManager.isStopImageAc(settingAcSignal)
+                    || SettingActionData.SettingActionExitManager.isStopAfter(settingAcSignal)
                 ) return
                 val imageActionCon = CmdClickMap.replace(
                     imageAcConSrc,

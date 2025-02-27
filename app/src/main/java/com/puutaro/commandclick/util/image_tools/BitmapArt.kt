@@ -166,18 +166,18 @@ object BitmapArt {
                 xyPair.second
             )
         }
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap.txt").absolutePath,
-            listOf(
-                xYPairToBitmapList.map{it.first}.joinToString("--"),
-                "shakeRate: ${shakeRate}",
-                "minOpacityRate: ${minOpacityRate}",
-                "maxOpacityRate: ${maxOpacityRate}",
-                "colorList: ${colorList}",
-                "opacityBandNum: ${opacityIncline}",
-                "times: ${times}"
-            ).joinToString("\n\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap.txt").absolutePath,
+//            listOf(
+//                xYPairToBitmapList.map{it.first}.joinToString("--"),
+//                "shakeRate: ${shakeRate}",
+//                "minOpacityRate: ${minOpacityRate}",
+//                "maxOpacityRate: ${maxOpacityRate}",
+//                "colorList: ${colorList}",
+//                "opacityBandNum: ${opacityIncline}",
+//                "times: ${times}"
+//            ).joinToString("\n\n")
+//        )
 //        FileSystems.writeFromByteArray(
 //            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap22.png").absolutePath,
 //            BitmapTool.convertBitmapToByteArray(resultBitmap)

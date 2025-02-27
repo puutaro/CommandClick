@@ -3,7 +3,8 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs
 import android.graphics.Bitmap
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import kotlinx.coroutines.Deferred
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.withLock
 
@@ -333,19 +334,71 @@ object ImageActionData {
     }
 
     class ImageActionExitManager {
-        private var exitSignal = AtomicBoolean(false)
-        //        private val exitSignalMutex = Mutex()
-        suspend fun setExit(){
-//            exitSignalMutex.withLock {
-            exitSignal = AtomicBoolean(true)
-//            }
+        private var exitSignal: ImageActionKeyManager.BreakSignal? = null
+        //AtomicBoolean(false)
+                private val exitSignalMutex = Mutex()
+        suspend fun setExitSignal(
+            signal: ImageActionKeyManager.BreakSignal?
+        ){
+            val notUpdateSignalSeq = sequenceOf(
+                null,
+                ImageActionKeyManager.BreakSignal.RETURN_SIGNAL,
+            )
+            if(
+                notUpdateSignalSeq.contains(signal)
+            ) return
+            val curSignal = get()
+            if(
+                curSignal != null
+            ) return
+            exitSignalMutex.withLock {
+                exitSignal = signal
+                    //AtomicBoolean(true)
+            }
         }
 
-        suspend fun get(): Boolean {
-            return exitSignal.get()
-//            exitSignalMutex.withLock {
-//                exitSignal
-//            }
+        suspend fun get(): ImageActionKeyManager.BreakSignal? {
+            return exitSignalMutex.withLock {
+                exitSignal
+            }
+        }
+
+        suspend fun isExit(): Boolean {
+            val signal = get()
+            return isExitBySignal(
+                signal
+            )
+        }
+
+        fun isExitBySignal(
+            signal: ImageActionKeyManager.BreakSignal?
+        ): Boolean {
+            val okSignalSequence = sequenceOf(
+                null,
+                ImageActionKeyManager.BreakSignal.RETURN_SIGNAL,
+            )
+            if(
+                okSignalSequence.contains(signal)
+            ) return false
+            return true
+        }
+
+        companion object {
+            fun isStopAfter(
+                signal: ImageActionKeyManager.BreakSignal?
+            ): Boolean {
+                val okSignalSeq = sequenceOf(
+                    null,
+                    ImageActionKeyManager.BreakSignal.RETURN_SIGNAL,
+                )
+                if(
+                    okSignalSeq.contains(signal)
+                ) return false
+                val stopSignalSeq = sequenceOf(
+                    ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                )
+                return stopSignalSeq.contains(signal)
+            }
         }
     }
 }

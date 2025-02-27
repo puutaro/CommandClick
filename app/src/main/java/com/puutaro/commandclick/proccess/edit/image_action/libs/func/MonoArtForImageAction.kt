@@ -81,7 +81,7 @@ object MonoArtForImageAction {
                         ?: return@let shapeToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -93,7 +93,7 @@ object MonoArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -105,7 +105,7 @@ object MonoArtForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -117,7 +117,7 @@ object MonoArtForImageAction {
                         ?: return@let timesToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val borderRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -129,7 +129,7 @@ object MonoArtForImageAction {
                         ?: return@let borderRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val minWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -141,7 +141,7 @@ object MonoArtForImageAction {
                         ?: return@let widthRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val maxWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -153,7 +153,7 @@ object MonoArtForImageAction {
                         ?: return@let widthRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 if(minWidthRate > maxWidthRate) {
@@ -171,7 +171,7 @@ object MonoArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minWidthRate(${spanMinWidthRate}) <= maxWidthRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -185,7 +185,7 @@ object MonoArtForImageAction {
                         ?: return@let heightRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val maxHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -197,7 +197,7 @@ object MonoArtForImageAction {
                         ?: return@let heightRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 if(minHeightRate > maxHeightRate) {
@@ -215,7 +215,7 @@ object MonoArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minWidthRate(${spanMinHeightRate}) <= maxWidthRate(${spanMaxHeightRate}): ${spanWhere}"
                     )
@@ -239,7 +239,7 @@ object MonoArtForImageAction {
                     ) return@let bitmapArtSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -287,7 +287,7 @@ object MonoArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -299,7 +299,7 @@ object MonoArtForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -311,7 +311,7 @@ object MonoArtForImageAction {
                         ?: return@let timesToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val borderRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -323,7 +323,7 @@ object MonoArtForImageAction {
                         ?: return@let borderRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val minWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -335,7 +335,7 @@ object MonoArtForImageAction {
                         ?: return@let widthRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val maxWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -347,7 +347,7 @@ object MonoArtForImageAction {
                         ?: return@let widthRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 if(minWidthRate > maxWidthRate) {
@@ -365,7 +365,7 @@ object MonoArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minWidthRate(${spanMinWidthRate}) <= maxWidthRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -379,7 +379,7 @@ object MonoArtForImageAction {
                         ?: return@let heightRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val maxHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -391,7 +391,7 @@ object MonoArtForImageAction {
                         ?: return@let heightRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 if(minHeightRate > maxHeightRate) {
@@ -409,7 +409,7 @@ object MonoArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minWidthRate(${spanMinHeightRate}) <= maxWidthRate(${spanMaxHeightRate}): ${spanWhere}"
                     )
@@ -432,7 +432,7 @@ object MonoArtForImageAction {
                     ) return@let bitmapArtSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -468,7 +468,7 @@ object MonoArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -480,7 +480,7 @@ object MonoArtForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -492,7 +492,7 @@ object MonoArtForImageAction {
                         ?: return@let timesToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val direction = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -504,7 +504,7 @@ object MonoArtForImageAction {
                         ?: return@let colorListToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     directionStr ->
@@ -521,7 +521,7 @@ object MonoArtForImageAction {
                         ?: return@let colorListToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
                     ColorTool.parseColorStr(
@@ -542,7 +542,7 @@ object MonoArtForImageAction {
                        ?: return@let minWidthRateToErr.first
                    return Pair(
                        null,
-                       ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                       ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                    ) to funcErr
                }.let {
                    minOpacityRateSrc ->
@@ -558,7 +558,7 @@ object MonoArtForImageAction {
                         ?: return@let maxOpacityRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         maxOpacityRateSrc ->
@@ -574,7 +574,7 @@ object MonoArtForImageAction {
                         ?: return@let minWidthShrinkRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         rate ->
@@ -590,7 +590,7 @@ object MonoArtForImageAction {
                         ?: return@let maxWidthShrinkRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         rate ->
@@ -612,7 +612,7 @@ object MonoArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minWidthShrinkRate(${spanMinHeightRate}) <= maxWidthShrinkRate(${spanMaxHeightRate}): ${spanWhere}"
                     )
@@ -626,7 +626,7 @@ object MonoArtForImageAction {
                         ?: return@let minHeightShrinkRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         rate ->
@@ -642,7 +642,7 @@ object MonoArtForImageAction {
                         ?: return@let maxHeightShrinkRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         rate ->
@@ -664,7 +664,7 @@ object MonoArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minHeightShrinkRate(${spanMinHeightRate}) <= maxHeightShrinkRate(${spanMaxHeightRate}): ${spanWhere}"
                     )
@@ -690,7 +690,7 @@ object MonoArtForImageAction {
                     ) return@let bitmapArtSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -727,7 +727,7 @@ object MonoArtForImageAction {
                         ?: return@let iconMacroStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -739,7 +739,7 @@ object MonoArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val borderRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -751,7 +751,7 @@ object MonoArtForImageAction {
                         ?: return@let borderRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val minWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -763,7 +763,7 @@ object MonoArtForImageAction {
                         ?: return@let widthRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val maxWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -775,7 +775,7 @@ object MonoArtForImageAction {
                         ?: return@let widthRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 if(minWidthRate > maxWidthRate) {
@@ -793,7 +793,7 @@ object MonoArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minWidthRate(${spanMinWidthRate}) <= maxWidthRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -807,7 +807,7 @@ object MonoArtForImageAction {
                         ?: return@let heightRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val maxHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -819,7 +819,7 @@ object MonoArtForImageAction {
                         ?: return@let heightRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 if(minHeightRate > maxHeightRate) {
@@ -837,7 +837,7 @@ object MonoArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minWidthRate(${spanMinHeightRate}) <= maxWidthRate(${spanMaxHeightRate}): ${spanWhere}"
                     )
@@ -858,7 +858,7 @@ object MonoArtForImageAction {
                     ) return@let bitmapArtSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -895,7 +895,7 @@ object MonoArtForImageAction {
                         ?: return@let iconMacroStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -907,7 +907,7 @@ object MonoArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val borderRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -919,7 +919,7 @@ object MonoArtForImageAction {
                         ?: return@let borderRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val minWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -931,7 +931,7 @@ object MonoArtForImageAction {
                         ?: return@let widthRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val maxWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -943,7 +943,7 @@ object MonoArtForImageAction {
                         ?: return@let widthRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 if(minWidthRate > maxWidthRate) {
@@ -961,7 +961,7 @@ object MonoArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minWidthRate(${spanMinWidthRate}) <= maxWidthRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -975,7 +975,7 @@ object MonoArtForImageAction {
                         ?: return@let heightRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val maxHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -987,7 +987,7 @@ object MonoArtForImageAction {
                         ?: return@let heightRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 if(minHeightRate > maxHeightRate) {
@@ -1005,7 +1005,7 @@ object MonoArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minWidthRate(${spanMinHeightRate}) <= maxWidthRate(${spanMaxHeightRate}): ${spanWhere}"
                     )
@@ -1026,7 +1026,7 @@ object MonoArtForImageAction {
                     ) return@let bitmapArtSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(

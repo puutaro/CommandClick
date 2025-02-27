@@ -79,7 +79,7 @@ object WallForImageAction {
                         ?: return@let macroStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
 //                val cmdClickBkImageFilePath = BkWallPath.get(
@@ -130,7 +130,7 @@ object WallForImageAction {
                         ?: return@let widthStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -142,7 +142,7 @@ object WallForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val xMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -154,7 +154,7 @@ object WallForImageAction {
                         ?: return@let xMultiToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val yMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -166,7 +166,7 @@ object WallForImageAction {
                         ?: return@let yMultiToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                    ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -178,7 +178,7 @@ object WallForImageAction {
                         ?: return@let pieceToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val pieceMapArray =
@@ -192,7 +192,7 @@ object WallForImageAction {
                         ?: return@let xDupToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val yDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -204,7 +204,7 @@ object WallForImageAction {
                         ?: return@let yDupToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val returnBitmap = BkWallPath.makeStorm(
@@ -223,7 +223,7 @@ object WallForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(

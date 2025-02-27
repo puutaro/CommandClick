@@ -70,7 +70,7 @@ object DebugForImageAction {
                         ?: return@let savePathToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 Pair(

@@ -76,7 +76,7 @@ object ImportDataForImageAction {
                         ?: return@let importPathToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val key = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -88,7 +88,7 @@ object ImportDataForImageAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val waitMill = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
@@ -100,7 +100,7 @@ object ImportDataForImageAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(it <= 0) return@let args.defaultWaitMill
@@ -164,7 +164,7 @@ object ImportDataForImageAction {
                         ?: return@let importPathToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val key = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -176,7 +176,7 @@ object ImportDataForImageAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
 //                FileSystems.writeFile(
@@ -203,7 +203,7 @@ object ImportDataForImageAction {
                         ?: return@let keyToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 Data.put(

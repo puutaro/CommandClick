@@ -75,7 +75,7 @@ object OverlayForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
@@ -88,7 +88,7 @@ object OverlayForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val returnBitmap = Overlay.byCenter(
@@ -102,7 +102,7 @@ object OverlayForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -139,7 +139,7 @@ object OverlayForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
@@ -152,7 +152,7 @@ object OverlayForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val offsetX = FuncCheckerForSetting.Getter.getFloatFromArgMapByIndex(
@@ -164,7 +164,7 @@ object OverlayForImageAction {
                         ?: return@let offsetXToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val offsetY = FuncCheckerForSetting.Getter.getFloatFromArgMapByIndex(
@@ -176,7 +176,7 @@ object OverlayForImageAction {
                         ?: return@let offsetYToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val returnBitmap = Overlay.byOffset(
@@ -192,7 +192,7 @@ object OverlayForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -229,7 +229,7 @@ object OverlayForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
@@ -242,7 +242,7 @@ object OverlayForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val returnBitmap = Overlay.byRnd(
@@ -256,7 +256,7 @@ object OverlayForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(

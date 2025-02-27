@@ -71,7 +71,7 @@ object FileSystemsForImageAction {
                         ?: return@let savePathToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
@@ -84,7 +84,7 @@ object FileSystemsForImageAction {
                         ?: return@let savePathToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 FileSystems.writeFromByteArray(
@@ -124,7 +124,7 @@ object FileSystemsForImageAction {
                         ?: return@let pathToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val returnBitmap =

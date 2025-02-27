@@ -272,9 +272,12 @@ object SettingActionData {
         fun setExitSignal(
             signal: SettingActionKeyManager.BreakSignal?
         ){
+            val notUpdateSignalSeq = sequenceOf(
+                null,
+                SettingActionKeyManager.BreakSignal.RETURN_SIGNAL,
+            )
             if(
-                signal == null
-                || signal == SettingActionKeyManager.BreakSignal.RETURN_SIGNAL
+                notUpdateSignalSeq.contains(signal)
                 ) return
             val curSignal = get()
             if(
@@ -312,7 +315,7 @@ object SettingActionData {
         }
 
         companion object {
-            fun isStopImageAc(
+            fun isStopAfter(
                 signal: SettingActionKeyManager.BreakSignal?
             ): Boolean {
                 val okSignalSeq = sequenceOf(
@@ -323,7 +326,6 @@ object SettingActionData {
                     okSignalSeq.contains(signal)
                 ) return false
                 val stopSignalSeq = sequenceOf(
-                    null,
                     SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     SettingActionKeyManager.BreakSignal.EXIT_WITH_IMAGE_SIGNAL,
                 )

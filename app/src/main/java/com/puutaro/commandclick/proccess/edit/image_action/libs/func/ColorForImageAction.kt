@@ -72,7 +72,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val toColorStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -84,7 +84,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         colorStr ->
@@ -106,7 +106,7 @@ object ColorForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -143,7 +143,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val saveColorStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -155,7 +155,7 @@ object ColorForImageAction {
                         ?: return@let colorToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         colorStr ->
@@ -175,7 +175,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         colorStr ->
@@ -198,7 +198,7 @@ object ColorForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -235,7 +235,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val toColorStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -247,7 +247,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         colorStr ->
@@ -267,7 +267,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         colorStr ->
@@ -290,7 +290,7 @@ object ColorForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -327,7 +327,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val toColorStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -339,7 +339,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         colorStr ->
@@ -361,7 +361,7 @@ object ColorForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -398,7 +398,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val returnBitmap = ColorManager.swapTransAndBlack(
@@ -411,7 +411,7 @@ object ColorForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -448,7 +448,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val color1Str = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -460,7 +460,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         colorStr ->
@@ -480,7 +480,7 @@ object ColorForImageAction {
                         ?: return@let colorToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         colorStr ->
@@ -503,7 +503,7 @@ object ColorForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -540,7 +540,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val colorStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
@@ -552,7 +552,7 @@ object ColorForImageAction {
                         ?: return@let colorToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         colorStr ->
@@ -574,7 +574,7 @@ object ColorForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -611,7 +611,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
 
@@ -625,7 +625,7 @@ object ColorForImageAction {
                     ) return@let grayBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -662,7 +662,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
 
@@ -676,7 +676,7 @@ object ColorForImageAction {
                     ) return@let grayBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -713,7 +713,7 @@ object ColorForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
 
@@ -727,7 +727,7 @@ object ColorForImageAction {
                     ) return@let grayBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(

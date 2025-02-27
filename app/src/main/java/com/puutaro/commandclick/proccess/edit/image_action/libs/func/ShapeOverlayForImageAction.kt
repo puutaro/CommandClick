@@ -72,7 +72,7 @@ object ShapeOverlayForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     shapeStr ->
@@ -89,7 +89,7 @@ object ShapeOverlayForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -101,7 +101,7 @@ object ShapeOverlayForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val returnBitmap = AssetsFileManager.assetsByteArray(

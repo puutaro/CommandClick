@@ -71,7 +71,7 @@ object DelayForImageAction {
                         ?: return@let millSecToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val bitmap = varNameToBitmapMap?.get(ImageActionKeyManager.BitmapVar.itPronoun)

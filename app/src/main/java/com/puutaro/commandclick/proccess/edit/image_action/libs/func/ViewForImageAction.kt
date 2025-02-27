@@ -85,7 +85,7 @@ object ViewForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val fadeInMill = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -97,7 +97,7 @@ object ViewForImageAction {
                         ?: return@let fadeInMillToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 withContext(Dispatchers.Main) {
@@ -144,7 +144,7 @@ object ViewForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val fadeInMill = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -156,7 +156,7 @@ object ViewForImageAction {
                         ?: return@let fadeInMillToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val radius = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -168,7 +168,7 @@ object ViewForImageAction {
                         ?: return@let radiusToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val sampling = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -180,7 +180,7 @@ object ViewForImageAction {
                         ?: return@let samplingToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 withContext(Dispatchers.Main){
@@ -228,7 +228,7 @@ object ViewForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val delay = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -240,7 +240,7 @@ object ViewForImageAction {
                         ?: return@let delayToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 ImageSetter.byMulti(
@@ -254,7 +254,7 @@ object ViewForImageAction {
                     funcErr ->
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
                 val returnBitmap =

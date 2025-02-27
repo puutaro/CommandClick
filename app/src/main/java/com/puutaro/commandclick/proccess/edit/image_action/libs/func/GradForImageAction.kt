@@ -72,7 +72,7 @@ object GradForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -84,7 +84,7 @@ object GradForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -96,7 +96,7 @@ object GradForImageAction {
                         ?: return@let colorStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val orientation = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -108,7 +108,7 @@ object GradForImageAction {
                         ?: return@let orientationToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     orientationStr ->
@@ -131,7 +131,7 @@ object GradForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(

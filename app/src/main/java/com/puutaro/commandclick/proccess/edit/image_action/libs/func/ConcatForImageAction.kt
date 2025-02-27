@@ -71,7 +71,7 @@ object ConcatForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val rightBitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
@@ -84,7 +84,7 @@ object ConcatForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val dupInt = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
@@ -96,7 +96,7 @@ object ConcatForImageAction {
                         ?: return@let dupToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     dupInt ->
@@ -115,7 +115,7 @@ object ConcatForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(

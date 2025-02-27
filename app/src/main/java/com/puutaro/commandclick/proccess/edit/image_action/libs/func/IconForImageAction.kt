@@ -80,7 +80,7 @@ object IconForImageAction {
                         ?: return@let iconMacroStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -92,7 +92,7 @@ object IconForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -104,7 +104,7 @@ object IconForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val bitmap = CmdClickIcons.entries.firstOrNull {
@@ -182,7 +182,7 @@ object IconForImageAction {
                         ?: return@let iconMacroStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val bitmap = CmdClickIcons.entries.firstOrNull {

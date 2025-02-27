@@ -79,7 +79,7 @@ object BitmapArtForImageAction {
                         ?: return@let bitmapStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -91,7 +91,7 @@ object BitmapArtForImageAction {
                         ?: return@let widthStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -103,7 +103,7 @@ object BitmapArtForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val xMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -115,7 +115,7 @@ object BitmapArtForImageAction {
                         ?: return@let xMultiToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val yMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -127,7 +127,7 @@ object BitmapArtForImageAction {
                         ?: return@let yMultiToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -139,7 +139,7 @@ object BitmapArtForImageAction {
                         ?: return@let pieceToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val pieceMap =
@@ -153,7 +153,7 @@ object BitmapArtForImageAction {
                         ?: return@let xDupToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val yDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -165,7 +165,7 @@ object BitmapArtForImageAction {
                         ?: return@let yDupToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val returnBitmap = InnerBitmapArt.matrixStorm(
@@ -185,7 +185,7 @@ object BitmapArtForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -222,7 +222,7 @@ object BitmapArtForImageAction {
                         ?: return@let bitmapStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val rate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -234,7 +234,7 @@ object BitmapArtForImageAction {
                         ?: return@let rateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }.let {
                     if(
@@ -252,7 +252,7 @@ object BitmapArtForImageAction {
                         ?: return@let timesToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
                 val minOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -264,7 +264,7 @@ object BitmapArtForImageAction {
                         ?: return@let minOpacityRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }.let {
                     if(
@@ -282,7 +282,7 @@ object BitmapArtForImageAction {
                         ?: return@let maxOpacityRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }.let {
                     if(
@@ -306,7 +306,7 @@ object BitmapArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minOpacityRate(${spanMinWidthRate}) <= maxOpacityRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -320,7 +320,7 @@ object BitmapArtForImageAction {
                         ?: return@let maxOpacityRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
                 val opacityOffset = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -332,7 +332,7 @@ object BitmapArtForImageAction {
                         ?: return@let opacityOffsetRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
                 val colorList = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -344,7 +344,7 @@ object BitmapArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
                     ColorTool.parseColorStr(
@@ -365,7 +365,7 @@ object BitmapArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
                     ColorTool.parseColorStr(
@@ -386,7 +386,7 @@ object BitmapArtForImageAction {
                         ?: return@let maxOpacityRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }.let {
                     if(
@@ -404,7 +404,7 @@ object BitmapArtForImageAction {
                         ?: return@let isOverlayToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
                 val returnBitmap = InnerBitmapArt.rectPuzzle(
@@ -427,7 +427,7 @@ object BitmapArtForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(

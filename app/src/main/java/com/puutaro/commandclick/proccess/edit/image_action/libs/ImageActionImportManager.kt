@@ -2,8 +2,6 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
@@ -112,7 +110,7 @@ object ImageActionImportManager {
             keyToSubKeyCon?.second ?: String()
         ).joinToString("=")
         val varNameToBitmapMap =
-            ImageActionKeyManager.makeValueToBitmapMap(
+            ImageActionMapTool.makeValueToBitmapMap(
                 curMapLoopKey,
                 topVarNameToVarNameBitmapMap,
                 importedVarNameToBitmapMap,
@@ -251,7 +249,9 @@ object ImageActionImportManager {
             if(
                 !isMultipleSpecifyErr
             ) return@let
-            imageActionExitManager.setExit()
+            imageActionExitManager.setExitSignal(
+               ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+            )
             return blankReturnValue
         }
         val ifProcName = QuoteTool.trimBothEdgeQuote(
@@ -290,7 +290,9 @@ object ImageActionImportManager {
                 errType.errMessage,
                 keyToSubKeyConWhere
             )
-            imageActionExitManager.setExit()
+            imageActionExitManager.setExitSignal(
+                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+            )
             return blankReturnValue
         }
         val isImport = isImportToErrType.first ?: false

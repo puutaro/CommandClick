@@ -2,11 +2,8 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
-import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.IfErrManager
-import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionErrLogger
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.util.map.CmdClickMap
 import kotlinx.coroutines.runBlocking
@@ -57,8 +54,10 @@ class ImageReturnExecutor {
             if(
                 !isMultipleSpecifyErr
             ) return@let
-            imageActionExitManager.setExit()
-            return null to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+            imageActionExitManager.setExitSignal(
+                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+            )
+            return null to ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
         }
         val ifMap =
             ifMapList
@@ -97,8 +96,10 @@ class ImageReturnExecutor {
                 )
             }
 //                        isNext = false
-            imageActionExitManager.setExit()
-            return null to ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+            imageActionExitManager.setExitSignal(
+                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+            )
+            return null to ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
         }
         IfErrManager.makeIfProcNameNotExistInRuntime(
             iIfKey,
@@ -116,7 +117,9 @@ class ImageReturnExecutor {
                     keyToSubKeyConWhere
                 )
             }
-            imageActionExitManager.setExit()
+            imageActionExitManager.setExitSignal(
+                ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+            )
             return Pair(
                 null,
                 null

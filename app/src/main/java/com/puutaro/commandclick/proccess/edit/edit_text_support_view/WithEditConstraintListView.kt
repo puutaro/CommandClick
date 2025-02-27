@@ -28,6 +28,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndV
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
+import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionData
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ImportDataForImageAction
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
@@ -187,7 +188,7 @@ object WithEditConstraintListView{
             globalVarNameToValueMapToSignal.first
         val settingAcSignal = globalVarNameToValueMapToSignal.second
         if(
-            SettingActionData.SettingActionExitManager.isStopImageAc(settingAcSignal)
+            SettingActionData.SettingActionExitManager.isStopAfter(settingAcSignal)
         ) return
         withContext(Dispatchers.IO) {
             SettingActionManager.init()
@@ -205,7 +206,7 @@ object WithEditConstraintListView{
                 UsePath.cmdclickDefaultIDebugAppDirPath
             )
         }
-        val globalVarNameToBitmapMap =
+        val globalVarNameToBitmapMapToSignal =
             ImageActionForConfigCon.getImageConfigCon(
                 editListConfigMapSrc,
             )?.let {
@@ -214,9 +215,6 @@ object WithEditConstraintListView{
                     globalVarNameToValueMap
                 )
             }.let {
-                if(
-                    SettingActionData.SettingActionExitManager.isStopImageAc(settingAcSignal)
-                ) return@let emptyMap()
                 val imageActionManager = ImageActionManager()
                 runBlocking {
                     val keyToSubKeyConWhere =
@@ -244,6 +242,13 @@ object WithEditConstraintListView{
             ImportDataForImageAction.clearImportData()
             ImageActionManager.init()
         }
+        val globalVarNameToBitmapMap =
+            globalVarNameToBitmapMapToSignal.first
+        val imageAcSignal =
+            globalVarNameToBitmapMapToSignal.second
+        if(
+            ImageActionData.ImageActionExitManager.isStopAfter(imageAcSignal)
+        ) return
 //        return
 //        val imageAcTestDirPath = File(UsePath.cmdclickDefaultAppDirPath, "imageAc").absolutePath
 //        FileSystems.removeAndCreateDir(
@@ -922,6 +927,9 @@ object WithEditConstraintListView{
         val frameVarNameValueMap =
             frameVarNameValueMapToSignal?.first ?: emptyMap()
         val frameSettingAcSignal = frameVarNameValueMapToSignal?.second
+        if(
+            SettingActionData.SettingActionExitManager.isStopAfter(frameSettingAcSignal)
+        ) return
         dateList.add("make tagIdMap" to LocalDateTime.now())
         val tagIdMapSrc = withContext(Dispatchers.IO){
             tagToIdListSrc?.map {
@@ -933,10 +941,7 @@ object WithEditConstraintListView{
             }?.toMap() ?: emptyMap()
         }
         dateList.add("make varNameToBitmap" to LocalDateTime.now())
-        val varNameToBitmapMapInFrame = withContext(Dispatchers.IO) {
-            if(
-                SettingActionData.SettingActionExitManager.isStopImageAc(frameSettingAcSignal)
-            ) return@withContext null
+        val varNameToBitmapMapInFrameToSignal = withContext(Dispatchers.IO) {
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lglobal_frame.txt").absolutePath,
 //                listOf(
@@ -959,6 +964,11 @@ object WithEditConstraintListView{
                 totalMapListElInfo,
             )
         }
+        val varNameToBitmapMapInFrame = varNameToBitmapMapInFrameToSignal.first
+        val imageAcSignal = varNameToBitmapMapInFrameToSignal.second
+        if(
+            ImageActionData.ImageActionExitManager.isStopAfter(imageAcSignal)
+        ) return
         dateList.add("make imagevitmap end" to LocalDateTime.now())
         if(
             sceneType == SceneType.BK

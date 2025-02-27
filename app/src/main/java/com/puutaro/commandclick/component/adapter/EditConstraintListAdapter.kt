@@ -32,6 +32,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
+import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionData
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
@@ -556,6 +557,9 @@ class EditConstraintListAdapter(
                 frameKeyPairsConToVarNameValueMapToSignal.second
             val frameVarNameValueMap = frameKeyVarNameValueMapToSignal.first
             val frameSettingAcSignal = frameKeyVarNameValueMapToSignal.second
+            if(
+                SettingActionData.SettingActionExitManager.isStopAfter(frameSettingAcSignal)
+            ) return@launch
             val tagIdMap = withContext(Dispatchers.IO){
                 tagToIdListSrc?.map {
                     val key = CmdClickMap.replace(
@@ -573,10 +577,7 @@ class EditConstraintListAdapter(
 //                } as? AppCompatImageView
             }
             dateList.add("frameImageActionStart" to LocalDateTime.now())
-            val varNameToBitmapMapInFrame = withContext(Dispatchers.IO){
-                if(
-                    SettingActionData.SettingActionExitManager.isStopImageAc(frameSettingAcSignal)
-                ) return@withContext emptyMap()
+            val varNameToBitmapMapInFrameToSignal = withContext(Dispatchers.IO){
                 ImageActionManager().exec(
                     context,
                     fannelInfoMap,
@@ -596,6 +597,11 @@ class EditConstraintListAdapter(
                     null,
                 )
             }
+            val varNameToBitmapMapInFrame = varNameToBitmapMapInFrameToSignal.first
+            val frameImageAcSignal = varNameToBitmapMapInFrameToSignal.second
+            if(
+                ImageActionData.ImageActionExitManager.isStopAfter(frameImageAcSignal)
+            ) return@launch
 //            FileSystems.updateFile(
 //                File(
 //                    UsePath.cmdclickDefaultAppDirPath,
@@ -1054,7 +1060,7 @@ class EditConstraintListAdapter(
 //                                    val varNameToBitmapMapInContents =
             withContext(Dispatchers.IO){
                 if(
-                    SettingActionData.SettingActionExitManager.isStopImageAc(contentsSettingAcSignal)
+                    SettingActionData.SettingActionExitManager.isStopAfter(contentsSettingAcSignal)
                 ) return@withContext
                 val topLevelVarNameToBitmapMap =
                     globalVarNameToBitmapMap + varNameToBitmapMapInFrame

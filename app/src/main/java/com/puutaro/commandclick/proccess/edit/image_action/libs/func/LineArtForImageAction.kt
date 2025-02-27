@@ -84,7 +84,7 @@ object LineArtForImageAction {
                         ?: return@let bitmapToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
                 val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -96,7 +96,7 @@ object LineArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     widthSrc ->
@@ -112,7 +112,7 @@ object LineArtForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         heightSrc ->
@@ -128,7 +128,7 @@ object LineArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val colorList = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -140,7 +140,7 @@ object LineArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
                     ColorTool.parseColorStr(
@@ -161,7 +161,7 @@ object LineArtForImageAction {
                         ?: return@let rateToErr.first
                     return  Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -179,7 +179,7 @@ object LineArtForImageAction {
                         ?: return@let rateToErr.first
                     return  Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -203,7 +203,7 @@ object LineArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minOpacityRate(${spanMinWidthRate}) <= maxOpacityRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -217,7 +217,7 @@ object LineArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val minStrokeWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -229,7 +229,7 @@ object LineArtForImageAction {
                         ?: return@let rateToErr.first
                     return  Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -247,7 +247,7 @@ object LineArtForImageAction {
                         ?: return@let rateToErr.first
                     return  Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -265,7 +265,7 @@ object LineArtForImageAction {
                         ?: return@let angleToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val minAngleShrinkRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -277,7 +277,7 @@ object LineArtForImageAction {
                         ?: return@let angleToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -295,7 +295,7 @@ object LineArtForImageAction {
                         ?: return@let angleToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -319,7 +319,7 @@ object LineArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minAngleShrinkRate(${spanMinWidthRate}) <= maxAngleShrinkRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -334,7 +334,7 @@ object LineArtForImageAction {
                         ?: return@let lengthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val minLengthShrinkRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -346,7 +346,7 @@ object LineArtForImageAction {
                         ?: return@let lengthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -364,7 +364,7 @@ object LineArtForImageAction {
                         ?: return@let rateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -388,7 +388,7 @@ object LineArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minLengthShrinkRate(${spanMinWidthRate}) <= maxLengthShrinkRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -418,7 +418,7 @@ object LineArtForImageAction {
                     ) return@let bitmapArtSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -455,7 +455,7 @@ object LineArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -467,7 +467,7 @@ object LineArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val pathDataStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -479,7 +479,7 @@ object LineArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -491,7 +491,7 @@ object LineArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val colorList = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -503,7 +503,7 @@ object LineArtForImageAction {
                         ?: return@let widthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
                     ColorTool.parseColorStr(
@@ -524,7 +524,7 @@ object LineArtForImageAction {
                         ?: return@let opacityToErr.first
                     return  Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(it <= 1f) return@let it
@@ -539,7 +539,7 @@ object LineArtForImageAction {
                         ?: return@let rateToErr.first
                     return  Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(it <= 1f) return@let it
@@ -554,7 +554,7 @@ object LineArtForImageAction {
                         ?: return@let rateToErr.first
                     return  Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(it <= 1f) return@let it
@@ -575,7 +575,7 @@ object LineArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minOpacityRate(${spanMinWidthRate}) <= maxOpacityRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -589,7 +589,7 @@ object LineArtForImageAction {
                         ?: return@let angleToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val marginRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -601,7 +601,7 @@ object LineArtForImageAction {
                         ?: return@let marginRateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -618,7 +618,7 @@ object LineArtForImageAction {
                         ?: return@let angleToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -636,7 +636,7 @@ object LineArtForImageAction {
                         ?: return@let angleToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -660,7 +660,7 @@ object LineArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minAngleShrinkRate(${spanMinWidthRate}) <= maxAngleShrinkRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -675,7 +675,7 @@ object LineArtForImageAction {
                         ?: return@let lengthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val minLengthShrinkRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -687,7 +687,7 @@ object LineArtForImageAction {
                         ?: return@let lengthToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -705,7 +705,7 @@ object LineArtForImageAction {
                         ?: return@let rateToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     if(
@@ -729,7 +729,7 @@ object LineArtForImageAction {
                     )
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to FuncCheckerForSetting.FuncCheckErr(
                         "Must be minLengthShrinkRate(${spanMinWidthRate}) <= maxLengthShrinkRate(${spanMaxWidthRate}): ${spanWhere}"
                     )
@@ -759,7 +759,7 @@ object LineArtForImageAction {
                     ) return@let bitmapArtSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(

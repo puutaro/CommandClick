@@ -88,7 +88,7 @@ object ArbForImageAction {
                         ?: return@let widthStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -100,7 +100,7 @@ object ArbForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val xMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -112,7 +112,7 @@ object ArbForImageAction {
                         ?: return@let xMultiToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val yMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -124,7 +124,7 @@ object ArbForImageAction {
                         ?: return@let yMultiToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -136,7 +136,7 @@ object ArbForImageAction {
                         ?: return@let pieceToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val pieceMapArray =
@@ -201,7 +201,7 @@ object ArbForImageAction {
                         ?: return@let xDupToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val yDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -213,7 +213,7 @@ object ArbForImageAction {
                         ?: return@let yDupToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
 //                val pieceRotate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
@@ -249,7 +249,7 @@ object ArbForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -285,7 +285,7 @@ object ArbForImageAction {
                         ?: return@let widthStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -297,7 +297,7 @@ object ArbForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -309,7 +309,7 @@ object ArbForImageAction {
                         ?: return@let pieceToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val pieceMapArray =
@@ -336,7 +336,7 @@ object ArbForImageAction {
                         ?: return@let startAngleToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val endAngle = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -348,7 +348,7 @@ object ArbForImageAction {
                         ?: return@let endAngleToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -360,7 +360,7 @@ object ArbForImageAction {
                         ?: return@let timesToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
 //                val shapeStr = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -423,7 +423,7 @@ object ArbForImageAction {
                         ?: return@let colorStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                         colorStr ->
@@ -446,7 +446,7 @@ object ArbForImageAction {
                         ?: return@let layoutStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     layoutStr ->
@@ -478,7 +478,7 @@ object ArbForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
@@ -514,7 +514,7 @@ object ArbForImageAction {
                         ?: return@let widthStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -526,7 +526,7 @@ object ArbForImageAction {
                         ?: return@let heightToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
 //                val pieceWidthFloat = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -562,7 +562,7 @@ object ArbForImageAction {
                         ?: return@let startAngleToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val endAngle = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -574,7 +574,7 @@ object ArbForImageAction {
                         ?: return@let endAngleToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
@@ -586,7 +586,7 @@ object ArbForImageAction {
                         ?: return@let timesToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
 //                val string = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
@@ -678,7 +678,7 @@ object ArbForImageAction {
                         ?: return@let colorStrToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     colorStr ->
@@ -747,7 +747,7 @@ object ArbForImageAction {
                         ?: return@let layoutToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
                     layoutStr ->
@@ -764,7 +764,7 @@ object ArbForImageAction {
                         ?: return@let pieceToErr.first
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
                 val pieceStrMapArray =
@@ -798,7 +798,7 @@ object ArbForImageAction {
                     ) return@let returnBitmapSrc
                     return Pair(
                         null,
-                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to err
                 }
                 Pair(
