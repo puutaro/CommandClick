@@ -24,39 +24,12 @@ object VarMarkTool {
         }
     }
 
-    fun replaceByValue3(
-        input: String,
-        varName: String,
-        varValue: String,
-    ): String {
-        val target = "${'$'}${varName}"
-        var result = ""
-        var index = 0
-
-        while (true) {
-            val targetIndex = input.indexOf(target, index)
-            if (targetIndex == -1) {
-                result += input.substring(index)
-                break
-            }
-
-            if (targetIndex == 0 || input[targetIndex - 1] != '\\') {
-                result += input.substring(index, targetIndex) + varValue
-                index = targetIndex + target.length
-            } else {
-                result += input.substring(index, targetIndex + target.length)
-                index = targetIndex + target.length
-            }
-        }
-        return result
-    }
-
     fun replaceByValue(
         input: String,
         varName: String,
         varValue: String,
     ): String {
-        val target = "${'$'}${varName}"
+        val target = "${'$'}{${varName}}"
         val result = StringBuilder()
         var index = 0
 
@@ -200,5 +173,69 @@ object VarMarkTool {
 
     private fun Char.isUpperAlphanumeric(): Boolean {
         return this in 'A'..'Z' || this in '0'..'9'
+    }
+
+    fun matchStringVarName(input: String): Boolean {
+        if (
+            input.isEmpty()
+            || !input.startsWith("\${")
+        ) return false
+
+        var index = 2 // "${" の次の文字からチェックを開始
+
+        // 英数字またはアンダースコアのチェック
+        while (index < input.length - 1) {
+            val char = input[index]
+            if (!char.isAlphanumeric() && char != '_') {
+                return false
+            }
+            index++
+        }
+
+        // 最後の文字が `}` であるかどうかをチェック
+        return index > 2 && index == input.length - 1 && input[index] == '}'
+    }
+
+    fun matchStringVarBodyAlphaNum(input: String): Boolean {
+        if (input.isEmpty()) return false
+
+        for (char in input) {
+            if (!char.isAlphanumeric() && char != '_') {
+                return false
+            }
+        }
+        return true
+    }
+
+    fun findAllVarMark(input: String): Sequence<String> {
+        var result = sequenceOf<String>()
+        var index = 0
+
+        while (index < input.length) {
+            if (input[index] == '$' && index + 1 < input.length && input[index + 1] == '{') {
+                // バックスラッシュのチェック
+                if (index > 0 && input[index - 1] == '\\') {
+                    index += 2
+                    continue
+                }
+
+                var endIndex = index + 2
+                while (
+                    endIndex < input.length
+                    && (input[endIndex].isAlphanumeric()
+                            || input[endIndex] == '_')
+                ) {
+                    endIndex++
+                }
+
+                if (endIndex < input.length && input[endIndex] == '}') {
+                    result += sequenceOf(input.substring(index, endIndex + 1))
+                    index = endIndex + 1
+                    continue
+                }
+            }
+            index++
+        }
+        return result
     }
 }

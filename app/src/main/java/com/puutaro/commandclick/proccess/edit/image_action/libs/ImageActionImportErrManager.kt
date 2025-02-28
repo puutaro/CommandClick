@@ -243,9 +243,10 @@ object ImageActionImportErrManager {
         ) return false
         val iIfKey =
             ImageActionKeyManager.ImageSubKey.I_IF.key
-        val iIfKeyRegex = Regex(
-            "[?]${iIfKey}="
-        )
+//        val iIfKeyRegex = Regex(
+//            "[?]${iIfKey}="
+//        )
+        val iIfKeyWithHatena = "?${iIfKey}="
         val lastSubKeyCon = keyToSubKeyConList.lastOrNull {
             it.first.isNotEmpty()
         }?.second
@@ -262,20 +263,21 @@ object ImageActionImportErrManager {
         ) || varName.startsWith(
             asyncPrefix
         )
-        val containIIfKey = iIfKeyRegex.containsMatchIn(lastSubKeyCon)
-        FileSystems.updateFile(
-            File(UsePath.cmdclickDefaultIDebugAppDirPath, "isGlobalVarNameNotLastErrWithoutRunPrefix.txt").absolutePath,
-            listOf(
-                "lastSettingKeyToVarName: ${lastSettingKeyToVarName}",
-                "isImageReturnKey: ${isImageReturnKey}",
-                "varName: ${varName}",
-                "isIrregularVarName: ${isIrregularVarName}",
-                "iIfKeyRegex: ${iIfKeyRegex}",
-                "keyToSubKeyConList: ${keyToSubKeyConList}",
-                "lastSubKeyCon: ${lastSubKeyCon}",
-                "containIIfKey: ${containIIfKey}",
-            ).joinToString("\n\n")
-        )
+        val containIIfKey = lastSubKeyCon.contains(iIfKeyWithHatena)
+            //iIfKeyRegex.containsMatchIn(lastSubKeyCon)
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultIDebugAppDirPath, "isGlobalVarNameNotLastErrWithoutRunPrefix.txt").absolutePath,
+//            listOf(
+//                "lastSettingKeyToVarName: ${lastSettingKeyToVarName}",
+//                "isImageReturnKey: ${isImageReturnKey}",
+//                "varName: ${varName}",
+//                "isIrregularVarName: ${isIrregularVarName}",
+//                "iIfKeyRegex: ${iIfKeyRegex}",
+//                "keyToSubKeyConList: ${keyToSubKeyConList}",
+//                "lastSubKeyCon: ${lastSubKeyCon}",
+//                "containIIfKey: ${containIIfKey}",
+//            ).joinToString("\n\n")
+//        )
         if (
             isImageReturnKey
             && !isIrregularVarName

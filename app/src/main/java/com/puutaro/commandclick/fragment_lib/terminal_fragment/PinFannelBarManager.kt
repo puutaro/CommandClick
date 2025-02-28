@@ -12,14 +12,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.PinFannelAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelInfo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.EditExecuteOrElse
 import com.puutaro.commandclick.proccess.pin.PinFannelManager
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FactFannel
+import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.list.ListTool
@@ -148,6 +153,44 @@ object PinFannelBarManager {
                         File(cmdclickDefaultAppDirPath, fannelName).absolutePath
                     )
                 }
+                //TODO delete
+                val editListConfigPath = let {
+                    val useFannelPath = File(
+                        UsePath.cmdclickDefaultAppDirPath,
+                        fannelName
+                    ).absolutePath
+                    val settingVariableListBeforeReplace =
+                        CommandClickVariables.extractValListFromHolder(
+                            ReadText(useFannelPath).textToList(),
+                            CommandClickScriptVariable.SETTING_SEC_START,
+                            CommandClickScriptVariable.SETTING_SEC_END
+                        )
+                    val setReplaceVariableMap =
+                        SetReplaceVariabler.makeSetReplaceVariableMap(
+                            terminalFragment.context,
+                            settingVariableListBeforeReplace,
+                            fannelName
+                        )
+                    val settingVariableList =
+                        settingVariableListBeforeReplace
+                            ?.joinToString("\n")
+                            ?.let {
+                                SetReplaceVariabler.execReplaceByReplaceVariables(
+                                    it,
+                                    setReplaceVariableMap,
+                                    fannelName,
+                                )
+                            }?.split("\n")
+                    val editListConfigPathSrc = SettingVariableReader.getStrValue(
+                        settingVariableList,
+                        CommandClickScriptVariable.EDIT_LIST_CONFIG,
+                        String()
+                    )
+                    when (editListConfigPathSrc.startsWith(EditSettings.filePrefix)) {
+                        false -> null
+                        else -> editListConfigPathSrc.removePrefix(EditSettings.filePrefix)
+                    } ?: return
+                }
                 terminalFragment.editListDialogForOrdinaryRevolver?.show(
                     FannelInfoTool.makeFannelInfoMapByString(
                         fannelName,
@@ -155,11 +198,12 @@ object PinFannelBarManager {
                     ).map {
                         "${it.key}=${it.value}"
                     }.joinToString(JsFannelInfo.fannelInfoMapSeparator.toString()),
-                    "/storage/emulated/0/Documents/cmdclick/AppDir/default/textToSpeech2Dir/settings/editListConfig.js"
+                    editListConfigPath
 //                    imageAcTestDir
 //                    textToSpeech2Dir
 //                    settingAcTestDir
                 )
+                //TODO ^^delete
                 return
                 EditExecuteOrElse.handle(
                     terminalFragment,

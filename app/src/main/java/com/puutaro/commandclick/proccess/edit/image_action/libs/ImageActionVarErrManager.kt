@@ -5,7 +5,9 @@ import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.ImageVarMarkTool
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.SpeedReplacer
 import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.runBlocking
 
@@ -70,7 +72,7 @@ object ImageActionVarErrManager {
         settingKeyToVarNameListSrc: List<Pair<String, String>>,
         keyToSubKeyConWhere: String,
     ): Boolean {
-        val varMarkRegex = Regex("^[a-zA-Z0-9_]+$")
+//        val varMarkRegex = Regex("^[a-zA-Z0-9_]+$")
         val settingKeyToVarNameList = settingKeyToVarNameListSrc.filter {
                 settingKeyToVarName ->
             settingKeyToVarName.first !=
@@ -80,7 +82,8 @@ object ImageActionVarErrManager {
                 settingKeyToVarName ->
             val varMarkEntry = settingKeyToVarName.second
             if(
-                varMarkRegex.matches(varMarkEntry)
+                VarMarkTool.matchStringVarBodyAlphaNum(varMarkEntry)
+//                varMarkRegex.matches(varMarkEntry)
             ) return@forEach
             val settingKey = settingKeyToVarName.first
             val spanSettingKey =
@@ -532,8 +535,10 @@ object ImageActionVarErrManager {
         val imageVarMainKey = ImageActionKeyManager.ImageActionsKey.IMAGE_VAR.key
         val funcKey = ImageActionKeyManager.ImageSubKey.FUNC.key
         val onReturnKey = ImageActionKeyManager.ImageSubKey.ON_RETURN.key
-        val funcKeyRegex = Regex("\\?${funcKey}=")
-        val returnKeyRegex = Regex("\\?${onReturnKey}=")
+//        val funcKeyRegex = Regex("\\?${funcKey}=")
+        val funcKeyWithHatena = "?${funcKey}="
+//        val returnKeyRegex = Regex("\\?${onReturnKey}=")
+        val returnKeyWithHatena = "?${onReturnKey}="
         keyToSubKeyConList.forEach {
                 settingKeyToSubKeyCon ->
             val settingKeyName = settingKeyToSubKeyCon.first
@@ -541,8 +546,11 @@ object ImageActionVarErrManager {
                 settingKeyName != imageVarMainKey
             ) return@forEach
             val subKeyCon = settingKeyToSubKeyCon.second
-            val isContainFuncOrReturn = funcKeyRegex.containsMatchIn(subKeyCon)
-                    || returnKeyRegex.containsMatchIn(subKeyCon)
+            val isContainFuncOrReturn =
+                subKeyCon.contains(funcKeyWithHatena)
+                        || subKeyCon.contains(returnKeyWithHatena)
+//                funcKeyRegex.containsMatchIn(subKeyCon)
+//                    || returnKeyRegex.containsMatchIn(subKeyCon)
             if(isContainFuncOrReturn) return@forEach
             val spanSettingKeyName =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(
@@ -750,7 +758,7 @@ object ImageActionVarErrManager {
         bitmapVarKeyList: List<String>?,
         keyToSubKeyConWhere: String,
     ): Boolean {
-        val regexStrTemplate = "(#[{]%s[}])"
+//        val regexStrTemplate = "(#[{]%s[}])"
         val bitmapKeyList = let {
             val bitmapKeyListInCode = settingKeyToNoRunVarNameList.filter {
                     settingKeyToNoRunVarName ->
@@ -766,27 +774,40 @@ object ImageActionVarErrManager {
                     plusBitmapKeyList +
                     listOf(ImageActionKeyManager.BitmapVar.itPronoun)
         }
-        val settingKeyListConRegex = let {
-            bitmapKeyList.map {
-                regexStrTemplate.format(it)
-            }.joinToString("|")
-        }.toRegex()
+//        val settingKeyListConRegex = let {
+//            bitmapKeyList.map {
+//                regexStrTemplate.format(it)
+//            }.joinToString("|")
+//        }.toRegex()
         val keyToSubKeyListCon = makeKeyToSubKeyListCon(
             keyToSubKeyConList,
         )
-        val keyToSubKeyListConWithRemoveVar = keyToSubKeyListCon.replace(
-            settingKeyListConRegex,
-            String()
+        val stringKeyToValueSeq = bitmapKeyList.asSequence().map {
+                bitmapKey ->
+            "#{${bitmapKey}}" to String()
+        }
+        val keyToSubKeyListConWithRemoveVar = SpeedReplacer.replace(
+            keyToSubKeyListCon,
+            stringKeyToValueSeq
         )
-        val findVarMarkRegex = Regex("(?<!\\\\)#[{][a-zA-Z0-9_]+[}]")
+//        val keyToSubKeyListConWithRemoveVar = keyToSubKeyListCon.replace(
+//            settingKeyListConRegex,
+//            String()
+//        )
         val leaveVarMark =
-            findVarMarkRegex.find(keyToSubKeyListConWithRemoveVar)
-                ?.value
-                ?: return false
+            ImageVarMarkTool.findAllVarMark(keyToSubKeyListConWithRemoveVar)
+        if(
+            !leaveVarMark.any()
+        ) return false
+//        val findVarMarkRegex = Regex("(?<!\\\\)#[{][a-zA-Z0-9_]+[}]")
+//        val leaveVarMark =
+//            findVarMarkRegex.find(keyToSubKeyListConWithRemoveVar)
+//                ?.value
+//                ?: return false
         val spanLeaveVarMark =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
                 CheckTool.errRedCode,
-                leaveVarMark
+                leaveVarMark.first()
             )
         runBlocking {
             ImageActionErrLogger.sendErrLog(

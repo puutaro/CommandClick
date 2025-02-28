@@ -1226,6 +1226,7 @@ class SettingActionManager {
 //                                        loopKeyToAsyncDeferredVarNameValueStrMap,
                                     )
                                 }
+                                null -> {}
                                 else -> {
                                     settingActionExitManager.setExitSignal(breakSignalClass)
                                     return Pair(
@@ -1436,7 +1437,7 @@ class SettingActionManager {
                                     BackslashTool.toNormal(it)
                                 } ?: return@let null
                                 if(
-                                    !SettingActionKeyManager.ValueStrVar.matchStringVarName(rawValue)
+                                    !VarMarkTool.matchStringVarName(rawValue)
                                 ) return@let rawValue
                                 val curIVarKey =
                                     mainSubKeyMap.get(mainSubKey)?.let {
@@ -1585,7 +1586,7 @@ class SettingActionManager {
                                     BackslashTool.toNormal(it)
                                 } ?: return@let null
                                 if(
-                                    !SettingActionKeyManager.ValueStrVar.matchStringVarName(rawValue)
+                                    !VarMarkTool.matchStringVarName(rawValue)
                                 ) return@let rawValue
                                 val curIVarKey =
                                     mainSubKeyMap.get(mainSubKey)?.let {

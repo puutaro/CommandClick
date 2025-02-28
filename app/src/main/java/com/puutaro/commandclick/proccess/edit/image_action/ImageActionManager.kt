@@ -1211,6 +1211,7 @@ class ImageActionManager {
                                         privateLoopKeyVarNameBitmapMap,
                                     )
                                 }
+                                null -> {}
                                 else -> {
                                     imageActionExitManager.setExitSignal(breakSignalClass)
                                     return Pair(

@@ -239,9 +239,10 @@ object ImportErrManager {
         ) return false
         val sIfKey =
             SettingActionKeyManager.SettingSubKey.S_IF.key
-        val sIfKeyRegex = Regex(
-            "[?]${sIfKey}="
-        )
+//        val sIfKeyRegex = Regex(
+//            "[?]${sIfKey}="
+//        )
+        val sIfKeyWithHatena = "?${sIfKey}="
         val lastSubKeyCon = keyToSubKeyConList.lastOrNull {
             it.first.isNotEmpty()
         }?.second
@@ -258,7 +259,8 @@ object ImportErrManager {
         ) || varName.startsWith(
             asyncPrefix
         )
-        val containIIfKey = sIfKeyRegex.containsMatchIn(lastSubKeyCon)
+        val containIIfKey = lastSubKeyCon.contains(sIfKeyWithHatena)
+            //sIfKeyRegex.containsMatchIn(lastSubKeyCon)
         if (
             isSettingReturnKey
             && !isIrregularVarName

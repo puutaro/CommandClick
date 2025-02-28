@@ -343,7 +343,7 @@ object SettingActionImportManager {
                 val blankMapPair =
                     String() to String()
                 if(
-                    !SettingActionKeyManager.ValueStrVar.matchStringVarName(
+                    !VarMarkTool.matchStringVarName(
                         valueStr
                     )
                 ) return@map blankMapPair

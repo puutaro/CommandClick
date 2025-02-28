@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action
 
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.VarMarkTool
 
 object SettingActionKeyManager {
 
@@ -55,13 +56,14 @@ object SettingActionKeyManager {
 
         const val itPronoun = "it"
 
-        fun matchStringVarName(
-            bitmapVarName: String,
-        ): Boolean {
-            val bitmapVarRegex = Regex("^[$][{][a-zA-Z0-9_]+[}]$")
-            return bitmapVarRegex.matches(bitmapVarName)
-                    && !bitmapVarName.startsWith(VarPrefix.RUN.prefix)
-        }
+//        fun matchStringVarName(
+//            bitmapVarName: String,
+//        ): Boolean {
+//            val bitmapVarRegex = Regex("^[$][{][a-zA-Z0-9_]+[}]$")
+//            return bitmapVarRegex.matches(bitmapVarName)
+//                    || bitmapVarName.startsWith("${'$'}{")
+//                    && !bitmapVarName.startsWith(VarPrefix.RUN.prefix)
+//        }
     }
 
 
@@ -162,7 +164,7 @@ object SettingActionKeyManager {
     ): Sequence<Pair<String, String>> {
         val settingReturnKey =
             SettingActionsKey.SETTING_RETURN.key
-        val varStrRegex = Regex("[a-zA-Z0-9_]+")
+//        val varStrRegex = Regex("[a-zA-Z0-9_]+")
         return settingKeyToDefinitionList.filter {
             val settingKey = it.first
             if(
@@ -172,7 +174,8 @@ object SettingActionKeyManager {
                 settingKey == settingReturnKey
             ) return@filter true
             val definition = it.second
-            varStrRegex.matches(definition)
+            VarMarkTool.matchStringVarBodyAlphaNum(definition)
+//            varStrRegex.matches(definition)
         }
     }
 

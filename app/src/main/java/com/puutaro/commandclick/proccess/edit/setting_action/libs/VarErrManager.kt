@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.SpeedReplacer
 import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.runBlocking
 
@@ -71,7 +72,7 @@ object VarErrManager {
         settingKeyToVarNameListSrc: List<Pair<String, String>>,
         keyToSubKeyConWhere: String,
     ): Boolean {
-        val varMarkRegex = Regex("^[a-zA-Z0-9_]+$")
+//        val varMarkRegex = Regex("^[a-zA-Z0-9_]+$")
         val settingKeyToVarNameList = settingKeyToVarNameListSrc.filter {
                 settingKeyToVarName ->
             settingKeyToVarName.first !=
@@ -81,7 +82,8 @@ object VarErrManager {
                 settingKeyToVarName ->
             val varMarkEntry = settingKeyToVarName.second
             if(
-                varMarkRegex.matches(varMarkEntry)
+                VarMarkTool.matchStringVarBodyAlphaNum(varMarkEntry)
+//                varMarkRegex.matches(varMarkEntry)
             ) return@forEach
             val settingKey = settingKeyToVarName.first
             val spanSettingKey =
@@ -543,9 +545,12 @@ object VarErrManager {
         val funcKey = SettingActionKeyManager.SettingSubKey.FUNC.key
         val onReturnKey = SettingActionKeyManager.SettingSubKey.ON_RETURN.key
         val valueKey = SettingActionKeyManager.SettingSubKey.VALUE.key
-        val funcKeyRegex = Regex("\\?${funcKey}=")
-        val returnKeyRegex = Regex("\\?${onReturnKey}=")
-        val valueKeyRegex = Regex("\\?${valueKey}=")
+//        val funcKeyRegex = Regex("\\?${funcKey}=")
+        val funcKeyWithHatena = "?${funcKey}="
+//        val returnKeyRegex = Regex("\\?${onReturnKey}=")
+        val returnKeyWithHatena = "?${onReturnKey}="
+//        val valueKeyRegex = Regex("\\?${valueKey}=")
+        val valueWithHatena = "?${valueKey}="
         keyToSubKeyConList.forEach {
                 settingKeyToSubKeyCon ->
             val settingKeyName = settingKeyToSubKeyCon.first
@@ -553,9 +558,13 @@ object VarErrManager {
                 settingKeyName != settingVarMainKey
             ) return@forEach
             val subKeyCon = settingKeyToSubKeyCon.second
-            val isContainFuncOrReturnOrValue = funcKeyRegex.containsMatchIn(subKeyCon)
-                    || returnKeyRegex.containsMatchIn(subKeyCon)
-                    || valueKeyRegex.containsMatchIn(subKeyCon)
+            val isContainFuncOrReturnOrValue =
+                subKeyCon.contains(funcKeyWithHatena)
+                        || subKeyCon.contains(returnKeyWithHatena)
+                        || subKeyCon.contains(valueWithHatena)
+//                funcKeyRegex.containsMatchIn(subKeyCon)
+//                    || returnKeyRegex.containsMatchIn(subKeyCon)
+//                    || valueKeyRegex.containsMatchIn(subKeyCon)
             if(
                 isContainFuncOrReturnOrValue
             ) return@forEach
@@ -721,7 +730,7 @@ object VarErrManager {
         stringVarKeyList: List<String>?,
         keyToSubKeyConWhere: String,
     ): Boolean {
-        val regexStrTemplate = "([$][{]%s[}])"
+//        val regexStrTemplate = "([$][{]%s[}])"
 //                val returnUseStringKeyList = settingKeyToNoRunVarNameList.filter {
 //                        settingKeyToNoRunVarName ->
 //                    settingKeyToNoRunVarName.first == settingReturnKey
@@ -743,34 +752,45 @@ object VarErrManager {
                     plusStringKeyList +
                     listOf(SettingActionKeyManager.ValueStrVar.itPronoun)
         }
-        val settingKeyListConRegex = let {
-            stringKeyList.map {
-                regexStrTemplate.format(it)
-            }.joinToString("|")
-        }.toRegex()
+//        val settingKeyListConRegex = let {
+//            stringKeyList.map {
+//                regexStrTemplate.format(it)
+//            }.joinToString("|")
+//        }.toRegex()
         val keyToSubKeyListCon = makeKeyToSubKeyListCon(
             keyToSubKeyConList,
         )
-        val keyToSubKeyListConWithRemoveVar = keyToSubKeyListCon.replace(
-            settingKeyListConRegex,
-            String()
+        val stringKeyToValueSeq = stringKeyList.asSequence().map {
+            varName ->
+            "${'$'}{${varName}}" to String()
+        }
+        val keyToSubKeyListConWithRemoveVar = SpeedReplacer.replace(
+            keyToSubKeyListCon,
+            stringKeyToValueSeq
         )
+//        val keyToSubKeyListConWithRemoveVar = keyToSubKeyListCon.replace(
+//            settingKeyListConRegex,
+//            String()
+//        )
 //                val notDefinitionStringKeyInReturn = returnUseStringKeyList.firstOrNull {
 //                    !stringKeyList.contains(it)
 //                }
-        val findVarMarkRegex = Regex(".[$][{][a-zA-Z0-9_]+[}]")
-        val leaveVarMarkList =
-            findVarMarkRegex
-                .findAll(keyToSubKeyListConWithRemoveVar).filter {
-                        varMarkResult ->
-                    val varMark = varMarkResult.value
-                    !varMark.startsWith("\\")
-                }.map {
-                    it.value.replace(
-                        Regex("^[^$]"),
-                        String()
-                    )
-                }
+        val leaveVarMarkList = VarMarkTool.findAllVarMark(
+            keyToSubKeyListConWithRemoveVar
+        )
+//        val findVarMarkRegex = Regex(".[$][{][a-zA-Z0-9_]+[}]")
+//        val leaveVarMarkList =
+//            findVarMarkRegex
+//                .findAll(keyToSubKeyListConWithRemoveVar).filter {
+//                        varMarkResult ->
+//                    val varMark = varMarkResult.value
+//                    !varMark.startsWith("\\")
+//                }.map {
+//                    it.value.replace(
+//                        Regex("^[^$]"),
+//                        String()
+//                    )
+//                }
         if(
             !leaveVarMarkList.any()
         ) return false

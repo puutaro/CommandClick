@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.edit.image_action
 
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.VarMarkTool
 
 object ImageActionKeyManager {
     const val landSeparator = ','
@@ -152,7 +153,7 @@ object ImageActionKeyManager {
     ): List<Pair<String, String>> {
         val settingReturnKey =
             ImageActionsKey.IMAGE_RETURN.key
-        val varStrRegex = Regex("[a-zA-Z0-9_]+")
+//        val varStrRegex = Regex("[a-zA-Z0-9_]+")
         return settingKeyToDefinitionList.filter {
             val settingKey = it.first
             if(
@@ -162,7 +163,8 @@ object ImageActionKeyManager {
                 settingKey == settingReturnKey
             ) return@filter true
             val definition = it.second
-            varStrRegex.matches(definition)
+            VarMarkTool.matchStringVarBodyAlphaNum(definition)
+//            varStrRegex.matches(definition)
         }
     }
 
