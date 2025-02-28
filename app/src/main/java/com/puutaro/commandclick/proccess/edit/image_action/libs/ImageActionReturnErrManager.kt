@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
+import com.puutaro.commandclick.util.str.ImageVarMarkTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.runBlocking
 
@@ -224,8 +225,8 @@ object ImageActionReturnErrManager {
         bitmapVarKeyList: List<String>?,
         keyToSubKeyConWhere: String,
     ): Boolean {
-        val varMarkRegex = Regex("#[{][a-zA-Z0-9_]+[}]")
-        val regexStrTemplate = "(#[{]%s[}])"
+//        val varMarkRegex = Regex("#[{][a-zA-Z0-9_]+[}]")
+//        val regexStrTemplate = "(#[{]%s[}])"
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "lisNotBeforeDefinitionInReturnErr.txt").absolutePath,
 //                    listOf(
@@ -255,14 +256,18 @@ object ImageActionReturnErrManager {
 //                        ).joinToString("\n\n") + "\n\n==========\n\n"
 //                    )
             if(
-                !varMarkRegex.containsMatchIn(returnVarName)
+                !ImageVarMarkTool.matchBitmapVarName(returnVarName)
+//                !varMarkRegex.containsMatchIn(returnVarName)
             ) return@forEachIndexed
-            val alreadyVarNameRegex = alreadyVarNameList.map {
-                regexStrTemplate.format(it)
-            }.joinToString("|").toRegex()
+//            val alreadyVarNameRegex = alreadyVarNameList.map {
+//                regexStrTemplate.format(it)
+//            }.joinToString("|").toRegex()
             if(
                 alreadyVarNameList.isNotEmpty()
-                && alreadyVarNameRegex.containsMatchIn(returnVarName)
+                ||  alreadyVarNameList.contains(
+                    ImageVarMarkTool.convertBitmapKey(returnVarName)
+                )
+//                && alreadyVarNameRegex.containsMatchIn(returnVarName)
             ) return@forEachIndexed
             val spanImageReturnKey =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(

@@ -20,17 +20,23 @@ object IfErrManager {
     ): Boolean {
         val ifStartKey = ifKeyToIfEndKey.first
         val ifEndKey = ifKeyToIfEndKey.second
-        val ifHolderKeyRegex =
-            Regex("[?](${ifStartKey}|${ifEndKey})=[^\n?|]+")
+//        val ifHolderKeyRegex =
+//            Regex("[?](${ifStartKey}|${ifEndKey})=[^\n?|]+")
         val keyToSubKeyCon = keyToSubKeyConList?.map {
             (mainKey, subKeyCon) ->
             "|${mainKey}=${subKeyCon}"
         }?.joinToString("\n")?.let {
             QuoteTool.maskSurroundQuote(it)
         } ?: String()
-        val ifHolderKeyList = ifHolderKeyRegex.findAll(keyToSubKeyCon).map {
+        //ifHolderKeyRegex.findAll(keyToSubKeyCon)
+        val ifHolderKeyList = findAllIfState(
+            keyToSubKeyCon,
+            ifStartKey,
+            ifEndKey
+        ).map {
             ifKeyEqualProcNameResult ->
-            ifKeyEqualProcNameResult.value.removePrefix("?").let {
+//            ifKeyEqualProcNameResult.value.removePrefix("?").let//
+            ifKeyEqualProcNameResult.removePrefix("?").let {
                 ifKeyEqualProcName ->
                 CcScript.makeKeyValuePairFromSeparatedString(
                     ifKeyEqualProcName,
@@ -42,6 +48,11 @@ object IfErrManager {
 //            File(UsePath.cmdclickDefaultAppDirPath, "liferr.txt").absolutePath,
 //            listOf(
 //                "ifKeyToIfEndKey: ${ifKeyToIfEndKey}",
+//                "allIfState: ${findAllIfState(
+//                    keyToSubKeyCon,
+//                    ifStartKey,
+//                    ifEndKey
+//                ).joinToString("---")}",
 //                "ifHolderKeyList: ${ifHolderKeyList.joinToString(", ")}",
 //            ).joinToString("\n\n")
 //        )
@@ -142,6 +153,117 @@ object IfErrManager {
             return true
         }
         return false
+    }
+
+    fun findAllIfState(
+        string: String,
+        ifStartKey: String,
+        ifEndKey: String
+    ): Sequence<String> {
+        val ifStartKeyEqual = "${ifStartKey}="
+        val ifEndKeyEqual = "${ifEndKey}="
+        val ifStartKeyEqualLen = ifStartKeyEqual.length
+        val ifEndKeyEqualLen = ifEndKeyEqual.length
+        var results = sequenceOf<String>()
+        val escapeSeq = sequenceOf(
+            '\n', '?', '|'
+        )
+        var index = 0
+        while (index < string.length) {
+            if (string[index] == '?') {
+                val start = index
+                index++
+                if (
+                    index < string.length
+                    && (string.startsWith(ifStartKeyEqual, index)
+                            || string.startsWith(ifEndKeyEqual, index)
+                            )
+                    ) {
+                    index += if (
+                        string.startsWith(ifStartKeyEqual, index)
+                        ) ifStartKeyEqualLen
+                    else ifEndKeyEqualLen
+                    while (
+                        index < string.length
+                        && !escapeSeq.contains(string[index])
+//                        && string[index] != '?'
+//                        && string[index] != '|'
+//                        && string[index] != '\n'
+                    ) {
+                        index++
+                    }
+                    results += sequenceOf(string.substring(start, index))
+                }
+            } else {
+                index++
+            }
+        }
+        return results
+    }
+
+    private fun findAllIfState2(
+        input: String,
+        ifStartKey: String,
+        ifEndKey: String
+    ): Sequence<String> {
+        var result = sequenceOf<String>()
+        var index = 0
+        val ifStartKeyEqual = "${ifStartKey}="
+        val ifEndKeyEqual = "${ifEndKey}="
+        val ifStartKeyEqualLen = ifStartKeyEqual.length
+        val ifEndKeyEqualLen = ifEndKeyEqual.length
+        while (index < input.length) {
+            if (input[index] != '?') {
+                index++
+                continue
+            }
+            val escapeSeq = sequenceOf(
+                '\n', '?', '|'
+            )
+            when (true) {
+                (index + ifStartKeyEqualLen < input.length
+                        && input.substring(index + 1, index + ifStartKeyEqualLen) == "${ifStartKey}=") -> {
+                    index += ifStartKeyEqualLen
+                    val startIndex = index
+                    while (
+                        index < input.length
+                        && !escapeSeq.contains(input[index])
+//                        && input[index] != '\n'
+//                        && input[index] != '?'
+//                        && input[index] != '|'
+                    ) {
+                        index++
+                    }
+                    if (index > startIndex) {
+                        result += sequenceOf(input.substring(startIndex - ifStartKeyEqualLen, index))
+                    }
+                    continue
+                }
+                (
+                        index + ifEndKeyEqualLen < input.length
+                                && input.substring(index + 1, index + ifEndKeyEqualLen) == "${ifEndKey}="
+                        ) -> {
+                    index += ifEndKeyEqualLen
+                    val startIndex = index
+                    while (
+                        index < input.length
+                        && !escapeSeq.contains(input[index])
+//                        && input[index] != '\n'
+//                        && input[index] != '?'
+//                        && input[index] != '|'
+                    ) {
+                        index++
+                    }
+                    if (index > startIndex) {
+                        result += sequenceOf(input.substring(startIndex - ifEndKeyEqualLen, index))
+                    }
+                    continue
+                }
+                else -> {}
+            }
+            index++
+        }
+        return result
     }
 
     fun makeIfProcNameNotExistInRuntime(

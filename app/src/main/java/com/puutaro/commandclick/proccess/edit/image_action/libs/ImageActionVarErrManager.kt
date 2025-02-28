@@ -852,8 +852,10 @@ object ImageActionVarErrManager {
         subKeyListCon: String,
         keyToSubKeyConWhere: String,
     ): Boolean {
-        val dolVarMarkRegex = Regex("(?<!\\\\)[$][{][a-zA-Z0-9_]+[}]")
-        val noReplaceVar = dolVarMarkRegex.find(subKeyListCon)?.value
+//        val dolVarMarkRegex = Regex("(?<!\\\\)[$][{][a-zA-Z0-9_]+[}]")
+        val noReplaceVar =
+            VarMarkTool.findAllVarMark(subKeyListCon).firstOrNull()
+            //dolVarMarkRegex.find(subKeyListCon)?.value
         if(
             noReplaceVar.isNullOrEmpty()
         ) return false

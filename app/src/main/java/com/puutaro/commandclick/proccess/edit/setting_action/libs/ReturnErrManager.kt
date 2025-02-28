@@ -4,6 +4,7 @@ import android.content.Context
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.runBlocking
 
 object ReturnErrManager {
@@ -222,8 +223,8 @@ object ReturnErrManager {
         settingKeyToVarNameList: List<Pair<String, String>>,
         keyToSubKeyConWhere: String,
     ): Boolean {
-        val varMarkRegex = Regex("[$][{][a-zA-Z0-9_]+[}]")
-        val regexStrTemplate = "([$][{]%s[}])"
+//        val varMarkRegex = Regex("[$][{][a-zA-Z0-9_]+[}]")
+//        val regexStrTemplate = "([$][{]%s[}])"
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "lisNotBeforeDefinitionInReturnErr.txt").absolutePath,
 //                    listOf(
@@ -252,14 +253,18 @@ object ReturnErrManager {
 //                        ).joinToString("\n\n") + "\n\n==========\n\n"
 //                    )
             if(
-                !varMarkRegex.containsMatchIn(returnVarName)
+                !VarMarkTool.matchStringVarName(returnVarName)
+//                !varMarkRegex.containsMatchIn(returnVarName)
             ) return@forEachIndexed
-            val alreadyVarNameRegex = alreadyVarNameList.map {
-                regexStrTemplate.format(it)
-            }.joinToString("|").toRegex()
+//            val alreadyVarNameRegex = alreadyVarNameList.map {
+//                regexStrTemplate.format(it)
+//            }.joinToString("|").toRegex()
             if(
                 alreadyVarNameList.isNotEmpty()
-                && alreadyVarNameRegex.containsMatchIn(returnVarName)
+                || alreadyVarNameList.contains(
+                    VarMarkTool.convertVarName(returnVarName)
+                )
+//                && alreadyVarNameRegex.containsMatchIn(returnVarName)
             ) return@forEachIndexed
             val spanSettingReturnKey =
                 CheckTool.LogVisualManager.execMakeSpanTagHolder(

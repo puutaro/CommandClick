@@ -898,8 +898,10 @@ object VarErrManager {
 //                        String()
 //                    )
 //                }
-        val dolVarMarkRegex = Regex("[$][{][a-zA-Z0-9_]+[}]")
-        val noReplaceVar = dolVarMarkRegex.find(replaceKeyToSubKeyListCon)?.value
+//        val dolVarMarkRegex = Regex("[$][{][a-zA-Z0-9_]+[}]")
+        val noReplaceVar =
+            VarMarkTool.findAllVarMark(replaceKeyToSubKeyListCon).firstOrNull()
+//            dolVarMarkRegex.find(replaceKeyToSubKeyListCon)?.value
         if(
             noReplaceVar.isNullOrEmpty()
             || noReplaceVar.startsWith("${'$'}{${escapeRunPrefix}")
