@@ -3,6 +3,37 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs
 import com.puutaro.commandclick.util.map.CmdClickMap
 
 object SettingArgsTool {
+
+    fun makePlaneVarNameToValueStrMap(
+        globalVarNameToValueMap: Map<String, String>?
+    ): Map<String, String>? {
+        if(
+            globalVarNameToValueMap.isNullOrEmpty()
+        ) return null
+        val noPlaneRepStrListForIf = sequenceOf(
+            "\\",
+            "\n",
+            "\"",
+            "`",
+            "`",
+            "?",
+            "|",
+            "!",
+            "#",
+            "$",
+            "&",
+        )
+        return globalVarNameToValueMap.filter {
+            val value = it.value
+            val isNoPlaneStr = noPlaneRepStrListForIf.any {
+                value.contains(it)
+            }
+            !isNoPlaneStr
+        }
+    }
+
+
+
     fun makeArgsPairList(
         ifMap: Map<String, String>,
         argKey: String,

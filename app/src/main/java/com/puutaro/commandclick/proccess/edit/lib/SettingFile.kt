@@ -300,7 +300,14 @@ object SettingFile {
                 setReplaceVariableMapSrc,
                 fannelName
             )
-            var settingCon = settingConBeforeImport
+
+            var settingCon = SpeedReplacer.replace(
+                settingConBeforeImport,
+                SettingArgsTool.makePlaneVarNameToValueStrMap(globalVarNameToValueMap)?.map {
+                    it.key to it.value
+                }?.asSequence()
+            )
+                //settingConBeforeImport
             for(i in 1..5) {
                 val result = importRegex.findAll(settingCon)
                 if(
@@ -383,7 +390,8 @@ object SettingFile {
                             )
                             val argsPairList = getIfArgs(
                                 importMap,
-                                globalVarNameToValueMap,
+                                null,
+                                //globalVarNameToValueMap,
                             )
 
                             val isImportToErr = when(argsPairList.isEmpty()) {
@@ -392,7 +400,8 @@ object SettingFile {
                                     ImportKey.IF_ARGS.key,
 //                                judgeTargetStr,
                                     argsPairList,
-                                    globalVarNameToValueMap,
+                                    null
+                                    //globalVarNameToValueMap,
                                 )
                             }
                             val ifArgsErr = isImportToErr.second
