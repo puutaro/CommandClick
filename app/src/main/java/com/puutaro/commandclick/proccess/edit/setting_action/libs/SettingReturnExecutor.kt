@@ -90,21 +90,27 @@ class SettingReturnExecutor {
         }
 
         val isReturnToErrType = let {
-            val argsPairList = CmdClickMap.createMap(
-                ifMap.get(
-                    SettingActionKeyManager.SettingSubKey.ARGS.key
-                ),
-                valueSeparator
-            ).asSequence().filter {
-                it.first.isNotEmpty()
-            }.map {
-                    argNameToValueStr ->
-                argNameToValueStr.first to
-                        CmdClickMap.replaceByBackslashToNormal(
-                            argNameToValueStr.second,
-                            varNameToValueStrMap,
-                        )
-            }.toList()
+            val argsPairList = SettingArgsTool.makeArgsPairList(
+                ifMap,
+                SettingActionKeyManager.SettingSubKey.ARGS.key,
+                varNameToValueStrMap,
+                valueSeparator,
+            )
+//            CmdClickMap.createMap(
+//                ifMap.get(
+//                    SettingActionKeyManager.SettingSubKey.ARGS.key
+//                ),
+//                valueSeparator
+//            ).asSequence().filter {
+//                it.first.isNotEmpty()
+//            }.map {
+//                    argNameToValueStr ->
+//                argNameToValueStr.first to
+//                        CmdClickMap.replaceByBackslashToNormal(
+//                            argNameToValueStr.second,
+//                            varNameToValueStrMap,
+//                        )
+//            }.toList()
             SettingIfManager.handle(
                 sIf.key,
 //                        judgeTargetStr,

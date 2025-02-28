@@ -13,6 +13,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionD
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionErrLogger
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionImportManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionMapTool
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingArgsTool
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingReturnExecutor
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.VarErrManager
@@ -1623,17 +1624,23 @@ class SettingActionManager {
                                         varNameToValueStrMap,
                                     )
                             } ?: return@forEach
-                            val argsPairListBeforeBsEscape = CmdClickMap.createMap(
-                                mainSubKeyMapSrc.get(
-                                    SettingActionKeyManager.SettingSubKey.ARGS.key
-                                ),
+                            val argsPairListBeforeBsEscape = SettingArgsTool.makeArgsPairList(
+                                mainSubKeyMapSrc,
+                                SettingActionKeyManager.SettingSubKey.ARGS.key,
+                                null,
                                 valueSeparator
-                            ).let {
-                                pair ->
-                                pair.filter {
-                                    it.first.isNotEmpty()
-                                }
-                            }
+                            )
+//                            CmdClickMap.createMap(
+//                                mainSubKeyMapSrc.get(
+//                                    SettingActionKeyManager.SettingSubKey.ARGS.key
+//                                ),
+//                                valueSeparator
+//                            ).let {
+//                                pair ->
+//                                pair.filter {
+//                                    it.first.isNotEmpty()
+//                                }
+//                            }
                             val argsPairList = SettingFuncTool.makeArgsPairList(
                                 argsPairListBeforeBsEscape,
                                 varNameToValueStrMap
@@ -1728,21 +1735,27 @@ class SettingActionManager {
                             }
                             val dateListInSIf = arrayListOf<Pair<String, java.time.LocalDateTime>>()
                             dateListInSIf.add("ifStart_creaatePairList" to java.time.LocalDateTime.now())
-                            val argsPairList = CmdClickMap.createMap(
-                                mainSubKeyMapSrc.get(
-                                    SettingActionKeyManager.SettingSubKey.ARGS.key
-                                ),
-                                valueSeparator
-                            ).asSequence().filter {
-                                it.first.isNotEmpty()
-                            }.map {
-                                    argNameToValueStr ->
-                                argNameToValueStr.first to
-                                        CmdClickMap.replaceByBackslashToNormal(
-                                            argNameToValueStr.second,
-                                            varNameToValueStrMap,
-                                        )
-                            }.toList()
+                            val argsPairList = SettingArgsTool.makeArgsPairList(
+                                mainSubKeyMapSrc,
+                                SettingActionKeyManager.SettingSubKey.ARGS.key,
+                                varNameToValueStrMap,
+                                valueSeparator,
+                            )
+//                            CmdClickMap.createMap(
+//                                mainSubKeyMapSrc.get(
+//                                    SettingActionKeyManager.SettingSubKey.ARGS.key
+//                                ),
+//                                valueSeparator
+//                            ).asSequence().filter {
+//                                it.first.isNotEmpty()
+//                            }.map {
+//                                    argNameToValueStr ->
+//                                argNameToValueStr.first to
+//                                        CmdClickMap.replaceByBackslashToNormal(
+//                                            argNameToValueStr.second,
+//                                            varNameToValueStrMap,
+//                                        )
+//                            }.toList()
                             dateListInSIf.add("ifManage ${mainSubKeyMapSrc.get(mainSubKey)}" to java.time.LocalDateTime.now())
                             val isNextToErrType = SettingIfManager.handle(
                                 sIfKeyName,

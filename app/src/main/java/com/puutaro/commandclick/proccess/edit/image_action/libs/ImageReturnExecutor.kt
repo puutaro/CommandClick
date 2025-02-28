@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.IfErrManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingArgsTool
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.util.map.CmdClickMap
 import kotlinx.coroutines.runBlocking
@@ -70,14 +71,20 @@ class ImageReturnExecutor {
             )
         }
         val isReturnToErrType = let {
-            val argsPairList = CmdClickMap.createMap(
-                ifMap.get(
-                    ImageActionKeyManager.ImageSubKey.ARGS.key
-                ),
+            val argsPairList = SettingArgsTool.makeArgsPairList(
+                ifMap,
+                ImageActionKeyManager.ImageSubKey.ARGS.key,
+                null,
                 valueSeparator
-            ).filter {
-                it.first.isNotEmpty()
-            }
+            )
+//                CmdClickMap.createMap(
+//                ifMap.get(
+//                    ImageActionKeyManager.ImageSubKey.ARGS.key
+//                ),
+//                valueSeparator
+//            ).filter {
+//                it.first.isNotEmpty()
+//            }
             SettingIfManager.handle(
                 iIfKey,
 //                        judgeTargetStr,

@@ -45,6 +45,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.func.SizeForImag
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.StrPngForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ViewForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.WallForImageAction
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingArgsTool
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.IfErrManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
@@ -1537,14 +1538,20 @@ class ImageActionManager {
                             }
                             val funcTypeDotMethod = mainSubKeyMap.get(mainSubKey)
                                 ?: return@forEach
-                            val argsPairList = CmdClickMap.createMap(
-                                mainSubKeyMap.get(
-                                    ImageActionKeyManager.ImageSubKey.ARGS.key
-                                ),
+                            val argsPairList = SettingArgsTool.makeArgsPairList(
+                                mainSubKeyMap,
+                                ImageActionKeyManager.ImageSubKey.ARGS.key,
+                                null,
                                 valueSeparator
-                            ).filter {
-                                it.first.isNotEmpty()
-                            }
+                            )
+//                            CmdClickMap.createMap(
+//                                mainSubKeyMap.get(
+//                                    ImageActionKeyManager.ImageSubKey.ARGS.key
+//                                ),
+//                                valueSeparator
+//                            ).filter {
+//                                it.first.isNotEmpty()
+//                            }
                             val varNameToBitmapMap =
                                 ImageActionMapTool.makeValueToBitmapMap(
                                     curMapLoopKey,
@@ -1650,14 +1657,20 @@ class ImageActionManager {
                             }
 //                            val judgeTargetStr = mainSubKeyMap.get(mainSubKey)
 //                                ?: return@forEach
-                            val argsPairList = CmdClickMap.createMap(
-                                mainSubKeyMap.get(
-                                    ImageActionKeyManager.ImageSubKey.ARGS.key
-                                ),
-                                valueSeparator
-                            ).filter {
-                                it.first.isNotEmpty()
-                            }
+                            val argsPairList = SettingArgsTool.makeArgsPairList(
+                                mainSubKeyMap,
+                                ImageActionKeyManager.ImageSubKey.ARGS.key,
+                                null,
+                                valueSeparator,
+                            )
+//                            CmdClickMap.createMap(
+//                                mainSubKeyMap.get(
+//                                    ImageActionKeyManager.ImageSubKey.ARGS.key
+//                                ),
+//                                valueSeparator
+//                            ).filter {
+//                                it.first.isNotEmpty()
+//                            }
                             val isImportToErrType = SettingIfManager.handle(
                                 iIfKeyName,
 //                                judgeTargetStr,
@@ -2536,13 +2549,13 @@ class ImageActionManager {
                     returnTopAcVarNameMacro,
                     forVarNameBitmapMap,
                 )
-                FileSystems.updateFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "loop.txt").absolutePath,
-                    listOf(
-                        "index: ${index}",
-                        "forVarNameBitmapMap: ${forVarNameBitmapMap?.get(ImageActionKeyManager.returnTopAcVarNameMacro)}"
-                    ).joinToString("\n") + "\n\n==========-\n\n"
-                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "loop.txt").absolutePath,
+//                    listOf(
+//                        "index: ${index}",
+//                        "forVarNameBitmapMap: ${forVarNameBitmapMap?.get(ImageActionKeyManager.returnTopAcVarNameMacro)}"
+//                    ).joinToString("\n") + "\n\n==========-\n\n"
+//                )
 //                return index to outputVarNameToBitmapMap.get(returnTopAcVarNameMacro)
             }
         }

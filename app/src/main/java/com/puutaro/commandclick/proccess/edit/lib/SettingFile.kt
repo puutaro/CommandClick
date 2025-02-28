@@ -4,14 +4,18 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingActionData
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingArgsTool
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -247,6 +251,7 @@ object SettingFile {
             SUFFIX("suffix"),
             SETTING_ACTION("settingAc"),
             IMAGE_ACTION("imageAc"),
+            IF_ARGS("ifArgs"),
         }
         private const val startLoopIndex = 1
 
@@ -376,6 +381,56 @@ object SettingFile {
                             val importMap = makeImportMap(
                                 importSrcCon
                             )
+                            val argsPairList = getIfArgs(
+                                importMap,
+                                globalVarNameToValueMap,
+                            )
+
+                            val isImportToErr = when(argsPairList.isEmpty()) {
+                                true -> true to null
+                                else -> SettingIfManager.handle(
+                                    ImportKey.IF_ARGS.key,
+//                                judgeTargetStr,
+                                    argsPairList,
+                                    globalVarNameToValueMap,
+                                )
+                            }
+                            val ifArgsErr = isImportToErr.second
+//                            if(argsPairList.isNotEmpty()){
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "limportCeck.txt").absolutePath,
+//                                    listOf(
+//                                        "importMap: ${importMap}",
+//                                        "argsPairList: ${argsPairList}",
+//                                        "ifArgsErr: ${ifArgsErr?.errMessage}",
+//                                        "isImport: ${isImportToErr.first}"
+//                                    ).joinToString("\n\n")
+//                                )
+//                            }
+                            if (ifArgsErr != null) {
+                                val spanWhere =
+                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                        CheckTool.errBrown,
+                                        "importMap: ${importMap}"
+                                    )
+                                val errMessage =
+                                    "[SETTING IMPORT] ${ifArgsErr.errMessage}: ${spanWhere}"
+                                LogSystems.broadErrLog(
+                                    context,
+                                    Jsoup.parse(errMessage).text(),
+                                    errMessage,
+                                )
+                                return@async Pair(
+                                    importRawSrcCon,
+                                    String(),
+                                )
+                            }
+
+                            val isImport = isImportToErr.first
+                            if(isImport == false) return@async Pair(
+                                importRawSrcCon,
+                                String(),
+                            )
                             val importPath = getImportPath(
                                 importMap
                             ) ?: return@async Pair(
@@ -399,6 +454,7 @@ object SettingFile {
                                     String(),
                                 )
                             }
+
                             val loopTimes = getLoopTimes(
                                 importMap
                             )
@@ -660,7 +716,8 @@ object SettingFile {
 //                }
                         }
                     }
-                    val importRawToConArray = arrayListOf<Pair<String, String>>()
+                    val importRawToConArray =
+                        ArrayList<Pair<String, String>>(importRawToConJobList.count())
                     importRawToConJobList.forEach {
                         val (importRawCon, con) = it.await()
                         if(
@@ -668,7 +725,9 @@ object SettingFile {
                         ) return@forEach
                         importRawToConArray.add(Pair(importRawCon, con))
                     }
-                    importRawToConArray
+                    importRawToConArray.filter {
+                        it.first.isNotEmpty()
+                    }
 //                        .filter { (importRawCon, _) ->
 //                            importRawCon.isNotEmpty()
 //                        }
@@ -1049,6 +1108,41 @@ object SettingFile {
                     loopVarMap
                 )
             }
+        }
+
+        fun getIfArgs(
+            importMap: Map<String, String>,
+            varNameToValueStrMap: Map<String, String?>?,
+        ): List<Pair<String, String>> {
+            val separator = '&'
+            return SettingArgsTool.makeArgsPairList(
+                importMap,
+                ImportKey.IF_ARGS.key,
+                varNameToValueStrMap,
+                separator,
+            )
+//            return importMap.get(
+//                ImportKey.IF.key
+//            )?.let {
+//                CmdClickMap.replaceByAtVar(
+//                    it,
+//                    loopVarMap
+//                )
+//            }?.let {
+//                CmdClickMap.createMap(
+//                   it,
+//                    separator
+//                ).asSequence().filter {
+//                    it.first.isNotEmpty()
+//                }.map {
+//                        argNameToValueStr ->
+//                    argNameToValueStr.first to
+//                            CmdClickMap.replaceByBackslashToNormal(
+//                                argNameToValueStr.second,
+//                                varNameToValueStrMap,
+//                            )
+//                }.toList()
+//            }
         }
 
         fun getSeparator(
