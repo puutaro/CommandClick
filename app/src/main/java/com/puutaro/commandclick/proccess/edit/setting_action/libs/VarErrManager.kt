@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.runBlocking
 
 object VarErrManager {
@@ -15,8 +16,8 @@ object VarErrManager {
     private val asyncPrefix = SettingActionKeyManager.VarPrefix.ASYNC.prefix
     private val settingReturnKey =
         SettingActionKeyManager.SettingActionsKey.SETTING_RETURN.key
-    private val globalVarNameRegex =
-        SettingActionKeyManager.globalVarNameRegex
+//    private val globalVarNameRegex =
+//        SettingActionKeyManager.globalVarNameRegex
 
     private fun makeKeyToSubKeyListCon(
         keyToSubKeyConList: List<Pair<String, String>>,
@@ -116,7 +117,8 @@ object VarErrManager {
         if(
             returnValueStr != null
         ) return false
-        val isGlobal = globalVarNameRegex.matches(varName)
+        val isGlobal = VarMarkTool.matchesUpperAlphNumOrUnderscore(varName)
+//            globalVarNameRegex.matches(varName)
         if(
             !isGlobal
         ) return false
@@ -983,7 +985,9 @@ object VarErrManager {
                 .firstOrNull()?.let {
                     QuoteTool.trimBothEdgeQuote(it)
                 } ?: return@map defaultReturnPair
-            val isPrivateVarName = !globalVarNameRegex.matches(varName)
+            val isPrivateVarName =
+                !VarMarkTool.matchesUpperAlphNumOrUnderscore(varName)
+//            !globalVarNameRegex.matches(varName)
             when(isPrivateVarName){
                 false -> String() to String()
                 else -> settingKey to varName

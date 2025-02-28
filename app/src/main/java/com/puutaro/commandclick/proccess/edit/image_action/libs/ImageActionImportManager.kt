@@ -11,6 +11,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.IfErrManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.ImageVarMarkTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -349,11 +350,11 @@ object ImageActionImportManager {
                 val blankMapPair =
                     String() to null
                 if(
-                    !ImageActionKeyManager.BitmapVar.matchBitmapVarName(
+                    !ImageVarMarkTool.matchBitmapVarName(
                         bitmapVarMark
                     )
                 ) return@map blankMapPair
-                val importKey = ImageActionKeyManager.BitmapVar.convertBitmapKey(bitmapVarMark)
+                val importKey = ImageVarMarkTool.convertBitmapKey(bitmapVarMark)
                 val importBitmap = varNameToBitmapMapPlusAwait.get(importKey)
                     ?: return@map  blankMapPair
                 importKey to importBitmap

@@ -43,6 +43,7 @@ import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
 import com.puutaro.commandclick.util.str.BackslashTool
+import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -63,8 +64,8 @@ class SettingActionManager {
 
         private const val awaitWaitTimes =
             SettingActionKeyManager.AwaitManager.awaitWaitTimes
-        private val globalVarNameRegex =
-            SettingActionKeyManager.globalVarNameRegex
+//        private val globalVarNameRegex =
+//            SettingActionKeyManager.globalVarNameRegex
 
         fun init(){
             SettingActionImportManager.BeforeActionImportMapManager.init()
@@ -669,7 +670,8 @@ class SettingActionManager {
 //                                        ) return@async null
                                         if(
 //                                            !globalVarNameRegex.matches(topAcSVarName)
-                                            !globalVarNameRegex.matches(curMapLoopKey)
+                                            VarMarkTool.matchesUpperAlphNumOrUnderscore(curMapLoopKey)
+//                                            !globalVarNameRegex.matches(curMapLoopKey)
                                             || mapRoopKeyUnit != curMapLoopKey
                                         ) return@async null
                                         val proposalRenewalVarNameSrcMapValueStr =
@@ -829,7 +831,8 @@ class SettingActionManager {
 //                        ) return@forEach
                         if(
 //                            !globalVarNameRegex.matches(topAcSVarName)
-                            !globalVarNameRegex.matches(acIVarName)
+                            VarMarkTool.matchesUpperAlphNumOrUnderscore(curMapLoopKey)
+//                            !globalVarNameRegex.matches(acIVarName)
                             || mapRoopKeyUnit != curMapLoopKey
 //                            || mapRoopKeyUnit != removedLoopKey
                         ) return@forEachIndexed
@@ -1051,7 +1054,8 @@ class SettingActionManager {
                                 varNameToValueStr.second
                             )
                             if(
-                                globalVarNameRegex.matches(varNameToValueStr.first)
+//                                globalVarNameRegex.matches(varNameToValueStr.first)
+                                VarMarkTool.matchesUpperAlphNumOrUnderscore(varNameToValueStr.first)
                                 && curMapLoopKey == mapRoopKeyUnit
                                 ) {
                                 loopKeyToVarNameValueStrMap.put(
@@ -1365,12 +1369,25 @@ class SettingActionManager {
                     arrayListOf<SettingIfManager.IfStack>()
                 val dateList = arrayListOf<Pair<String, LocalDateTime>>()
                 dateList.add("start" to LocalDateTime.now())
+//                val useValNameSeq = VarMarkTool.extractValNameListByBackslashEscape(
+//                    mainSubKeyPairList.joinToString("\n")
+//                )
+                val mainSubKeyPairListCon =
+                    mainSubKeyPairList.joinToString("\n")
+                val filterTopVarNameToValueStrMap = VarMarkTool.filterByUseVarMark(
+                    topVarNameToValueStrMap,
+                    mainSubKeyPairListCon,
+                )
+                val filterImportedVarNameToValueStrMap = VarMarkTool.filterByUseVarMark(
+                    importedVarNameToValueStrMap,
+                    mainSubKeyPairListCon,
+                )
                 mainSubKeyPairList.forEach {
                         mainSubKeyPair ->
                     val varNameToValueStrMap = SettingActionMapTool.makeVarNameToValueStrMap(
                         curMapLoopKey,
-                        topVarNameToValueStrMap,
-                        importedVarNameToValueStrMap,
+                        filterTopVarNameToValueStrMap,
+                        filterImportedVarNameToValueStrMap,
                         loopKeyToVarNameValueStrMapClass,
                         privateLoopKeyVarNameValueStrMapClass,
                         null,
@@ -1423,7 +1440,7 @@ class SettingActionManager {
                                 ) return@let rawValue
                                 val curIVarKey =
                                     mainSubKeyMap.get(mainSubKey)?.let {
-                                        SettingActionKeyManager.ValueStrVar.convertStrKey(it)
+                                        VarMarkTool.convertVarName(it)
                                     }
 //                                FileSystems.updateFile(
 //                                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "l_value_varNameToValueStrMap_${settingVarName}.txt").absolutePath,
@@ -1572,7 +1589,7 @@ class SettingActionManager {
                                 ) return@let rawValue
                                 val curIVarKey =
                                     mainSubKeyMap.get(mainSubKey)?.let {
-                                        SettingActionKeyManager.ValueStrVar.convertStrKey(it)
+                                        VarMarkTool.convertVarName(it)
                                     }
 //                                FileSystems.updateFile(
 //                                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "l_onReturn_varNameToValueStrMap_${settingVarName}.txt").absolutePath,
@@ -1617,13 +1634,15 @@ class SettingActionManager {
 //                                isNext = true
                                 return@forEach
                             }
-                            val funcTypeDotMethod = mainSubKeyMapSrc.get(mainSubKey)?.let {
-                                funcTypeDotMethodSrc ->
-                                    CmdClickMap.replaceByBackslashToNormal(
-                                        funcTypeDotMethodSrc,
-                                        varNameToValueStrMap,
-                                    )
-                            } ?: return@forEach
+                            val funcTypeDotMethod = mainSubKeyMapSrc.get(mainSubKey)
+                                ?: return@forEach
+//                                ?.let {
+//                                funcTypeDotMethodSrc ->
+//                                    CmdClickMap.replaceByBackslashToNormal(
+//                                        funcTypeDotMethodSrc,
+//                                        varNameToValueStrMap,
+//                                    )
+//                            } ?: return@forEach
                             val argsPairListBeforeBsEscape = SettingArgsTool.makeArgsPairList(
                                 mainSubKeyMapSrc,
                                 SettingActionKeyManager.SettingSubKey.ARGS.key,

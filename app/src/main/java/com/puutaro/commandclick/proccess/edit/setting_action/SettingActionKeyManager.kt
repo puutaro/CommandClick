@@ -9,7 +9,7 @@ object SettingActionKeyManager {
     const val mainKeySeparator = '|'
     const val subKeySeparator = '?'
     const val valueSeparator = '&'
-    val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
+//    val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
     const val returnTopAcVarNameMacro = "CMDCLICK_OUTPUT_MACRO"
 
     enum class SettingActionsKey(
@@ -61,12 +61,6 @@ object SettingActionKeyManager {
             val bitmapVarRegex = Regex("^[$][{][a-zA-Z0-9_]+[}]$")
             return bitmapVarRegex.matches(bitmapVarName)
                     && !bitmapVarName.startsWith(VarPrefix.RUN.prefix)
-        }
-
-        fun convertStrKey(bitmapVar: String): String {
-            return bitmapVar
-                .removePrefix("${'$'}{")
-                .removeSuffix("}")
         }
     }
 

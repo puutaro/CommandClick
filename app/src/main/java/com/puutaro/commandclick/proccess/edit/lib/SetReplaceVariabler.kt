@@ -8,10 +8,13 @@ import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.str.VarMarkTool
 import java.io.File
+import java.time.LocalDateTime
 
 object SetReplaceVariabler {
 
@@ -185,10 +188,12 @@ object SetReplaceVariabler {
 
     fun execReplaceByReplaceVariables(
         replacingContents: String,
-        setReplaceVariableCompleteMap: Map<String, String>?,
+        setReplaceVariableCompleteMapSrc: Map<String, String>?,
 //        recentAppDirPath: String,
         fannelName: String
     ):String {
+//        val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+//        dateList.add("read" to LocalDateTime.now())
 //        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
 //        val loadJsUrlSource = buildString {
 //            append(replacingContents)
@@ -208,8 +213,30 @@ object SetReplaceVariabler {
 //                )
 //            }
 //        }
+//        val valNameSeq = VarMarkTool.extractValNameList(
+//            replacingContents
+//        )
+//        if(
+//            !valNameSeq.any()
+//        ){
+//            return ScriptPreWordReplacer.replace(
+//                replacingContents,
+////            recentAppDirPath,
+//                fannelName
+//            )
+//        }
+//        val setReplaceVariableCompleteMap = setReplaceVariableCompleteMapSrc?.filter {
+//            valNameSeq.contains(it.key)
+//        }
+//        if(
+//            setReplaceVariableCompleteMap.isNullOrEmpty()
+//        ) return ScriptPreWordReplacer.replace(
+//            replacingContents,
+////            recentAppDirPath,
+//            fannelName
+//        )
         val builder = StringBuilder(replacingContents)
-        setReplaceVariableCompleteMap?.forEach {
+        setReplaceVariableCompleteMapSrc?.forEach {
             val replaceVariable = "\${${it.key}}"
             val replaceString = it.value
             var index = builder.indexOf(replaceVariable)
@@ -218,6 +245,18 @@ object SetReplaceVariabler {
                 index = builder.indexOf(replaceVariable, index + replaceString.length)
             }
         }
+//        dateList.add("end" to LocalDateTime.now())
+//        if(fannelName.contains("textToSpeech")) {
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "lrepVal.txt").absolutePath,
+//                listOf(
+//                    "replacingContents: ${replacingContents}",
+//                    "valNameSeq: ${valNameSeq.joinToString(",")}",
+////                "setReplaceVariableCompleteMap: ${setReplaceVariableCompleteMap}",
+//                    dateList.joinToString("\n")
+//                ).joinToString("\n\n") + "\n------\n\n"
+//            )
+//        }
         return ScriptPreWordReplacer.replace(
             builder.toString(),
 //            recentAppDirPath,

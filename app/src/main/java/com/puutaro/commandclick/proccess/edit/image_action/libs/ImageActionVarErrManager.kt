@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.runBlocking
 
 object ImageActionVarErrManager {
@@ -15,7 +16,7 @@ object ImageActionVarErrManager {
     private val asyncPrefix = ImageActionKeyManager.VarPrefix.ASYNC.prefix
     private val imageReturnKey =
         ImageActionKeyManager.ImageActionsKey.IMAGE_RETURN.key
-    private val globalVarNameRegex = ImageActionKeyManager.globalVarNameRegex
+//    private val globalVarNameRegex = ImageActionKeyManager.globalVarNameRegex
 
     private fun makeKeyToSubKeyListCon(
         keyToSubKeyConList: List<Pair<String, String>>,
@@ -115,7 +116,9 @@ object ImageActionVarErrManager {
         if(
             returnBitmap != null
         ) return false
-        val isGlobal = globalVarNameRegex.matches(varName)
+        val isGlobal =
+            VarMarkTool.matchesUpperAlphNumOrUnderscore(varName)
+            //globalVarNameRegex.matches(varName)
         if(
             !isGlobal
         ) return false
@@ -934,7 +937,9 @@ object ImageActionVarErrManager {
                 .firstOrNull()?.let {
                     QuoteTool.trimBothEdgeQuote(it)
                 } ?: return@map defaultReturnPair
-            val isPrivateVarName = !globalVarNameRegex.matches(varName)
+            val isPrivateVarName =
+                !VarMarkTool.matchesUpperAlphNumOrUnderscore(varName)
+//                !globalVarNameRegex.matches(varName)
             when(isPrivateVarName){
                 false -> String() to String()
                 else -> settingKey to varName

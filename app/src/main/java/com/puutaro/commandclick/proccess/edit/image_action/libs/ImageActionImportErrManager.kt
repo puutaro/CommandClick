@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.str.ImageVarMarkTool
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
@@ -96,7 +97,7 @@ object ImageActionImportErrManager {
         keyToSubKeyConWhere: String,
     ): Boolean {
         val importVarSharpMarkList = importRepMap.filter {
-            ImageActionKeyManager.BitmapVar.matchBitmapVarName(it.value)
+            ImageVarMarkTool.matchBitmapVarName(it.value)
         }.map {
             it.value
         }

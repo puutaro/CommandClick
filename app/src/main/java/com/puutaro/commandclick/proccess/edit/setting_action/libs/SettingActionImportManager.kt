@@ -12,6 +12,7 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -346,9 +347,9 @@ object SettingActionImportManager {
                         valueStr
                     )
                 ) return@map blankMapPair
-                val importKey = SettingActionKeyManager.ValueStrVar.convertStrKey(valueStr)
+                val importKey = VarMarkTool.convertVarName(valueStr)
                 val importValueStr = varNameToValueStrMapPlusAwait.get(importKey)
-                    ?: return@map  blankMapPair
+                    ?: return@map blankMapPair
                 importKey to importValueStr
             }.filter {
                 (importKey, _) ->

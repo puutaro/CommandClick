@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
+import com.puutaro.commandclick.util.str.ImageVarMarkTool
 import java.io.File
 
 object FuncCheckerForSetting {
@@ -394,11 +395,11 @@ object FuncCheckerForSetting {
             return try {
                 valueStr ?: throw Exception()
                 if(
-                    !ImageActionKeyManager.BitmapVar.matchBitmapVarName(valueStr)
+                    !ImageVarMarkTool.matchBitmapVarName(valueStr)
                 ){
                     throw Exception()
                 }
-                val bitmapKey = ImageActionKeyManager.BitmapVar.convertBitmapKey(valueStr)
+                val bitmapKey = ImageVarMarkTool.convertBitmapKey(valueStr)
                 val bitmap = varNameToBitmapMap?.get(bitmapKey) ?: throw Exception()
                 bitmap to null
             } catch (e: Exception) {

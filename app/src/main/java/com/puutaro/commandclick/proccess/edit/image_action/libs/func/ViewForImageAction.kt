@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.util.str.ImageVarMarkTool
 import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -352,7 +353,7 @@ object ViewForImageAction {
                 }.map {
                         (_, bitmapVarMark) ->
                     if(
-                        !ImageActionKeyManager.BitmapVar.matchBitmapVarName(bitmapVarMark)
+                        !ImageVarMarkTool.matchBitmapVarName(bitmapVarMark)
                     ) {
                         val spanBitmapVarMark = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                             CheckTool.errRedCode,
@@ -360,7 +361,7 @@ object ViewForImageAction {
                         )
                         return FuncCheckerForSetting.FuncCheckErr("Irregular bitmap var mark: $spanBitmapVarMark, ${where}")
                     }
-                    val bitmapKey = ImageActionKeyManager.BitmapVar.convertBitmapKey(bitmapVarMark)
+                    val bitmapKey = ImageVarMarkTool.convertBitmapKey(bitmapVarMark)
                     varNameToBitmapMap?.get(bitmapKey) ?: let {
                         val spanBitmapVarMark = CheckTool.LogVisualManager.execMakeSpanTagHolder(
                             CheckTool.errRedCode,

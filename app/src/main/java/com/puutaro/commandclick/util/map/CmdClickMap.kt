@@ -1,17 +1,11 @@
 package com.puutaro.commandclick.util.map
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.datetime.LocalDatetimeTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.BackslashTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.SpeedReplacer
 import com.puutaro.commandclick.util.str.VarMarkTool
-import java.io.File
-import java.time.Duration
-import java.time.LocalDateTime
 
 object CmdClickMap {
 
@@ -188,18 +182,47 @@ object CmdClickMap {
         return builder.toString()
     }
 
-
     fun replace(
         targetCon: String,
-        repMap: Map<String, String?>?
+        repMapSrc: Map<String, String?>?
+    ): String {
+        if (repMapSrc.isNullOrEmpty()) return targetCon
+
+        val builder = StringBuilder(targetCon)
+
+        repMapSrc.forEach { (varNameKey, replaceStr) ->
+            if (varNameKey.isEmpty()) return@forEach
+
+            val target = "\${$varNameKey}"
+            val newValue = replaceStr ?: String()
+            var index = 0
+
+            while (true) {
+                val targetIndex = builder.indexOf(target, index)
+                if (targetIndex == -1) break
+
+                if (targetIndex == 0 || builder[targetIndex - 1] != '\\') {
+                    builder.replace(targetIndex, targetIndex + target.length, newValue)
+                    index = targetIndex + newValue.length
+                } else {
+                    index = targetIndex + target.length
+                }
+            }
+        }
+
+        return builder.toString()
+    }
+
+
+    fun replace2(
+        targetCon: String,
+        repMapSrc: Map<String, String?>?
     ): String {
         if(
-            repMap.isNullOrEmpty()
+            repMapSrc.isNullOrEmpty()
         ) return targetCon
-//        val dateList = mutableListOf<Pair<String, String>>()
-//        dateList.add("builder" to LocalDateTime.now().toString())
         val builder = StringBuilder(targetCon)
-        repMap.forEach { (varNameKey, replaceStr) ->
+        repMapSrc.forEach { (varNameKey, replaceStr) ->
             if(
                 varNameKey.isEmpty()
             ) return@forEach
@@ -212,100 +235,33 @@ object CmdClickMap {
             }
         }
         return builder.toString()
-//        var repCon = targetCon
-//        dateList.add("builder end" to LocalDateTime.now().toString())
-//        val builderDiff = Duration.between(
-//            LocalDatetimeTool.getLocalDatetimeFromString(
-//                dateList.get(dateList.lastIndex - 1).second
-//            ),
-//            LocalDatetimeTool.getLocalDatetimeFromString((dateList.last()).second)
-//        )
-//        dateList.add("builder diff" to builderDiff.toString())
-//       return try {
-//           buildString {
-//               append(targetCon)
-//               repMap.forEach { (varNameKey, replaceStrSrc) ->
-//                   val replaceStr = replaceStrSrc ?: String()
-//                   replace(
-//                       "",
-//                       ""
-//                   )
-//                   try {
-//                       replace(
-//                           Regex("""([^\\])[$][{]${varNameKey}[}]"""),
-//                           "$1${replaceStr}"
-//                       )
-//                   } catch(e: Exception){ }
-//                   try {
-//                       replace(
-//                           Regex(
-//                               """^[$][{]${varNameKey}[}]"""
-//                           ),
-//                           replaceStr
-//                       )
-//                   } catch(e: Exception){ }
-//               }
-//           }
-//       } catch (e: Exception) {
-//           FileSystems.writeFile(
-//               File(UsePath.cmdclickDefaultAppDirPath, "lreplace_error.txt").absolutePath,
-//               e.toString()
-//           )
-//           targetCon
-//       }
-//        repMap.forEach {
-//            val replaceStr =
-//                it.value ?: String()
-////            sb.replace(it.key, replaceStr)
-////            val tempRepCon = VarMarkTool.replaceByValue(
-////                repCon,
-////                it.key,
-////                replaceStr,
-////            )
-////            repCon = tempRepCon
-//        }
-//        dateList.add("replace" to LocalDateTime.now().toString())
-//        repMap.forEach {
-//            if(
-//                it.key.isEmpty()
-//            ) return@forEach
-//            val replaceStr =
-//                it.value ?: String()
-//            val tempRepCon = VarMarkTool.replaceByValue(
-//                repCon,
-//                it.key,
-//                replaceStr,
-//            )
-//            repCon = tempRepCon
-//        }
-//        dateList.add("replace end" to LocalDateTime.now().toString())
-//        val repDiff = Duration.between(
-//            LocalDatetimeTool.getLocalDatetimeFromString(
-//                dateList.get(dateList.lastIndex - 1).second
-//            ),
-//            LocalDatetimeTool.getLocalDatetimeFromString((dateList.last()).second)
-//        )
-//        dateList.add("rep diff" to repDiff.toString())
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lconpare.txt").absolutePath,
-//            (
-//                    listOf(
-//                        targetCon.take(100) +
-//                                "___" +  targetCon.length.toString() +
-//                                "___" + repMap.keys.size.toString()
-//                    ) + dateList
-//                    ).joinToString("\n") + "\n\n=====\n\n"
-//        )
-//        return repCon
     }
 
     fun replaceByBackslashToNormal(
         targetCon: String,
         repMapSrc: Map<String, String?>?
     ): String {
+//        val valNameSeq = VarMarkTool.extractValNameListByBackslashEscape(
+//            targetCon
+//        )
+//        if(
+//            !valNameSeq.any()
+//        ){
+//            return targetCon
+//        }
+//        val repMap = repMapSrc?.filter {
+//            valNameSeq.contains(it.key)
+//        }?.let {
+//            BackSlashSaveMap.make(
+//                repMapSrc,
+//            )
+//        }
         val repMap = BackSlashSaveMap.make(
             repMapSrc,
         )
+        if(
+            repMap.isNullOrEmpty()
+        ) return targetCon
         return replace(
             targetCon,
             repMap

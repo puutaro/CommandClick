@@ -24,6 +24,7 @@ import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.ExtraMenuForC
 import com.puutaro.commandclick.proccess.setting_menu_for_cmdindex.page_search.PageSearchManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.LineArt
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -122,13 +123,25 @@ class CommandIndexFragment: Fragment() {
         PreInstallFannel.install(this)
         ExtraMenuGifCreator.create(this)
         UrlImageDownloader.save(this)
+        val src = """
+            ${'$'}{aa} cc \\${'$'}{bb}
+             ${'$'}{cc} aa
+        """.trimIndent()
+
 //        context?.let {
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "lpath.txt").absolutePath,
-//                listOf(
-//                    "${LineArt.getPathsFromVectorDrawable(it, FannelIcons.TEN.id)}"
-//                ).joinToString("\n")
-//            )
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "lpath.txt").absolutePath,
+                listOf(
+                    "map: ${CmdClickMap.replace(
+                        src,
+                        mapOf(
+                            "aa" to "AA",
+                            "bb" to "BB",
+                            "cc" to "CC"
+                        )
+                    )}"
+                ).joinToString("\n")
+            )
 //        }
     }
 

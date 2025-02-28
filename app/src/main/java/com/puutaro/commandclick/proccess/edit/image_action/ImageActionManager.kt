@@ -58,7 +58,9 @@ import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
 import com.puutaro.commandclick.util.str.BackslashTool
+import com.puutaro.commandclick.util.str.ImageVarMarkTool
 import com.puutaro.commandclick.util.str.QuoteTool
+import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -76,7 +78,7 @@ import kotlin.enums.EnumEntries
 class ImageActionManager {
     companion object {
 
-        private val globalVarNameRegex = ImageActionKeyManager.globalVarNameRegex
+//        private val globalVarNameRegex = ImageActionKeyManager.globalVarNameRegex
         private const val awaitWaitTimes =
             ImageActionKeyManager.awaitWaitTimes
         private const val mapRoopKeyUnit =
@@ -658,7 +660,8 @@ class ImageActionManager {
                                             )
                                         }
                                         if(
-                                            !globalVarNameRegex.matches(acIVarName)
+//                                            !globalVarNameRegex.matches(acIVarName)
+                                            !VarMarkTool.matchesUpperAlphNumOrUnderscore(acIVarName)
                                             || mapRoopKeyUnit != curMapLoopKey
                                         ) return@async null
                                         val proposalRenewalVarNameSrcMapBitmap =
@@ -747,7 +750,8 @@ class ImageActionManager {
                             )
                         }
                         if(
-                            !globalVarNameRegex.matches(acIVarName)
+//                            !globalVarNameRegex.matches(acIVarName)
+                            !VarMarkTool.matchesUpperAlphNumOrUnderscore(acIVarName)
                             || mapRoopKeyUnit != curMapLoopKey
                         ) return@forEach
                         val proposalRenewalVarNameSrcMapBitmap =
@@ -976,7 +980,8 @@ class ImageActionManager {
                                 varNameToBitmap.second
                             )
                             if(
-                                globalVarNameRegex.matches(varNameToBitmap.first)
+//                                globalVarNameRegex.matches(varNameToBitmap.first)
+                                VarMarkTool.matchesUpperAlphNumOrUnderscore(varNameToBitmap.first)
                                 && curMapLoopKey == mapRoopKeyUnit
                             ) {
                                 loopKeyToVarNameBitmapMap.put(
@@ -1056,7 +1061,7 @@ class ImageActionManager {
                                     null,
                                 )
                             varNameToBitmapMap.get (
-                                ImageActionKeyManager.BitmapVar.convertBitmapKey(
+                                ImageVarMarkTool.convertBitmapKey(
                                         bitmapVarMark
                                     )
                                 )
@@ -1339,6 +1344,17 @@ class ImageActionManager {
             ): Pair<Pair<String, Bitmap?>, ImageActionKeyManager.BreakSignal?>? {
                 val ifStackList =
                     arrayListOf<SettingIfManager.IfStack>()
+//                val varMarkSeq =
+//                    ImageVarMarkTool.extractValNameList(mainSubKeyPairList.joinToString("\n"))
+                val mainSubKeyPairListCon = mainSubKeyPairList.joinToString("\n")
+                val filterTopVarNameToVarNameBitmapMap = ImageVarMarkTool.filterByUseVarMark(
+                    topVarNameToVarNameBitmapMap,
+                    mainSubKeyPairListCon,
+                )
+                val filterImportedVarNameToBitmapMap = ImageVarMarkTool.filterByUseVarMark(
+                    importedVarNameToBitmapMap,
+                    mainSubKeyPairListCon,
+                )
                 mainSubKeyPairList.forEach {
                         mainSubKeyPair ->
                     val mainSubKey = mainSubKeyPair.first
@@ -1483,8 +1499,8 @@ class ImageActionManager {
                             val varNameToBitmapMap =
                                 ImageActionMapTool.makeValueToBitmapMap(
                                     curMapLoopKey,
-                                    topVarNameToVarNameBitmapMap,
-                                    importedVarNameToBitmapMap,
+                                    filterTopVarNameToVarNameBitmapMap,
+                                    filterImportedVarNameToBitmapMap,
                                     loopKeyToVarNameBitmapMapClass,
                                     privateLoopKeyVarNameBitmapMapClass,
                                     null,
@@ -1492,7 +1508,7 @@ class ImageActionManager {
                                 )
                             val curIVarKey =
                                 mainSubKeyMap.get(mainSubKey)?.let {
-                                    ImageActionKeyManager.BitmapVar.convertBitmapKey(it)
+                                    ImageVarMarkTool.convertBitmapKey(it)
                                 }
                             val returnBitmap = when(true) {
 //                                (curIVarKey == itPronoun) -> itPronounBitmapToExitSignal?.first
@@ -1555,8 +1571,8 @@ class ImageActionManager {
                             val varNameToBitmapMap =
                                 ImageActionMapTool.makeValueToBitmapMap(
                                     curMapLoopKey,
-                                    topVarNameToVarNameBitmapMap,
-                                    importedVarNameToBitmapMap,
+                                    filterTopVarNameToVarNameBitmapMap,
+                                    filterImportedVarNameToBitmapMap,
                                     loopKeyToVarNameBitmapMapClass,
                                     privateLoopKeyVarNameBitmapMapClass,
                                     null,

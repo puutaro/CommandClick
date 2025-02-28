@@ -8,7 +8,7 @@ object ImageActionKeyManager {
     const val mainKeySeparator = '|'
     const val subKeySepartor = '?'
     const val valueSeparator = '&'
-    val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
+//    val globalVarNameRegex = "[A-Z0-9_]+".toRegex()
     const val awaitWaitTimes = 5//10
     const val returnTopAcVarNameMacro = "RESULT_OUTPUT"
 
@@ -55,20 +55,6 @@ object ImageActionKeyManager {
 
 
         const val itPronoun = "it"
-
-        fun matchBitmapVarName(
-            bitmapVarName: String,
-        ): Boolean {
-            val bitmapVarRegex = Regex("^#[{][a-zA-Z0-9_]+[}]$")
-            return bitmapVarRegex.matches(bitmapVarName)
-                    && !bitmapVarName.startsWith(VarPrefix.RUN.prefix)
-        }
-
-        fun convertBitmapKey(bitmapVar: String): String {
-            return bitmapVar
-                .removePrefix("#{")
-                .removeSuffix("}")
-        }
     }
 
     object AwaitManager {
