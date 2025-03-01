@@ -40,7 +40,10 @@ object VarMarkTool {
                 break
             }
 
-            if (targetIndex == 0 || input[targetIndex - 1] != '\\') {
+            if (
+                targetIndex == 0
+                || input[targetIndex - 1] != '\\'
+                ) {
                 result.append(input.substring(index, targetIndex)).append(varValue)
                 index = targetIndex + target.length
             } else {
@@ -116,11 +119,13 @@ object VarMarkTool {
                 return null
             }
 
-            if (startIndex == 0 || input[startIndex - 1] != '\\') {
+            if (
+                startIndex == 0
+                || input[startIndex - 1] != '\\'
+                ) {
                 return startIndex to startIndex + target.length
-            } else {
-                index = startIndex + target.length
             }
+            index = startIndex + target.length
         }
     }
 
@@ -136,12 +141,13 @@ object VarMarkTool {
             if (targetIndex == -1) {
                 return null
             }
-
-            if (targetIndex == 0 || input[targetIndex - 1] != '\\') {
+            if (
+                targetIndex == 0
+                || input[targetIndex - 1] != '\\'
+                ) {
                 return target
-            } else {
-                index = targetIndex + target.length
             }
+            index = targetIndex + target.length
         }
     }
 
@@ -149,9 +155,13 @@ object VarMarkTool {
         if (input.isEmpty()) return false
 
         for (char in input) {
-            if (!char.isAlphanumeric() && char != '_') {
-                return false
+            if (
+                char.isAlphanumeric()
+                || char == '_'
+                ) {
+                continue
             }
+            return false
         }
         return true
     }
@@ -164,9 +174,11 @@ object VarMarkTool {
         if (input.isEmpty()) return false
 
         for (char in input) {
-            if (!char.isUpperAlphanumeric() && char != '_') {
-                return false
-            }
+            if (
+                char.isUpperAlphanumeric()
+                || char == '_'
+                ) continue
+            return false
         }
         return true
     }
@@ -186,10 +198,14 @@ object VarMarkTool {
         // 英数字またはアンダースコアのチェック
         while (index < input.length - 1) {
             val char = input[index]
-            if (!char.isAlphanumeric() && char != '_') {
-                return false
+            if (
+                char.isAlphanumeric()
+                || char == '_'
+                ) {
+                index++
+                continue
             }
-            index++
+            return false
         }
 
         // 最後の文字が `}` であるかどうかをチェック
@@ -197,12 +213,16 @@ object VarMarkTool {
     }
 
     fun matchStringVarBodyAlphaNum(input: String): Boolean {
-        if (input.isEmpty()) return false
+        if (
+            input.isEmpty()
+        ) return false
 
         for (char in input) {
-            if (!char.isAlphanumeric() && char != '_') {
-                return false
-            }
+            if (
+                char.isAlphanumeric()
+                || char == '_'
+            ) continue
+            return false
         }
         return true
     }
@@ -212,27 +232,35 @@ object VarMarkTool {
         var index = 0
 
         while (index < input.length) {
-            if (input[index] == '$' && index + 1 < input.length && input[index + 1] == '{') {
-                // バックスラッシュのチェック
-                if (index > 0 && input[index - 1] == '\\') {
-                    index += 2
-                    continue
-                }
+            val isHit = input[index] == '$'
+                    && index + 1 < input.length
+                    && input[index + 1] == '{'
+            if(!isHit){
+                index++
+                continue
+            }
+            // バックスラッシュのチェック
+            if (index > 0 && input[index - 1] == '\\') {
+                index += 2
+                continue
+            }
 
-                var endIndex = index + 2
-                while (
-                    endIndex < input.length
-                    && (input[endIndex].isAlphanumeric()
-                            || input[endIndex] == '_')
+            var endIndex = index + 2
+            while (
+                endIndex < input.length
+                && (input[endIndex].isAlphanumeric()
+                        || input[endIndex] == '_')
+            ) {
+                endIndex++
+            }
+
+            if (
+                endIndex < input.length
+                && input[endIndex] == '}'
                 ) {
-                    endIndex++
-                }
-
-                if (endIndex < input.length && input[endIndex] == '}') {
-                    result += sequenceOf(input.substring(index, endIndex + 1))
-                    index = endIndex + 1
-                    continue
-                }
+                result += sequenceOf(input.substring(index, endIndex + 1))
+                index = endIndex + 1
+                continue
             }
             index++
         }

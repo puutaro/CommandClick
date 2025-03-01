@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.EditConstraintListAdapter
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager.LoopKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -38,6 +39,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ToastForS
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.TsvToolForSetting
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.StrToMapListTool
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -56,6 +58,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDateTime
+import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.enums.EnumEntries
 

@@ -2,12 +2,15 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.SpeedReplacer
 import com.puutaro.commandclick.util.str.VarMarkTool
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 object VarErrManager {
 
@@ -163,7 +166,7 @@ object VarErrManager {
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sContetn00.txt").absolutePath,
 //                    listOf(
 //                        "settingKeyAndAsyncVarNameToAwaitVarNameList: ${settingKeyAndAsyncVarNameToAwaitVarNameList}",
-//                        "keyToSubKeyConList: ${keyToSubKeyConList}",
+////                        "keyToSubKeyConList: ${keyToSubKeyConList}",
 //                    ).joinToString("\n\n") + "\n\n=============\n\n"
 //                )
         val awaitKey = SettingActionKeyManager.SettingSubKey.AWAIT.key
@@ -813,15 +816,17 @@ object VarErrManager {
                 keyToSubKeyConWhere,
             )
         }
-//
+
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sisNotReplaceVarErr.txt").absolutePath,
 //                    listOf(
 //                        "settingKeyToNoRunVarNameList: ${settingKeyToNoRunVarNameList}",
 //                        "keyToSubKeyConList: ${keyToSubKeyConList}",
+//                        "stringKeyList: ${stringKeyList}",
+//                        "keyToSubKeyListCon: ${keyToSubKeyListCon}",
 //                        "keyToSubKeyListConWithRemoveVar: ${keyToSubKeyListConWithRemoveVar}",
-//                        "settingKeyListConRegex: ${settingKeyListConRegex}",
-//                        "leaveVarMark: ${leaveVarMark}",
+////                        "settingKeyListConRegex: ${settingKeyListConRegex}",
+//                        "leaveVarMarkList: ${leaveVarMarkList.joinToString(",")}",
 //                    ).joinToString("\n\n") + "\n\n=============\n\n"
 //                )
         return true

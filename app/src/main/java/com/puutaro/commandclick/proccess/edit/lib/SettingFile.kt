@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
@@ -442,12 +443,12 @@ object SettingFile {
                                 AltRegexTool.findPrefixChars(
                                     importSrcConWithPrefix,
                                     settingSeparators,
-                                )
+                                ) ?: String()
 //                                Regex("^[${settingSeparators}]*").find(importSrcConWithPrefix)?.value
                             val importSrcCon =
-                                when (separatorPrefix == null) {
+                                when (separatorPrefix.isEmpty()) {
                                     true -> importSrcConWithPrefix
-                                    else -> importSrcConWithPrefix.removePrefix(separatorPrefix.toString())
+                                    else -> importSrcConWithPrefix.removePrefix(separatorPrefix)
                                 }.removeSuffix(importEndSeparator)
 //                FileSystems.updateFile(
 //                    File(UsePath.cmdclickDefaultAppDirPath, "sInImpoet.txt").absolutePath,
@@ -774,6 +775,23 @@ object SettingFile {
                             }
 //                            dateList.add("replace${index} ${importPath}" to LocalDateTime.now())
 //                            dateList.add("loopEnd${index}" to LocalDateTime.now())
+//                            if(fannelName.contains("settingAc")) {
+//                                FileSystems.updateFile(
+//                                    File(UsePath.cmdclickDefaultAppDirPath, "sKeytoSubKeyCon.txt").absolutePath,
+//                                    listOf(
+//                                        "prefix: ${prefix}",
+//                                        "suffix: ${suffix}",
+//                                        "separatorPrefix:${separatorPrefix}",
+//                                        "importRawSrcCon: ${importRawSrcCon}",
+//                                        "importCon: ${importCon}",
+////                "editListConfigMapSrc: ${editListConfigMapSrc}",
+////                "keyToSubKeyCon: ${
+////                    SettingActionForEditList.getSettingConfigCon(
+////                    editListConfigMapSrc,
+////                )}"
+//                                    ).joinToString("\n")
+//                                )
+//                            }
                             Pair(
                                 importRawSrcCon,
                                 "${separatorPrefix}${importCon}"
