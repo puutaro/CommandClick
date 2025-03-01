@@ -239,9 +239,9 @@ object SettingFile {
         private const val importEndSeparator = ".impEND"
         private const val settingSeparators = "|?&"
         private const val replaceSeparator = '&'
-        private const val importRegexStr =
-            "\n[ \t]*[${settingSeparators}]*${importPreWord}=.+?\\${importEndSeparator}"
-        private val importRegex = importRegexStr.toRegex(RegexOption.DOT_MATCHES_ALL)
+//        private const val importRegexStr =
+//            "\n[ \t]*[${settingSeparators}]*${importPreWord}=.+?\\${importEndSeparator}"
+//        private val importRegex = importRegexStr.toRegex(RegexOption.DOT_MATCHES_ALL)
         private enum class ImportKey(val key: String) {
             IMPORT_PATH("importPath"),
             REPLACE("replace"),
@@ -283,6 +283,76 @@ object SettingFile {
             }
         }
 
+        fun findAllImportStatements(input: String): Sequence<String> {
+            val blackSec = sequenceOf(
+                ' ', '\t',
+            )
+            var result = sequenceOf<String>()
+            var index = 0
+            while (index < input.length) {
+                // 改行のチェック
+                if (input[index] != '\n') {
+                    index++
+                    continue
+                }
+                index++
+                // 空白とタブのチェック
+                while (
+                    index < input.length
+                    && blackSec.contains(input[index])
+                ) {
+                    index++
+                }
+
+                // 設定セパレータのチェック
+                while (
+                    index < input.length
+                    && settingSeparators.contains(input[index])
+                ) {
+                    index++
+                }
+
+                // インポートプレワードのチェック
+                if (
+                    index + importPreWord.length >= input.length
+                    || input.substring(
+                        index,
+                        index + importPreWord.length
+                    ) != importPreWord
+                ) continue
+                index += importPreWord.length
+
+                // 等号のチェック
+                if (
+                    index >= input.length
+                    || input[index] != '='
+                ) continue
+                index++
+
+                // 任意の文字のチェック
+                val startIndex = index
+                while (index < input.length) {
+                    if (
+                        index + importEndSeparator.length <= input.length
+                        && input.substring(
+                            index,
+                            index + importEndSeparator.length
+                        ) == importEndSeparator
+                    ) {
+                        result +=
+                            input.substring(
+                                startIndex - importPreWord.length - 1,
+                                index + importEndSeparator.length
+                            )
+                        index += importEndSeparator.length
+                        break
+                    }
+                    index++
+                }
+            }
+            return result
+        }
+
 
 
         fun import(
@@ -311,7 +381,9 @@ object SettingFile {
             )
                 //settingConBeforeImport
             for(i in 1..5) {
-                val result = importRegex.findAll(settingCon)
+                val result =
+                    findAllImportStatements(settingCon)
+//                    importRegex.findAll(settingCon)
                 if(
                     result.count() == 0
                 ){
@@ -351,17 +423,18 @@ object SettingFile {
             settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
             imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
             settingConBeforeImport: String,
-            result: Sequence<MatchResult>,
+            result: Sequence<String>,
+//            result: Sequence<MatchResult>,
         ): String {
 //            val dateList = mutableListOf<Pair<String, LocalDateTime>>()
 //            dateList.add("init" to LocalDateTime.now())
 //            var settingCon = settingConBeforeImport
             val rawToConList = runBlocking {
                 withContext(Dispatchers.IO) {
-                    val importRawToConJobList = result.mapIndexed { index, it ->
+                    val importRawToConJobList = result.mapIndexed { index, importRawSrcCon ->
                         async {
 //                            dateList.add("loop${index}" to LocalDateTime.now())
-                            val importRawSrcCon = it.value
+//                            val importRawSrcCon = it.value
                             val importSrcConWithPrefix = importRawSrcCon
                                 .trim('\n')
                                 .trim()
