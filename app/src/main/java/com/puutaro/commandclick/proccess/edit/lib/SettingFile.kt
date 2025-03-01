@@ -19,6 +19,8 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.AltRegexTool
+import com.puutaro.commandclick.util.str.RegexTool
 import com.puutaro.commandclick.util.str.SpeedReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -364,7 +366,11 @@ object SettingFile {
                                 .trim('\n')
                                 .trim()
                             val separatorPrefix =
-                                Regex("^[${settingSeparators}]*").find(importSrcConWithPrefix)?.value
+                                AltRegexTool.findPrefixChars(
+                                    importSrcConWithPrefix,
+                                    settingSeparators,
+                                )
+//                                Regex("^[${settingSeparators}]*").find(importSrcConWithPrefix)?.value
                             val importSrcCon =
                                 when (separatorPrefix == null) {
                                     true -> importSrcConWithPrefix
@@ -768,10 +774,15 @@ object SettingFile {
 
 
         private fun trimImportSrcCon(jsList: List<String>): String {
-            return "\n" + jsList.joinToString("\n")
-                .replace("\n[ 　\t]*".toRegex(), "\n")
-                .replace("\n//[^\n]+".toRegex(), "\n")
+            return "\n" + jsList.joinToString("\n").let {
+                AltRegexTool.removeSpaceTagAfterNewline(it)
+            }.let {
+                AltRegexTool.removeCommentLines(it)
+            }
+//                .replace("\n[ 　\t]*".toRegex(), "\n")
+//                .replace("\n//[^\n]+".toRegex(), "\n")
         }
+
 
 
         private object ImportExecutor {

@@ -61,4 +61,83 @@ object AltRegexTool {
         return result.toString()
     }
 
+    fun findPrefixChars(
+        input: String,
+        chars: String,
+    ): String? {
+        if (
+            input.isEmpty()
+            ) return null
+
+        var endIndex = 0
+        while (
+            endIndex < input.length
+            && chars.contains(input[endIndex])
+//            ||input[endIndex] == '?'
+//                    || input[endIndex] == '&'
+//                    || input[endIndex] == '|'
+        ) {
+            endIndex++
+        }
+
+        if (endIndex > 0) {
+            return input.substring(0, endIndex)
+        }
+        return null
+    }
+
+    fun removeSpaceTagAfterNewline(input: String): String {
+        val trimSeq = sequenceOf(
+            ' ',
+            '　',
+            '\t',
+        )
+        val result = StringBuilder()
+        var index = 0
+        while (index < input.length) {
+            if (input[index] != '\n') {
+                result.append(input[index])
+                index++
+                continue
+            }
+            result.append('\n')
+            index++
+            while (
+                index < input.length
+                && trimSeq.contains(input[index])
+            ) {
+                index++
+            }
+        }
+        return result.toString()
+    }
+
+
+    fun removeCommentLines(input: String): String {
+        val result = StringBuilder()
+        var index = 0
+
+        while (index < input.length) {
+            if (input[index] != '\n'){
+                result.append(input[index])
+                index++
+                continue
+            }
+            result.append('\n')
+            index++
+            if (
+                index + 2 < input.length
+                && input.substring(index, index + 2) == "//"
+                ) {
+                while (
+                    index < input.length
+                    && input[index] != '\n'
+                ) {
+                    index++
+                }
+            }
+        }
+        return result.toString()
+    }
+
 }
