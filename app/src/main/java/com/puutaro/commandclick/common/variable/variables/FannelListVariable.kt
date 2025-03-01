@@ -8,6 +8,7 @@ import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
+import com.puutaro.commandclick.util.str.AltRegexTool
 import java.io.File
 
 object FannelListVariable {
@@ -108,14 +109,27 @@ object FannelListVariable {
         val readmeSuffix = UrlFileSystems.readmeSuffix
         val gitSuffix = ".git"
         return sequenceOf(
-            readmeUrl
-                .replace(Regex("${gitSuffix}#.*$"), "")
-                .replace(Regex("#.*$"), "")
-                .removeSuffix(gitSuffix)
+            AltRegexTool.removeFrom(
+                readmeUrl,
+                "${gitSuffix}#"
+            ).let {
+                AltRegexTool.removeFrom(
+                    readmeUrl,
+                    "#"
+                )
+            }.removeSuffix(gitSuffix)
                 .replace(
                     gitComPrefix,
                     gitUserContentPrefix
                 ),
+//            readmeUrl
+//                .replace(Regex("${gitSuffix}#.*$"), "")
+//                .replace(Regex("#.*$"), "")
+//                .removeSuffix(gitSuffix)
+//                .replace(
+//                    gitComPrefix,
+//                    gitUserContentPrefix
+//                ),
             readmeSuffix
         ).joinToString("/")
     }

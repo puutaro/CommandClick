@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
+import com.puutaro.commandclick.util.str.AltRegexTool
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -71,10 +72,17 @@ object AssetsFileManager {
     fun concatAssetsPath(
         pathList: List<String>
     ): String {
-        return pathList.joinToString("/").replace(
-            Regex("[/]+"),
-            "/"
-        ).removePrefix("/")
+        return pathList.joinToString("/").let{
+            AltRegexTool.consecCharToOne(
+                it,
+                '/',
+            )
+        }
+//            .replace(
+//            Regex("[/]+"),
+//            "/"
+//        )
+            .removePrefix("/")
     }
 
     fun assetsByteArray(
@@ -170,10 +178,16 @@ object AssetsFileManager {
                 return
             }
             val dirPath =
-                "${targetDirPath}/${path.removePrefix(replacePrefix)}".replace(
-                    Regex("[/]+"),
-                    "/"
-                )
+                "${targetDirPath}/${path.removePrefix(replacePrefix)}".let{
+                    AltRegexTool.consecCharToOne(
+                        it,
+                        '/',
+                    )
+                }
+//                    .replace(
+//                    Regex("[/]+"),
+//                    "/"
+//                )
             val dir = File(
                 dirPath
             )

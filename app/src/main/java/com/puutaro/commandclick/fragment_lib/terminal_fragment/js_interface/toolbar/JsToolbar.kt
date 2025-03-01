@@ -14,6 +14,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.url.SiteUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -99,11 +100,15 @@ class JsToolbar(
             title.isEmpty()
         ) {
             true -> CommandClickScriptVariable.makeRndPrefix()
-            else -> title.replace(
-                Regex(
-                    "[\"#$%&'()~^|{}\\[\\];:`<>*\t]"),
-                String()
+            else -> AltRegexTool.removeChars(
+                title,
+                "\"#$%&'()~^|{}[];:`<>*\t",
             )
+//            title.replace(
+//                Regex(
+//                    "[\"#$%&'()~^|{}\\[\\];:`<>*\t]"),
+//                String()
+//            )
         }
         val compFileName = EditSettingExtraArgsTool.makeCompFileName(
             editFragment,

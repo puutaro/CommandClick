@@ -469,13 +469,16 @@ object CmdClickMap {
         targetCon: String,
         repMap: Map<String, String>?
     ): Map<String, String> {
-        val valNameDefaValueRegex =
-            "\\{\\{ [A-Z0-9_-]{1,}[:]{0,1}.*? \\}\\}"
-        val valNameDefaValueResult =
-            Regex(valNameDefaValueRegex)
-                .findAll(targetCon)
+//        val valNameDefaValueRegex =
+//            "\\{\\{ [A-Z0-9_-]{1,}[:]{0,1}.*? \\}\\}"
+        val valNameDefaValueResult = findAllDoubleBraces(
+            targetCon
+        )
+//            Regex(valNameDefaValueRegex)
+//                .findAll(targetCon)
         return valNameDefaValueResult.map {
-            val hitHolderMark = it.value
+            hitHolderMark ->
+//            val hitHolderMark = it.value
             val holderNameAndDefaultValueList =
                 hitHolderMark
                     .trim()
@@ -495,5 +498,57 @@ object CmdClickMap {
                 ?: defaultValue
             hitHolderMark to repValue
         }.toMap().filterKeys { it.isNotEmpty() }
+    }
+
+    fun findAllDoubleBraces(input: String): Sequence<String> {
+        var result = sequenceOf<String>()
+        var index = 0
+
+        while (index < input.length) {
+            if (
+                index + 3 < input.length
+                && input.substring(index, index + 3) == "{{ "
+                ) {
+                var endIndex = index + 3
+                while (
+                    endIndex < input.length
+                    && (input[endIndex].isAlphanumeric()
+                            || input[endIndex] == '_'
+                            || input[endIndex] == '-'
+                            )
+                ) {
+                    endIndex++
+                }
+
+                if (
+                    endIndex < input.length
+                    && input[endIndex] == ':'
+                    ) {
+                    endIndex++
+                }
+
+                while (
+                    endIndex + 3 <= input.length
+                    && input.substring(endIndex, endIndex + 3) != " }}"
+                ) {
+                    endIndex++
+                }
+
+                if (
+                    endIndex + 3 <= input.length
+                    && input.substring(endIndex, endIndex + 3) == " }}"
+                    ) {
+                    result += sequenceOf(input.substring(index, endIndex + 3))
+                    index = endIndex + 3
+                    continue
+                }
+            }
+            index++
+        }
+        return result
+    }
+
+    fun Char.isAlphanumeric(): Boolean {
+        return this in 'A'..'Z' || this in '0'..'9'
     }
 }

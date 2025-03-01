@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.history.fannel_history
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.FannelInfoSetting
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 
@@ -32,9 +33,15 @@ object FannelHistoryPath {
                 currentFannelName,
             ),
             partPngDirName
-        ).joinToString("/").replace(
-            Regex("[/]+"), "/"
-        )
+        ).joinToString("/").let{
+            AltRegexTool.consecCharToOne(
+                it,
+                '/',
+            )
+        }
+//        .replace(
+//            Regex("[/]+"), "/"
+//        )
     }
 
     fun getCaptureFacePngDirPath(
@@ -47,9 +54,15 @@ object FannelHistoryPath {
                 currentFannelName,
             ),
             faceDirName
-        ).joinToString("/").replace(
-            Regex("[/]+"), "/"
-        )
+        ).joinToString("/").let {
+            AltRegexTool.consecCharToOne(
+                it,
+                '/',
+            )
+        }
+//            .replace(
+//            Regex("[/]+"), "/"
+//        )
     }
 
 
@@ -63,9 +76,15 @@ object FannelHistoryPath {
                 currentFannelName,
             ),
             gifFileName
-        ).joinToString("/").replace(
-            Regex("[/]+"), "/"
-        )
+        ).joinToString("/").let {
+            AltRegexTool.consecCharToOne(
+                it,
+                '/',
+            )
+        }
+//            .replace(
+//            Regex("[/]+"), "/"
+//        )
     }
 
     fun getCaptureGifDesignPath(
@@ -78,9 +97,15 @@ object FannelHistoryPath {
                 currentFannelName,
             ),
             gifDesignName
-        ).joinToString("/").replace(
-            Regex("[/]+"), "/"
-        )
+        ).joinToString("/").let {
+            AltRegexTool.consecCharToOne(
+                it,
+                '/',
+            )
+        }
+//            .replace(
+//            Regex("[/]+"), "/"
+//        )
     }
 
     private fun makeFannelSettingImagesCaptureDirPath(

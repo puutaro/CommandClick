@@ -126,13 +126,12 @@ object ListDialogForButton {
             alertDialog?.dismiss()
             alertDialog = null
             val selectedElement = listCon.split("\n").filter {
-                Regex(
                     searchText.text.toString()
                         .lowercase()
                         .replace("\n", "")
-                ).containsMatchIn(
-                    it.lowercase()
-                )
+                        .contains(
+                            it.lowercase()
+                        )
             }
 
                 .get(pos)
@@ -169,13 +168,12 @@ object ListDialogForButton {
             override fun afterTextChanged(s: Editable?) {
                 if (!searchText.hasFocus()) return
                 val filteredList = listCon.split("\n").filter {
-                    Regex(
-                        searchText.text.toString()
+                    searchText.text.toString()
                             .lowercase()
                             .replace("\n", "")
-                    ).containsMatchIn(
-                        it.lowercase()
-                    )
+                            .contains(
+                                it.lowercase()
+                            )
                 }
 
                 CommandListManager.execListUpdateByEditText(

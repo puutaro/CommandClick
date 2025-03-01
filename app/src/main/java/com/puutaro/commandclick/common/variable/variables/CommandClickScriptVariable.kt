@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.str.AltRegexTool
 import java.io.File
 
 
@@ -680,9 +681,14 @@ object CommandClickScriptVariable {
                 )
                 .split("\n")
                 .map {
-                    it.replace(
-                        Regex("^#"), "//"
+                    AltRegexTool.replacePrefix(
+                        it,
+                        "#",
+                        "//"
                     )
+//                    it.replace(
+//                        Regex("^#"), "//"
+//                    )
             }.joinToString("\n")
         }
         val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
@@ -710,9 +716,14 @@ object CommandClickScriptVariable {
     """.trimMargin()
             .split("\n")
             .map {
-                it.replace(
-                    Regex("^#"), "//"
+                AltRegexTool.replacePrefix(
+                    it,
+                    "#",
+                    "//"
                 )
+//                it.replace(
+//                    Regex("^#"), "//"
+//                )
             }.joinToString("\n")
     }
 

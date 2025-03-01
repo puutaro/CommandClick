@@ -315,11 +315,9 @@ object UrlHistoryButtonEvent{
                 val filteredCmdStrList = updateHistoryList.filter {
                     val title =  it.get(titleKey)?.lowercase()
                         ?: return@filter false
-                    Regex(
                         s.toString()
                             .lowercase()
-                            .replace("\n", "")
-                    ).containsMatchIn(
+                            .replace("\n", "").contains(
                         title.lowercase()
                     )
                 }
@@ -628,13 +626,12 @@ object UrlHistoryButtonEvent{
             val title = UrlTool.trimTitle(
                 urlTitleSource
             )
-            Regex(
-                searchText.text.toString()
+           searchText.text.toString()
                     .lowercase()
                     .replace("\n", "")
-            ).containsMatchIn(
-                title.lowercase()
-            )
+                    .contains(
+                        title.lowercase()
+                    )
         }
     }
 

@@ -208,12 +208,13 @@ object FannelHistoryButtonEvent {
 
                 val updateFannelNameList = makeUpdateFannelNameList()
                 val filteredCmdStrList = updateFannelNameList.filter {
-                    Regex(
-                        s.toString()
-                            .lowercase()
-                            .replace("\n", "")
-                    ).containsMatchIn(
-                        it.lowercase()
+                    s.toString()
+                        .lowercase()
+                        .replace(
+                            "\n",
+                            String(),
+                        ).contains(
+                            it.lowercase()
                     )
                 }
                 fannelManageListAdapter.fannelNameList.clear()

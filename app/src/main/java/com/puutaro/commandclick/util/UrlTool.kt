@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util
 
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.SpeedReplacer
 import com.puutaro.commandclick.util.url.WebUrlVariables
 
@@ -31,10 +32,17 @@ object UrlTool {
             httpsPrefix,
             httpsPrefixMark
         )
-            .replace(
-                Regex("^${slashPrefix}"),
-                slashPrefixMark
-            ).let {
+//            .replace(
+//                Regex("^${slashPrefix}"),
+//                slashPrefixMark
+//            )
+            .let {
+                AltRegexTool.replacePrefix(
+                    it,
+                    slashPrefix,
+                    slashPrefixMark,
+                )
+            }.let {
                 SpeedReplacer.replace(
                     it,
                     sequenceOf(

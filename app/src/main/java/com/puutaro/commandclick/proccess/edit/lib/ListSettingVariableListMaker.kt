@@ -14,6 +14,7 @@ import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.AltRegexTool
 import java.io.File
 
 object ListSettingVariableListMaker {
@@ -231,9 +232,13 @@ object ListSettingVariableListMaker {
 //        currentAppDirPath: String,
         currentFannelName: String,
     ): String {
-        return valueListCon.replace(
-            Regex("\n\n*"),
-            "\n"
+//        valueListCon.replace(
+//            Regex("\n\n*"),
+//            "\n"
+//        )
+        return AltRegexTool.consecCharToOne(
+            valueListCon,
+            '\n',
         ).split("\n")
             .filter {
                 it.isNotEmpty()

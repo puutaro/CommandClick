@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.history.url_history
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.url.WebUrlVariables
 import java.io.File
 
@@ -79,9 +80,15 @@ object UrlHistoryPath {
             makeCaptureHistoryDirPath(),
             makePathNameFromUrl(currentUrl),
             partPngDirName
-        ).joinToString("/").replace(
-            Regex("[/]+"), "/"
-        )
+        ).joinToString("/").let{
+            AltRegexTool.consecCharToOne(
+                it,
+                '/',
+            )
+        }
+//            .replace(
+//            Regex("[/]+"), "/"
+//        )
     }
 
 //    fun getCaptureGifTextPath(
@@ -105,9 +112,15 @@ object UrlHistoryPath {
             makeCaptureHistoryDirPath(),
             makePathNameFromUrl(currentUrl),
             "gif.gif"
-        ).joinToString("/").replace(
-            Regex("[/]+"), "/"
-        )
+        ).joinToString("/").let{
+            AltRegexTool.consecCharToOne(
+                it,
+                '/',
+            )
+        }
+//            .replace(
+//            Regex("[/]+"), "/"
+//        )
     }
 
 }
