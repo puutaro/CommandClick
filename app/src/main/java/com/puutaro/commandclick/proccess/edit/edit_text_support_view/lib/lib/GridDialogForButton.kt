@@ -132,12 +132,11 @@ object GridDialogForButton {
             terminalViewModel.onDialog = false
             val selectedElement =
                 makeGridList(listCon).filter {
-                    searchText.text.toString()
+                    it.lowercase().contains(
+                        searchText.text.toString()
                         .lowercase()
                         .replace("\n", "")
-                        .contains(
-                            it.lowercase()
-                        )
+                    )
             }.get(pos)
             terminalViewModel.onDialog = false
             terminalViewModel.dialogReturnValue = selectedElement
@@ -159,12 +158,10 @@ object GridDialogForButton {
                 if (!searchText.hasFocus()) return
                 val filteredList =
                     makeGridList(listCon).filter {
-                            searchText.text.toString()
-                                .lowercase()
-                                .replace("\n", "")
-                                .contains(
-                                    it.lowercase()
-                                )
+                        it.lowercase().contains(searchText.text.toString()
+                            .lowercase()
+                            .replace("\n", "")
+                        )
                     }
 
                 imageAdapter.clear()

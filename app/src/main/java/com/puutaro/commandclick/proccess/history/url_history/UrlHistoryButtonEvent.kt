@@ -315,10 +315,10 @@ object UrlHistoryButtonEvent{
                 val filteredCmdStrList = updateHistoryList.filter {
                     val title =  it.get(titleKey)?.lowercase()
                         ?: return@filter false
+                    title.lowercase().contains(
                         s.toString()
                             .lowercase()
-                            .replace("\n", "").contains(
-                        title.lowercase()
+                            .replace("\n", "")
                     )
                 }
                 urlHistoryListAdapter.urlHistoryMapList.clear()

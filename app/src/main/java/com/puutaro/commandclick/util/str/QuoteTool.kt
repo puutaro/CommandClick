@@ -225,7 +225,14 @@ object QuoteTool {
         val layoutSeparatorStr = layoutSeparator.toString()
         return surroundLayoutSeparatorReplace(
             targetCon,
-        ).replace(Regex("[${layoutSeparator}]+"), layoutSeparator.toString()).split(
+        ).let {
+            AltRegexTool.consecCharToOne(
+                it,
+                layoutSeparator,
+            )
+        }
+//            .replace(Regex("[${layoutSeparator}]+"), layoutSeparator.toString())
+            .split(
             layoutSeparatorStr,
         ).filter {
             it.isNotEmpty()
