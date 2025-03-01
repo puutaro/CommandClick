@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.util
 
+import com.puutaro.commandclick.util.str.AltRegexTool
+
 object RecordNumToMapNameValueInHolder {
 
     fun parse(
@@ -27,12 +29,15 @@ object RecordNumToMapNameValueInHolder {
         } else {
             return null
         }
-        val cmdclickVariableRegex = Regex("^[a-zA-Z0-9_-]*=")
+//        val cmdclickVariableRegex = Regex("^[a-zA-Z0-9_-]*=")
         return substituteCmdStartEndContentList.asSequence().map {
                 substituteCmdStartEndContentStr ->
-            val result = cmdclickVariableRegex.containsMatchIn(
+            val result = AltRegexTool.containsAlphaNumUnderscoreHyphenEquals(
                 substituteCmdStartEndContentStr
             )
+//            cmdclickVariableRegex.containsMatchIn(
+//                substituteCmdStartEndContentStr
+//            )
             if(
                 !result
             ) return@map String() to String()

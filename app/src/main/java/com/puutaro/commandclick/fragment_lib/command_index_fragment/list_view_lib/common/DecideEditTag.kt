@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.str.AltRegexTool
 
 class DecideEditTag(
     private val shellContentsList: List<String>,
@@ -87,15 +88,18 @@ class DecideEditTag(
         startHolderName: String,
         endHolderName: String,
     ): Boolean {
-        val cmdclickVariableRegex = Regex("^[a-zA-Z0-9_-]*=")
+//        val cmdclickVariableRegex = Regex("^[a-zA-Z0-9_-]*=")
         return CommandClickVariables.extractValListFromHolder(
             shellContentsList,
             startHolderName,
             endHolderName
         )?.filter {
-            cmdclickVariableRegex.containsMatchIn(
-                it
+            AltRegexTool.containsAlphaNumUnderscoreHyphenEquals(
+                it,
             )
+//            cmdclickVariableRegex.containsMatchIn(
+//                it
+//            )
         }?.size?.let {
             it > 0
         } ?: false

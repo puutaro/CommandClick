@@ -140,4 +140,26 @@ object AltRegexTool {
         return result.toString()
     }
 
+    fun containsAlphaNumUnderscoreHyphenEquals(input: String): Boolean {
+        if (input.isEmpty()) return false
+
+        var index = 0
+        while (
+            index < input.length
+            && (input[index].isAlphanumeric()
+                    || input[index] == '_'
+                    || input[index] == '-'
+                    )
+        ) {
+            index++
+        }
+
+        return index < input.length
+                && input[index] == '='
+    }
+
+    private fun Char.isAlphanumeric(): Boolean {
+        return this in 'A'..'Z' || this in 'a'..'z' || this in '0'..'9'
+    }
+
 }
