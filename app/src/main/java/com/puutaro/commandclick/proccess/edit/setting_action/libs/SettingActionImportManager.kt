@@ -85,7 +85,7 @@ object SettingActionImportManager {
 
     suspend fun makeImportPathAndRenewalVarNameToImportCon(
         context: Context,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         curMapLoopKey: String,
         topVarNameToValueStrMap: Map<String, String?>?,
@@ -500,7 +500,7 @@ object SettingActionImportManager {
 
     private suspend fun makeActionImportSrcCon(
         context: Context,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,

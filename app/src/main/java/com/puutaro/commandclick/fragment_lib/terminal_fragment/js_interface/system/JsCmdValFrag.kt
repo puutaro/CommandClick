@@ -38,7 +38,7 @@ class JsCmdValFrag(
                     fannelStateKeyName -> keyName to state
                     else -> keyName to it.value
                 }
-            }.toMap() as HashMap<String, String>
+            }.toMap()
         val editFragArg = EditFragmentArgs(
             updatedFannelInfoMap,
             EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,

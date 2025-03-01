@@ -18,7 +18,7 @@ object ItemTouchHelperCallbackForEditListAdapter {
     suspend fun set(
 //        editFragment: EditFragment,
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         recyclerView: RecyclerView,
         editConstraintListAdapter: EditConstraintListAdapter,
@@ -110,7 +110,7 @@ object ItemTouchHelperCallbackForEditListAdapter {
     }
 
     private fun switchHandler(
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editConstraintListAdapter: EditConstraintListAdapter,
         fromViewHolder: EditConstraintListAdapter.EditListViewHolder,

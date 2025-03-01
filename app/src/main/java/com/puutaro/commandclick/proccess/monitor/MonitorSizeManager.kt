@@ -60,7 +60,7 @@ object MonitorSizeManager {
         listener?.onToolbarMenuCategories(
             ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
             EditFragmentArgs(
-                hashMapOf(),
+                emptyMap(),
                 EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
             )
         )

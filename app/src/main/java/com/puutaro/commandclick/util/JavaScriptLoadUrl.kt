@@ -218,7 +218,7 @@ object JavaScriptLoadUrl {
 
     fun makeRawJsConFromContents(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         jsConBeforeJsImport: String,
         setReplaceVariableMap: Map<String, String>?,
     ): String {

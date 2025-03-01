@@ -72,7 +72,7 @@ object OkButtonHandler {
                 listener?.onToolBarButtonClickForEditFragment(
                     String(),
                     ToolbarButtonBariantForEdit.CANCEL,
-                    hashMapOf(),
+                    emptyMap(),
                     false
                 )
             }
@@ -93,7 +93,7 @@ object OkButtonHandler {
                 listener?.onToolBarButtonClickForEditFragment(
                     String(),
                     ToolbarButtonBariantForEdit.CANCEL,
-                    hashMapOf(),
+                    emptyMap(),
                     false
                 )
             }

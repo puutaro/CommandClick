@@ -19,7 +19,7 @@ object ExecToolBarButtonClickForEdit {
         activity: MainActivity,
         callOwnerFragmentTag : String?,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         enableCmdEdit: Boolean,
     ){
         when(toolbarButtonBariantForEdit){

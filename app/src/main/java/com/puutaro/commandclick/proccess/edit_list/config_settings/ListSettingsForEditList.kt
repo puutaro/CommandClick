@@ -58,7 +58,7 @@ object ListSettingsForEditList  {
     object ViewLayoutPathManager{
 
         fun getViewLayoutPath(
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             configMap: Map<String, String>?,
             keyName: String,
@@ -73,7 +73,7 @@ object ListSettingsForEditList  {
 
         suspend fun parseForConstraint(
             fragment: Fragment,
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
             globalVarNameToValueMap: Map<String, String>?,
@@ -143,7 +143,7 @@ object ListSettingsForEditList  {
 
         suspend fun parseFromListForConstraint(
             fragment: Fragment,
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
             globalVarNameToValueMap: Map<String, String>?,
@@ -484,7 +484,7 @@ object ListSettingsForEditList  {
     }
 
     fun howExistPathForTsv(
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         indexListMap: Map<String, String>,
         mapList: List<Map<String, String>>
@@ -510,7 +510,7 @@ object ListSettingsForEditList  {
     }
 
     fun getSortType(
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         indexListMap: Map<String, String>?,
     ): SortByKey {
@@ -531,7 +531,7 @@ object ListSettingsForEditList  {
         private const val itemNameMark = "\${ITEM_NAME}"
 
         fun makeLineMapListHandler(
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             indexListMap: Map<String, String>,
             busyboxExecutor: BusyboxExecutor?
@@ -601,7 +601,7 @@ object ListSettingsForEditList  {
         }
 
         private fun makeLineMapList(
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             indexListMap: Map<String, String>,
             busyboxExecutor: BusyboxExecutor?,
@@ -838,7 +838,7 @@ object ListSettingsForEditList  {
         }
 
         fun getFilterShellCon(
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             indexListMap: Map<String, String>?,
         ): String {
@@ -856,7 +856,7 @@ object ListSettingsForEditList  {
         }
 
         private fun execGetFilterShellCon(
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             filterShellPath: String,
         ): String {
@@ -888,7 +888,7 @@ object ListSettingsForEditList  {
 private object CompPathManager {
 
     fun concatByCompConWhenTsvEdit(
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         indexListMap: Map<String, String>,
         lineMapListSrc: List<Map<String, String>>
@@ -959,7 +959,7 @@ private object CompPathManager {
     }
 
     private fun makeInitConFromFile(
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         initTsvPathObj: File,
     ): List<Map<String, String>> {

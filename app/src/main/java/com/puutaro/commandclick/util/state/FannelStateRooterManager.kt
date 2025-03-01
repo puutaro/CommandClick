@@ -18,7 +18,7 @@ object FannelStateRooterManager {
 
     fun makeSettingVariableList(
         context: Context?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingSectionStart: String,
         settingSectionEnd: String,
@@ -60,7 +60,7 @@ object FannelStateRooterManager {
     }
 
     fun getSettingFannelPath(
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(

@@ -24,7 +24,7 @@ class GetFileForEdit(
 
     fun get(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView,
         parentDirPath: String,
@@ -71,7 +71,7 @@ class GetFileForEdit(
 
     private fun execGetDir(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView,
         parentDirPath: String,
@@ -126,7 +126,7 @@ class GetFileForEdit(
 
     private fun execGetFile(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView,
         parentDirPath: String,
@@ -198,7 +198,7 @@ class GetFileForEdit(
 
     private fun execGetForTsv(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView,
         sourceFilePath: String,
@@ -243,7 +243,7 @@ class GetFileForEdit(
 
     private fun registerFileHandler(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView,
         sourceFileOrDirPath: String,

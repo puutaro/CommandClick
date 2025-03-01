@@ -575,7 +575,7 @@ object QrLogoSettingsForQrDialog {
 
 //        fun makeIconNameConfigMap(
 //            setReplaceVariableMap: Map<String, String>?,
-//            fannelInfoMap: HashMap<String, String>?,
+//            fannelInfoMap: Map<String, String>?,
 //            iconConfigMap: Map<String, String>,
 //        ): Map<String, String> {
 //            val nameConfigPathKey = QrIcon.NAME_CONFIG_PATH.key

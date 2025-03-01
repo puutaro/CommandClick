@@ -37,7 +37,7 @@ object FannelInfoTool {
     fun getFannelInfoMap(
         fragment: Fragment,
         mainOrSubFannelPath: String?,
-    ): HashMap<String, String> {
+    ): Map<String, String> {
         if(
             mainOrSubFannelPath.isNullOrEmpty()
         ){
@@ -45,7 +45,7 @@ object FannelInfoTool {
                 is CommandIndexFragment -> fragment.fannelInfoMap
                 is EditFragment -> fragment.fannelInfoMap
                 is TerminalFragment -> fragment.fannelInfoMap
-                else -> hashMapOf()
+                else -> emptyMap()
             }
         }
         val currentAppDirPath = CcPathTool.getMainAppDirPath(
@@ -54,7 +54,7 @@ object FannelInfoTool {
         val currentFannelName = File(
             CcPathTool.getMainFannelFilePath(mainOrSubFannelPath)
         ).name
-        return hashMapOf(
+        return mapOf(
 //            FannelInfoSetting.current_app_dir.name
 //                    to currentAppDirPath,
             FannelInfoSetting.current_fannel_name.name
@@ -64,7 +64,7 @@ object FannelInfoTool {
     }
 
 //    fun getCurrentAppDirPath(
-//        fannelInfoMap: HashMap<String, String>,
+//        fannelInfoMap: Map<String, String>,
 //    ): String {
 //        return getValFromFannelInfoMap(
 //            fannelInfoMap,
@@ -73,7 +73,7 @@ object FannelInfoTool {
 //    }
 
     fun getCurrentFannelName(
-        fannelInfoMap: HashMap<String, String>?,
+        fannelInfoMap: Map<String, String>?,
     ): String {
         if(
             fannelInfoMap.isNullOrEmpty()
@@ -92,7 +92,7 @@ object FannelInfoTool {
     }
 
     fun getCurrentStateName(
-        fannelInfoMap: HashMap<String, String>?,
+        fannelInfoMap: Map<String, String>?,
     ): String {
         if(
             fannelInfoMap.isNullOrEmpty()
@@ -104,7 +104,7 @@ object FannelInfoTool {
     }
 
     fun getOnShortcut(
-        fannelInfoMap: HashMap<String, String>?,
+        fannelInfoMap: Map<String, String>?,
     ): String {
         if(
             fannelInfoMap.isNullOrEmpty()
@@ -175,7 +175,7 @@ object FannelInfoTool {
 
     fun makeFannelInfoMapByShare(
         fannelInfoSharePref: FannelInfoSharePref?
-    ): HashMap<String, String> {
+    ): Map<String, String> {
 //        val sharedCurrentAppPath = UsePath.cmdclickDefaultAppDirPath
 
         val sharedCurrentShellFileName = getStringFromFannelInfo(
@@ -192,7 +192,7 @@ object FannelInfoTool {
             FannelInfoSetting.current_fannel_state
         )
 
-        return hashMapOf(
+        return mapOf(
 //            FannelInfoSetting.current_app_dir.name
 //                    to sharedCurrentAppPath,
             FannelInfoSetting.current_fannel_name.name
@@ -208,8 +208,8 @@ object FannelInfoTool {
 //        currentAppDirPath: String = String(),
         currentFannelName: String = String(),
         currentFannelState: String = String()
-    ): HashMap<String, String> {
-        return hashMapOf(
+    ): Map<String, String> {
+        return mapOf(
 //            FannelInfoSetting.current_app_dir.name
 //                    to currentAppDirPath,
             FannelInfoSetting.current_fannel_name.name
@@ -220,7 +220,7 @@ object FannelInfoTool {
     }
 
     private fun getValFromFannelInfoMap(
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         fannelInfoSetting: FannelInfoSetting
     ): String {
         return try {

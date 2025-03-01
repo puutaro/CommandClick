@@ -44,7 +44,7 @@ class CommandIndexFragment: Fragment() {
     var onTermVisibleWhenKeyboard =
         CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
 //    var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
-    var fannelInfoMap: HashMap<String, String> = hashMapOf()
+    var fannelInfoMap: Map<String, String> = emptyMap()
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null

@@ -139,7 +139,7 @@ object EditConstraintFrameMaker {
         idInt: Int?,
         tagIdMap: Map<String, Int>?,
         frameLayoutSrc: FrameLayout?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         frameKeyPairList: List<Pair<String, String>>?,
@@ -742,7 +742,7 @@ object EditConstraintFrameMaker {
     }
 
     private suspend fun setTextView(
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         captionTextView: OutlineTextView,

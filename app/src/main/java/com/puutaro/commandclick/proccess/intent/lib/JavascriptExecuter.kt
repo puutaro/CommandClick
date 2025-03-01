@@ -206,7 +206,7 @@ object JavascriptExecuter {
         fragment: Fragment,
         execJsPath: String,
         execJsConList: List<String>,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         extraMapCon: Map<String, String>?,
         webView: WebView?
     ){

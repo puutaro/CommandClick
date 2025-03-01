@@ -17,7 +17,7 @@ object ConfigMapTool {
         context: Context?,
         configPath: String,
         defaultConfigMapStr: String,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap:  Map<String, String>? = null,
     ): Map<String, String> {
         val propertySeparator = ','

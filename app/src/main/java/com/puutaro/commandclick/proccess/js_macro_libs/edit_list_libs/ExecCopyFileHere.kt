@@ -9,7 +9,7 @@ import com.puutaro.commandclick.component.adapter.lib.edit_list_adapter.ExecAddF
 object ExecCopyFileHere {
     fun copyFileHere(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView,
 //        editComponentListAdapter: EditComponentListAdapter,
@@ -44,7 +44,7 @@ object ExecCopyFileHere {
 
     private fun execCopyHereForTsv(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView,
 //        listIndexForEditAdapter: EditComponentListAdapter,

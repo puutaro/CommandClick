@@ -88,7 +88,7 @@ import org.jsoup.Jsoup
 //
 //    suspend fun makeFrameVarNameToValueMap(
 //        fragment: Fragment?,
-//        fannelInfoMap: HashMap<String, String>,
+//        fannelInfoMap: Map<String, String>,
 //        setReplaceVariableMap: Map<String, String>?,
 //        busyboxExecutor: BusyboxExecutor?,
 //        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,

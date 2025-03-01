@@ -122,7 +122,7 @@ class ImageActionManager {
 
     suspend fun exec(
         context: Context?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         imageView: AppCompatImageView?,
@@ -191,7 +191,7 @@ class ImageActionManager {
 
     private fun makeSetRepValMap(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         extraRepValMap: Map<String, String>?
     ): Map<String, String>? {
         val virtualSubFannelPath = VirtualSubFannel.makePath(
@@ -247,7 +247,7 @@ class ImageActionManager {
 
     private class ImageActionExecutor(
 //        private val fragmentRef: WeakReference<Fragment>,
-        private val fannelInfoMap: HashMap<String, String>,
+        private val fannelInfoMap: Map<String, String>,
         private val setReplaceVariableMapSrc: Map<String, String>?,
         private val busyboxExecutor: BusyboxExecutor?,
         private val topLevelBitmapStrKeyList: List<String>?,
@@ -1324,7 +1324,7 @@ class ImageActionManager {
 
             suspend fun exec(
                 context: Context?,
-                fannelInfoMap: HashMap<String, String>,
+                fannelInfoMap: Map<String, String>,
                 setReplaceVariableMapSrc: Map<String, String>?,
                 busyboxExecutor: BusyboxExecutor?,
                 mainSubKeyPairList: List<Pair<String, Map<String, String>>>,
@@ -1810,7 +1810,7 @@ class ImageActionManager {
 
         suspend fun handle(
             context: Context?,
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMapSrc: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
             funcTypeDotMethod: String,
@@ -2123,7 +2123,7 @@ class ImageActionManager {
 
         suspend fun handle(
             context: Context?,
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMapSrc: Map<String, String>?,
             busyboxExecutor: BusyboxExecutor?,
             topVarNameToBitmapMap: Map<String, Bitmap?>?,
@@ -2364,7 +2364,7 @@ class ImageActionManager {
 
             suspend fun map(
                 context: Context?,
-                fannelInfoMap: HashMap<String, String>,
+                fannelInfoMap: Map<String, String>,
                 setReplaceVariableMapSrc: Map<String, String>?,
                 busyboxExecutor: BusyboxExecutor?,
                 topVarNameToBitmapMapSrc: Map<String, Bitmap?>?,
@@ -2511,7 +2511,7 @@ class ImageActionManager {
 
             private suspend fun execAction(
                 context: Context?,
-                fannelInfoMap: HashMap<String, String>,
+                fannelInfoMap: Map<String, String>,
                 setReplaceVariableMapSrc: Map<String, String>?,
                 busyboxExecutor: BusyboxExecutor?,
                 topVarNameToBitmapMap: Map<String, Bitmap?>?,

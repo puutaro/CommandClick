@@ -109,7 +109,7 @@ object WithEditConstraintListView{
 
     suspend fun create(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMapSrc: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
@@ -558,7 +558,7 @@ object WithEditConstraintListView{
 
     private suspend fun setFooter(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
@@ -607,7 +607,7 @@ object WithEditConstraintListView{
 
     private suspend fun setToolbar(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
@@ -645,7 +645,7 @@ object WithEditConstraintListView{
 
     private suspend fun setTitle(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
@@ -683,7 +683,7 @@ object WithEditConstraintListView{
 
     private suspend fun setBk(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
@@ -721,7 +721,7 @@ object WithEditConstraintListView{
 
     private suspend fun createViewLayout(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
@@ -1360,7 +1360,7 @@ object WithEditConstraintListView{
 
     private suspend fun setFrameLayout(
         fragment: Fragment?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView?,
@@ -1566,7 +1566,7 @@ object WithEditConstraintListView{
 
     private suspend fun setImageView(
         fragment: Fragment?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView?,
@@ -1672,7 +1672,7 @@ object WithEditConstraintListView{
 
     private suspend fun setTextView(
         fragment: Fragment?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView?,
@@ -1781,7 +1781,7 @@ object WithEditConstraintListView{
 
     private suspend fun clickHandler(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView?,
         contentsKeyPairsListCon: String,
@@ -1926,7 +1926,7 @@ object WithEditConstraintListView{
 
     private fun execJsAction(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         editListRecyclerView: RecyclerView?,
         jsAcCon: String,
@@ -1958,7 +1958,7 @@ object WithEditConstraintListView{
 
     private suspend fun invokeItemSetClickListenerForFileList(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
@@ -2059,7 +2059,7 @@ object WithEditConstraintListView{
 
     private suspend fun invokeItemSetTouchListenerForFileList(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         editListRecyclerView: RecyclerView,
@@ -2186,7 +2186,7 @@ object WithEditConstraintListView{
 
     private suspend fun makeSearchEditText(
         fragment: Fragment,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         editConstraintListAdapter: EditConstraintListAdapter,
         searchText: AppCompatEditText,
         editListConfigMap: Map<String, String>?,

@@ -25,7 +25,7 @@ object ListSettingVariableListMaker {
 
     fun makeConfigMapFromSettingValList(
         context: Context?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
@@ -61,7 +61,7 @@ object ListSettingVariableListMaker {
     }
     fun makeFromSettingVariableList(
         context: Context?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
@@ -131,7 +131,7 @@ object ListSettingVariableListMaker {
 
     fun makeFromSettingPath(
         context: Context?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
@@ -173,7 +173,7 @@ object ListSettingVariableListMaker {
     private fun createFromSettingVal(
         settingValConSrc: String,
         defaultConfigMapStr: String,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap:  Map<String, String>? = null,
     ): Map<String, String> {
         val propertySeparator = ','

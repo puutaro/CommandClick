@@ -71,7 +71,7 @@ import java.lang.ref.WeakReference
 class EditConstraintListAdapter(
     private val fragmentRef: WeakReference<Fragment>,
     private val layoutInflater: LayoutInflater,
-    val fannelInfoMap: HashMap<String, String>,
+    val fannelInfoMap: Map<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
     private val settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
     private val imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
@@ -1149,7 +1149,7 @@ class EditConstraintListAdapter(
 
     private suspend fun setTextView(
         fragment: Fragment?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         holder: EditListViewHolder,
@@ -1467,7 +1467,7 @@ class EditConstraintListAdapter(
     private object MapListUpdater {
         fun updateLineMapList(
             fragment: Fragment?,
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             editListRecyclerView: RecyclerView,
             indexListMap: Map<String, String>,
@@ -1500,7 +1500,7 @@ class EditConstraintListAdapter(
 
         private fun execUpdateLineMapList(
             fragment: Fragment?,
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             setReplaceVariableMap: Map<String, String>?,
             editRecyclerView: RecyclerView,
             indexListMap: Map<String, String>,
@@ -1871,7 +1871,7 @@ class EditConstraintListAdapter(
 
         fun saveFannelCon(
             saveFannelConList: List<String>?,
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             frameOrLinearCon: String,
         ) {
             if (
@@ -1891,7 +1891,7 @@ class EditConstraintListAdapter(
         }
 
         fun execSaveFannelCon(
-            fannelInfoMap: HashMap<String, String>,
+            fannelInfoMap: Map<String, String>,
             saveFannelConList: List<String>?,
         ){
             if(

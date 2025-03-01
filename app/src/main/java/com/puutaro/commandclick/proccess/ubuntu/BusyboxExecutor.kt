@@ -59,7 +59,7 @@ class BusyboxExecutor(
         commandSrc: String,
         envMapSrc: Map<String, String>? = null,
     ): String {
-        val envMap = makeRepValHashMap(
+        val envMap = makeRepValMap(
             envMapSrc,
         )
         val command = CmdClickMap.replace(
@@ -92,7 +92,7 @@ class BusyboxExecutor(
         envMapSrc: Map<String, String>? = null,
         chDirPath: String?,
     ): Pair<String, String?> {
-        val envMap = makeRepValHashMap(
+        val envMap = makeRepValMap(
             envMapSrc,
         )
         val command = CmdClickMap.replace(
@@ -121,12 +121,12 @@ class BusyboxExecutor(
         )
     }
 
-    private fun makeRepValHashMap(
+    private fun makeRepValMap(
         extraArgsMap: Map<String, String>?,
     ): Map<String, String> {
         if(
             extraArgsMap.isNullOrEmpty()
-        ) return hashMapOf()
+        ) return emptyMap()
         val envMapSrc = extraArgsMap.map {
             val keyName = it.key
             val value = it.value

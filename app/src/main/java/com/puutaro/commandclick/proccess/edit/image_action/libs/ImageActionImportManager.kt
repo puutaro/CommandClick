@@ -85,7 +85,7 @@ object ImageActionImportManager {
 
     suspend fun makeImportPathAndRenewalVarNameToImportCon(
         context: Context?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         curMapLoopKey: String,
         topVarNameToVarNameBitmapMap: Map<String, Bitmap?>?,
@@ -460,7 +460,7 @@ object ImageActionImportManager {
         context: Context?,
         importPath: String,
 //        currentAppDirPath: String,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
         val beforeActionImportSrcCon = withContext(Dispatchers.IO) {

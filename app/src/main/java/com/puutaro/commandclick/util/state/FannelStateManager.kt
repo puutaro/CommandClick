@@ -52,7 +52,7 @@ object FannelStateManager {
     fun updateState(
         context: Context?,
         updateFannelState: String,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ) {
 //        val currentAppDirPath = FannelInfoTool.getCurrentAppDirPath(

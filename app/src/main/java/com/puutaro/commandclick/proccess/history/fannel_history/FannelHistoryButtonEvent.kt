@@ -92,7 +92,7 @@ object FannelHistoryButtonEvent {
                 fragment.fannelInfoMap
             }
             is TerminalFragment -> fragment.fannelInfoMap
-            else -> hashMapOf()
+            else -> emptyMap()
         }
         val fannelManageListAdapter = FannelManageAdapter(
             context,

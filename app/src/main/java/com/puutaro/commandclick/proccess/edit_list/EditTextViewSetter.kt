@@ -16,7 +16,7 @@ import java.io.File
 object EditTextViewSetter {
     suspend fun setForConstraint(
         context: Context?,
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
         tagIdMap: Map<String, Int>?,

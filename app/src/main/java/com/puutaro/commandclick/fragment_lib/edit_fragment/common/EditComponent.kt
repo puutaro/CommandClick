@@ -1336,7 +1336,7 @@ object EditComponent {
                         }
 
                         fun makeText(
-                                fannelInfoMap: HashMap<String, String>,
+                                fannelInfoMap: Map<String, String>,
                                 setReplaceVariableMap: Map<String, String>?,
                                 busyboxExecutor: BusyboxExecutor?,
                                 textMap: Map<String, String>?,
@@ -1545,7 +1545,7 @@ object EditComponent {
 
 //                suspend fun makeFrameVarNameToValueMap(
 //                        fragment: Fragment?,
-//                        fannelInfoMap: HashMap<String, String>,
+//                        fannelInfoMap: Map<String, String>,
 //                        setReplaceVariableMap: Map<String, String>?,
 //                        busyboxExecutor: BusyboxExecutor?,
 //                        settingActionAsyncCoroutine: SettingActionAsyncCoroutine,

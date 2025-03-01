@@ -10,7 +10,7 @@ import com.puutaro.commandclick.util.state.FannelInfoTool
 object FilePrefixGetter {
 
     fun get(
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         configMap: Map<String, String>?,
         keyName: String,
@@ -46,7 +46,7 @@ object FilePrefixGetter {
     }
 
     private fun execGetByFilePrefix(
-        fannelInfoMap: HashMap<String, String>,
+        fannelInfoMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         replaceListDirValue: String,
         keyName: String,
