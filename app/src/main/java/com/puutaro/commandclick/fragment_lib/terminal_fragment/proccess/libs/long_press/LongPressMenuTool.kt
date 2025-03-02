@@ -140,8 +140,11 @@ object LongPressMenuTool {
             linkUrlList: List<String>,
         ): List<Map<LongPressKey, String>> {
             val context = fragment.context
-            val indexTolongPressInfoMapList: MutableList<Pair<Int, Map<LongPressKey, String>>> =
-                mutableListOf()
+            val indexTolongPressInfoMapList = ArrayList<Pair<Int, Map<LongPressKey, String>>>(
+                longPressScriptList.size
+            )
+//            =
+//                mutableListOf()
             val semaphore = Semaphore(5)
             val channel = Channel<Pair<Int, Map<LongPressKey, String>>>(longPressScriptList.size)
             runBlocking {
@@ -323,10 +326,14 @@ object LongPressMenuTool {
                     indexTolongPressInfoMapList.add(indexToLongPressInfoMap)
                 }
             }
-            indexTolongPressInfoMapList.sortBy { it.first }
-            return indexTolongPressInfoMapList.map {
+            return indexTolongPressInfoMapList.filter{
+                it.second.isNotEmpty()
+            }.sortedBy { it.first }.map {
                 it.second
             }
+//            return indexTolongPressInfoMapList.map {
+//                it.second
+//            }
         }
 
         private fun execMakeLongPressMap(

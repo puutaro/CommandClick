@@ -927,7 +927,7 @@ object CheckTool {
             tagRegexResultList: Sequence<String>,
             startOrEndTagTempMarkBase: String,
         ): Pair<String, List<Pair<String, String>>> {
-            val tagStrToMarkList = mutableListOf<Pair<String, String>>()
+            val tagStrToMarkList = ArrayList<Pair<String, String>>(tagRegexResultList.count())
             var markNo = 0
             var repCon = srcCon
             tagRegexResultList.forEach {

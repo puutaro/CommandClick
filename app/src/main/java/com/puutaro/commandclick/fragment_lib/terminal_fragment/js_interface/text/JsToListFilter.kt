@@ -288,7 +288,7 @@ class JsToListFilter(
             val semaphore = Semaphore(concurrentLimit)
             val listSize = mapSrcLinesList.size
             val channel = Channel<Pair<Int, String>>(listSize)
-            val receiveLineMapList = mutableListOf<Pair<Int, String>>()
+            val receiveLineMapList = ArrayList<Pair<Int, String>>(mapSrcLinesList.size)
             runBlocking {
                 val jobList = mapSrcLinesList.mapIndexed {
                         index, line ->
@@ -351,14 +351,19 @@ class JsToListFilter(
                 }
             }
             val rowNumToLineFilterList = receiveLineMapList.filter {
-                it.second != notInsertMark
+                (_, line) ->
+                line != notInsertMark
+            }.sortedBy {
+                    (rowNum, _) ->
+                rowNum
+            }.map{
+                    (_, line) ->
+                line
             }.toMutableList()
-            rowNumToLineFilterList.sortBy {
-                it.first
-            }
-            return rowNumToLineFilterList.map {
-                it.second
-            }
+//            rowNumToLineFilterList.sortBy {
+//                it.first
+//            }
+            return rowNumToLineFilterList
         }
 
         private fun matcher(
@@ -369,7 +374,7 @@ class JsToListFilter(
             linesMatchTypeStr: String?,
             matchRegexMatchTypeStr: String?
         ): Boolean {
-            val linesMatchType = FilterAndMapModule.LinesMatchType.values().firstOrNull {
+            val linesMatchType = FilterAndMapModule.LinesMatchType.entries.firstOrNull {
                 it.type == linesMatchTypeStr
             } ?: FilterAndMapModule.LinesMatchType.EQUAL
             val matchInLines = judgeMatchLines(
@@ -378,10 +383,10 @@ class JsToListFilter(
                 linesMatchType,
             )
 
-            val matchConditionType = FilterAndMapModule.MatchConditionType.values().firstOrNull {
+            val matchConditionType = FilterAndMapModule.MatchConditionType.entries.firstOrNull {
                 it.type == matchConditionStr
             } ?: FilterAndMapModule.MatchConditionType.AND
-            val matchRegexMatchType = FilterAndMapModule.MatchRegexMatchType.values().firstOrNull {
+            val matchRegexMatchType = FilterAndMapModule.MatchRegexMatchType.entries.firstOrNull {
                 it.type == matchRegexMatchTypeStr
             } ?: FilterAndMapModule.MatchRegexMatchType.EQUAL
             val matchRegexListResult = judgeMatchRegexListResult(

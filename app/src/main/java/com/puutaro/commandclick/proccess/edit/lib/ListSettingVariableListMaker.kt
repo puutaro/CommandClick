@@ -353,7 +353,7 @@ private object DuplicatedKey {
         settingVariableName: String,
     ): List<String> {
         val reversedValList = valLineList.reversed()
-        val prefixList = mutableListOf<String>()
+        val prefixList = ArrayList<String>(reversedValList.size)
         return reversedValList.map {
                 valueLine ->
             if(
