@@ -1,7 +1,9 @@
 package com.puutaro.commandclick.util.image_tools
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Matrix
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.num.RateTool
@@ -10,7 +12,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import java.io.File
-import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 
 object BitmapArt {
 
@@ -183,6 +186,303 @@ object BitmapArt {
 //            BitmapTool.convertBitmapToByteArray(resultBitmap)
 //        )
         return resultBitmap
+    }
+
+    suspend fun shake(
+        targetBitmap: Bitmap,
+        zoomRate: Float,
+        minOpacityRate: Float,
+        maxOpacityRate: Float,
+        opacityIncline: Float,
+        opacityOffset: Float,
+        colorList: List<String>,
+        times: Int,
+    ): Bitmap {
+        val targetWidth = targetBitmap.width
+        val targetHeight = targetBitmap.height
+        val width = (targetWidth * zoomRate).toInt()
+        val height = (targetHeight * zoomRate).toInt()
+        val xYPairToBitmapList = withContext(Dispatchers.IO) {
+            val xYPairToBitmapListJob = (0..times).map {
+                async {
+                    val offsetX = try {
+                        (0..(width - targetWidth)).random()
+                    } catch (e: Exception) {
+                        0
+                    }
+                    val offsetY = try {
+                        (0..(height - targetHeight)).random()
+                    } catch (e: Exception) {
+                        0
+                    }
+                    val changeColorBitmap = let {
+                        val colorStr = colorList.random()
+                        if(
+                            Color.parseColor(colorStr) == Color.BLACK
+                        ) return@let targetBitmap
+                        BitmapTool.ImageTransformer.convertBlackToColor(
+                            targetBitmap,
+                            colorList.random(),
+                        )
+                    }
+                    val opacity = RateTool.randomByRate(
+                        254f,
+                        minOpacityRate,
+                        maxOpacityRate,
+                    ).let {
+                            opacitySrc ->
+                        opacityIncline * offsetX + (opacitySrc + opacityOffset)
+                    }.toInt().let {
+                        if(it <= 0) return@let 5
+                        it
+                    }
+                    val ajustOpacityBitmap = BitmapTool.ImageTransformer.ajustOpacity(
+                        changeColorBitmap,
+                        opacity
+                    )
+                    Pair(
+                        offsetX.toFloat(),
+                        offsetY.toFloat()
+                    ) to ajustOpacityBitmap
+                }
+            }
+            xYPairToBitmapListJob.awaitAll()
+        }
+//        FileSystems.writeFromByteArray(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap00.png").absolutePath,
+//            BitmapTool.convertBitmapToByteArray(srcBitmap)
+//        )
+//        FileSystems.writeFromByteArray(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap11.png").absolutePath,
+//            BitmapTool.convertBitmapToByteArray(xYPairToBitmapList[0].second)
+//        )
+        var resultBitmap = BitmapTool.ImageTransformer.makeRect(
+            "#00000000",
+            width,
+            height,
+        )
+        xYPairToBitmapList.forEach {
+                (xyPair, cutBitmap) ->
+            resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                resultBitmap,
+                cutBitmap,
+                xyPair.first,
+                xyPair.second
+            )
+        }
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap.txt").absolutePath,
+//            listOf(
+//                xYPairToBitmapList.map{it.first}.joinToString("--"),
+//                "shakeRate: ${shakeRate}",
+//                "minOpacityRate: ${minOpacityRate}",
+//                "maxOpacityRate: ${maxOpacityRate}",
+//                "colorList: ${colorList}",
+//                "opacityBandNum: ${opacityIncline}",
+//                "times: ${times}"
+//            ).joinToString("\n\n")
+//        )
+//        FileSystems.writeFromByteArray(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap22.png").absolutePath,
+//            BitmapTool.convertBitmapToByteArray(resultBitmap)
+//        )
+        return resultBitmap
+    }
+
+    suspend fun rotate(
+        targetBitmap: Bitmap,
+        zoomRate: Float,
+        minOpacityRate: Float,
+        maxOpacityRate: Float,
+        opacityIncline: Float,
+        opacityOffset: Float,
+        colorList: List<String>,
+        minAngle: Float,
+        maxAngle: Float,
+        times: Int,
+    ): Bitmap {
+        val targetWidth = targetBitmap.width
+        val targetHeight = targetBitmap.height
+        val width = (targetWidth * zoomRate).toInt()
+        val height = (targetHeight * zoomRate).toInt()
+        val xYPairToBitmapList = withContext(Dispatchers.IO) {
+            val xYPairToBitmapListJob = (0..times).map {
+                async {
+                    val offsetX = try {
+                        (0..(width - targetWidth)).random()
+                    } catch (e: Exception) {
+                        0
+                    }
+                    val offsetY = try {
+                        (0..(height - targetHeight)).random()
+                    } catch (e: Exception) {
+                        0
+                    }
+                    val changeColorBitmap = let {
+                        val colorStr = colorList.random()
+                        if(
+                            Color.parseColor(colorStr) == Color.BLACK
+                        ) return@let targetBitmap
+                        BitmapTool.ImageTransformer.convertBlackToColor(
+                            targetBitmap,
+                            colorList.random(),
+                        )
+                    }
+                    val opacity = RateTool.randomByRate(
+                        254f,
+                        minOpacityRate,
+                        maxOpacityRate,
+                    ).let {
+                            opacitySrc ->
+                        opacityIncline * offsetX + (opacitySrc + opacityOffset)
+                    }.toInt().let {
+                        if(it <= 0) return@let 5
+                        it
+                    }
+                    val ajustOpacityBitmap = BitmapTool.ImageTransformer.ajustOpacity(
+                        changeColorBitmap,
+                        opacity
+                    )
+                    Pair(
+                        offsetX.toFloat(),
+                        offsetY.toFloat()
+                    ) to ajustOpacityBitmap
+                }
+            }
+            xYPairToBitmapListJob.awaitAll()
+        }
+//        FileSystems.writeFromByteArray(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap00.png").absolutePath,
+//            BitmapTool.convertBitmapToByteArray(srcBitmap)
+//        )
+//        FileSystems.writeFromByteArray(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap11.png").absolutePath,
+//            BitmapTool.convertBitmapToByteArray(xYPairToBitmapList[0].second)
+//        )
+        var resultBitmap = BitmapTool.ImageTransformer.makeRect(
+            "#00000000",
+            width,
+            height,
+        )
+        xYPairToBitmapList.forEach {
+                (xyPair, cutBitmap) ->
+            resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                resultBitmap,
+                cutBitmap,
+                xyPair.first,
+                xyPair.second
+            )
+        }
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap.txt").absolutePath,
+//            listOf(
+//                xYPairToBitmapList.map{it.first}.joinToString("--"),
+//                "shakeRate: ${shakeRate}",
+//                "minOpacityRate: ${minOpacityRate}",
+//                "maxOpacityRate: ${maxOpacityRate}",
+//                "colorList: ${colorList}",
+//                "opacityBandNum: ${opacityIncline}",
+//                "times: ${times}"
+//            ).joinToString("\n\n")
+//        )
+//        FileSystems.writeFromByteArray(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap22.png").absolutePath,
+//            BitmapTool.convertBitmapToByteArray(resultBitmap)
+//        )
+        return resultBitmap
+    }
+
+    suspend fun createFanShapedBitmap(
+        peaceBitmaps: Bitmap,
+        times: Int,
+        radius: Int,
+        fanAngle: Float,
+        opacityIncline: Float,
+        opacityOffset: Float,
+        colorList: List<String>,
+//        shakeRate: Float,
+//        minOpacityRate: Float,
+//        maxOpacityRate: Float,
+    ): Bitmap? {
+
+        // 回転後のBitmapの最大サイズを計算 (例として、すべてのBitmapが同じサイズと仮定)
+        val maxWidth = peaceBitmaps.width
+        val maxHeight = peaceBitmaps.height
+
+        // 合成後のBitmapのサイズを計算 (扇形が収まるように調整)
+        val combinedWidth = (radius * 2).toInt()
+        val combinedHeight = (radius * 2).toInt()
+
+        // 合成後のBitmapを作成
+        val combinedBitmap = Bitmap.createBitmap(
+            combinedWidth, combinedHeight, Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(combinedBitmap)
+
+        // 扇形の中心点
+        val centerX = combinedWidth / 2f
+        val centerY = combinedHeight / 2f
+
+        val opacityStep = 255 / (times + 1)
+        val angleStep = fanAngle / (times + 1) // 配置角度のステップ
+        val bitmapList = withContext(Dispatchers.IO) {
+            val jobList = (0..times).map { index ->
+                async {
+                    val opacitySrc =
+                        opacityStep * index
+                    val opacity =
+                        (opacityIncline * index + (opacitySrc + opacityOffset)).let {
+                            if(it < 0) return@let 0
+                            if(it > 255) return@let 255
+                            it
+                        }.toInt()
+//                    FileSystems.writeFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lshake${index}.txt").absolutePath,
+//                        listOf(
+//                            "index: ${index}",
+//                            "opacityStep: ${opacityStep}",
+//                            "opacityIncline: ${opacityIncline}",
+//                            "opacityOffset: ${opacityOffset}",
+//                            "opacity: ${opacity}",
+//                        ).joinToString("\n")
+//                    )
+                    val colorBitmap = let {
+                        val colorStr = colorList.random()
+                        if(
+                            Color.parseColor(colorStr) == Color.BLACK
+                        ) return@let peaceBitmaps
+                        BitmapTool.ImageTransformer.convertBlackToColor(
+                            peaceBitmaps,
+                            colorList.random()
+                        )
+                    }.let {
+                        BitmapTool.ImageTransformer.ajustOpacity(
+                            it,
+                            opacity
+                        )
+                    }
+                    index to Pair(
+                        angleStep * index,
+                        colorBitmap
+                    )
+                }
+            }
+            jobList.awaitAll().sortedBy { it.first }.map {
+                it.second
+            }
+        }
+        bitmapList.forEach {
+             (angle, bitmap) ->
+
+            // 配置座標を計算
+            val x = centerX + radius * cos(Math.toRadians(angle.toDouble())).toFloat() - bitmap.width / 2f
+            val y = centerY + radius * sin(Math.toRadians(angle.toDouble())).toFloat() - bitmap.height / 2f
+
+            // Bitmapを描画
+            canvas.drawBitmap(bitmap, x, y, null)
+        }
+
+        return combinedBitmap
     }
 
 

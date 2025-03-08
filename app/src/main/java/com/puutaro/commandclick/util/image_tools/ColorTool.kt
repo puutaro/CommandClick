@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util.image_tools
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.common.variable.CheckTool
@@ -170,5 +171,45 @@ object ColorTool {
         } else {
             hexColor // 元の文字列をそのまま返す (アルファ値がない場合)
         }
+    }
+
+    fun replaceOpacity(
+        hexColor: String,
+        opacityRateSrc: Float,
+    ): String {
+        val rawHexColorStr =
+            removeAlpha(hexColor)
+                .removePrefix("#")
+        val opacityRate = when(true){
+            (opacityRateSrc > 1f) -> 1f
+            (opacityRateSrc < 0f) -> 0f
+            else -> opacityRateSrc
+        }
+        val opacityHex = Integer.toHexString(
+            (255 * opacityRate).toInt()
+        )
+        return "#${opacityHex}${rawHexColorStr}"
+    }
+
+    fun calculateAverageColor(bitmap: Bitmap): Int {
+        val pixels = IntArray(bitmap.width * bitmap.height)
+        bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
+
+        var redSum = 0
+        var greenSum = 0
+        var blueSum = 0
+
+        for (pixel in pixels) {
+            redSum += Color.red(pixel)
+            greenSum += Color.green(pixel)
+            blueSum += Color.blue(pixel)
+        }
+
+        val pixelCount = pixels.size
+        val averageRed = redSum / pixelCount
+        val averageGreen = greenSum / pixelCount
+        val averageBlue = blueSum / pixelCount
+
+        return Color.rgb(averageRed, averageGreen, averageBlue)
     }
 }

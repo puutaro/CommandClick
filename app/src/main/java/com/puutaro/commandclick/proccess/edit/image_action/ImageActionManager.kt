@@ -2057,7 +2057,7 @@ class ImageActionManager {
                         baseArgsPairList,
                         varNameToBitmapMap,
                     )
-                FuncType.BITMAP_STORM ->
+                FuncType.BITMAP_ART ->
                     BitmapArtForImageAction.handle(
                         context,
                         funcTypeStr,
@@ -2111,7 +2111,7 @@ class ImageActionManager {
             EVAL("eval"),
             LINE_ART("lineArt"),
             CONCAT("concat"),
-            BITMAP_STORM("bitmapArt"),
+            BITMAP_ART("bitmapArt"),
             IMAGE_TOOL("imageTool"),
             EXIT("exit"),
         }

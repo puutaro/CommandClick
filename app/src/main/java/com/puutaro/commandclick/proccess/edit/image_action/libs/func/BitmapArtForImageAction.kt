@@ -435,6 +435,130 @@ object BitmapArtForImageAction {
                     null,
                 ) to null
             }
+            is BitmapArtMethodArgClass.WaveArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val fanAngle = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.fanAngleKeyToDefaultValueStr,
+                    where
+                ).let { angleToErr ->
+                    val funcErr = angleToErr.second
+                        ?: return@let angleToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByName(
+                    mapArgMapList,
+                    args.bitmapKeyToDefaultValueStr,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapStrToErr ->
+                    val funcErr = bitmapStrToErr.second
+                        ?: return@let bitmapStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.timesKeyToDefaultValueStr,
+                    where
+                ).let { timesToErr ->
+                    val funcErr = timesToErr.second
+                        ?: return@let timesToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }
+                val opacityIncline = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.opacityInclineKeyToDefaultValueStr,
+                    where
+                ).let { maxOpacityRateToErr ->
+                    val funcErr = maxOpacityRateToErr.second
+                        ?: return@let maxOpacityRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }
+                val opacityOffset = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.opacityOffsetKeyToDefaultValueStr,
+                    where
+                ).let { opacityOffsetRateToErr ->
+                    val funcErr = opacityOffsetRateToErr.second
+                        ?: return@let opacityOffsetRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }
+                val colorList = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.colorListKeyToDefaultValueStr,
+                    where
+                ).let { colorLitConToErr ->
+                    val funcErr = colorLitConToErr.second
+                        ?: return@let colorLitConToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
+                    ColorTool.parseColorStr(
+                        context,
+                        it,
+                        args.colorListKeyToDefaultValueStr.first,
+                        where,
+                    ).let {
+                        ColorTool.removeAlpha(it)
+                    }
+                }.toList()
+                val returnBitmap = InnerBitmapArt.wave(
+                    bitmap,
+                    fanAngle,
+                    times,
+                    opacityIncline,
+                    opacityOffset,
+                    colorList,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    returnBitmap,
+                    null,
+                ) to null
+            }
         }
     }
 
@@ -593,6 +717,74 @@ object BitmapArtForImageAction {
                 return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
             }
         }
+        suspend fun wave(
+            bitmap: Bitmap,
+            fanAngle: Float,
+            times: Int,
+            opacityIncline: Float,
+            opacityOffset: Float,
+            colorList: List<String>,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                BitmapArt.createFanShapedBitmap(
+                    bitmap,
+                    times,
+                    bitmap.height,
+                    fanAngle,
+                    opacityIncline,
+                    opacityOffset,
+                    colorList,
+                ) to null
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
+        suspend fun shake(
+            bitmap: Bitmap,
+            fanAngle: Float,
+            times: Int,
+            minOpacityRate: Float,
+            maxOpacityRate: Float,
+            opacityIncline: Float,
+            opacityOffset: Float,
+            colorList: List<String>,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                BitmapArt.createFanShapedBitmap(
+                    bitmap,
+                    times,
+                    bitmap.height,
+                    fanAngle,
+                    opacityIncline,
+                    opacityOffset,
+                    colorList,
+//                    minOpacityRate,
+//                    maxOpacityRate,
+                ) to null
+//                BitmapArt.shake(
+//                    bitmap,
+//                    zoomRate,
+//                    minOpacityRate,
+//                    maxOpacityRate,
+//                    opacityIncline,
+//                    opacityOffset,
+//                    colorList,
+//                    times,
+//                ) to null
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
     }
 
     private enum class MethodNameClass(
@@ -601,6 +793,7 @@ object BitmapArtForImageAction {
     ){
         MATRIX_STORM("matrixStorm", BitmapArtMethodArgClass.MatrixStormArgs),
         RECT_PUZZLE("rectPuzzle", BitmapArtMethodArgClass.RectPuzzleArgs),
+        WAVE("wave", BitmapArtMethodArgClass.WaveArgs),
     }
 
     private sealed interface ArgType {
@@ -680,6 +873,107 @@ object BitmapArtForImageAction {
                 IS_OVERLAY("isOverlay", false.toString(), FuncCheckerForSetting.ArgType.BOOL),
             }
         }
+        data object WaveArgs : BitmapArtMethodArgClass(), ArgType {
+            override val entries = WaveEnumArgs.entries
+            val fanAngleKeyToDefaultValueStr = Pair(
+                WaveEnumArgs.FAN_ANGLE.key,
+                WaveEnumArgs.FAN_ANGLE.defaultValueStr,
+            )
+            val bitmapKeyToDefaultValueStr = Pair(
+                WaveEnumArgs.BITMAP.key,
+                WaveEnumArgs.BITMAP.defaultValueStr,
+            )
+            val timesKeyToDefaultValueStr = Pair(
+                WaveEnumArgs.TIMES.key,
+                WaveEnumArgs.TIMES.defaultValueStr
+            )
+            val opacityInclineKeyToDefaultValueStr = Pair(
+                WaveEnumArgs.OPACITY_INCLINE.key,
+                WaveEnumArgs.OPACITY_INCLINE.defaultValueStr
+            )
+            val opacityOffsetKeyToDefaultValueStr = Pair(
+                WaveEnumArgs.OPACITY_OFFSET.key,
+                WaveEnumArgs.OPACITY_OFFSET.defaultValueStr
+            )
+            val colorListKeyToDefaultValueStr = Pair(
+                WaveEnumArgs.COLOR_LIST.key,
+                WaveEnumArgs.COLOR_LIST.defaultValueStr
+            )
+            enum class WaveEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
+                TIMES("timestimes", 1000.toString(), FuncCheckerForSetting.ArgType.INT),
+                FAN_ANGLE("fanAngle", 90.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                OPACITY_INCLINE("opacityIncline", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                OPACITY_OFFSET("opacityOffset", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                COLOR_LIST("colorList", CmdClickColor.BLACK.str, FuncCheckerForSetting.ArgType.STRING),
+            }
+        }
+//        data object ShakeArgs : BitmapArtMethodArgClass(), ArgType {
+//            override val entries = ShakeEnumArgs.entries
+//            val zoomRateKeyToDefaultValueStr = Pair(
+//                ShakeEnumArgs.ZOOM_RATE.key,
+//                ShakeEnumArgs.ZOOM_RATE.defaultValueStr,
+//            )
+//            val fanAngleKeyToDefaultValueStr = Pair(
+//                ShakeEnumArgs.FAN_ANGLE.key,
+//                ShakeEnumArgs.FAN_ANGLE.defaultValueStr,
+//            )
+//            val bitmapKeyToDefaultValueStr = Pair(
+//                ShakeEnumArgs.BITMAP.key,
+//                ShakeEnumArgs.BITMAP.defaultValueStr,
+//            )
+//            val timesKeyToDefaultValueStr = Pair(
+//                ShakeEnumArgs.TIMES.key,
+//                ShakeEnumArgs.TIMES.defaultValueStr
+//            )
+//            val minOpacityRateKeyToDefaultValueStr = Pair(
+//                ShakeEnumArgs.MIN_OPACITY_RATE.key,
+//                ShakeEnumArgs.MIN_OPACITY_RATE.defaultValueStr
+//            )
+//            val maxOpacityRateKeyToDefaultValueStr = Pair(
+//                ShakeEnumArgs.MAX_OPACITY_RATE.key,
+//                ShakeEnumArgs.MAX_OPACITY_RATE.defaultValueStr
+//            )
+//            val opacityInclineKeyToDefaultValueStr = Pair(
+//                ShakeEnumArgs.OPACITY_INCLINE.key,
+//                ShakeEnumArgs.OPACITY_INCLINE.defaultValueStr
+//            )
+//            val opacityOffsetKeyToDefaultValueStr = Pair(
+//                ShakeEnumArgs.OPACITY_OFFSET.key,
+//                ShakeEnumArgs.OPACITY_OFFSET.defaultValueStr
+//            )
+//            val colorListKeyToDefaultValueStr = Pair(
+//                ShakeEnumArgs.COLOR_LIST.key,
+//                ShakeEnumArgs.COLOR_LIST.defaultValueStr
+//            )
+//            enum class ShakeEnumArgs(
+//                val key: String,
+//                val defaultValueStr: String?,
+//                val type: FuncCheckerForSetting.ArgType,
+//            ){
+//                ZOOM_RATE("zoomRate", null, FuncCheckerForSetting.ArgType.FLOAT),
+//                BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
+//                TIMES("timestimes", 1000.toString(), FuncCheckerForSetting.ArgType.INT),
+//                FAN_ANGLE("fanAngle", 90.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+//                MIN_OPACITY_RATE(
+//                    "minOpacityRate",
+//                    (0.1).toString(),
+//                    FuncCheckerForSetting.ArgType.FLOAT
+//                ),
+//                MAX_OPACITY_RATE(
+//                    "maxOpacityRate",
+//                    (0.5).toString(),
+//                    FuncCheckerForSetting.ArgType.FLOAT
+//                ),
+//                OPACITY_INCLINE("opacityIncline", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+//                OPACITY_OFFSET("opacityOffset", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+//                COLOR_LIST("colorList", CmdClickColor.BLACK.str, FuncCheckerForSetting.ArgType.STRING),
+//            }
+//        }
         data object MatrixStormArgs : BitmapArtMethodArgClass(), ArgType {
             override val entries = MatrixStormEnumArgs.entries
             val bitmapKeyToDefaultValueStr = Pair(
@@ -763,17 +1057,6 @@ object BitmapArtForImageAction {
                 ).toMap()
             }.firstOrNull()
         }
-
-//        fun getOneSide(pieceMap: Map<String, String>): Int {
-//            return try {
-//                pieceMap.get(
-//                    PieceKey.ONE_SIDE.key
-//                )?.toInt()
-//            } catch (e: Exception){
-//                null
-//            } ?: pieceOneSide
-//        }
-
         fun getRotate(pieceMap: Map<String, String>): Float {
             return try {
                 pieceMap.get(
@@ -783,33 +1066,5 @@ object BitmapArtForImageAction {
                 null
             } ?: 0f
         }
-
-//        fun getWidth(pieceMap: Map<String, String>): Int? {
-//            return try {
-//                pieceMap.get(
-//                    PieceKey.WIDTH.key
-//                )?.toInt()
-//            } catch (e: Exception){
-//                null
-//            }
-//        }
-//
-//        fun getHeight(pieceMap: Map<String, String>): Int? {
-//            return try {
-//                pieceMap.get(
-//                    PieceKey.HEIGHT.key
-//                )?.toInt()
-//            } catch (e: Exception){
-//                null
-//            }
-//        }
-
-
-//        fun getMacro(pieceMap: Map<String, String>): String? {
-//            val macroStr = pieceMap.get(
-//                PieceKey.MACRO.key
-//            )
-//            return macroStr
-//        }
     }
 }

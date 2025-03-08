@@ -688,94 +688,11 @@ object SettingFile {
                                         suffix,
                                         separator,
                                     )
-//                                    val atRepValMap = rndVarNameToValueSeq?.map {
-//                                            (varName, valueList) ->
-//                                        varName to valueList.random()
-//                                    }?.toMap()
-//                                    val settingAcCon = getSettingActionCon(
-//                                        importMap,
-//                                        atRepValMap
-//                                    )
-//                                    val imageAcCon = getImageActionCon(
-//                                        importMap,
-//                                        atRepValMap
-//                                    )
-//                                    CmdClickMap.replaceHolderForJsAction(
-//                                        ReadSettingFileBuf.read(
-//                                            importPath
-//                                        ),
-////                        ReadText(importPath).readText(),
-//                                        repValMap
-//                                    ).let {
-//                                        con ->
-//                                        if(
-//                                            atRepValMap == null
-//                                        ) return@let con
-//                                        val repCon = CmdClickMap.replaceByAtVar(
-//                                            con,
-//                                            atRepValMap
-//                                        )
-//                                        repCon
-//                                    }.let { innerImportCon ->
-//                                        (startLoopIndex..loopTimes).map { loopIndex ->
-//                                            if (loopTimes == startLoopIndex) {
-//                                                return@map innerImportCon
-//                                            }
-//                                            if (
-//                                                loopVarName.isNullOrEmpty()
-//                                            ) return@map innerImportCon
-//                                            if (
-//                                                !innerImportCon.contains("@{${loopVarName}}")
-//                                            ) {
-//                                                val spanLoopVarName =
-//                                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
-//                                                        CheckTool.errRedCode,
-//                                                        loopVarName
-//                                                    )
-//                                                val spanImportRawSrcCon =
-//                                                    CheckTool.LogVisualManager.execMakeSpanTagHolder(
-//                                                        CheckTool.errBrown,
-//                                                        importRawSrcCon
-//                                                    )
-//                                                val errMessage =
-//                                                    "[SETTING IMPORT] ${ImportKey.LOOP_VAR_NAME.key}'s ${spanLoopVarName} var name is not used: importCon: ${spanImportRawSrcCon}"
-//                                                LogSystems.broadErrLog(
-//                                                    context,
-//                                                    Jsoup.parse(errMessage).text(),
-//                                                    errMessage,
-//                                                )
-//                                                return@map String()
-//                                            }
-//                                            if(
-//                                                !settingAcCon.isNullOrEmpty()
-//                                                || !imageAcCon.isNullOrEmpty()
-//                                            ) {
-//                                                CoroutineScope(Dispatchers.IO).launch {
-//                                                    val loopVarMap =
-//                                                        (atRepValMap ?: emptyMap()) + mapOf(
-//                                                            loopVarName to loopIndex.toString()
-//                                                        )
-//                                                }
-//                                            }
-//                                            CmdClickMap.replaceByAtVar(
-//                                                innerImportCon,
-//                                                mapOf(
-//                                                    loopVarName to loopIndex.toString()
-//                                                ),
-//                                            )
-//                                        }.joinToString(separator).let {
-//                                            listOf(
-//                                                prefix,
-//                                                it,
-//                                                suffix
-//                                            ).joinToString("\n")
-//                                        }
-//                                    }
                                 }
                             }
 //                            dateList.add("replace${index} ${importPath}" to LocalDateTime.now())
 //                            dateList.add("loopEnd${index}" to LocalDateTime.now())
-//                            if(fannelName.contains("settingAc")) {
+//                            if(fannelName.contains("textToSpeech")) {
 //                                FileSystems.updateFile(
 //                                    File(UsePath.cmdclickDefaultAppDirPath, "sKeytoSubKeyCon.txt").absolutePath,
 //                                    listOf(
@@ -784,11 +701,11 @@ object SettingFile {
 //                                        "separatorPrefix:${separatorPrefix}",
 //                                        "importRawSrcCon: ${importRawSrcCon}",
 //                                        "importCon: ${importCon}",
-////                "editListConfigMapSrc: ${editListConfigMapSrc}",
-////                "keyToSubKeyCon: ${
-////                    SettingActionForEditList.getSettingConfigCon(
-////                    editListConfigMapSrc,
-////                )}"
+////                                        "editListConfigMapSrc: ${editListConfigMapSrc}",
+////                                        "keyToSubKeyCon: ${
+////                                            SettingActionForEditList.getSettingConfigCon(
+////                                            editListConfigMapSrc,
+////                                        )}"
 //                                    ).joinToString("\n")
 //                                )
 //                            }
@@ -1200,6 +1117,12 @@ object SettingFile {
             return importMap.get(
                 ImportKey.SETTING_ACTION.key
             )?.let {
+                settingConFormatter(
+                    it.split("\n")
+                ).let {
+                    formSettingContents(it)
+                }
+            }?.let {
                 CmdClickMap.replaceByAtVar(
                     it,
                     loopVarMap
@@ -1214,6 +1137,12 @@ object SettingFile {
             return importMap.get(
                 ImportKey.IMAGE_ACTION.key
             )?.let {
+                settingConFormatter(
+                    it.split("\n")
+                ).let {
+                    formSettingContents(it)
+                }
+            }?.let {
                 CmdClickMap.replaceByAtVar(
                     it,
                     loopVarMap

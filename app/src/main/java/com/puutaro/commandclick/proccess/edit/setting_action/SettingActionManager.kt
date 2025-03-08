@@ -2034,6 +2034,7 @@ private object SettingFuncManager {
                 )
             FuncType.COLOR -> {
                 ColorForSetting.handle(
+                    context,
                     funcTypeStr,
                     methodName,
                     baseArgsPairList,

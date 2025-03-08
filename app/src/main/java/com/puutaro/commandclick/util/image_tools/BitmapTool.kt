@@ -153,6 +153,8 @@ object BitmapTool {
             BOTH,
             VERTICAL_BOTTOM_TO_TOP,
             LEFT_RIGHT,
+            TR_BL,
+            BL_TR,
         }
 
         private val horizonLinearGradOrientList = arrayOf(
@@ -230,6 +232,8 @@ object BitmapTool {
                 GradOrient.DIAGONAL -> diagonalGradOrientList
                 GradOrient.VERTICAL_BOTTOM_TO_TOP -> bottomTopGradOrientList
                 GradOrient.LEFT_RIGHT -> leftRightGradOrientList
+                GradOrient.TR_BL -> arrayOf(GradientDrawable.Orientation.TR_BL)
+                GradOrient.BL_TR -> arrayOf(GradientDrawable.Orientation.BL_TR)
             }
             val gradient = GradientDrawable(gradientOrientationList.random(), colorIntArray)
             gradient.cornerRadius = 0f
