@@ -3,19 +3,125 @@ package com.puutaro.commandclick.util.image_tools
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Matrix
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
+import androidx.core.graphics.toColorInt
 import com.puutaro.commandclick.util.num.RateTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
-import java.io.File
 import kotlin.math.cos
 import kotlin.math.sin
+import androidx.core.graphics.scale
 
 object BitmapArt {
+
+    suspend fun byArc(
+        width: Int,
+        height: Int,
+        peaceBitmapList: List<Bitmap>,
+        centerX: Float,
+        centerY: Float,
+        radius: Float,
+        startAngle: Float,
+        sweepAngle: Float,
+        opacityIncline: Float,
+        opacityOffset: Float,
+        sizeIncline: Float,
+        sizeOffset: Float,
+        colorList: List<String>,
+        times: Int,
+        bkColor: String,
+    ): Bitmap {
+        val angleStep = sweepAngle / (times + 1) // 配置角度のステップ
+        val opacityStep = 255 / (times + 1)
+        val xyToBitmapList = withContext(Dispatchers.IO) {
+            val xyToBitmapListJob = (0 until times).map { index ->
+                async {
+                    val opacitySrc =
+                        opacityStep * index
+                    val peaceBitmap = peaceBitmapList.random()
+                    val opacity =
+                        (opacityIncline * index + (opacitySrc + opacityOffset)).let {
+                            if (it < 0) return@let 0
+                            if (it > 255) return@let 255
+                            it
+                        }.toInt()
+                    val peaceWidth =
+                        (sizeIncline * index + (peaceBitmap.width + sizeOffset)).let {
+                            if (it <= 1f) return@let null
+                            it
+                        }?.toInt() ?: return@async null
+                    val peaceHeight =
+                        (sizeIncline * index + (peaceBitmap.height + sizeOffset)).let {
+                            if (it <= 1f) return@let null
+                            it
+                        }?.toInt() ?: return@async null
+                    val angle = startAngle + angleStep * index
+
+                    // 配置座標を計算
+                    val x = centerX + radius * cos(
+                        Math.toRadians(angle.toDouble())
+                    ).toFloat() - peaceBitmap.width / 2f
+                    val y = centerY + radius * sin(
+                        Math.toRadians(angle.toDouble())
+                    ).toFloat() - peaceBitmap.height / 2f
+
+                    val sizingPeaceBitmap =
+                        peaceBitmap.scale(peaceWidth, peaceHeight)
+                    val colorBitmap = let {
+                        val colorStr = colorList.random()
+                        if (
+                            colorStr.toColorInt() == Color.BLACK
+                        ) return@let sizingPeaceBitmap
+                        BitmapTool.ImageTransformer.convertBlackToColor(
+                            sizingPeaceBitmap,
+                            colorList.random()
+                        )
+                    }.let {
+                        BitmapTool.ImageTransformer.ajustOpacity(
+                            it,
+                            opacity
+                        )
+                    }
+                    index to Pair(
+                        Pair(
+                            x,
+                            y
+                        ),
+                        colorBitmap
+                    )
+                }
+            }
+            xyToBitmapListJob.awaitAll().filter {
+                it != null
+            }.sortedBy { it?.first }.map {
+                it?.second
+            }
+        }
+        val combinedBitmap = BitmapTool.ImageTransformer.makeRect(
+            bkColor,
+            width,
+            height,
+        )
+        val canvas = Canvas(combinedBitmap)
+        xyToBitmapList.forEach {
+                xYToBitmap ->
+            if(
+                xYToBitmap == null
+            ) return@forEach
+            val xY = xYToBitmap.first
+            val x = xY.first
+            val y = xY.second
+            // Bitmapを描画
+            canvas.drawBitmap(
+                xYToBitmap.second,
+                x,
+                y,
+                null
+            )
+        }
+        return combinedBitmap
+    }
 
     suspend fun rectPuzzle(
         srcBitmap: Bitmap,

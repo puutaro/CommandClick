@@ -241,13 +241,18 @@ class PromptWithListDialog(
                     else -> promptMapList.distinct().filter { lineMap ->
                         val title = lineMap.get(titleKey)
                             ?: return@filter true
-                        Regex(
+                        title.lowercase().contains(
                             filterString
                                 .lowercase()
                                 .replace("\n", "")
-                        ).containsMatchIn(
-                            title.lowercase()
                         )
+//                        Regex(
+//                            filterString
+//                                .lowercase()
+//                                .replace("\n", "")
+//                        ).containsMatchIn(
+//                            title.lowercase()
+//                        )
                     }
                 }.let { listSrc ->
                     when (listLimit == null) {

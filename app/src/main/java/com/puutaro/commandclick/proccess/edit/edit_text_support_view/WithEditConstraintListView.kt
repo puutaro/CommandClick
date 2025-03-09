@@ -2256,13 +2256,18 @@ object WithEditConstraintListView{
                             val title = lineMap.get(
                                 ListSettingsForEditList.MapListPathManager.Key.SRC_TITLE.key
                             ) ?: String()
-                            Regex(
+                            title.lowercase().contains(
                                 searchText.text.toString()
                                     .lowercase()
                                     .replace("\n", "")
-                            ).containsMatchIn(
-                                title.lowercase()
                             )
+//                            Regex(
+//                                searchText.text.toString()
+//                                    .lowercase()
+//                                    .replace("\n", "")
+//                            ).containsMatchIn(
+//                                title.lowercase()
+//                            )
                         }
                     ListViewToolForEditListAdapter.editConstraintListUpdateFileList(
                         editConstraintListAdapter,

@@ -626,11 +626,13 @@ object UrlHistoryButtonEvent{
             val title = UrlTool.trimTitle(
                 urlTitleSource
             )
-           searchText.text.toString()
-                    .lowercase()
+
+            title.lowercase()
                     .replace("\n", "")
                     .contains(
-                        title.lowercase()
+                        searchText.text
+                            .toString()
+                            .lowercase()
                     )
         }
     }

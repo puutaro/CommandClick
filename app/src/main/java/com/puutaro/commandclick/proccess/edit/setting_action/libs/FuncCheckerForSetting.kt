@@ -372,7 +372,7 @@ object FuncCheckerForSetting {
             }
         }
 
-        private fun getBitmapArg(
+        fun getBitmapArg(
             argName: String,
             valueStr: String?,
             logIndexSrc: String?,
