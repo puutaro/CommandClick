@@ -56,7 +56,7 @@ enum class FannelIcons(
     ),
     CROWN(
         "crown",
-        R.drawable.fannel_crown
+        R.drawable.fannel_crown3
     ),
     BRAIN(
         "brain",
@@ -164,7 +164,7 @@ enum class FannelIcons(
     ),
     KABUTO(
         "kabuto",
-        R.drawable.fannel_kabuto
+        R.drawable.fannel_kabuto1
     ),
     KABUTO2(
         "kabuto2",
@@ -208,7 +208,7 @@ enum class FannelIcons(
     ),
     OCTOPASS(
         "octopass",
-        R.drawable.fannel_octopass
+        R.drawable.fannel_octopass1
     ),
     OCTOPASS2(
         "octopass2",
@@ -248,7 +248,7 @@ enum class FannelIcons(
     ),
     SAMURAI(
         "samurai",
-        R.drawable.fannel_samurai
+        R.drawable.fannel_samurai1
     ),
     SAMURAI2(
         "samurai2",

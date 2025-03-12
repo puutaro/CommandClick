@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import kotlin.math.cos
 import kotlin.math.sin
 import androidx.core.graphics.scale
+import androidx.core.graphics.createBitmap
 
 object BitmapArt {
 
@@ -123,6 +124,130 @@ object BitmapArt {
         return combinedBitmap
     }
 
+    suspend fun byLine(
+        width: Int,
+        height: Int,
+        peaceBitmapList: List<Bitmap>,
+        centerX: Float,
+        centerY: Float,
+        maxRadius: Float,
+        angle: Float,
+        opacityIncline: Float,
+        opacityOffset: Float,
+        sizeIncline: Float,
+        sizeOffset: Float,
+        colorList: List<String>,
+        times: Int,
+        bkColor: String,
+    ): Bitmap {
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lByLine00.txt").absolutePath,
+//            listOf(
+//                "times: ${times}",
+////                        "radiusStep: ${radiusStep}",
+////                        "xyToBitmapList: ${xyToBitmapList.map {it?.first}}",
+//            ).joinToString("\n")
+//        )
+//        val angleStep = sweepAngle / (times + 1) // 配置角度のステップ
+        val radiusStep = maxRadius / (times + 1)
+        val opacityStep = 255 / (times + 1)
+        val xyToBitmapList = withContext(Dispatchers.IO) {
+            val xyToBitmapListJob = (0 until times).map { index ->
+                async {
+                    val opacitySrc =
+                        opacityStep * index
+                    val peaceBitmap = peaceBitmapList.random()
+                    val opacity =
+                        (opacityIncline * index + (opacitySrc + opacityOffset)).let {
+                            if (it < 0) return@let 0
+                            if (it > 255) return@let 255
+                            it
+                        }.toInt()
+                    val peaceWidth =
+                        (sizeIncline * index + (peaceBitmap.width + sizeOffset)).let {
+                            if (it <= 1f) return@let null
+                            it
+                        }?.toInt() ?: return@async null
+                    val peaceHeight =
+                        (sizeIncline * index + (peaceBitmap.height + sizeOffset)).let {
+                            if (it <= 1f) return@let null
+                            it
+                        }?.toInt() ?: return@async null
+//                    val angle = startAngle + angleStep * index
+                    val radius = radiusStep * index
+                    // 配置座標を計算
+                    val x = centerX + radius * cos(
+                        Math.toRadians(angle.toDouble())
+                    ).toFloat() - peaceBitmap.width / 2f
+                    val y = centerY + radius * sin(
+                        Math.toRadians(angle.toDouble())
+                    ).toFloat() - peaceBitmap.height / 2f
+
+                    val sizingPeaceBitmap =
+                        peaceBitmap.scale(peaceWidth, peaceHeight)
+                    val colorBitmap = let {
+                        val colorStr = colorList.random()
+                        if (
+                            colorStr.toColorInt() == Color.BLACK
+                        ) return@let sizingPeaceBitmap
+                        BitmapTool.ImageTransformer.convertBlackToColor(
+                            sizingPeaceBitmap,
+                            colorList.random()
+                        )
+                    }.let {
+                        BitmapTool.ImageTransformer.ajustOpacity(
+                            it,
+                            opacity
+                        )
+                    }
+                    index to Pair(
+                        Pair(
+                            x,
+                            y
+                        ),
+                        colorBitmap
+                    )
+                }
+            }
+            xyToBitmapListJob.awaitAll().filter {
+                it != null
+            }.sortedBy { it?.first }.map {
+                it?.second
+            }
+        }
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "lByLine.txt").absolutePath,
+//            listOf(
+//                "times: ${times}",
+//                "radiusStep: ${radiusStep}",
+//                "xyToBitmapList: ${xyToBitmapList.map {it?.first}}",
+//            ).joinToString("\n")
+//        )
+        val combinedBitmap = BitmapTool.ImageTransformer.makeRect(
+            bkColor,
+            width,
+            height,
+        )
+        val canvas = Canvas(combinedBitmap)
+        xyToBitmapList.forEach {
+                xYToBitmap ->
+            if(
+                xYToBitmap == null
+            ) return@forEach
+            val xY = xYToBitmap.first
+            val x = xY.first
+            val y = xY.second
+            // Bitmapを描画
+            canvas.drawBitmap(
+                xYToBitmap.second,
+                x,
+                y,
+                null
+            )
+        }
+        return combinedBitmap
+    }
+
     suspend fun rectPuzzle(
         srcBitmap: Bitmap,
         shakeRate: Float,
@@ -165,7 +290,7 @@ object BitmapArt {
                         ).let {
                             val colorStr = passionColorList.random()
                             if(
-                                Color.parseColor(colorStr) == Color.BLACK
+                                colorStr.toColorInt() == Color.BLACK
                             ) return@let it
                             BitmapTool.ImageTransformer.convertBlackToColor(
                                 it,
@@ -181,7 +306,7 @@ object BitmapArt {
                         ).let {
                             val colorStr = colorList.random()
                             if(
-                                Color.parseColor(colorStr) == Color.BLACK
+                                colorStr.toColorInt() == Color.BLACK
                             ) return@let it
                             BitmapTool.ImageTransformer.convertBlackToColor(
                                 it,
@@ -294,6 +419,12 @@ object BitmapArt {
         return resultBitmap
     }
 
+    enum class ShakeDirection {
+        VERTICAL,
+        HORIZON,
+        RND,
+    }
+
     suspend fun shake(
         targetBitmap: Bitmap,
         zoomRate: Float,
@@ -303,6 +434,7 @@ object BitmapArt {
         opacityOffset: Float,
         colorList: List<String>,
         times: Int,
+        direction: ShakeDirection,
     ): Bitmap {
         val targetWidth = targetBitmap.width
         val targetHeight = targetBitmap.height
@@ -312,19 +444,31 @@ object BitmapArt {
             val xYPairToBitmapListJob = (0..times).map {
                 async {
                     val offsetX = try {
-                        (0..(width - targetWidth)).random()
+                        val widthDiff = (width - targetWidth)
+                        when(
+                            direction == ShakeDirection.VERTICAL
+                        ) {
+                            true -> widthDiff / 2
+                            else -> (0..widthDiff).random()
+                        }
                     } catch (e: Exception) {
                         0
                     }
                     val offsetY = try {
-                        (0..(height - targetHeight)).random()
+                        val heightDiff = (height - targetHeight)
+                        when(
+                            direction == ShakeDirection.HORIZON
+                        ) {
+                            true -> heightDiff / 2
+                            else -> (0..heightDiff).random()
+                        }
                     } catch (e: Exception) {
                         0
                     }
                     val changeColorBitmap = let {
                         val colorStr = colorList.random()
                         if(
-                            Color.parseColor(colorStr) == Color.BLACK
+                            colorStr.toColorInt() == Color.BLACK
                         ) return@let targetBitmap
                         BitmapTool.ImageTransformer.convertBlackToColor(
                             targetBitmap,
@@ -520,9 +664,7 @@ object BitmapArt {
         val combinedHeight = (radius * 2).toInt()
 
         // 合成後のBitmapを作成
-        val combinedBitmap = Bitmap.createBitmap(
-            combinedWidth, combinedHeight, Bitmap.Config.ARGB_8888
-        )
+        val combinedBitmap = createBitmap(combinedWidth, combinedHeight)
         val canvas = Canvas(combinedBitmap)
 
         // 扇形の中心点
@@ -555,7 +697,7 @@ object BitmapArt {
                     val colorBitmap = let {
                         val colorStr = colorList.random()
                         if(
-                            Color.parseColor(colorStr) == Color.BLACK
+                            colorStr.toColorInt() == Color.BLACK
                         ) return@let peaceBitmaps
                         BitmapTool.ImageTransformer.convertBlackToColor(
                             peaceBitmaps,

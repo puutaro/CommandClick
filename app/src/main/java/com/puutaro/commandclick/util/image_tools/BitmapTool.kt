@@ -56,6 +56,8 @@ import java.util.Arrays
 import java.util.Locale
 import kotlin.math.max
 import kotlin.random.Random
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.toColorInt
 
 
 object BitmapTool {
@@ -1008,11 +1010,7 @@ object BitmapTool {
         }
 
         fun addPadding(Src: Bitmap, padding_x: Int, padding_y: Int): Bitmap {
-            val outputimage = Bitmap.createBitmap(
-                Src.width + padding_x,
-                Src.height + padding_y,
-                Bitmap.Config.ARGB_8888
-            )
+            val outputimage = createBitmap(Src.width + padding_x, Src.height + padding_y)
             val can = Canvas(outputimage)
             can.drawARGB(0, 0, 0, 0) //This represents White color
             can.drawBitmap(Src, (padding_x / 2f), (padding_y / 2f), null)
@@ -1024,7 +1022,7 @@ object BitmapTool {
             width: Int,
             height: Int,
         ): Bitmap {
-            val bg: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val bg: Bitmap = createBitmap(width, height)
             val canvas = Canvas(bg)
             // paint background with the trick
             // paint background with the trick
@@ -1032,7 +1030,7 @@ object BitmapTool {
             rect_paint.style = Paint.Style.FILL
             rect_paint.color = when(color == null) {
                 true -> Color.TRANSPARENT
-                else -> Color.parseColor(color)
+                else -> color.toColorInt()
             }
 //            rect_paint.alpha = 0x80 // optional
 
@@ -1041,7 +1039,7 @@ object BitmapTool {
         }
 
         fun maskImageByTransparent(bitmap: Bitmap, maskBitmap: Bitmap): Bitmap {
-            val resultBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val resultBitmap = createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(resultBitmap)
 
             val paint = Paint()

@@ -9,7 +9,6 @@ import android.graphics.Path
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
-import com.puutaro.commandclick.proccess.edit.image_action.libs.func.LineArtForImageAction.MonoArtMethodArgClass.FromPathArgs.FromPathEnumArgs
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
@@ -767,6 +766,243 @@ object LineArtForImageAction {
                     null
                 ) to null
             }
+            is MonoArtMethodArgClass.CrackArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+
+                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.widthKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.heightKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val durationRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.durationKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    if(
+                        0 <= it
+                        && it <= 1f
+                    ) return@let it
+                    0f
+                }
+                val strokeWidth = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.strokeWidthKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    if(it <= 0) return@let 1f
+                    it
+                }
+                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.timesKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val colorList = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.colorListKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
+                    ColorTool.parseColorStr(
+                        context,
+                        it,
+                        args.colorListKeyToDefaultValueStr.first,
+                        where,
+                    ).let {
+                        ColorTool.removeAlpha(it)
+                    }
+                }.toList()
+                val minOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.minOpacityRateKeyToDefaultValueStr,
+                    where
+                ).let { rateToErr ->
+                    val funcErr = rateToErr.second
+                        ?: return@let rateToErr.first
+                    return  Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    if(it <= 1f) return@let it
+                    1f
+                }
+                val maxOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.maxOpacityRateKeyToDefaultValueStr,
+                    where
+                ).let { rateToErr ->
+                    val funcErr = rateToErr.second
+                        ?: return@let rateToErr.first
+                    return  Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    if(it <= 1f) return@let it
+                    1f
+                }
+                if(minOpacityRate > maxOpacityRate) {
+                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        minOpacityRate.toString()
+                    )
+                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        maxOpacityRate.toString()
+                    )
+                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        where
+                    )
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to FuncCheckerForSetting.FuncCheckErr(
+                        "Must be minOpacityRate(${spanMinWidthRate}) <= maxOpacityRate(${spanMaxWidthRate}): ${spanWhere}"
+                    )
+                }
+                val minSeg = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.minSegKeyToDefaultValueStr,
+                    where
+                ).let { minSegToErr ->
+                    val funcErr = minSegToErr.second
+                        ?: return@let minSegToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    if(it >= 0) return@let it
+                    0
+                }
+                val maxSeg = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.maxSegKeyToDefaultValueStr,
+                    where
+                ).let { maxSegToErr ->
+                    val funcErr = maxSegToErr.second
+                        ?: return@let maxSegToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    if(it >= 0) return@let it
+                    0
+                }
+                if(minSeg > maxSeg) {
+                    val spanMinSegRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        minOpacityRate.toString()
+                    )
+                    val spanMaxSegRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        maxOpacityRate.toString()
+                    )
+                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        where
+                    )
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to FuncCheckerForSetting.FuncCheckErr(
+                        "Must be minSeg(${spanMinSegRate}) <= maxSeg(${spanMaxSegRate}): ${spanWhere}"
+                    )
+                }
+                val bitmapArt = InnerLineArt.crack(
+                    width,
+                    height,
+                    strokeWidth,
+                    minSeg,
+                    maxSeg,
+                    durationRate,
+                    minOpacityRate,
+                    maxOpacityRate,
+                    colorList,
+                    times,
+                    where,
+                ).let {
+                        (bitmapArtSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let bitmapArtSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    bitmapArt,
+                    null
+                ) to null
+            }
         }
     }
 
@@ -877,6 +1113,40 @@ object LineArtForImageAction {
                 null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
             }
         }
+        suspend fun crack(
+            width: Int,
+            height: Int,
+            strokeWidth: Float,
+            minSeg: Int,
+            maxSeg: Int,
+            durationRate: Float,
+            minOpacityRate: Float,
+            maxOpacityRate: Float,
+            colorList: List<String>,
+            times: Int,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                LineArt.drawCrackOnBitmap(
+                    width,
+                    height,
+                    strokeWidth,
+                    minSeg,
+                    maxSeg,
+                    durationRate,
+                    minOpacityRate,
+                    maxOpacityRate,
+                    colorList,
+                    times
+                ) to null
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
         private suspend fun execFromPath(
             baseWidth: Int,
             baseHeight: Int,
@@ -956,6 +1226,7 @@ object LineArtForImageAction {
     ){
         RND_ORTHOGONAL_RECT("fromPath", MonoArtMethodArgClass.FromPathArgs),
         TAN("tan", MonoArtMethodArgClass.TangentArgs),
+        CRACK("crack", MonoArtMethodArgClass.CrackArgs),
     }
     private sealed interface ArgType {
         val entries: EnumEntries<*>
@@ -1085,6 +1356,77 @@ object LineArtForImageAction {
                     1.toString(),
                     FuncCheckerForSetting.ArgType.FLOAT
                 ),
+            }
+        }
+
+        data object CrackArgs : MonoArtMethodArgClass(), ArgType {
+            override val entries = ClackEnumArgs.entries
+            val widthKeyToDefaultValueStr = Pair(
+                ClackEnumArgs.WIDTH.key,
+                ClackEnumArgs.WIDTH.defaultValueStr
+            )
+            val heightKeyToDefaultValueStr = Pair(
+                ClackEnumArgs.HEIGHT.key,
+                ClackEnumArgs.HEIGHT.defaultValueStr
+            )
+            val minSegKeyToDefaultValueStr = Pair(
+                ClackEnumArgs.MIN_SEG.key,
+                ClackEnumArgs.MIN_SEG.defaultValueStr
+            )
+            val maxSegKeyToDefaultValueStr = Pair(
+                ClackEnumArgs.MAX_SEG.key,
+                ClackEnumArgs.MAX_SEG.defaultValueStr
+            )
+            val durationKeyToDefaultValueStr = Pair(
+                ClackEnumArgs.DURATION_RATE.key,
+                ClackEnumArgs.DURATION_RATE.defaultValueStr
+            )
+            val strokeWidthKeyToDefaultValueStr = Pair(
+                ClackEnumArgs.STROKE_WIDTH.key,
+                ClackEnumArgs.STROKE_WIDTH.defaultValueStr
+            )
+            val timesKeyToDefaultValueStr = Pair(
+                ClackEnumArgs.TIMES.key,
+                ClackEnumArgs.TIMES.defaultValueStr
+            )
+            val minOpacityRateKeyToDefaultValueStr = Pair(
+                ClackEnumArgs.MIN_OPACITY_RATE.key,
+                ClackEnumArgs.MIN_OPACITY_RATE.defaultValueStr
+            )
+            val maxOpacityRateKeyToDefaultValueStr = Pair(
+                ClackEnumArgs.MAX_OPACITY_RATE.key,
+                ClackEnumArgs.MAX_OPACITY_RATE.defaultValueStr
+            )
+            val colorListKeyToDefaultValueStr = Pair(
+                ClackEnumArgs.COLOR_LIST.key,
+                ClackEnumArgs.COLOR_LIST.defaultValueStr
+            )
+
+
+            enum class ClackEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ) {
+                WIDTH("width", null, FuncCheckerForSetting.ArgType.INT),
+                HEIGHT("height", null, FuncCheckerForSetting.ArgType.INT),
+                MIN_SEG("minSeg", 1.toString(), FuncCheckerForSetting.ArgType.INT),
+                MAX_SEG("maxSeg", 10.toString(), FuncCheckerForSetting.ArgType.INT),
+                COLOR_LIST("colorList", CmdClickColor.BLACK.str, FuncCheckerForSetting.ArgType.STRING),
+                TIMES("times", 5.toString(), FuncCheckerForSetting.ArgType.INT),
+                MIN_OPACITY_RATE(
+                    "minOpacityRate",
+                    (0.1).toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                MAX_OPACITY_RATE(
+                    "maxOpacityRate",
+                    (0.5).toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                DURATION_RATE("durationRate", 0.5.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                STROKE_WIDTH("strokeWidth", 1.toString(), FuncCheckerForSetting.ArgType.INT),
+
             }
         }
 

@@ -17,6 +17,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionMapTo
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionReturnErrManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionVarErrManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageReturnExecutor
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.SpecialArtForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.BitmapArtForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.BlurForImageAction
@@ -2078,6 +2079,13 @@ class ImageActionManager {
                             funcTypeStr,
                             methodName,
                         )
+                FuncType.SPECIAL_ART ->
+                    SpecialArtForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                    )
             }
 
         }
@@ -2114,6 +2122,7 @@ class ImageActionManager {
             BITMAP_ART("bitmapArt"),
             IMAGE_TOOL("imageTool"),
             EXIT("exit"),
+            SPECIAL_ART("specialArt"),
         }
     }
 

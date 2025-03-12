@@ -9,14 +9,13 @@ import android.graphics.Path
 import android.graphics.PathMeasure
 import android.graphics.drawable.VectorDrawable
 import androidx.core.graphics.PathParser
+import androidx.core.graphics.createBitmap
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.num.RateTool
-import java.io.File
 import java.util.Random
-import kotlin.math.PI
 import kotlin.math.atan2
+import kotlin.math.max
+import androidx.core.graphics.toColorInt
 
 object LineArt {
 
@@ -296,5 +295,67 @@ object LineArt {
         }
 
         return resultBitmap
+    }
+
+    fun drawCrackOnBitmap(
+        width: Int,
+        height: Int,
+        strokeWidthFloat: Float,
+        minSeg: Int,
+        maxSeg: Int,
+        durationRate: Float,
+        minOpacityRate: Float,
+        maxOpacityRate: Float,
+        colorList: List<String>,
+        times: Int,
+        ): Bitmap {
+        val combinedBitmap = createBitmap(width, height)
+        val canvas = Canvas(combinedBitmap)
+        val paint = Paint().apply {
+            color = Color.BLACK
+            style = Paint.Style.STROKE
+            strokeWidth = strokeWidthFloat // 亀裂の太さ
+        }
+        val widthDuration= (width * durationRate).toInt()
+        val heightDuration= (height * durationRate).toInt()
+        for(i in 0..times) {
+            // 亀裂の始点をランダムに設定
+            val startX = (0 until width).random().toFloat()
+            val startY = (0 until height).random().toFloat()
+            val path = Path()
+            path.moveTo(startX, startY)
+
+            // 亀裂の形状をlineToでランダムに描画
+            var currentX = startX
+            var currentY = startY
+            val numSegments = (minSeg..maxSeg).random() // 亀裂のセグメント数
+            (0 until numSegments).forEach { segIndex ->
+                val nextX = (
+                        currentX.toInt() - widthDuration
+                                ..
+                                currentX.toInt() + widthDuration
+                        ).random()
+                    .coerceIn(0, width).toFloat() // 範囲内に制限
+                val nextY = (
+                        currentY.toInt() - heightDuration
+                                ..
+                                currentY.toInt() + heightDuration
+                        ).random()
+                    .coerceIn(0, height).toFloat() // 範囲内に制限
+                path.lineTo(nextX, nextY)
+                currentX = nextX
+                currentY = nextY
+            }
+            val seed = 1000
+            paint.alpha = (
+                    (minOpacityRate * seed).toInt()..
+                            (maxOpacityRate * seed).toInt()
+                    ).random() / seed
+
+            // 亀裂を描画
+            paint.color = colorList.random().toColorInt()
+            canvas.drawPath(path, paint)
+        }
+        return combinedBitmap
     }
 }
