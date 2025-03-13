@@ -16,6 +16,9 @@ import java.util.Random
 import kotlin.math.atan2
 import kotlin.math.max
 import androidx.core.graphics.toColorInt
+import androidx.core.graphics.get
+import kotlin.math.cos
+import kotlin.math.sin
 
 object LineArt {
 
@@ -156,9 +159,7 @@ object LineArt {
                 minOpacityRate,
                 maxOpacityRate
             )
-            paint.color = Color.parseColor(
-                colorList.random()
-            )
+            paint.color = colorList.random().toColorInt()
             val distance = random.nextFloat() * pathLength // パス上のランダムな位置
             val pos = FloatArray(2)
             val tan = FloatArray(2)
@@ -209,13 +210,13 @@ object LineArt {
 
         for (x in 1 until srcWidth - 1) {
             for (y in 1 until srcHeight - 1) {
-                val color = bitmap.getPixel(x, y)
+                val color = bitmap[x, y]
                 if (color == Color.BLACK) {
                     // 周囲のピクセルをチェックし、境界を検出
-                    if (bitmap.getPixel(x - 1, y) != Color.BLACK ||
-                        bitmap.getPixel(x + 1, y) != Color.BLACK ||
-                        bitmap.getPixel(x, y - 1) != Color.BLACK ||
-                        bitmap.getPixel(x, y + 1) != Color.BLACK
+                    if (bitmap[x - 1, y] != Color.BLACK ||
+                        bitmap[x + 1, y] != Color.BLACK ||
+                        bitmap[x, y - 1] != Color.BLACK ||
+                        bitmap[x, y + 1] != Color.BLACK
                     ) {
                         boundaries.add(Pair(x, y))
                     }
@@ -247,9 +248,7 @@ object LineArt {
 //            val boundary = boundaries.random()
 //            val x = boundary.first
 //            val y = boundary.second
-            paint.color = Color.parseColor(
-                colorList.random()
-            )
+            paint.color = colorList.random().toColorInt()
             paint.strokeWidth = RateTool.randomByRate(
                 strokeWidth,
                 minStrokeWidthRate,
@@ -272,10 +271,10 @@ object LineArt {
                 maxAngleShrinkRate
             )
             val dx =
-                if (x > 0) bitmap.getPixel(x - 1, y) - bitmap.getPixel(x + 1, y)
+                if (x > 0) bitmap[x - 1, y] - bitmap[x + 1, y]
                 else 0
             val dy =
-                if (y > 0) bitmap.getPixel(x, y - 1) - bitmap.getPixel(x, y + 1)
+                if (y > 0) bitmap[x, y - 1] - bitmap[x, y + 1]
                 else 0
             val thita = (atan2(dx.toDouble(), dy.toDouble())) + Math.toRadians(angle.toDouble())
             val endX = x + lineLength * Math.cos(thita).toFloat()
@@ -357,5 +356,43 @@ object LineArt {
             canvas.drawPath(path, paint)
         }
         return combinedBitmap
+    }
+
+    fun drawCrackFromCenter(
+        bitmap: Bitmap,
+        centerX: Int,
+        centerY: Int,
+        numCracks: Int,
+        maxRadius: Int,
+        minSeg: Int,
+        maxSeg: Int,
+    ) {
+        val canvas = Canvas(bitmap)
+        val paint = Paint().apply {
+            color = Color.BLACK
+            style = Paint.Style.STROKE
+            strokeWidth = 3f // 亀裂の太さ
+        }
+
+        for (i in 0 until numCracks) {
+            val path = Path()
+            path.moveTo(centerX.toFloat(), centerY.toFloat())
+
+            // 亀裂の形状をランダムに描画
+            val numSegments = (minSeg..maxSeg).random() // 亀裂のセグメント数
+            var currentX = centerX.toFloat()
+            var currentY = centerY.toFloat()
+            for (j in 0 until numSegments) {
+                val angle = (0..360).random().toFloat()
+                val radius = (10..maxRadius).random().toFloat()
+                val nextX = currentX + radius * cos(Math.toRadians(angle.toDouble())).toFloat()
+                val nextY = currentY + radius * sin(Math.toRadians(angle.toDouble())).toFloat()
+                path.lineTo(nextX, nextY)
+                currentX = nextX
+                currentY = nextY
+            }
+            // 亀裂を描画
+            canvas.drawPath(path, paint)
+        }
     }
 }

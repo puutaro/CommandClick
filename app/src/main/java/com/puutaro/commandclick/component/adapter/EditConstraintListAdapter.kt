@@ -66,6 +66,7 @@ import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDateTime
 import java.io.File
 import java.lang.ref.WeakReference
+import androidx.core.view.isNotEmpty
 
 
 class EditConstraintListAdapter(
@@ -445,7 +446,7 @@ class EditConstraintListAdapter(
 //                        }
 //                    }
                     val removeAndSet2TotalConstraint = async {
-                        if(totalConstraintLayout.childCount > 0) {
+                        if(totalConstraintLayout.isNotEmpty()) {
                             totalConstraintLayout.removeAllViews()
                         }
                         totalConstraintLayout.apply {
