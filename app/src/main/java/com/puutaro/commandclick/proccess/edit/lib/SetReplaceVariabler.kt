@@ -235,6 +235,9 @@ object SetReplaceVariabler {
 ////            recentAppDirPath,
 //            fannelName
 //        )
+        if(
+            replacingContents.isEmpty()
+        ) return String()
         val builder = StringBuilder(replacingContents)
         setReplaceVariableCompleteMapSrc?.forEach {
             val replaceVariable = "\${${it.key}}"

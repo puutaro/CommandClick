@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
@@ -21,7 +20,7 @@ import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.AltRegexTool
-import com.puutaro.commandclick.util.str.RegexTool
+import com.puutaro.commandclick.util.str.NewLineTool
 import com.puutaro.commandclick.util.str.SpeedReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -240,6 +239,7 @@ object SettingFile {
         private const val importEndSeparator = ".impEND"
         private const val settingSeparators = "|?&"
         private const val replaceSeparator = '&'
+        private const val defAcQuote = '`'
 //        private const val importRegexStr =
 //            "\n[ \t]*[${settingSeparators}]*${importPreWord}=.+?\\${importEndSeparator}"
 //        private val importRegex = importRegexStr.toRegex(RegexOption.DOT_MATCHES_ALL)
@@ -252,8 +252,8 @@ object SettingFile {
             SEPARATOR("separator"),
             PREFIX("prefix"),
             SUFFIX("suffix"),
-            SETTING_ACTION("settingAc"),
-            IMAGE_ACTION("imageAc"),
+            DEF_SETTING_ACTION("defSettingAc"),
+            DEF_IMAGE_ACTION("defImageAc"),
             IF_ARGS("ifArgs"),
         }
         private const val startLoopIndex = 1
@@ -377,9 +377,19 @@ object SettingFile {
             var settingCon = SpeedReplacer.replace(
                 settingConBeforeImport,
                 SettingArgsTool.makePlaneVarNameToValueStrMap(globalVarNameToValueMap)?.map {
-                    it.key to it.value
+                    "${'$'}{${it.key}}" to it.value
                 }?.asSequence()
             )
+//            if(settingCon.contains("LAYOUT_LOOP_INDEX")) {
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lbkLayout.txt").absolutePath,
+//                    listOf(
+//                        "settingCon: ${settingCon}",
+//                        "settingConBeforeImport: ${settingConBeforeImport}",
+//
+//                        ).joinToString("\n\n")
+//                )
+//            }
                 //settingConBeforeImport
             for(i in 1..5) {
                 val result =
@@ -677,7 +687,6 @@ object SettingFile {
                                         globalVarNameToBitmapMap,
                                         settingActionAsyncCoroutine,
                                         imageActionAsyncCoroutine,
-                                        importMap,
                                         importPath,
                                         repValMap,
                                         rndVarNameToValueSeq,
@@ -786,6 +795,8 @@ object SettingFile {
                 AltRegexTool.removeSpaceTagAfterNewline(it)
             }.let {
                 AltRegexTool.removeCommentLines(it)
+            }.let {
+                NewLineTool.replaceMultipleNewlines(it)
             }
 //                .replace("\n[ 　\t]*".toRegex(), "\n")
 //                .replace("\n//[^\n]+".toRegex(), "\n")
@@ -803,7 +814,6 @@ object SettingFile {
                 globalVarNameToBitmapMap: Map<String, Bitmap?>?,
                 settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
                 imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
-                importMap: Map<String, String>,
                 importPath: String,
                 repValMap: Map<String, String>,
                 rndVarNameToValueSeq: Sequence<Pair<String, List<String>>>?,
@@ -819,14 +829,14 @@ object SettingFile {
                         (varName, valueList) ->
                     varName to valueList.random()
                 }?.toMap()
-                val settingAcCon = getSettingActionCon(
-                    importMap,
-                    atRepValMap
-                )
-                val imageAcCon = getImageActionCon(
-                    importMap,
-                    atRepValMap
-                )
+//                val settingAcCon = getSettingActionCon(
+//                    importMap,
+//                    atRepValMap
+//                )
+//                val imageAcCon = getImageActionCon(
+//                    importMap,
+//                    atRepValMap
+//                )
                 val innerImportCon = CmdClickMap.replaceHolderForJsAction(
                     ReadSettingFileBuf.read(
                         importPath
@@ -847,35 +857,28 @@ object SettingFile {
                 val indexToImportConList = withContext(Dispatchers.IO) {
                     val indexToImportConJobList = (startLoopIndex..loopTimes).map { loopIndex ->
                         async {
-                            if(
-                                !settingAcCon.isNullOrEmpty()
-                                || !imageAcCon.isNullOrEmpty()
-                            ){
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    launchAction(
-                                        context,
-                                        fannelName,
-                                        setReplaceVariableMapSrc,
-                                        busyboxExecutor,
-                                        globalVarNameToValueMap,
-                                        globalVarNameToBitmapMap,
-                                        settingActionAsyncCoroutine,
-                                        imageActionAsyncCoroutine,
-                                        settingAcCon,
-                                        imageAcCon,
-                                        atRepValMap,
-                                        loopVarName,
-                                        loopIndex,
-                                        "importPath: ${importPath}, importRawSrcCon: ${importRawSrcCon}"
-                                    )
-                                }
-                            }
-                            if (loopTimes == startLoopIndex) {
-                                return@async loopIndex to innerImportCon
-                            }
                             if (
-                                loopVarName.isNullOrEmpty()
-                            ) return@async loopIndex to innerImportCon
+                                loopTimes == startLoopIndex
+                                || loopVarName.isNullOrEmpty()
+                                ) {
+                                val innerImportConSrc = removeDefAcAndLaunchDefAction(
+                                    context,
+                                    fannelName,
+                                    setReplaceVariableMapSrc,
+                                    busyboxExecutor,
+                                    globalVarNameToValueMap,
+                                    globalVarNameToBitmapMap,
+                                    settingActionAsyncCoroutine,
+                                    imageActionAsyncCoroutine,
+                                    importRawSrcCon,
+                                    innerImportCon,
+                                    importPath,
+                                    atRepValMap,
+                                    loopVarName,
+                                    loopIndex,
+                                )
+                                return@async loopIndex to innerImportConSrc
+                            }
                             if (
                                 !innerImportCon.contains("@{${loopVarName}}")
                             ) {
@@ -898,12 +901,29 @@ object SettingFile {
                                 )
                                 return@async loopIndex to String()
                             }
-                            loopIndex to CmdClickMap.replaceByAtVar(
+                            val innerImportConBeforeDefAcRemove = CmdClickMap.replaceByAtVar(
                                 innerImportCon,
                                 mapOf(
                                     loopVarName to loopIndex.toString()
                                 ),
                             )
+                            val innerImportConSrc = removeDefAcAndLaunchDefAction(
+                                context,
+                                fannelName,
+                                setReplaceVariableMapSrc,
+                                busyboxExecutor,
+                                globalVarNameToValueMap,
+                                globalVarNameToBitmapMap,
+                                settingActionAsyncCoroutine,
+                                imageActionAsyncCoroutine,
+                                importRawSrcCon,
+                                innerImportConBeforeDefAcRemove,
+                                importPath,
+                                atRepValMap,
+                                loopVarName,
+                                loopIndex,
+                            )
+                            loopIndex to innerImportConSrc
                         }
                     }
                     indexToImportConJobList
@@ -920,7 +940,88 @@ object SettingFile {
                 }
             }
 
-            suspend fun launchAction(
+            private fun removeDefAcAndLaunchDefAction(
+                context: Context,
+                fannelName: String,
+                setReplaceVariableMapSrc: Map<String, String>?,
+                busyboxExecutor: BusyboxExecutor?,
+                globalVarNameToValueMap: Map<String, String>?,
+                globalVarNameToBitmapMap: Map<String, Bitmap?>?,
+                settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
+                imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
+                baseImportRawSrcCon: String,
+                importCon: String,
+                importPath: String,
+                atRepValMap: Map<String, String>?,
+                loopVarName: String?,
+                loopIndex: Int,
+            ): String {
+                val settingAcKeyCon = getSettingActionKeyCon(
+                    importCon
+                )
+                val imageAcKeyCon = getImageActionKeyCon(
+                    importCon
+                )
+                val innerImportConSrc = removeDefAcKeyCon(
+                    importCon,
+                    settingAcKeyCon,
+                    imageAcKeyCon
+                )
+//                if(importCon.contains("wallShakeBackBkRect")) {
+//                    FileSystems.writeFile(
+//                        File(
+//                            UsePath.cmdclickDefaultAppDirPath,
+//                            "ldefSettingAc.txt"
+//                        ).absolutePath,
+//                        listOf(
+//                            "importCon: ${importCon}",
+//                            "settingAcKeyCon: ${settingAcKeyCon}",
+//                            "innerImportConSrc: ${innerImportConSrc}"
+//                        ).joinToString("==\n") + "======"
+//                    )
+//                }
+                CoroutineScope(Dispatchers.IO).launch {
+                    val settingAcConSrc = getSettingActionCon(
+                        settingAcKeyCon,
+                    )
+                    val imageAcConSrc = getImageActionCon(
+                        imageAcKeyCon,
+                    )
+                    if(
+                        settingAcConSrc.isNullOrEmpty()
+                        && imageAcConSrc.isNullOrEmpty()
+                    ) return@launch
+                    val settingAcCon = SetReplaceVariabler.execReplaceByReplaceVariables(
+                        settingAcConSrc ?: String(),
+                        setReplaceVariableMapSrc,
+                        fannelName,
+                    )
+                    val imageAcCon = SetReplaceVariabler.execReplaceByReplaceVariables(
+                        imageAcConSrc ?: String(),
+                        setReplaceVariableMapSrc,
+                        fannelName,
+                    )
+                    execLaunchAction(
+                        context,
+                        fannelName,
+                        setReplaceVariableMapSrc,
+                        busyboxExecutor,
+                        globalVarNameToValueMap,
+                        globalVarNameToBitmapMap,
+                        settingActionAsyncCoroutine,
+                        imageActionAsyncCoroutine,
+                        settingAcCon,
+                        imageAcCon,
+                        atRepValMap,
+                        loopVarName,
+                        loopIndex,
+                        "importPath: ${importPath}, importRawSrcCon: ${baseImportRawSrcCon}"
+                    )
+                }
+                return innerImportConSrc
+            }
+
+            private suspend fun execLaunchAction(
                 context: Context,
                 fannelName: String,
                 setReplaceVariableMapSrc: Map<String, String>?,
@@ -1110,44 +1211,207 @@ object SettingFile {
             }
         }
 
-        fun getSettingActionCon(
-            importMap: Map<String, String>,
-            loopVarMap: Map<String, String>?
+        fun getSettingActionKeyCon(
+//            importMap: Map<String, String>,
+            importCon: String,
+//            loopVarMap: Map<String, String>?
         ): String? {
-            return importMap.get(
-                ImportKey.SETTING_ACTION.key
-            )?.let {
+            if(
+                importCon.isEmpty()
+            ) return null
+            return findDefSettingAcKeyCon(
+                importCon,
+                ImportKey.DEF_SETTING_ACTION.key
+            )
+//            return importMap.get(
+//                ImportKey.DEF_SETTING_ACTION.key
+//            )?.let {
+//                settingConFormatter(
+//                    it.split("\n")
+//                ).let {
+//                    formSettingContents(it)
+//                }
+//            }?.let {
+//                CmdClickMap.replaceByAtVar(
+//                    it,
+//                    loopVarMap
+//                )
+//            }
+        }
+
+        fun getSettingActionCon(
+//            importMap: Map<String, String>,
+            settingActionKeyCon: String?,
+//            loopVarMap: Map<String, String>?
+        ): String? {
+            if(
+                settingActionKeyCon.isNullOrEmpty()
+            ) return null
+            return extractDefAcCon(
+                settingActionKeyCon,
+                ImportKey.DEF_SETTING_ACTION.key,
+            ).let {
                 settingConFormatter(
                     it.split("\n")
-                ).let {
-                    formSettingContents(it)
-                }
-            }?.let {
-                CmdClickMap.replaceByAtVar(
-                    it,
-                    loopVarMap
                 )
+            }.let {
+                formSettingContents(it)
             }
+//            return importMap.get(
+//                ImportKey.DEF_SETTING_ACTION.key
+//            )?.let {
+//                settingConFormatter(
+//                    it.split("\n")
+//                ).let {
+//                    formSettingContents(it)
+//                }
+//            }?.let {
+//                CmdClickMap.replaceByAtVar(
+//                    it,
+//                    loopVarMap
+//                )
+//            }
+        }
+
+        fun getImageActionKeyCon(
+//            importMap: Map<String, String>,
+            importCon: String,
+//            loopVarMap: Map<String, String>?,
+        ): String? {
+            if(
+                importCon.isEmpty()
+                ) return null
+            return findDefSettingAcKeyCon(
+                importCon,
+                ImportKey.DEF_IMAGE_ACTION.key
+            )
+//            return importMap.get(
+//                ImportKey.DEF_IMAGE_ACTION.key
+//            )?.let {
+//                settingConFormatter(
+//                    it.split("\n")
+//                ).let {
+//                    formSettingContents(it)
+//                }
+//            }?.let {
+//                CmdClickMap.replaceByAtVar(
+//                    it,
+//                    loopVarMap
+//                )
+//            }
         }
 
         fun getImageActionCon(
-            importMap: Map<String, String>,
-            loopVarMap: Map<String, String>?,
+//            importMap: Map<String, String>,
+            imageActionKeyCon: String?,
+//            loopVarMap: Map<String, String>?,
         ): String? {
-            return importMap.get(
-                ImportKey.IMAGE_ACTION.key
-            )?.let {
+            if(
+                imageActionKeyCon.isNullOrEmpty()
+            ) return null
+            return extractDefAcCon(
+                imageActionKeyCon,
+                ImportKey.DEF_IMAGE_ACTION.key,
+            ).let {
                 settingConFormatter(
                     it.split("\n")
-                ).let {
-                    formSettingContents(it)
-                }
-            }?.let {
-                CmdClickMap.replaceByAtVar(
-                    it,
-                    loopVarMap
+                )
+            }.let {
+                formSettingContents(it)
+            }
+//            return importMap.get(
+//                ImportKey.DEF_IMAGE_ACTION.key
+//            )?.let {
+//                settingConFormatter(
+//                    it.split("\n")
+//                ).let {
+//                    formSettingContents(it)
+//                }
+//            }?.let {
+//                CmdClickMap.replaceByAtVar(
+//                    it,
+//                    loopVarMap
+//                )
+//            }
+        }
+
+        private fun extractDefAcCon(
+            defAcKeyCon: String,
+            defAcKey: String,
+        ): String {
+            return defAcKeyCon.removePrefix(
+                makeDefAcPreWord(defAcKey)
+            ).removeSuffix(defAcQuote.toString())
+        }
+
+        fun removeDefAcKeyCon(
+            importCon: String,
+            settingAcKeyCon: String?,
+            imageAcKeyCon: String?,
+        ): String {
+            val innerImportConBeforeDefImageAcRep = when(
+                settingAcKeyCon.isNullOrEmpty()
+            ){
+                true -> importCon
+                else -> importCon.replace(
+                    settingAcKeyCon,
+                    String(),
                 )
             }
+            val innerImportConSrc = when(
+                imageAcKeyCon.isNullOrEmpty()
+            ){
+                true -> innerImportConBeforeDefImageAcRep
+                else -> innerImportConBeforeDefImageAcRep.replace(
+                    imageAcKeyCon,
+                    String(),
+                )
+            }
+            return innerImportConSrc
+        }
+
+        fun makeDefAcPreWord(
+            defAcPreWord: String,
+        ): String{
+            return "\n${defAcPreWord}=${defAcQuote}"
+        }
+
+        private fun findDefSettingAcKeyCon(
+            importConSrc: String,
+            defAcPreWord: String,
+        ): String? {
+            val importCon = "\n${importConSrc}"
+            val findPrefix = makeDefAcPreWord(defAcPreWord)
+            val startIndex = importCon.indexOf(
+                findPrefix
+            )
+            if (startIndex == -1) {
+                return null
+            }
+
+            var currentIndex =
+                startIndex + "\n${defAcPreWord}=${defAcQuote}".length
+            val contentStart =
+                currentIndex
+
+            while (currentIndex < importCon.length) {
+                if (importCon[currentIndex] != defAcQuote) {
+                    currentIndex++
+                    continue
+                }
+                if (
+                    currentIndex > contentStart
+                    && importCon[currentIndex - 1] != '\\'
+                ) {
+                    return importCon.substring(
+                        startIndex,
+                        currentIndex + 1
+                    )
+                }
+                currentIndex++
+            }
+
+            return null // 閉じ括弧 '"' が見つからない
         }
 
         fun getIfArgs(

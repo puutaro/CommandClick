@@ -195,16 +195,20 @@ object WithEditConstraintListView{
 //            FileSystems.writeFile(
 //                File(UsePath.cmdclickDefaultSDebugAppDirPath, "sglobalVarNameToValueMap.txt").absolutePath,
 //                listOf(
-//                    "globalVarNameToValueMap: ${globalVarNameToValueMap}\n",
+//                    "globalVarNameToValueMap: ${globalVarNameToValueMap}\n\n",
+//                    "globalVarNameToValueMap: ${
+//                        globalVarNameToValueMap.entries
+//                            .joinToString("\n")
+//                    }\n",
 //                ).joinToString("\n\n\n")
 //            )
         }
         dateList.add("imageAc" to LocalDateTime.now())
         withContext(Dispatchers.IO) {
             ImageActionManager.init()
-            FileSystems.removeAndCreateDir(
-                UsePath.cmdclickDefaultIDebugAppDirPath
-            )
+//            FileSystems.removeAndCreateDir(
+//                UsePath.cmdclickDefaultIDebugAppDirPath
+//            )
         }
         val globalVarNameToBitmapMapToSignal =
             ImageActionForConfigCon.getImageConfigCon(
