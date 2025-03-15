@@ -396,7 +396,8 @@ class TerminalFragment:
         fun onTextViewAndFannelForTermFragment(
             indexOrParentTagName: String,
             srcFragment: String,
-            tagNameList: List<String>,
+            tagName: String,
+            settingValName: String,
             updateText: String,
             overrideTextMap: Map<String, String>?,
 //            textPropertyMap: Map< String, String>?,

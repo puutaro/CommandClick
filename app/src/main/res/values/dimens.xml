@@ -21,4 +21,6 @@
     <dimen name="twenty_dp">20dp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="edit_title_height">55dp</dimen>
+    <dimen name="edit_list_parts_height">40dp</dimen>
+    <dimen name="edit_list_button_margin_top">10dp</dimen>
 </resources>

@@ -1495,9 +1495,10 @@ object WithEditConstraintListView{
                 textView,
                 contentsKeyPairsList,
                 contentsKeyPairsListCon,
-                editConstraintListAdapter?.getTotalSettingValMap()?.get(
-                    execContentsTag
-                ),
+                editConstraintListAdapter?.getTotalSettingValMap()?.toMap(),
+//                editConstraintListAdapter?.getTotalSettingValMap()?.get(
+//                    execContentsTag
+//                ),
                 0,
                 enableClick,
                 outValue,

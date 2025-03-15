@@ -75,9 +75,11 @@ object SettingFile {
 //        }
         return settingConFormatter(
             settingConList
-        ).let {
-            formSettingContents(it)
-        }.let {
+        ).joinToString("")
+//            .let {
+//            formSettingContents(it)
+//        }
+            .let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMapSrc,
@@ -174,9 +176,10 @@ object SettingFile {
 //        )
         return settingConFormatter(
             settingConList
-        ).let {
-            formSettingContents(it)
-        }
+        ).joinToString(String())
+//            .let {
+//            formSettingContents(it)
+//        }
 //            .let {
 //            val layoutContents = SetReplaceVariabler.execReplaceByReplaceVariables(
 //                it,
@@ -1253,10 +1256,11 @@ object SettingFile {
             ).let {
                 settingConFormatter(
                     it.split("\n")
-                )
-            }.let {
-                formSettingContents(it)
+                ).joinToString("")
             }
+//                .let {
+//                formSettingContents(it)
+//            }
 //            return importMap.get(
 //                ImportKey.DEF_SETTING_ACTION.key
 //            )?.let {
@@ -1315,10 +1319,11 @@ object SettingFile {
             ).let {
                 settingConFormatter(
                     it.split("\n")
-                )
-            }.let {
-                formSettingContents(it)
+                ).joinToString("")
             }
+//                .let {
+//                formSettingContents(it)
+//            }
 //            return importMap.get(
 //                ImportKey.DEF_IMAGE_ACTION.key
 //            )?.let {

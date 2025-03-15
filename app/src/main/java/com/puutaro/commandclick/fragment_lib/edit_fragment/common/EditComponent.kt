@@ -1271,7 +1271,8 @@ object EditComponent {
                                 FILTER_SHELL_PATH("filterShellPath"),
                                 DISPLAY_TEXT("displayText"),
                                 SRC_STR("srcStr"),
-                                SETTING_VALUE("settingValue"),
+//                                SETTING_VALUE("settingValue"),
+                                SETTING_VAL_NAME("settingValName"),
                                 LENGTH("length"),
                                 ON_UPDATE("onUpdate"),
                         }
@@ -1320,19 +1321,20 @@ object EditComponent {
 
                         fun createTextMap(
                                 textMapCon: String?,
-                                settingValue: String?,
+//                                settingValue: String?,
                                 separator: Char,
                         ): Map<String,String> {
-                                val textMapSrc = CmdClickMap.createMap(
-                                        textMapCon,
-                                        separator,
-                                ).toMap()
-                                return when(settingValue.isNullOrEmpty()){
-                                        true -> textMapSrc
-                                        else -> textMapSrc + mapOf(
-                                                TextKey.SETTING_VALUE.key to settingValue
-                                        )
-                                }
+                            val textMapSrc = CmdClickMap.createMap(
+                                    textMapCon,
+                                    separator,
+                            ).toMap()
+                            return textMapSrc
+//                                return when(settingValue.isNullOrEmpty()){
+//                                        true -> textMapSrc
+//                                        else -> textMapSrc + mapOf(
+//                                                TextKey.SETTING_VALUE.key to settingValue
+//                                        )
+//                                }
                         }
 
                         fun makeText(
@@ -1340,7 +1342,8 @@ object EditComponent {
                                 setReplaceVariableMap: Map<String, String>?,
                                 busyboxExecutor: BusyboxExecutor?,
                                 textMap: Map<String, String>?,
-                                settingValueSrc: String?,
+                                totalSettingValMap: Map<String, String>?,
+//                                settingValueSrc: String?,
                         ): String? {
 //                                FileSystems.updateFile(
 //                                        File(UsePath.cmdclickDefaultAppDirPath, "label.txt").absolutePath,
@@ -1353,52 +1356,56 @@ object EditComponent {
                                 if(
                                         textMap.isNullOrEmpty()
                                 ) return String()
-                                val settingValue = settingValueSrc?.let {
-                                        QuoteTool.trimBothEdgeQuote(it)
-                                }?: String()
-                                val displayTextSrc = makeDisplayTextByRemoveRegex(
-                                        textMap,
-                                        settingValue,
-                                )?: return null
-                                val filterShellCon = textMap.get(
-                                        TextKey.FILTER_SHELL_PATH.key
-                                )?.let {
-                                        ReadText(it).readText().replace(
-                                                ReplaceHolder.SrcReplaceHolders.SHELL_SRC.key,
-                                                displayTextSrc,
-                                        )
-                                }
-                                val length = textMap.get(
-                                        TextKey.LENGTH.key
-                                )?.let {
-                                        try{
-                                                it.toInt()
-                                        }catch (e: Exception){
-                                                null
-                                        }
-                                }
-                                if(
-                                        filterShellCon.isNullOrEmpty()
-                                ) return displayTextSrc.let {
-                                        if(
-                                                length == null
-                                        ) return it
-                                        it.take(length)
-                                }
-                                val fannelName = FannelInfoTool.getCurrentFannelName(
-                                        fannelInfoMap
-                                )
-                                return getOutputByShellCon(
-                                        setReplaceVariableMap,
-                                        busyboxExecutor,
-                                        filterShellCon,
-                                        fannelName
-                                )?.let {
-                                        if(
-                                                length == null
-                                        ) return it
-                                        it.take(length)
-                                }
+                            val settingValue = textMap.get(
+                                TextKey.SETTING_VAL_NAME.key
+                            )?.let {
+                                totalSettingValMap?.get(it)
+                            }?.let {
+                                QuoteTool.trimBothEdgeQuote(it)
+                            }
+                            val displayTextSrc = makeDisplayTextByRemoveRegex(
+                                    textMap,
+                                    settingValue ?: String(),
+                            )?: return null
+                            val filterShellCon = textMap.get(
+                                    TextKey.FILTER_SHELL_PATH.key
+                            )?.let {
+                                    ReadText(it).readText().replace(
+                                            ReplaceHolder.SrcReplaceHolders.SHELL_SRC.key,
+                                            displayTextSrc,
+                                    )
+                            }
+                            val length = textMap.get(
+                                    TextKey.LENGTH.key
+                            )?.let {
+                                    try{
+                                            it.toInt()
+                                    }catch (e: Exception){
+                                            null
+                                    }
+                            }
+                            if(
+                                    filterShellCon.isNullOrEmpty()
+                            ) return displayTextSrc.let {
+                                    if(
+                                            length == null
+                                    ) return it
+                                    it.take(length)
+                            }
+                            val fannelName = FannelInfoTool.getCurrentFannelName(
+                                    fannelInfoMap
+                            )
+                            return getOutputByShellCon(
+                                    setReplaceVariableMap,
+                                    busyboxExecutor,
+                                    filterShellCon,
+                                    fannelName
+                            )?.let {
+                                    if(
+                                            length == null
+                                    ) return it
+                                    it.take(length)
+                            }
                         }
 
                         private fun makeDisplayTextByRemoveRegex(
@@ -1708,9 +1715,9 @@ object EditComponent {
                                         (_, mapCon) ->
                                 val textMap = Template.TextManager.createTextMap(
                                         mapCon,
-                                        totalSettingValMap?.get(
-                                                frameTag
-                                        ),
+//                                        totalSettingValMap?.get(
+//                                                frameTag
+//                                        ),
                                         Template.keySeparator,
                                 )
                                 val tagName = textMap.get(tagKey) ?: let {

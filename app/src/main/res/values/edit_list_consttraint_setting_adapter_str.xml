@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="normal_card_view_tag">normal</string>
+    <string name="setting_card_view_tag">setting</string>
+    <string name="normal_constraint_tag">normal</string>
+    <string name="setting_constraint_tag">setting</string>
+    <string name="setting_label_tag">settingLabel</string>
+    <string name="setting_value_tag">settingValue</string>
+    <string name="left_button_tag">leftButton</string>
+    <string name="center_button_tag">centerButton</string>
+    <string name="right_button_tag">rightButton</string>
+</resources>

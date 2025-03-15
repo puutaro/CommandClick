@@ -40,6 +40,26 @@ object EditImageViewSetter {
             )
             param
         }
+        setOnlyView(
+            imageView,
+            contentsKeyPairList,
+            enableClick,
+            outValue,
+            requestBuilderSrc,
+            density,
+            whereForErr,
+        )
+    }
+
+    suspend fun setOnlyView(
+        imageView: AppCompatImageView?,
+        contentsKeyPairList: List<Pair<String, String>>?,
+        enableClick: Boolean,
+        outValue: TypedValue?,
+        requestBuilderSrc: RequestBuilder<Drawable>?,
+        density: Float,
+        whereForErr: String,
+    ){
         val contentsMap =
             contentsKeyPairList?.toMap()
         ImageViewTool.setVisibility(
@@ -49,7 +69,7 @@ object EditImageViewSetter {
         ImageViewTool.set(
             imageView,
             contentsMap,
-        null,
+            null,
             ImageView.ScaleType.FIT_CENTER,
             enableClick,
             outValue,

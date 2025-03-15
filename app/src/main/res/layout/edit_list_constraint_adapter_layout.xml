@@ -42,6 +42,7 @@
         />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/edit_constraint_adapter_constraint"
+        android:tag="@string/normal_constraint_tag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white_green"

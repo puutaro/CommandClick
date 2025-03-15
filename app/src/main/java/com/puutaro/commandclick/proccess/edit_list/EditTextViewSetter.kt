@@ -23,7 +23,8 @@ object EditTextViewSetter {
         textView: OutlineTextView?,
         contentsKeyPairList: List<Pair<String, String>>?,
         contentsKeyPairsListCon: String?,
-        settingValue: String?,
+        totalSettingValMap: Map<String, String>?,
+//        settingValue: String?,
         width: Int?,
         enableClick: Boolean,
         outValue: TypedValue?,
@@ -37,7 +38,7 @@ object EditTextViewSetter {
         val textMap = withContext(Dispatchers.IO) {
             EditComponent.Template.TextManager.createTextMap(
                 contentsKeyPairsListCon,
-                settingValue,
+//                settingValue,
                 EditComponent.Template.typeSeparator,
             )
         }
@@ -85,6 +86,38 @@ object EditTextViewSetter {
 //                ).joinToString("\n") + "\n\n============\n\n\n"
 //            )
 //        }
+        setOnlyView(
+            context,
+            fannelInfoMap,
+            setReplaceVariableMap,
+            busyboxExecutor,
+            textMap,
+            textView,
+            totalSettingValMap,
+            enableClick,
+            outValue,
+            density,
+            whereForErr,
+        )
+    }
+
+    suspend fun setOnlyView(
+        context: Context?,
+        fannelInfoMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
+        textMap: Map<String, String>?,
+        textView: OutlineTextView?,
+        totalSettingValMap: Map<String, String>?,
+        enableClick: Boolean,
+        outValue: TypedValue?,
+        density: Float,
+        whereForErr: String,
+    ){
+        if(
+            context == null
+            || textView == null
+            ) return
         TextViewTool.setVisibility(
             textView,
             textMap
@@ -95,7 +128,8 @@ object EditTextViewSetter {
                 setReplaceVariableMap,
                 busyboxExecutor,
                 textMap,
-                settingValue
+                totalSettingValMap?.toMap(),
+//                settingValue
             )
         }
 //        if(textView.tag.toString() == "Speed") {
