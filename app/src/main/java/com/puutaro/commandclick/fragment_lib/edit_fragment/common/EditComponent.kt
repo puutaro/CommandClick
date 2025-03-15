@@ -187,7 +187,7 @@ object EditComponent {
                         enum class ViewType(
                                 val str: String
                         ) {
-                                FRAME("frame"),
+//                                FRAME("frame"),
                                 TEXT("text"),
                                 IMAGE("image"),
                         }
@@ -201,7 +201,7 @@ object EditComponent {
                                 )
                                 return ViewType.entries.firstOrNull {
                                         it.str == viewTypeStr
-                                } ?: ViewType.FRAME
+                                } ?: ViewType.IMAGE
                         }
                 }
 

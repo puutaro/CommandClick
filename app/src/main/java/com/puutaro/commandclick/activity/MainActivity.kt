@@ -91,7 +91,6 @@ class MainActivity:
     TerminalFragment.OnFileChooseListener,
     TerminalFragment.OnTextViewAndFannelUpdateListenerForTerm,
     TerminalFragment.OnImageViewUpdateListenerForTerm,
-    TerminalFragment.OnFrameLayoutUpdateListenerForTerm,
     TerminalFragment.OnTextViewAndMapListUpdateListenerForTerm,
 //    TerminalFragment.OnSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnEditableSpinnerUpdateListenerForTermFragment,
@@ -669,23 +668,6 @@ class MainActivity:
 //            )
 //        }
 //    }
-
-    override fun onFrameLayoutUpdateForTerm(
-        indexOrParentTagName: String,
-        srcFragment: String,
-        tagNameList: List<String>,
-        frameKeyPairList: List<Pair<String, String>>?,
-    ) {
-        CoroutineScope(Dispatchers.Main).launch {
-            FrameLayoutUpdaterForTerm.update(
-                this@MainActivity,
-                indexOrParentTagName,
-                srcFragment,
-                tagNameList,
-                frameKeyPairList
-            )
-        }
-    }
 
     override fun onTextViewAndMapListUpdateForTerm(
         editListIndex: Int,
