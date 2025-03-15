@@ -392,6 +392,11 @@ object WithEditConstraintListView{
                     )
                 }
             dateList.add("setAdapter_EditConstraintListAdapter" to LocalDateTime.now())
+            val viewLayoutType = ListSettingsForEditList.ViewLayoutPathManager.getViewLayoutType(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                indexListMap,
+            )
             EditConstraintListAdapter(
                 WeakReference(fragment),
                 layoutInflater,
@@ -403,6 +408,7 @@ object WithEditConstraintListView{
                 globalVarNameToBitmapMap,
                 frameMapAndFrameTagToContentsMapListToTagIdList,
                 editListConfigMap,
+                viewLayoutType,
                 busyboxExecutor,
                 indexListMap,
                 lineMapList,

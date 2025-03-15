@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/edit_constraint_adapter_setting_mterial_card_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:tag="@string/setting_card_view_tag"
+    card_view:cardElevation="0dp"
+    app:checkedIcon="@drawable/icons8_check_ok"
+    app:checkedIconTint="@color/checked_item_color"
+    app:checkedIconSize="30dp"
+    app:checkedIconMargin="10dp"
+    android:checkable="true"
+    app:rippleColor="@color/fill_gray"
+    android:background="@null"
+    android:backgroundTint="@color/trans"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_gravity="center"
+    android:gravity="center"
+    >
+    <!--        <include-->
+    <!--            android:id="@+id/edit_constraint_adapter_bk_frame_layout"-->
+    <!--            layout="@layout/icon_caption_layout_for_edit_list"-->
+    <!--            android:background="@color/trans"-->
+    <!--            android:backgroundTint="@color/trans"-->
+    <!--            />-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/edit_constraint_adapter_setting_constraint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white_green"
+        android:gravity="center"
+        >
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/plusbutton"
+            android:tag="@string/plus_button_tag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:tint="@null"
+            android:rotation="180"
+            android:backgroundTint="@null"
+            android:background="@null"
+            android:scaleType="fitXY"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

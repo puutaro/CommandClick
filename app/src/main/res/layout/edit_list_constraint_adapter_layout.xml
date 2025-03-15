@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardElevation="0dp"
+    android:tag="@string/normal_card_view_tag"
     app:checkedIcon="@drawable/icons8_check_ok"
     app:checkedIconTint="@color/checked_item_color"
     app:checkedIconSize="30dp"

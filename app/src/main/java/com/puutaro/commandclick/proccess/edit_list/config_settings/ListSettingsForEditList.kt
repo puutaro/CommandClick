@@ -45,6 +45,7 @@ object ListSettingsForEditList  {
     ) {
         MAP_LIST_PATH("mapListPath"),
         VIEW_LAYOUT_PATH("viewLayoutPath"),
+        VIEW_LAYOUT_TYPE("viewLayoutType"),
         DEFAULT_FRAME_TAG("defaultFrameTag"),
         PREFIX("prefix"),
         SUFFIX("suffix"),
@@ -55,7 +56,28 @@ object ListSettingsForEditList  {
     }
 
 
-    object ViewLayoutPathManager{
+    object ViewLayoutPathManager {
+
+        enum class Type {
+            PATH,
+            SETTING,
+        }
+
+        fun getViewLayoutType(
+            fannelInfoMap: Map<String, String>,
+            setReplaceVariableMap: Map<String, String>?,
+            configMap: Map<String, String>?,
+        ): Type {
+            val viewLayoutTypeStr = FilePrefixGetter.get(
+                fannelInfoMap,
+                setReplaceVariableMap,
+                configMap,
+                ListSettingKey.VIEW_LAYOUT_TYPE.key,
+            )
+            return Type.entries.firstOrNull {
+                it.name == viewLayoutTypeStr
+            } ?: Type.PATH
+        }
 
         fun getViewLayoutPath(
             fannelInfoMap: Map<String, String>,

@@ -84,6 +84,7 @@ class EditConstraintListAdapter(
             Map<String, Int>
             >?,
     val editListConfigMap: Map<String, String>?,
+    private val listType: ListSettingsForEditList.ViewLayoutPathManager.Type,
     val busyboxExecutor: BusyboxExecutor?,
     val indexListMap: Map<String, String>,
     var lineMapList: MutableList<Map<String, String>>,
@@ -272,21 +273,63 @@ class EditConstraintListAdapter(
     }
 
     class EditListViewHolder(
-        val view: View
+        val view: View,
+        private val listType: ListSettingsForEditList.ViewLayoutPathManager.Type,
     ): RecyclerView.ViewHolder(view) {
         val materialCardView =
-            view.findViewById<MaterialCardView>(
-                R.id.edit_constraint_adapter_mterial_card_view
-            )
+            when(listType) {
+                ListSettingsForEditList.ViewLayoutPathManager.Type.SETTING
+                    -> view.findViewById<MaterialCardView>(
+                    R.id.edit_constraint_adapter_setting_mterial_card_view
+                )
+                ListSettingsForEditList.ViewLayoutPathManager.Type.PATH
+                    -> view.findViewById<MaterialCardView>(
+                    R.id.edit_constraint_adapter_mterial_card_view
+                )
+            }
 //        val bkFrameLayout = materialCardView.findViewById<FrameLayout>(
 //            R.id.edit_constraint_adapter_bk_frame_layout
-//        )
-        val bkImageView = materialCardView.findViewById<AppCompatImageView>(
-            R.id.edit_constraint_adapter_bk_image
-        )
-        val totalConstraintLayout = materialCardView.findViewById<ConstraintLayout>(
-            R.id.edit_constraint_adapter_constraint,
-        )
+//        )on
+        val context = view.context
+        private val settingCardViewTag =
+            context.getString(R.string.setting_card_view_tag)
+        val bkImageView = when(materialCardView.tag) {
+            settingCardViewTag -> null
+            else -> materialCardView.findViewById<AppCompatImageView>(
+                R.id.edit_constraint_adapter_bk_image
+            )
+
+}
+        val totalConstraintLayout = when(listType) {
+            ListSettingsForEditList.ViewLayoutPathManager.Type.SETTING
+                -> materialCardView.findViewById<ConstraintLayout>(
+                R.id.edit_constraint_adapter_setting_constraint,
+            )
+            ListSettingsForEditList.ViewLayoutPathManager.Type.PATH
+                -> materialCardView.findViewById<ConstraintLayout>(
+                R.id.edit_constraint_adapter_constraint,
+            )
+        }
+        val textViewMap = when(materialCardView.tag) {
+            settingCardViewTag
+                -> mapOf(
+                view.context.getString(R.string.plus_button_tag) to
+                        materialCardView.findViewById<ConstraintLayout>(
+                            R.id.edit_constraint_adapter_setting_constraint,
+                        )
+            )
+            else -> null
+        }
+        val imageViewMap = when(materialCardView.tag) {
+            settingCardViewTag
+                -> mapOf(
+                    view.context.getString(R.string.plus_button_tag) to
+                            materialCardView.findViewById<ConstraintLayout>(
+                                R.id.edit_constraint_adapter_setting_constraint,
+                            )
+                )
+            else -> null
+        }
 //        val contentsLayoutList = listOf(
 //            R.id.button_frame_layout1,
 //            R.id.button_frame_layout2,
@@ -332,7 +375,8 @@ class EditConstraintListAdapter(
             false
         )
         return EditListViewHolder(
-            itemView
+            itemView,
+            listType,
         )
     }
 
@@ -457,7 +501,7 @@ class EditConstraintListAdapter(
                     }
 
                     val removeAllViewFromBkFrameJob = async {
-                        holder.bkImageView.apply {
+                        holder.bkImageView?.apply {
                             background = null
                             backgroundTintList = null
                             imageTintList = null
@@ -665,6 +709,9 @@ class EditConstraintListAdapter(
 //                )
                 val frameId = 10000
                 withContext(Dispatchers.Main) execSetFrame@{
+                    if(
+                        bkImageView == null
+                    ) return@execSetFrame
                     bkImageView.tag = frameTag
                     EditConstraintFrameMaker.setImageView(
                         bkImageView,

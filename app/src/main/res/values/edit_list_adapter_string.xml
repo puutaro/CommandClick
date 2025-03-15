@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="normal_card_view_tag">normal</string>
+    <string name="setting_card_view_tag">setting</string>
+    <string name="plus_button_tag">plusButton</string>
+</resources>
