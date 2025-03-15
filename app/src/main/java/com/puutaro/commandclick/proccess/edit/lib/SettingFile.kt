@@ -75,7 +75,8 @@ object SettingFile {
 //        }
         return settingConFormatter(
             settingConList
-        ).joinToString("")
+        )
+            //.joinToString("")
 //            .let {
 //            formSettingContents(it)
 //        }
@@ -176,7 +177,8 @@ object SettingFile {
 //        )
         return settingConFormatter(
             settingConList
-        ).joinToString(String())
+        )
+            //.joinToString(String())
 //            .let {
 //            formSettingContents(it)
 //        }
@@ -209,7 +211,10 @@ object SettingFile {
 
     private fun settingConFormatter(
         settingConList: List<String>,
-    ): List<String> {
+    ): String
+//            List<String>
+    {
+
         return settingConList.map {
             it.trim()
         }.filter {
@@ -220,8 +225,20 @@ object SettingFile {
                 it,
                 ',',
                 ",\n"
-            ).split("\n")
+            ).replace("\n", String())
+                //.split("\n")
         }
+//        val result = StringBuilder()
+//        input.lineSequence()
+//            .map { it.trim() }
+//            .filter { it.isNotEmpty() && !it.startsWith("//") }
+//            .forEach {
+//                if (result.isNotEmpty()) {
+//                    result.append("\n")
+//                }
+//                result.append(it)
+//            }
+//        return result.toString()
     }
 
     fun formSettingContents(
@@ -1256,7 +1273,8 @@ object SettingFile {
             ).let {
                 settingConFormatter(
                     it.split("\n")
-                ).joinToString("")
+                )
+                    //.joinToString("")
             }
 //                .let {
 //                formSettingContents(it)
@@ -1319,7 +1337,8 @@ object SettingFile {
             ).let {
                 settingConFormatter(
                     it.split("\n")
-                ).joinToString("")
+                )
+                    //.joinToString("")
             }
 //                .let {
 //                formSettingContents(it)
