@@ -10,6 +10,7 @@ import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.core.graphics.toColorInt
 
 object TextViewTool {
 
@@ -432,7 +433,7 @@ object TextViewTool {
                         textShadowColorKey,
                         where
                     )
-                    Color.parseColor(colorStr)
+                    colorStr.toColorInt()
                 } ?: shadowColor
 //                        ?: Color.TRANSPARENT
             }

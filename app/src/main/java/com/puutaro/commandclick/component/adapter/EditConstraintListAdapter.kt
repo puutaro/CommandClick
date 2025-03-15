@@ -2,6 +2,7 @@ package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.Gravity
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
@@ -316,11 +318,25 @@ class EditConstraintListAdapter(
                 view.context.getString(R.string.setting_label_tag) to
                         totalConstraintLayout.findViewById<OutlineTextView>(
                             R.id.setting_label_tag,
-                        ),
+                        ).apply {
+                            setFillColor(R.color.white)
+                            strokeWidthSrc = 2
+                            setShadowLayer(
+                                2f, 2f, 2f,
+                                ContextCompat.getColor(context, R.color.file_dark_green_color),
+                            )
+                        },
                 view.context.getString(R.string.setting_value_tag) to
                         totalConstraintLayout.findViewById<OutlineTextView>(
                             R.id.setting_value_tag,
-                        ),
+                        ).apply {
+                            setFillColor(R.color.whiteWhiteGreen)
+                            strokeWidthSrc = 2
+                            setShadowLayer(
+                                2f, 2f, 2f,
+                                ContextCompat.getColor(context, R.color.file_dark_green_color),
+                            )
+                        },
             )
             else -> null
         }
