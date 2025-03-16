@@ -24,7 +24,8 @@ class JsAction(
             jsActionPath,
         )
         val jsActionPairListCon = SettingFile.readFromList(
-            ReadText(jsActionPath).textToList(),
+            ReadText(jsActionPath).readText(),
+//            ReadText(jsActionPath).textToList(),
             jsActionPath,
             setReplaceVariableMap
         )

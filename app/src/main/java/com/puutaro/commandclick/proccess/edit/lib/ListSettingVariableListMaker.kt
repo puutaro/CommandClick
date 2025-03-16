@@ -191,10 +191,14 @@ object ListSettingVariableListMaker {
         )
         val configMapPairList = when (true) {
             settingValCon.isNotEmpty() ->
-                SettingFile.formSettingContents(settingValCon.split("\n"))
+                SettingFile.formSettingContents(
+                    settingValCon
+                        //.split("\n")
+                )
             else ->
                 SettingFile.formSettingContents(
-                    defaultConfigMapStr.split("\n")
+                    defaultConfigMapStr
+                        //.split("\n")
                 )
         }.let {
             replaceByPreWordAndRepValMap(

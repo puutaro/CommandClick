@@ -135,7 +135,7 @@ object JavascriptExecuter {
             -> execJsAction(
                 fragment,
                 execJsPath,
-                execJsConList,
+                execJsConList.joinToString("\n"),
                 fannelInfoMap,
                 extraMapCon,
                 webView
@@ -159,7 +159,7 @@ object JavascriptExecuter {
                 execJsAction(
                     fragment,
                     execJsPath,
-                    execExcludeJsConList,
+                    execExcludeJsConList.joinToString("\n"),
                     fannelInfoMap,
                     extraMapCon,
                     webView
@@ -205,7 +205,8 @@ object JavascriptExecuter {
     private fun execJsAction(
         fragment: Fragment,
         execJsPath: String,
-        execJsConList: List<String>,
+        execJsCon: String,
+//        execJsConList: List<String>,
         fannelInfoMap: Map<String, String>,
         extraMapCon: Map<String, String>?,
         webView: WebView?
@@ -216,7 +217,8 @@ object JavascriptExecuter {
                 execJsPath
             )
         val jsKeyToSubKeyListCon = SettingFile.readFromList(
-            execJsConList,
+            execJsCon,
+//            execJsConList,
             execJsPath,
             setReplaceVariableMap
         )

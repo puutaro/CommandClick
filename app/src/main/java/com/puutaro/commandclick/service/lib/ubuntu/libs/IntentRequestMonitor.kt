@@ -713,14 +713,15 @@ object IntentRequestMonitor {
             .trimSeparatorGap(elementSeparator)
             .trimSeparatorGap(keySeparator)
             .trimSeparatorGap(valueSeparator)
-            .split("\n").let {
-            SettingFile.formSettingContents(it)
-        }.let {
+//            .split("\n")
+            .let {
+                SettingFile.formSettingContents(it)
+            }.let {
                 CmdClickMap.createMap(
                     it,
                     fieldSeparator
                 )
-        }.toMap()
+            }.toMap()
     }
 
     private fun String.trimSeparatorGap(

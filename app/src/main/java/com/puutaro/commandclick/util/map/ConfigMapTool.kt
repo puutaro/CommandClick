@@ -49,10 +49,11 @@ object ConfigMapTool {
 
             else -> {
                 SettingFile.formSettingContents(
-                    QuoteTool.splitBySurroundedIgnore(
-                        defaultConfigMapStr,
-                        '\n'
-                    )
+                    defaultConfigMapStr,
+//                    QuoteTool.splitBySurroundedIgnore(
+//                        defaultConfigMapStr,
+//                        '\n'
+//                    )
                 )
             }
         }.let {

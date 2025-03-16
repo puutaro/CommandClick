@@ -145,7 +145,8 @@ class ToolbarButtonArgsMaker(
 
                 )
                 else -> SettingFile.formSettingContents(
-                    makeToolbarbuttonMenuConHandler().split("\n")
+                    makeToolbarbuttonMenuConHandler()
+                        //.split("\n")
                 )
             }
             return MenuSettingTool.makeMenuPairListForMenuList(

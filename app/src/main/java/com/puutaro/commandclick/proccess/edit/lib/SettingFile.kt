@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
@@ -15,7 +14,6 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingArgsToo
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
@@ -52,7 +50,8 @@ object SettingFile {
 //        ReadText(
 //            settingFilePath
 //        ).textToList()
-        val settingConList = ImportManager.import(
+//        val settingConList =
+        val settingCon = ImportManager.import(
             context,
             fannelName,
             setReplaceVariableMapSrc,
@@ -62,7 +61,8 @@ object SettingFile {
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
             firstSettingConList,
-        ).split("\n")
+        )
+            //.split("\n")
 //        if(settingConList.joinToString("\n").contains("settingAction=")) {
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "settingFile_read.txt").absolutePath,
@@ -74,7 +74,7 @@ object SettingFile {
 //            )
 //        }
         return settingConFormatter(
-            settingConList
+            settingCon
         )
             //.joinToString("")
 //            .let {
@@ -156,7 +156,8 @@ object SettingFile {
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
         firstSettingConList: List<String>,
     ): String {
-        val settingConList = ImportManager.import(
+//        val settingConList =
+        val settingCon = ImportManager.import(
             context,
             fannelName,
             setReplaceVariableMapSrc,
@@ -166,7 +167,8 @@ object SettingFile {
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
             firstSettingConList,
-        ).split("\n")
+        )
+            //.split("\n")
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "readLayoutFromList00.txt").absolutePath,
 //            listOf(
@@ -176,7 +178,7 @@ object SettingFile {
 //            ).joinToString("\n\n\n") + "\n\n==============\n\n"
 //        )
         return settingConFormatter(
-            settingConList
+            settingCon
         )
             //.joinToString(String())
 //            .let {
@@ -193,14 +195,15 @@ object SettingFile {
     }
 
     fun readFromList(
-        settingConList: List<String>,
+//        settingConList: List<String>,
+        settingCon: String,
         fannelPath: String,
         setReplaceVariableCompleteMap: Map<String, String>?
     ): String {
         val fannelPathObj = File(fannelPath)
         if (!fannelPathObj.isFile) return String()
         val scriptFileName = fannelPathObj.name
-        return formSettingContents(settingConList).let {
+        return formSettingContents(settingCon).let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableCompleteMap,
@@ -210,24 +213,32 @@ object SettingFile {
     }
 
     private fun settingConFormatter(
-        settingConList: List<String>,
+//        settingConList: List<String>,
+        settingCon: String,
     ): String
 //            List<String>
     {
-
-        return settingConList.map {
-            it.trim()
-        }.filter {
-            it.isNotEmpty()
-                && !it.startsWith("//")
-        }.joinToString("").let {
+        return removeBlankAndComment(settingCon).let {
             QuoteTool.replaceBySurroundedIgnore(
                 it,
                 ',',
                 ",\n"
             ).replace("\n", String())
-                //.split("\n")
+            //.split("\n")
         }
+//        return settingConList.map {
+//            it.trim()
+//        }.filter {
+//            it.isNotEmpty()
+//                && !it.startsWith("//")
+//        }.joinToString("").let {
+//            QuoteTool.replaceBySurroundedIgnore(
+//                it,
+//                ',',
+//                ",\n"
+//            ).replace("\n", String())
+//                //.split("\n")
+//        }
 //        val result = StringBuilder()
 //        input.lineSequence()
 //            .map { it.trim() }
@@ -242,15 +253,76 @@ object SettingFile {
     }
 
     fun formSettingContents(
-        settingCon: List<String>
+//        settingCon: List<String>
+        settingCon: String,
     ): String {
-        return settingCon.map {
-            it.trim()
-        }.filter {
-            it.isNotEmpty()
-                    && !it.startsWith("//")
-        }.joinToString("")
+        return removeBlankAndComment(settingCon)
+//        return settingCon.map {
+//            it.trim()
+//        }.filter {
+//            it.isNotEmpty()
+//                    && !it.startsWith("//")
+//        }.joinToString("")
     }
+
+    private fun removeBlankAndComment(input: String): String {
+        val result = StringBuilder(input.length) // 適切な初期容量を設定
+        var lineStart = 0
+        var lineEnd = 0
+//        var isFirstLine = true
+
+        while (lineEnd <= input.length) {
+            if (
+                lineEnd != input.length
+                && input[lineEnd] != '\n'
+                ) {
+                lineEnd++
+                continue
+            }
+            val line = input.substring(lineStart, lineEnd)
+            var trimmedStart = 0
+            var trimmedEnd = line.length
+
+            // trim()の自前実装で高速化
+            while (
+                trimmedStart < trimmedEnd
+                && line[trimmedStart].isWhitespace()
+            ) {
+                trimmedStart++
+            }
+            while (
+                trimmedEnd > trimmedStart
+                && line[trimmedEnd - 1].isWhitespace()
+            ) {
+                trimmedEnd--
+            }
+
+            let {
+                if (
+                    trimmedStart >= trimmedEnd
+                ) return@let
+                // 空行チェック
+                val trimmedLine = line.substring(
+                    trimmedStart,
+                    trimmedEnd
+                )
+                if (
+                    trimmedLine.startsWith("//")
+                ) return@let
+                // コメント行チェック
+//                if (isFirstLine) {
+//                    isFirstLine = false
+//                } else {
+//                    result.append('\n')
+//                }
+                result.append(trimmedLine)
+            }
+            lineStart = lineEnd + 1
+            lineEnd++
+        }
+        return result.toString()
+    }
+
 
     private object ImportManager {
 
@@ -1272,7 +1344,8 @@ object SettingFile {
                 ImportKey.DEF_SETTING_ACTION.key,
             ).let {
                 settingConFormatter(
-                    it.split("\n")
+                    it,
+//                    it.split("\n")
                 )
                     //.joinToString("")
             }
@@ -1336,7 +1409,8 @@ object SettingFile {
                 ImportKey.DEF_IMAGE_ACTION.key,
             ).let {
                 settingConFormatter(
-                    it.split("\n")
+                    it,
+//                    it.split("\n")
                 )
                     //.joinToString("")
             }
