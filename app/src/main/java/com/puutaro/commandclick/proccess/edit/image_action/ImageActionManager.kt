@@ -17,12 +17,14 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionMapTo
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionReturnErrManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionVarErrManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageReturnExecutor
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.AlphaForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.SpecialArtForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ArbForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.BitmapArtForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.BlurForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ColorForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ConcatForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.CrackForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.CutForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DebugForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.DelayForImageAction
@@ -2086,6 +2088,21 @@ class ImageActionManager {
                         methodName,
                         baseArgsPairList,
                     )
+                FuncType.CRACK ->
+                    CrackForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                    )
+                FuncType.ALPHA ->
+                    AlphaForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                        varNameToBitmapMap,
+                    )
             }
 
         }
@@ -2123,6 +2140,8 @@ class ImageActionManager {
             IMAGE_TOOL("imageTool"),
             EXIT("exit"),
             SPECIAL_ART("specialArt"),
+            CRACK("crack"),
+            ALPHA("alpha"),
         }
     }
 

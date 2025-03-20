@@ -58,6 +58,11 @@ import kotlin.math.max
 import kotlin.random.Random
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.toColorInt
+import androidx.core.graphics.scale
+import androidx.core.graphics.get
+import androidx.core.graphics.set
+import androidx.core.graphics.drawable.toDrawable
+import kotlin.math.sqrt
 
 
 object BitmapTool {
@@ -79,11 +84,9 @@ object BitmapTool {
 //                                    resizeScale = 180.0 / beforeResizeBitMap.width
         val resizeScale: Double =
             (baseWidth / beforeResizeBitMap.width).toDouble()
-        return Bitmap.createScaledBitmap(
-            beforeResizeBitMap,
+        return beforeResizeBitMap.scale(
             (beforeResizeBitMap.width * resizeScale).toInt(),
-            (beforeResizeBitMap.height * resizeScale).toInt(),
-            true
+            (beforeResizeBitMap.height * resizeScale).toInt()
         )
     }
 
@@ -113,7 +116,7 @@ object BitmapTool {
 //            width = s.width + s.width
 //            height = c.height
 //        }
-        cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        cs = createBitmap(width, height)
         val comboImage = Canvas(cs)
         comboImage.drawBitmap(c, 0f, 0f, null)
         val startX = c.width.toFloat() - duplication
@@ -133,8 +136,8 @@ object BitmapTool {
 
     fun convertBitmapToDrawable(
         context: Context,
-        bitmap: Bitmap?): BitmapDrawable {
-        return BitmapDrawable(context.getResources(), bitmap);
+        bitmap: Bitmap?): BitmapDrawable? {
+        return bitmap?.toDrawable(context.getResources())
     }
 
     fun convertFileToBitmap(path: String): Bitmap? {
@@ -192,7 +195,7 @@ object BitmapTool {
         fun addGradient(originalBitmap: Bitmap, startColor: Int, endColor: Int): Bitmap {
             val width = originalBitmap.width
             val height = originalBitmap.height
-            val updatedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val updatedBitmap = createBitmap(width, height)
             val canvas = Canvas(updatedBitmap)
 
             canvas.drawBitmap(originalBitmap, 0f, 0f, null)
@@ -292,11 +295,9 @@ object BitmapTool {
     ): Bitmap {
         val resizeScale: Double =
             (maxHeight / beforeResizeBitMap.height)
-        return Bitmap.createScaledBitmap(
-            beforeResizeBitMap,
+        return beforeResizeBitMap.scale(
             (beforeResizeBitMap.width * resizeScale).toInt(),
-            (beforeResizeBitMap.height * resizeScale).toInt(),
-            true
+            (beforeResizeBitMap.height * resizeScale).toInt()
         )
     }
 
@@ -307,11 +308,7 @@ object BitmapTool {
             v == null
         ) return null
         // create a bitmap object
-        val screenshot = Bitmap.createBitmap(
-            v.measuredWidth,
-            v.measuredHeight,
-            Bitmap.Config.ARGB_8888
-        )
+        val screenshot = createBitmap(v.measuredWidth, v.measuredHeight)
         // Now draw this bitmap on a canvas
         val canvas = Canvas(screenshot)
         v.draw(canvas)
@@ -337,11 +334,7 @@ object BitmapTool {
             v == null
         ) return null
         // create a bitmap object
-        val screenshot = Bitmap.createBitmap(
-            v.measuredWidth,
-            v.measuredHeight,
-            Bitmap.Config.ARGB_8888
-        )
+        val screenshot = createBitmap(v.measuredWidth, v.measuredHeight)
         // Now draw this bitmap on a canvas
         val canvas = Canvas(screenshot)
         v.draw(canvas)
@@ -368,11 +361,11 @@ object BitmapTool {
 //            val imgWidth = 200f     // 画像幅
 //            val imgHeight = 200f    // 画像高さ
 //            val rectWidth = imageWidth //- 10f    // 矩形幅
-            val rectHeight = imageHeight - 10f   // 矩形高さ
+//            val rectHeight = imageHeight - 10f   // 矩形高さ
 //            val x = (imageWidth - rectWidth) / 2      // 矩形左上x座標
 //            val y = (imageHeight - rectHeight) / 2    // 矩形左上y座標
 
-            val bmp = Bitmap.createBitmap(imageWidth.toInt(), imageHeight.toInt(), Bitmap.Config.ARGB_8888)
+            val bmp = createBitmap(imageWidth.toInt(), imageHeight.toInt())
             val canvas = Canvas(bmp)
             val paint = Paint()
 
@@ -484,7 +477,7 @@ object BitmapTool {
             isAntiAlias: Boolean = false,
             maxLines: Int? = null,
         ): Bitmap {
-            val bmp = Bitmap.createBitmap(imageWidth.toInt(), imageHeight.toInt(), Bitmap.Config.ARGB_8888)
+            val bmp = createBitmap(imageWidth.toInt(), imageHeight.toInt())
             val canvas = Canvas(bmp)
             val paint = Paint()
 
@@ -699,11 +692,11 @@ object BitmapTool {
 //            val imgWidth = 200f     // 画像幅
 //            val imgHeight = 200f    // 画像高さ
 //            val rectWidth = imageWidth //- 10f    // 矩形幅
-            val rectHeight = imageHeight - 10f   // 矩形高さ
+//            val rectHeight = imageHeight - 10f   // 矩形高さ
 //            val x = (imageWidth - rectWidth) / 2      // 矩形左上x座標
 //            val y = (imageHeight - rectHeight) / 2    // 矩形左上y座標
 
-            val bmp = Bitmap.createBitmap(imageWidth.toInt(), imageHeight.toInt(), Bitmap.Config.ARGB_8888)
+            val bmp = createBitmap(imageWidth.toInt(), imageHeight.toInt())
             val canvas = Canvas(bmp)
             val paint = Paint()
 
@@ -729,7 +722,7 @@ object BitmapTool {
             textPaint.textSize = fontSize ?: 30f
 //            textPaint.setLea(lineSpacingMultiplier * paint.getFontSpacing());
 //            textPaint.textAlign = Paint.Align.CENTER
-            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
 //            textPaint.isAntiAlias = true
 
             val alignment = Layout.Alignment.ALIGN_CENTER
@@ -779,16 +772,13 @@ object BitmapTool {
                 paint.textSize = 12 * scale
                 // text shadow
                 paint.setShadowLayer(1f, 0f, 1f, Color.DKGRAY)
-                paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
                 // draw text to the Canvas center
                 val bounds: Rect = Rect()
                 paint.getTextBounds(mText, 0, mText.length, bounds)
 
-                val transparantBitmap: Bitmap = Bitmap.createBitmap(
-                    bounds.width() + 10,
-                    bounds.height() + 10,
-                    Bitmap.Config.ARGB_8888
-                )
+                val transparantBitmap: Bitmap =
+                    createBitmap(bounds.width() + 10, bounds.height() + 10)
                 val canvas = Canvas(transparantBitmap)
 
                 val x: Int = (transparantBitmap.width - bounds.width()) / 6
@@ -850,6 +840,193 @@ object BitmapTool {
         }
     }
 
+    object AlphaManager {
+
+        fun fadeBitmapLeftToRight(
+            bitmap: Bitmap,
+            alphaIncline: Float,
+            alphaOffset: Float,
+        ): Bitmap {
+            val width = bitmap.width
+            val height = bitmap.height
+            val pixels = IntArray(width * height)
+            bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+            val transColor = Color.TRANSPARENT
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val index = y * width + x
+                    val color = pixels[index]
+                    val curAlpha = Color.alpha(color)
+//                    val alphaSrc = ((x.toFloat() / width) * 255).toInt()
+                    val alpha =
+                        when(color == transColor) {
+                            true -> 0
+                            else -> (alphaIncline * x.toFloat() + (curAlpha + alphaOffset)).let {
+                                if (it < 0f) return@let 0f
+                                if (it > 255f) return@let 255f
+                                it
+                            }.toInt()
+                        }
+                    val red = Color.red(color)
+                    val green = Color.green(color)
+                    val blue = Color.blue(color)
+
+//                    if(height/ 2 == y) {
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "lalpha.txt").absolutePath,
+//                            listOf(
+////                                "alphaSrc: ${alphaSrc}",
+//                                "alpha: ${alpha}",
+//                                "curAlpha: ${curAlpha}",
+//                            ).joinToString("\n")
+//                        )
+//                    }
+                    pixels[index] = Color.argb(
+//                        255,
+                        alpha,
+//                        curAlpha,
+                        red, green, blue)
+                }
+            }
+            val fadedBitmap = createBitmap(width, height)
+            fadedBitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+            return fadedBitmap
+        }
+        fun overrideLeftToRight(
+            bitmap: Bitmap,
+            alphaIncline: Float,
+            alphaOffset: Float,
+        ): Bitmap {
+            val width = bitmap.width
+            val height = bitmap.height
+            val pixels = IntArray(width * height)
+            bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+            val transColor = Color.TRANSPARENT
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val index = y * width + x
+                    val color = pixels[index]
+                    val alphaSrc = ((x.toFloat() / width) * 255).toInt()
+                    val alpha =
+                        when(color == transColor) {
+                            true -> 0
+                            else -> (alphaIncline * x.toFloat() + (alphaSrc + alphaOffset)).let {
+                                if(it < 0f) return@let 0f
+                                if(it > 255f) return@let 255f
+                                it
+                            }.toInt()
+                        }
+                    (alphaIncline * x.toFloat() + (alphaSrc + alphaOffset)).let {
+                        if(it < 0f) return@let 0f
+                        if(it > 255f) return@let 255f
+                        it
+                    }.toInt()
+//                    val curAlpha = Color.alpha(color)
+                    val red = Color.red(color)
+                    val green = Color.green(color)
+                    val blue = Color.blue(color)
+                    pixels[index] = Color.argb(
+                        alpha,
+//                        curAlpha,
+                        red, green, blue)
+                }
+            }
+            val fadedBitmap = createBitmap(width, height)
+            fadedBitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+            return fadedBitmap
+        }
+
+        fun fadeBitmapFromCenter(
+            bitmap: Bitmap,
+            centerX: Int,
+            centerY: Int,
+            alphaIncline: Float,
+            alphaOffset: Float,
+        ): Bitmap {
+            val width = bitmap.width
+            val height = bitmap.height
+            val pixels = IntArray(width * height)
+            bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+            val transColor = Color.TRANSPARENT
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val index = y * width + x
+                    val color = pixels[index]
+                    val curAlpha = Color.alpha(color)
+                    val distance = sqrt(
+                        ((x - centerX) * (x - centerX) +
+                                (y - centerY) * (y - centerY)).toDouble()
+                    ).toFloat()
+                    val alpha =
+                        when(color == transColor) {
+                            true -> 0
+                            else -> (alphaIncline * distance + (curAlpha + alphaOffset)).let {
+                                if (it < 0f) return@let 0f
+                                if (it > 255) return@let 255
+                                it
+                            }.toInt()
+                        }
+                    val red = Color.red(color)
+                    val green = Color.green(color)
+                    val blue = Color.blue(color)
+                    pixels[index] = Color.argb(alpha, red, green, blue)
+                }
+            }
+
+            val fadedBitmap = createBitmap(width, height)
+            fadedBitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+            return fadedBitmap
+        }
+
+        fun overrideFromCenter(
+            bitmap: Bitmap,
+            centerX: Int,
+            centerY: Int,
+            alphaIncline: Float,
+            alphaOffset: Float,
+        ): Bitmap {
+            val width = bitmap.width
+            val height = bitmap.height
+            val pixels = IntArray(width * height)
+            bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+            val maxDistance = sqrt(
+                (centerX * centerX + centerY * centerY).toDouble()
+            ).toFloat()
+            val transColor = Color.TRANSPARENT
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val index = y * width + x
+                    val color = pixels[index]
+                    val distance = sqrt(
+                        ((x - centerX) * (x - centerX) +
+                                (y - centerY) * (y - centerY)).toDouble()
+                    ).toFloat()
+                    val alphaSrc = (distance / maxDistance * 255).toInt().coerceIn(0, 255)
+                    val alpha =
+                        when(color == transColor) {
+                            true -> 0
+                            else -> (alphaIncline * distance + (alphaSrc + alphaOffset)).let {
+                                if (it < 0f) return@let 0f
+                                if (it > 255) return@let 255
+                                it
+
+                            }.toInt()
+                        }
+                    val red = Color.red(color)
+                    val green = Color.green(color)
+                    val blue = Color.blue(color)
+                    pixels[index] = Color.argb(alpha, red, green, blue)
+                }
+            }
+
+            val fadedBitmap = createBitmap(width, height)
+            fadedBitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+            return fadedBitmap
+        }
+
+    }
+
     object ImageTransformer {
 
         fun stretchImageWithoutBlur(
@@ -861,7 +1038,7 @@ object BitmapTool {
                 return originalBitmap
             }
             // Create a new bitmap with the target dimensions
-            val scaledBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888)
+            val scaledBitmap = createBitmap(targetWidth, targetHeight)
 
             // Create a canvas to draw on the new bitmap
             val canvas = Canvas(scaledBitmap)
@@ -912,7 +1089,7 @@ object BitmapTool {
             val randomList = (-10..10)
             for (x in 0 until resultBitmap.width) {
                 for (y in 0 until resultBitmap.height) {
-                    val pixel = resultBitmap.getPixel(x, y)
+                    val pixel = resultBitmap[x, y]
                     if (
                         Color.alpha(pixel) == 0
                     ) continue
@@ -920,7 +1097,7 @@ object BitmapTool {
 //                    val green = Color.green(pixel) + randomList.random()
 //                    val blue = Color.blue(pixel) + randomList.random()
                     if (randomList.random() < 3) {
-                        resultBitmap.setPixel(x, y, Color.TRANSPARENT)
+                        resultBitmap[x, y] = Color.TRANSPARENT
                     }
 
                 }
@@ -931,7 +1108,7 @@ object BitmapTool {
         fun distortImage(bitmap: Bitmap): Bitmap {
             val width = bitmap.width
             val height = bitmap.height
-            val newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val newBitmap = createBitmap(width, height)
             val canvas = Canvas(newBitmap)
 
             val paint = Paint()
@@ -941,7 +1118,7 @@ object BitmapTool {
             for (x in 0 until width) {
                 for (y in 0 until height) {
                     // ランダムなオフセットを計算
-                    val pixel = newBitmap.getPixel(x, y)
+                    val pixel = newBitmap[x, y]
                     if (
                         Color.alpha(pixel) == 0
                     ) {
@@ -969,14 +1146,14 @@ object BitmapTool {
         fun applyUnevenFade(originalBitmap: Bitmap): Bitmap {
             val width = originalBitmap.width
             val height = originalBitmap.height
-            val result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val result = createBitmap(width, height)
             val canvas = Canvas(result)
 
             // 不均質な透明度を適用
             val paint = Paint()
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    val pixel = originalBitmap.getPixel(x, y)
+                    val pixel = originalBitmap[x, y]
                     if (
                         Color.alpha(pixel) == 0
                     ) {
@@ -998,11 +1175,11 @@ object BitmapTool {
             val randomList = (-10..10)
             for (x in 0 until resultBitmap.width) {
                 for (y in 0 until resultBitmap.height) {
-                    val pixel = resultBitmap.getPixel(x, y)
+                    val pixel = resultBitmap[x, y]
                     val red = Color.red(pixel) + randomList.random()
                     val green = Color.green(pixel) + randomList.random()
                     val blue = Color.blue(pixel) + randomList.random()
-                    resultBitmap.setPixel(x, y, Color.argb(255, red, green, blue))
+                    resultBitmap[x, y] = Color.argb(255, red, green, blue)
                 }
             }
 
@@ -1179,11 +1356,7 @@ object BitmapTool {
             bkBitmap: Bitmap,
             mascSrcBitmap: Bitmap,
         ): Bitmap {
-            val output = Bitmap.createBitmap(
-                mascSrcBitmap.width,
-                mascSrcBitmap.height,
-                Bitmap.Config.ARGB_8888
-            )
+            val output = createBitmap(mascSrcBitmap.width, mascSrcBitmap.height)
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
                 paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
             val canvas = Canvas(output)
@@ -1218,7 +1391,7 @@ object BitmapTool {
             val top = (outHeight - scaledHeight) / 2f
             val destRect = RectF(left, top, left + scaledWidth, top + scaledHeight)
 
-            val bitmap = Bitmap.createBitmap(outWidth, outHeight, Bitmap.Config.ARGB_8888)
+            val bitmap = createBitmap(outWidth, outHeight)
 //            pool.get(outWidth, outHeight, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
             val paint = if (out) SRC_OUT_PAINT else SRC_IN_PAINT
@@ -1241,7 +1414,7 @@ object BitmapTool {
 
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    val pixel = resultBitmap.getPixel(x, y)
+                    val pixel = resultBitmap[x, y]
                     val red = Color.red(pixel)
                     val green = Color.green(pixel)
                     val blue = Color.blue(pixel)
@@ -1249,7 +1422,7 @@ object BitmapTool {
                     // Check if the pixel is white or close to white
                     if (red > 240 && green > 240 && blue > 240) {
                         // Set the pixel to fully transparent
-                        resultBitmap.setPixel(x, y, Color.TRANSPARENT)
+                        resultBitmap[x, y] = Color.TRANSPARENT
                     }
                 }
             }
@@ -1298,14 +1471,14 @@ object BitmapTool {
 
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    val pixel = resultBitmap.getPixel(x, y)
+                    val pixel = resultBitmap[x, y]
                     if (
                         Color.alpha(pixel) == 0
                     ) {
-                        resultBitmap.setPixel(x, y, Color.TRANSPARENT)
+                        resultBitmap[x, y] = Color.TRANSPARENT
                         continue
                     }
-                    resultBitmap.setPixel(x, y, Color.BLACK)
+                    resultBitmap[x, y] = Color.BLACK
                 }
             }
 
@@ -1323,7 +1496,7 @@ object BitmapTool {
 
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    val pixel = resultBitmap.getPixel(x, y)
+                    val pixel = resultBitmap[x, y]
                     val red = Color.red(pixel)
                     val green = Color.green(pixel)
                     val blue = Color.blue(pixel)
@@ -1331,7 +1504,7 @@ object BitmapTool {
                     // Check if the pixel is white or close to white
                     if (red > 240 && green > 240 && blue > 240) {
                         // Set the pixel to fully transparent
-                        resultBitmap.setPixel(x, y, Color.BLACK)
+                        resultBitmap[x, y] = Color.BLACK
                     }
                 }
             }
@@ -1363,7 +1536,7 @@ object BitmapTool {
 
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    val pixel = resultBitmap.getPixel(x, y)
+                    val pixel = resultBitmap[x, y]
                     val red = Color.red(pixel)
                     val green = Color.green(pixel)
                     val blue = Color.blue(pixel)
@@ -1371,10 +1544,10 @@ object BitmapTool {
                     if (
                         Color.alpha(pixel) == 0
                     ) {
-                        resultBitmap.setPixel(x, y, Color.BLACK)
+                        resultBitmap[x, y] = Color.BLACK
                         continue
                     }
-                    resultBitmap.setPixel(x, y, Color.TRANSPARENT)
+                    resultBitmap[x, y] = Color.TRANSPARENT
                 }
             }
 
@@ -1385,11 +1558,14 @@ object BitmapTool {
             srcBitmap: Bitmap,
             colorStr: String?
         ): Bitmap {
+            val transColorStr =
+                "#00000000"
             val toColor = when(
-                colorStr == "#00000000"
+                colorStr == transColorStr
             ) {
                 true -> Color.TRANSPARENT
-                else -> Color.parseColor(colorStr)
+                else -> colorStr?.toColorInt()
+                    ?: transColorStr.toColorInt()
             }
             val width = srcBitmap.width
             val height = srcBitmap.height
@@ -1399,11 +1575,7 @@ object BitmapTool {
             // get pixel array from source
             srcBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
 
-            val bmOut = Bitmap.createBitmap(
-                width,
-                height,
-                srcBitmap.config!!
-            )
+            val bmOut = createBitmap(width, height, srcBitmap.config!!)
 
 //            var pixel: Int
             val trans = Color.TRANSPARENT
@@ -1453,7 +1625,7 @@ object BitmapTool {
                 colorStr == "#00000000"
             ) {
                 true -> Color.TRANSPARENT
-                else -> Color.parseColor(colorStr)
+                else -> colorStr.toColorInt()
             }
 //            val overrideAlpha = when(parsedColor.alpha == 0){
 //                true -> Color.TRANSPARENT.alpha
@@ -1620,13 +1792,13 @@ object BitmapTool {
                 fromColorStr == "#00000000"
             ) {
                 true -> Color.TRANSPARENT
-                else -> Color.parseColor(fromColorStr)
+                else -> fromColorStr.toColorInt()
             }
             val toParsedColor = when(
                 toColorStr == "#00000000"
             ) {
                 true -> Color.TRANSPARENT
-                else -> Color.parseColor(toColorStr)
+                else -> toColorStr.toColorInt()
             }
             return changeColor(
                 originalBitmap,
@@ -1646,11 +1818,7 @@ object BitmapTool {
             // get pixel array from source
             src.getPixels(pixels, 0, width, 0, 0, width, height)
 
-            val bmOut = Bitmap.createBitmap(
-                width,
-                height,
-                src.config!!
-            )
+            val bmOut = createBitmap(width, height, src.config!!)
 
 //            var pixel: Int
 //            val toArgb = argb(
@@ -1692,11 +1860,7 @@ object BitmapTool {
             // get pixel array from source
             src.getPixels(pixels, 0, width, 0, 0, width, height)
 
-            val bmOut = Bitmap.createBitmap(
-                width,
-                height,
-                src.config!!
-            )
+            val bmOut = createBitmap(width, height, src.config!!)
 
 //            var pixel: Int
             val toArgb = argb(
@@ -1732,13 +1896,13 @@ object BitmapTool {
                 colorStr1 == "#00000000"
             ) {
                 true -> Color.TRANSPARENT
-                else -> Color.parseColor(colorStr1)
+                else -> colorStr1.toColorInt()
             }
-            val parsedColor2 = when(
+            val parsedColor2 = when (
                 colorStr2 == "#00000000"
             ) {
                 true -> Color.TRANSPARENT
-                else -> Color.parseColor(colorStr2)
+                else -> colorStr2.toColorInt()
             }
             val width = originalBitmap.width
             val height = originalBitmap.height
@@ -1746,10 +1910,7 @@ object BitmapTool {
             // get pixel array from source
             originalBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
 
-            val bmOut = Bitmap.createBitmap(
-                width, height,
-                originalBitmap.config!!
-            )
+            val bmOut = createBitmap(width, height, originalBitmap.config!!)
 
 //            var pixel: Int
             val argb1 = argb(
@@ -1797,14 +1958,10 @@ object BitmapTool {
             // get pixel array from source
             src.getPixels(pixels, 0, width, 0, 0, width, height)
 
-            val bmOut = Bitmap.createBitmap(
-                width,
-                height,
-                src.config!!
-            )
+            val bmOut = createBitmap(width, height, src.config!!)
 
 //            var pixel: Int
-            val colorInt = Color.parseColor(colorStr)
+            val colorInt = colorStr.toColorInt()
             val trans = Color.TRANSPARENT
             // iteration through pixels
             for (y in 0 until height) {
@@ -1828,7 +1985,7 @@ object BitmapTool {
             // You have to make the Bitmap mutable when changing the config because there will be a crash
             // That only mutable Bitmap's should be allowed to change config.
             val bmp = original.copy(Bitmap.Config.ARGB_8888, true)
-            val bmpGrayscale = Bitmap.createBitmap(bmp.width, bmp.height, Bitmap.Config.ARGB_8888)
+            val bmpGrayscale = createBitmap(bmp.width, bmp.height)
             val canvas = Canvas(bmpGrayscale)
             val paint = Paint()
             val colorMatrix = ColorMatrix()
@@ -1840,7 +1997,7 @@ object BitmapTool {
         }
 
         fun invertMonoBitmap(bitmap: Bitmap): Bitmap {
-            val resultBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val resultBitmap = createBitmap(bitmap.width, bitmap.height)
             val canvas = Canvas(resultBitmap)
 
             val paint = Paint()
@@ -1859,7 +2016,7 @@ object BitmapTool {
         }
 
         fun reduceContrast(bitmap: Bitmap): Bitmap {
-            val resultBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val resultBitmap = createBitmap(bitmap.width, bitmap.height)
             val canvas = Canvas(resultBitmap)
 
             val paint = Paint()
@@ -1890,7 +2047,7 @@ object BitmapTool {
             val path = Path()
             for (x in 0 until bitmapWidth) {
                 for (y in 0 until bitmapHeight) {
-                    val pixelColor = bitmap.getPixel(x, y)
+//                    val pixelColor = bitmap[x, y]
                     // Process pixel color to determine if it should be part of the path
 //                    if (shouldIncludePixel(pixelColor)) {
                         // Add pixel coordinates to the path
@@ -1975,7 +2132,7 @@ object BitmapTool {
             val marginTop = (bitmapBackground.height * 0.5 - bitmap2Height * 0.5).toFloat()
             val bkBitmapConfig = bitmapBackground.config as Bitmap.Config
             val overlayBitmap =
-                Bitmap.createBitmap(bitmap2Width, bitmap2Height, bkBitmapConfig)
+                createBitmap(bitmap2Width, bitmap2Height, bkBitmapConfig)
             val canvas = Canvas(overlayBitmap)
             canvas.drawBitmap(bitmapBackground, Matrix(), null)
             canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)
@@ -1991,7 +2148,7 @@ object BitmapTool {
             val marginTop = (0..(bitmapBackground.height - bitmap2Height)).random().toFloat()
             val bkBitmapConfig = bitmapBackground.config as Bitmap.Config
             val overlayBitmap =
-                Bitmap.createBitmap(bitmapWidth, bitmapHeight, bkBitmapConfig)
+                createBitmap(bitmapWidth, bitmapHeight, bkBitmapConfig)
             val canvas = Canvas(overlayBitmap)
             canvas.drawBitmap(bitmapBackground, Matrix(), null)
             canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)
@@ -2007,7 +2164,7 @@ object BitmapTool {
             val marginTop =(bitmapBackground.height - bitmap2Height) / 2f
             val bkBitmapConfig = bitmapBackground.config as Bitmap.Config
             val overlayBitmap =
-                Bitmap.createBitmap(bitmapWidth, bitmapHeight, bkBitmapConfig)
+                createBitmap(bitmapWidth, bitmapHeight, bkBitmapConfig)
             val canvas = Canvas(overlayBitmap)
             canvas.drawBitmap(bitmapBackground, Matrix(), null)
             canvas.drawBitmap(bitmapImage, marginLeft, marginTop, null)
@@ -2026,7 +2183,7 @@ object BitmapTool {
 //            val bitmap2Height = bitmapImage.height
             val bkBitmapConfig = bitmapBackground.config as Bitmap.Config
             val overlayBitmap =
-                Bitmap.createBitmap(bitmapWidth, bitmapHeight, bkBitmapConfig)
+                createBitmap(bitmapWidth, bitmapHeight, bkBitmapConfig)
             val canvas = Canvas(overlayBitmap)
             canvas.drawBitmap(bitmapBackground, Matrix(), null)
             canvas.drawBitmap(bitmapImage, pivotX, pivotY, null)
@@ -2038,10 +2195,7 @@ object BitmapTool {
                 bitmap: Bitmap,
                 cornerDips: Int,
             ): Bitmap? {
-                val output = Bitmap.createBitmap(
-                bitmap.width, bitmap.height,
-                Bitmap.Config.ARGB_8888
-            )
+                val output = createBitmap(bitmap.width, bitmap.height)
             val canvas = Canvas(output)
             val cornerSizePx = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, cornerDips.toFloat(),
@@ -2071,7 +2225,7 @@ object BitmapTool {
 
             for (y in 0 until height) {
                 for (x in 0 until width) {
-                    val pixel = bitmap.getPixel(x, y)
+                    val pixel = bitmap[x, y]
                     if (pixel == Color.TRANSPARENT) continue
                         // 透明でないピクセルの場合、周囲のピクセルをチェック
                     var isEdge = false
@@ -2084,7 +2238,7 @@ object BitmapTool {
                             val nx = x + dx
                             val ny = y + dy
                             if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue
-                            val neighborPixel = bitmap.getPixel(nx, ny)
+                            val neighborPixel = bitmap[nx, ny]
                             if (neighborPixel != Color.TRANSPARENT) continue
                             isEdge = true
                             break
@@ -2093,7 +2247,7 @@ object BitmapTool {
                     }
                     // 輪郭のピクセルの場合、透明にする
                     if (!isEdge) continue
-                    trimmedBitmap.setPixel(x, y, Color.TRANSPARENT)
+                    trimmedBitmap[x, y] = Color.TRANSPARENT
                 }
             }
             return trimmedBitmap
@@ -2106,7 +2260,7 @@ object BitmapTool {
 
             for (y in 0 until height) {
                 for (x in 0 until width) {
-                    val pixel = bitmap.getPixel(x, y)
+                    val pixel = bitmap[x, y]
                     if (pixel == Color.TRANSPARENT) continue
                     // 透明でないピクセルの場合、周囲のピクセルをチェック
                     var isEdge = false
@@ -2119,7 +2273,7 @@ object BitmapTool {
                             val nx = x + dx
                             val ny = y + dy
                             if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue
-                            val neighborPixel = bitmap.getPixel(nx, ny)
+                            val neighborPixel = bitmap[nx, ny]
                             if (neighborPixel != Color.TRANSPARENT) continue
                             isEdge = true
                             break
@@ -2128,7 +2282,7 @@ object BitmapTool {
                     }
                     // 輪郭のピクセルの場合、透明にする
                     if (!isEdge) continue
-                    trimmedBitmap.setPixel(x, y, Color.TRANSPARENT)
+                    trimmedBitmap[x, y] = Color.TRANSPARENT
                 }
             }
             return trimmedBitmap

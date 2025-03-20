@@ -15,7 +15,7 @@ enum class FannelIcons(
         R.drawable.fannel_airphane_defo
     ),
     AT_MARK(
-        "airphane",
+        "at_mark",
         R.drawable.fannel_at_mark
     ),
 //    AWARD(

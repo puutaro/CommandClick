@@ -17,6 +17,9 @@ import kotlin.math.atan2
 import kotlin.math.max
 import androidx.core.graphics.toColorInt
 import androidx.core.graphics.get
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -299,7 +302,8 @@ object LineArt {
     fun drawCrackOnBitmap(
         width: Int,
         height: Int,
-        strokeWidthFloat: Float,
+        minStrokeWidthFloat: Float,
+        maxStrokeWidthRate: Float,
         minSeg: Int,
         maxSeg: Int,
         durationRate: Float,
@@ -311,12 +315,15 @@ object LineArt {
         val combinedBitmap = createBitmap(width, height)
         val canvas = Canvas(combinedBitmap)
         val paint = Paint().apply {
-            color = Color.BLACK
+//            color = Color.BLACK
             style = Paint.Style.STROKE
-            strokeWidth = strokeWidthFloat // 亀裂の太さ
+//            strokeWidth = strokeWidthFloat // 亀裂の太さ
         }
+        val random = kotlin.random.Random.Default
         val widthDuration= (width * durationRate).toInt()
         val heightDuration= (height * durationRate).toInt()
+        val minStrokeWidthDouble = minStrokeWidthFloat.toDouble()
+        val maxStrokeWidthDouble = maxStrokeWidthRate.toDouble()
         for(i in 0..times) {
             // 亀裂の始点をランダムに設定
             val startX = (0 until width).random().toFloat()
@@ -345,12 +352,19 @@ object LineArt {
                 currentX = nextX
                 currentY = nextY
             }
-            val seed = 1000
             paint.alpha = (
-                    (minOpacityRate * seed).toInt()..
-                            (maxOpacityRate * seed).toInt()
-                    ).random() / seed
-
+                    (minOpacityRate * 255).toInt()
+                            ..
+                            (maxOpacityRate * 255).toInt()
+                    ).random()
+            paint.strokeWidth =
+                when(minStrokeWidthDouble == maxStrokeWidthDouble) {
+                    true -> maxStrokeWidthRate
+                    else -> random.nextDouble(
+                        minStrokeWidthDouble,
+                        maxStrokeWidthDouble,
+                    ).toFloat()
+                }
             // 亀裂を描画
             paint.color = colorList.random().toColorInt()
             canvas.drawPath(path, paint)
@@ -359,40 +373,168 @@ object LineArt {
     }
 
     fun drawCrackFromCenter(
-        bitmap: Bitmap,
-        centerX: Int,
-        centerY: Int,
-        numCracks: Int,
+        width: Int,
+        height: Int,
+        centerX: Float,
+        centerY: Float,
+        minRadius: Int,
         maxRadius: Int,
         minSeg: Int,
         maxSeg: Int,
-    ) {
-        val canvas = Canvas(bitmap)
+        minStrokeWidthFloat: Float,
+        maxStrokeWidthFloat: Float,
+        minOpacityRate: Float,
+        maxOpacityRate: Float,
+        radAngle: Int,
+        colorList: List<String>,
+        times: Int,
+    ): Bitmap {
+        val resultBitmap = createBitmap(width, height)
+        val canvas = Canvas(resultBitmap)
         val paint = Paint().apply {
-            color = Color.BLACK
+//            color = Color.BLACK
             style = Paint.Style.STROKE
-            strokeWidth = 3f // 亀裂の太さ
+//            strokeWidth = strokeWidthFloat // 亀裂の太さ
         }
-
-        for (i in 0 until numCracks) {
+        val random = kotlin.random.Random.Default
+        val minStrokeWidthDouble = minStrokeWidthFloat.toDouble()
+        val maxStrokeWidthDouble = maxStrokeWidthFloat.toDouble()
+        for (i in 0 until times) {
             val path = Path()
-            path.moveTo(centerX.toFloat(), centerY.toFloat())
+            path.moveTo(centerX, centerY)
 
             // 亀裂の形状をランダムに描画
             val numSegments = (minSeg..maxSeg).random() // 亀裂のセグメント数
-            var currentX = centerX.toFloat()
-            var currentY = centerY.toFloat()
+            var currentX = centerX
+            var currentY = centerY
             for (j in 0 until numSegments) {
-                val angle = (0..360).random().toFloat()
-                val radius = (10..maxRadius).random().toFloat()
-                val nextX = currentX + radius * cos(Math.toRadians(angle.toDouble())).toFloat()
-                val nextY = currentY + radius * sin(Math.toRadians(angle.toDouble())).toFloat()
+                val curXDiff = currentX - centerX
+                val curYDiff = currentY - centerY
+                val vectorAngle = when(
+                    j == 0
+                ) {
+                    true -> (0..360).random()
+                    else -> atan2(
+                        curYDiff,
+                        curXDiff,
+                    )
+                }.let {
+                    Math.toDegrees(it.toDouble())
+                }
+                val angle = vectorAngle + when(
+                    j == 0
+                ) {
+                    true -> (0..360)
+                    else -> (-radAngle..radAngle)
+                }.random().toFloat()
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "langle.txt").absolutePath,
+//                    listOf(
+//                        "curXDiff: ${curXDiff}",
+//                        "curYDiff: ${curYDiff}",
+//                        "vectorAngle: ${vectorAngle}",
+//                        "angle: ${angle}",
+//                    ).joinToString("\n") + "\n\n=====\n\n"
+//                )
+                val radius = (
+                        minRadius..maxRadius
+                        ).random().toFloat()
+                val nextX = currentX + radius * cos(Math.toRadians(angle)).toFloat()
+                val nextY = currentY + radius * sin(Math.toRadians(angle)).toFloat()
                 path.lineTo(nextX, nextY)
                 currentX = nextX
                 currentY = nextY
             }
             // 亀裂を描画
+            paint.alpha =
+                (
+                        (minOpacityRate * 255).toInt()
+                                ..
+                                (maxOpacityRate * 255).toInt()
+                        ).random()
+            paint.strokeWidth =
+                when(minStrokeWidthDouble == maxStrokeWidthDouble) {
+                    true -> maxStrokeWidthFloat
+                    else -> random.nextDouble(
+                        minStrokeWidthDouble,
+                        maxStrokeWidthDouble,
+                    ).toFloat()
+                }
+            paint.color = colorList.random().toColorInt()
             canvas.drawPath(path, paint)
+        }
+        return resultBitmap
+    }
+
+    fun drawCracksAwayFromCenter(bitmap: Bitmap, centerX: Int, centerY: Int) {
+        val canvas = Canvas(bitmap)
+        val paint = Paint()
+        paint.color = Color.BLACK
+        paint.strokeWidth = 2f
+
+        val numCracks = 20 // ひび割れの数
+        val crackLength = 100f // ひび割れの長さ
+        val crackVariation = 0.2f // ひび割れの長さのばらつき
+
+        // 基準角度を計算
+        val baseAngles = floatArrayOf(
+            Math.toDegrees(atan2(-centerY.toDouble(), -centerX.toDouble())).toFloat(), // 左上
+            Math.toDegrees(atan2(-centerY.toDouble(), (bitmap.width - centerX).toDouble())).toFloat(), // 右上
+            Math.toDegrees(atan2((bitmap.height - centerY).toDouble(), (bitmap.width - centerX).toDouble())).toFloat(), // 右下
+            Math.toDegrees(atan2((bitmap.height - centerY).toDouble(), -centerX.toDouble())).toFloat() // 左下
+        )
+        val random = kotlin.random.Random.Default
+        for (i in 0 until numCracks) {
+            // ランダムな基準角度を選択
+            val baseAngle = baseAngles[random.nextInt(baseAngles.size)]
+
+            // 基準角度を中心に、プラスマイナス90度の範囲でランダムな角度を生成
+            val angle = baseAngle + random.nextFloat() * 180f - 90f
+
+            val length = crackLength * (1f + random.nextFloat() * crackVariation - crackVariation / 2f)
+            val endX = centerX + length * cos(Math.toRadians(angle.toDouble())).toFloat()
+            val endY = centerY + length * sin(Math.toRadians(angle.toDouble())).toFloat()
+
+            // 中心点から離れる方向にひび割れを描画
+            canvas.drawLine(centerX.toFloat(), centerY.toFloat(), endX, endY, paint)
+
+            // ひび割れに少し曲がりを加える
+            val midX = (centerX + endX) / 2f
+            val midY = (centerY + endY) / 2f
+            val controlX = midX + random.nextFloat() * 20f - 10f
+            val controlY = midY + random.nextFloat() * 20f - 10f
+
+            canvas.drawLine(centerX.toFloat(), centerY.toFloat(), controlX, controlY, paint)
+            canvas.drawLine(controlX, controlY, endX, endY, paint)
+        }
+    }
+
+    fun drawCrack(bitmap: Bitmap, centerX: Int, centerY: Int) {
+        val canvas = Canvas(bitmap)
+        val paint = Paint()
+        paint.color = Color.BLACK
+        paint.strokeWidth = 2f
+
+        val numCracks = 20 // ひび割れの数
+        val crackLength = 100f // ひび割れの長さ
+        val crackVariation = 0.2f // ひび割れの長さのばらつき
+        val random = kotlin.random.Random.Default
+        for (i in 0 until numCracks) {
+            val angle = random.nextFloat() * 360f
+            val length = crackLength * (1f + random.nextFloat() * crackVariation - crackVariation / 2f)
+            val endX = centerX + length * cos(Math.toRadians(angle.toDouble())).toFloat()
+            val endY = centerY + length * sin(Math.toRadians(angle.toDouble())).toFloat()
+
+            canvas.drawLine(centerX.toFloat(), centerY.toFloat(), endX, endY, paint)
+
+            // ひび割れに少し曲がりを加える
+            val midX = (centerX + endX) / 2f
+            val midY = (centerY + endY) / 2f
+            val controlX = midX + random.nextFloat() * 20f - 10f
+            val controlY = midY + random.nextFloat() * 20f - 10f
+
+            canvas.drawLine(centerX.toFloat(), centerY.toFloat(), controlX, controlY, paint)
+            canvas.drawLine(controlX, controlY, endX, endY, paint)
         }
     }
 }
