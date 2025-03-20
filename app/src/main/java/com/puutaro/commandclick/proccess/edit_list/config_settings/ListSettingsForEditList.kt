@@ -172,7 +172,8 @@ object ListSettingsForEditList  {
             globalVarNameToBitmapMap: Map<String, Bitmap?>,
             settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
             imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
-            viewLayoutConList: List<String>,
+//            viewLayoutConList: List<String>,
+            viewLayoutCon: String,
             whereForLog: String,
         ): Triple<
                 Map<String, String >,
@@ -193,7 +194,8 @@ object ListSettingsForEditList  {
                 globalVarNameToBitmapMap,
                 settingActionAsyncCoroutine,
                 imageActionAsyncCoroutine,
-                viewLayoutConList,
+                viewLayoutCon,
+//                viewLayoutConList,
             )
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "lviewLayout.txt").absolutePath,

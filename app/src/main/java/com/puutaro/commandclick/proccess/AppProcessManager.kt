@@ -350,15 +350,15 @@ object AppProcessManager {
         fragment: Fragment,
         fannelName: String,
     ){
-        val settingVariable = CommandClickVariables.returnSettingVariableList(
-            ReadText(
-                File(
-                    UsePath.cmdclickDefaultAppDirPath,
-                    fannelName
-                ).absolutePath,
-            ).textToList(),
-//            languageType
-        )
+//        val settingVariable = CommandClickVariables.returnSettingVariableList(
+//            ReadText(
+//                File(
+//                    UsePath.cmdclickDefaultAppDirPath,
+//                    fannelName
+//                ).absolutePath,
+//            ).textToList(),
+////            languageType
+//        )
         val fannelDirName = CcPathTool.makeFannelDirName(
             fannelName
         )

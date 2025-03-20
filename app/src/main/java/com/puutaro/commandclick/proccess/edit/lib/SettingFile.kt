@@ -43,9 +43,13 @@ object SettingFile {
         val fannelPathObj = File(fannelPath)
         if (!fannelPathObj.isFile) return String()
         val fannelName = fannelPathObj.name
-        val firstSettingConList = ReadSettingFileBuf.read(
+//        val firstSettingConList = ReadSettingFileBuf.read(
+//            settingFilePath
+//        ).split("\n")
+        val firstSettingCon = ReadSettingFileBuf.read(
             settingFilePath
-        ).split("\n")
+        )
+            //.split("\n")
 //        ReadText(
 //            settingFilePath
 //        ).textToList()
@@ -59,7 +63,8 @@ object SettingFile {
             null,
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
-            firstSettingConList,
+            firstSettingCon,
+//            firstSettingConList,
         )
             //.split("\n")
 //        if(settingConList.joinToString("\n").contains("settingAction=")) {
@@ -104,9 +109,12 @@ object SettingFile {
         val fannelName = fannelPathObj.name
 //        val dateList = mutableListOf<Pair<String, LocalDateTime>>()
 //        dateList.add("read" to LocalDateTime.now())
-        val firstSettingConList = ReadSettingFileBuf.read(
+//        val firstSettingConList = ReadSettingFileBuf.read(
+//            settingFilePath
+//        ).split("\n")
+        val firstSettingCon = ReadSettingFileBuf.read(
             settingFilePath
-        ).split("\n")
+        )
 //        ReadText(
 //            settingFilePath
 //        ).textToList()
@@ -132,7 +140,8 @@ object SettingFile {
             globalVarNameToBitmapMap,
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
-            firstSettingConList,
+            firstSettingCon,
+//            firstSettingConList,
         )
 //            .let {
 //            dateList.add("readLayoutFromList_end" to LocalDateTime.now())
@@ -153,7 +162,8 @@ object SettingFile {
         globalVarNameToBitmapMap: Map<String, Bitmap?>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
-        firstSettingConList: List<String>,
+        firstSettingCon: String,
+//        firstSettingConList: List<String>,
     ): String {
 //        val settingConList =
         val settingCon = ImportManager.import(
@@ -165,7 +175,8 @@ object SettingFile {
             globalVarNameToBitmapMap,
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
-            firstSettingConList,
+            firstSettingCon
+//            firstSettingConList,
         )
             //.split("\n")
 //        FileSystems.updateFile(
@@ -456,11 +467,15 @@ object SettingFile {
             globalVarNameToBitmapMap: Map<String, Bitmap?>?,
             settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
             imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
-            settingSrcConList: List<String>,
+            settingSrcCon: String,
+//            settingSrcConList: List<String>,
         ): String {
 //            init()
             val settingConBeforeImport = SetReplaceVariabler.execReplaceByReplaceVariables(
-                trimImportSrcCon(settingSrcConList.joinToString("\n")),
+                trimImportSrcCon(
+                    settingSrcCon
+//                    settingSrcConList.joinToString("\n")
+                ),
                 setReplaceVariableMapSrc,
                 fannelName
             )

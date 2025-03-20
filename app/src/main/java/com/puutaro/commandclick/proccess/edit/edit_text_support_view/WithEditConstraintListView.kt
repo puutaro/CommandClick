@@ -796,7 +796,8 @@ object WithEditConstraintListView{
                 globalVarNameToBitmapMap,
                 settingActionAsyncCoroutine,
                 imageActionAsyncCoroutine,
-                EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroConList,
+                EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroCon,
+//                EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.macroConList,
                 "${EditListConfig.ToolbarLayoutPath.ToolbarLayoutMacro.FOR_ONLY_CMD_VAL_EDIT.name} in $plusKeyToSubKeyConWhere"
                 )
             else -> ListSettingsForEditList.ViewLayoutPathManager.parseForConstraint(

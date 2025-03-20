@@ -15,16 +15,7 @@ object FannelListVariable {
 
     val cmdclickFannelListSeparator = "CMDCLICK_FANNEL_LIST_SEPARATOR"
     val descriptionFirstLineLimit = 100
-
-    val fannelNameIndex = 0
 //    val editExecuteValueIndex = 1
-    val descIndex = 2
-
-    fun getFannelName(conLine: String): String {
-        return conLine.split("\n")
-            .getOrNull(fannelNameIndex) ?: String()
-    }
-
 //    fun getEditExecute(conLine: String): String {
 //        return conLine.split("\n")
 //            .getOrNull(editExecuteValueIndex)

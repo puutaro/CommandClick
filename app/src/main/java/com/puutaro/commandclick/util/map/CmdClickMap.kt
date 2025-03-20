@@ -5,7 +5,6 @@ import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.str.BackslashTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.SpeedReplacer
-import com.puutaro.commandclick.util.str.VarMarkTool
 
 object CmdClickMap {
 
@@ -49,9 +48,9 @@ object CmdClickMap {
          if(
              mapEntryStr.isNullOrEmpty()
          ) return emptyList()
-         val normalSplitSeparatorList = sequenceOf('\n', '\t')
+         val normalSplitSeparatorSet = setOf('\n', '\t')
         val mapEntryStrList = when(
-            normalSplitSeparatorList.contains(separator)
+            normalSplitSeparatorSet.contains(separator)
         ) {
             true -> mapEntryStr.split(separator)
             else -> QuoteTool.splitBySurroundedIgnore(
@@ -200,9 +199,15 @@ object CmdClickMap {
             while (true) {
                 val targetIndex = builder.indexOf(target, index)
                 if (targetIndex == -1) break
-
-                if (targetIndex == 0 || builder[targetIndex - 1] != '\\') {
-                    builder.replace(targetIndex, targetIndex + target.length, newValue)
+                if (
+                    targetIndex == 0
+                    || builder[targetIndex - 1] != '\\'
+                    ) {
+                    builder.replace(
+                        targetIndex,
+                        targetIndex + target.length,
+                        newValue,
+                    )
                     index = targetIndex + newValue.length
                 } else {
                     index = targetIndex + target.length

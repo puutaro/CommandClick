@@ -444,7 +444,8 @@ object EditListConfig {
 
     object ToolbarLayoutPath {
         enum class ToolbarLayoutMacro(
-            val macroConList: List<String>,
+//            val macroConList: List<String>,
+            val macroCon: String,
         ){
             FOR_ONLY_CMD_VAL_EDIT(
                 ToolbarLayoutForOnlyCmdValEdit.toolbarLayoutForOnlyCmdValEdit,
@@ -564,6 +565,7 @@ object EditListConfig {
         ${typeSeparator}var=runDisplayCurSettingValue
             ?func=jsBackstack.exec
         ${sectionSeparator}
-    """.trimIndent().split("\n")
+    """.trimIndent()
+            //.split("\n")
     }
 }

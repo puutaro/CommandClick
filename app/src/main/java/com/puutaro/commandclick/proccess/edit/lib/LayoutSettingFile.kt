@@ -55,7 +55,8 @@ object LayoutSettingFile {
         globalVarNameToBitmapMap: Map<String, Bitmap?>?,
         settingActionAsyncCoroutine: SettingActionAsyncCoroutine,
         imageActionAsyncCoroutine: ImageActionAsyncCoroutine,
-        firstSettingConList: List<String>,
+        firstSettingCon: String,
+//        firstSettingConList: List<String>,
     ): List<String> {
         return SettingFile.readLayoutFromList(
             context,
@@ -66,7 +67,8 @@ object LayoutSettingFile {
             globalVarNameToBitmapMap,
             settingActionAsyncCoroutine,
             imageActionAsyncCoroutine,
-            firstSettingConList,
+            firstSettingCon,
+//            firstSettingConList,
         ).let {
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "layoutSettingFile.txt").absolutePath,

@@ -661,46 +661,6 @@ object CommandClickScriptVariable {
     """.trimMargin()
     }
 
-
-    fun makeShellOrJsFile(
-//        dirPath: String,
-        shellScriptName: String,
-        onUpdateLastModifyValue: String = onUpdateLastModifyOn,
-//        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
-        execJsOrHtmlPathValue: String = String(),
-    ) {
-        val shellContents =  makeScriptContents(
-            onUpdateLastModifyValue,
-//            shellOrJs,
-            execJsOrHtmlPathValue
-        ).let {
-//            if(shellOrJs != LanguageTypeSelects.JAVA_SCRIPT) return@let it
-            it
-                .substring(
-                    it.indexOf('\n')+1
-                )
-                .split("\n")
-                .map {
-                    AltRegexTool.replacePrefix(
-                        it,
-                        "#",
-                        "//"
-                    )
-//                    it.replace(
-//                        Regex("^#"), "//"
-//                    )
-            }.joinToString("\n")
-        }
-        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-        FileSystems.createDirs(cmdclickDefaultAppDirPath)
-        val createFile = File(
-            cmdclickDefaultAppDirPath,
-            shellScriptName
-        )
-        createFile.writeText(shellContents)
-    }
-
-
     private fun makeAppDirScriptContents(
 //        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
     ): String{
@@ -739,29 +699,6 @@ object CommandClickScriptVariable {
         if(createFile.isFile) return
         createFile.writeText(
             makeAppDirScriptContents()
-        )
-    }
-
-    fun makeButtonExecJS(
-//        dirPath: String,
-        shellScriptName: String,
-        execJsOrHtmlPathValue: String = String()
-    ){
-        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-//        val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
-        FileSystems.createDirs(cmdclickDefaultAppDirPath)
-        if(
-            File(
-                cmdclickDefaultAppDirPath,
-                shellScriptName
-            ).isFile
-        ) return
-        makeShellOrJsFile(
-//            dirPath,
-            shellScriptName,
-            onUpdateLastModifyOff,
-//            shellOrJs,
-            execJsOrHtmlPathValue
         )
     }
 
