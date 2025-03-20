@@ -18,7 +18,6 @@ import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.AltRegexTool
-import com.puutaro.commandclick.util.str.NewLineTool
 import com.puutaro.commandclick.util.str.SpeedReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -461,7 +460,7 @@ object SettingFile {
         ): String {
 //            init()
             val settingConBeforeImport = SetReplaceVariabler.execReplaceByReplaceVariables(
-                trimImportSrcCon(settingSrcConList),
+                trimImportSrcCon(settingSrcConList.joinToString("\n")),
                 setReplaceVariableMapSrc,
                 fannelName
             )
@@ -504,7 +503,10 @@ object SettingFile {
                     settingCon,
                     result,
                 ).let {
-                    trimImportSrcCon(it.split("\n"))
+                    trimImportSrcCon(
+                        it,
+//                        it.split("\n")
+                    )
                 }
             }
 //            FileSystems.updateFile(
@@ -882,14 +884,17 @@ object SettingFile {
         }
 
 
-        private fun trimImportSrcCon(jsList: List<String>): String {
-            return "\n" + jsList.joinToString("\n").let {
-                AltRegexTool.removeSpaceTagAfterNewline(it)
-            }.let {
-                AltRegexTool.removeCommentLines(it)
-            }.let {
-                NewLineTool.replaceMultipleNewlines(it)
+        private fun trimImportSrcCon(input: String): String {
+            return "\n" + input.let {
+                AltRegexTool
+                    .removeSpaceTabCommentAndConsecNewLineAfterNewline(it)
             }
+//                AltRegexTool.removeSpaceTabAfterNewline(it)
+//            }.let {
+//                AltRegexTool.removeCommentLines(it)
+//            }.let {
+//                NewLineTool.replaceMultipleNewlines(it)
+//            }
 //                .replace("\n[ 　\t]*".toRegex(), "\n")
 //                .replace("\n//[^\n]+".toRegex(), "\n")
         }
