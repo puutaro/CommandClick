@@ -45,7 +45,7 @@ object CrackForImageAction {
         val args =
             methodNameClass.args
         return when(args){
-            is MonoArtMethodArgClass.RndArgs -> {
+            is CrackArtMethodArgClass.RndArgs -> {
                 val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
                         index, formalArgsNameToType ->
                     Triple(
@@ -89,9 +89,9 @@ object CrackForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val durationRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minDurationRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
-                    args.durationKeyToDefaultValueStr,
+                    args.minDurationKeyToDefaultValueStr,
                     where
                 ).let { widthToErr ->
                     val funcErr = widthToErr.second
@@ -107,6 +107,52 @@ object CrackForImageAction {
                     ) return@let it
                     0f
                 }
+                val maxDurationRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.maxDurationKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                    if(
+                        0 <= it
+                        && it <= 1f
+                    ) return@let it
+                    1f
+                }
+                if(minDurationRate > maxDurationRate) {
+                    val spanMinDurationRateKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        args.minDurationKeyToDefaultValueStr.first,
+                    )
+                    val spanMaxDurationRateKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        args.maxDurationKeyToDefaultValueStr.first,
+                    )
+                    val spanMinDurationRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        minDurationRate.toString()
+                    )
+                    val spanMaxDurationRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        maxDurationRate.toString()
+                    )
+                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        where
+                    )
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to FuncCheckerForSetting.FuncCheckErr(
+                        "Must be ${spanMinDurationRateKey}(${spanMinDurationRate}) <= ${spanMaxDurationRateKey}(${spanMaxDurationRate}): ${spanWhere}"
+                    )
+                }
                 val minStrokeWidth = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
                     args.minStrokeWidthKeyToDefaultValueStr,
@@ -119,8 +165,11 @@ object CrackForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }.let {
-                    if(it <= 0) return@let 1f
-                    it
+                    if(
+                        0 <= it
+                        && it <= 1f
+                    ) return@let it
+                    1f
                 }
                 val maxStrokeWidth = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
@@ -305,7 +354,8 @@ object CrackForImageAction {
                     maxStrokeWidth,
                     minSeg,
                     maxSeg,
-                    durationRate,
+                    minDurationRate,
+                    maxDurationRate,
                     minOpacityRate,
                     maxOpacityRate,
                     colorList,
@@ -326,7 +376,7 @@ object CrackForImageAction {
                     null
                 ) to null
             }
-            is MonoArtMethodArgClass.RadArgs -> {
+            is CrackArtMethodArgClass.RadArgs -> {
                 val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
                         index, formalArgsNameToType ->
                     Triple(
@@ -793,7 +843,8 @@ object CrackForImageAction {
             maxStrokeWidth: Float,
             minSeg: Int,
             maxSeg: Int,
-            durationRate: Float,
+            minDurationRate:Float,
+            maxDurationRate: Float,
             minOpacityRate: Float,
             maxOpacityRate: Float,
             colorList: List<String>,
@@ -808,7 +859,8 @@ object CrackForImageAction {
                     maxStrokeWidth,
                     minSeg,
                     maxSeg,
-                    durationRate,
+                    minDurationRate,
+                    maxDurationRate,
                     minOpacityRate,
                     maxOpacityRate,
                     colorList,
@@ -869,18 +921,18 @@ object CrackForImageAction {
     }
     private enum class MethodNameClass(
         val str: String,
-        val args: MonoArtMethodArgClass
+        val args: CrackArtMethodArgClass
     ){
-        RND("rnd", MonoArtMethodArgClass.RndArgs),
-        RAD("rad", MonoArtMethodArgClass.RadArgs),
+        RND("rnd", CrackArtMethodArgClass.RndArgs),
+        RAD("rad", CrackArtMethodArgClass.RadArgs),
     }
     private sealed interface ArgType {
         val entries: EnumEntries<*>
     }
 
-    private sealed class MonoArtMethodArgClass {
+    private sealed class CrackArtMethodArgClass {
 
-        data object RndArgs : MonoArtMethodArgClass(), ArgType {
+        data object RndArgs : CrackArtMethodArgClass(), ArgType {
             override val entries = RndEnumArgs.entries
             val widthKeyToDefaultValueStr = Pair(
                 RndEnumArgs.WIDTH.key,
@@ -898,9 +950,13 @@ object CrackForImageAction {
                 RndEnumArgs.MAX_SEG.key,
                 RndEnumArgs.MAX_SEG.defaultValueStr
             )
-            val durationKeyToDefaultValueStr = Pair(
-                RndEnumArgs.DURATION_RATE.key,
-                RndEnumArgs.DURATION_RATE.defaultValueStr
+            val minDurationKeyToDefaultValueStr = Pair(
+                RndEnumArgs.MIN_DURATION_RATE.key,
+                RndEnumArgs.MIN_DURATION_RATE.defaultValueStr
+            )
+            val maxDurationKeyToDefaultValueStr = Pair(
+                RndEnumArgs.MAX_DURATION_RATE.key,
+                RndEnumArgs.MAX_DURATION_RATE.defaultValueStr
             )
             val minStrokeWidthKeyToDefaultValueStr = Pair(
                 RndEnumArgs.MIN_STROKE_WIDTH.key,
@@ -939,21 +995,22 @@ object CrackForImageAction {
                 TIMES("times", 5.toString(), FuncCheckerForSetting.ArgType.INT),
                 MIN_OPACITY_RATE(
                     "minOpacityRate",
-                    (0.1).toString(),
+                    1.toString(),
                     FuncCheckerForSetting.ArgType.FLOAT
                 ),
                 MAX_OPACITY_RATE(
                     "maxOpacityRate",
-                    (0.5).toString(),
+                    1.toString(),
                     FuncCheckerForSetting.ArgType.FLOAT
                 ),
-                DURATION_RATE("durationRate", 0.5.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                MIN_DURATION_RATE("minDurationRate", 0.5.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                MAX_DURATION_RATE("maxDurationRate", 0.9.toString(), FuncCheckerForSetting.ArgType.FLOAT),
                 MIN_STROKE_WIDTH("minStrokeWidth", 1.toString(), FuncCheckerForSetting.ArgType.FLOAT),
                 MAX_STROKE_WIDTH("maxStrokeWidth", 1.toString(), FuncCheckerForSetting.ArgType.FLOAT),
 
             }
         }
-        data object RadArgs : MonoArtMethodArgClass(), ArgType {
+        data object RadArgs : CrackArtMethodArgClass(), ArgType {
             override val entries = RadEnumArgs.entries
             val widthKeyToDefaultValueStr = Pair(
                 RadEnumArgs.WIDTH.key,

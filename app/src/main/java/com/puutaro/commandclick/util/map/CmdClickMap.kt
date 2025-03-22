@@ -48,11 +48,12 @@ object CmdClickMap {
          if(
              mapEntryStr.isNullOrEmpty()
          ) return emptyList()
-         val normalSplitSeparatorSet = setOf('\n', '\t')
+//         val normalSplitSeparatorSet = setOf('\n', '\t')
         val mapEntryStrList = when(
-            normalSplitSeparatorSet.contains(separator)
+//            normalSplitSeparatorSet.contains(separator)
+            separator
         ) {
-            true -> mapEntryStr.split(separator)
+            '\n', '\t' -> mapEntryStr.split(separator)
             else -> QuoteTool.splitBySurroundedIgnore(
                 mapEntryStr,
                 separator,

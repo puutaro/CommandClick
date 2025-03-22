@@ -14,12 +14,8 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.puutaro.commandclick.util.num.RateTool
 import java.util.Random
 import kotlin.math.atan2
-import kotlin.math.max
 import androidx.core.graphics.toColorInt
 import androidx.core.graphics.get
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -306,7 +302,8 @@ object LineArt {
         maxStrokeWidthRate: Float,
         minSeg: Int,
         maxSeg: Int,
-        durationRate: Float,
+        minDurationRate: Float,
+        maxDurationRate: Float,
         minOpacityRate: Float,
         maxOpacityRate: Float,
         colorList: List<String>,
@@ -320,8 +317,10 @@ object LineArt {
 //            strokeWidth = strokeWidthFloat // 亀裂の太さ
         }
         val random = kotlin.random.Random.Default
-        val widthDuration= (width * durationRate).toInt()
-        val heightDuration= (height * durationRate).toInt()
+        val minWidthDuration= (width * minDurationRate).toInt()
+        val maxWidthDuration= (width * maxDurationRate).toInt()
+        val minHeightDuration= (height * minDurationRate).toInt()
+        val maxHeightDuration= (height * maxDurationRate).toInt()
         val minStrokeWidthDouble = minStrokeWidthFloat.toDouble()
         val maxStrokeWidthDouble = maxStrokeWidthRate.toDouble()
         for(i in 0..times) {
@@ -337,15 +336,15 @@ object LineArt {
             val numSegments = (minSeg..maxSeg).random() // 亀裂のセグメント数
             (0 until numSegments).forEach { segIndex ->
                 val nextX = (
-                        currentX.toInt() - widthDuration
+                        currentX.toInt() - minWidthDuration
                                 ..
-                                currentX.toInt() + widthDuration
+                                currentX.toInt() + maxWidthDuration
                         ).random()
                     .coerceIn(0, width).toFloat() // 範囲内に制限
                 val nextY = (
-                        currentY.toInt() - heightDuration
+                        currentY.toInt() - minHeightDuration
                                 ..
-                                currentY.toInt() + heightDuration
+                                currentY.toInt() + maxHeightDuration
                         ).random()
                     .coerceIn(0, height).toFloat() // 範囲内に制限
                 path.lineTo(nextX, nextY)

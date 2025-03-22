@@ -275,61 +275,53 @@ object SettingFile {
 //        }.joinToString("")
     }
 
-    private fun removeBlankAndComment(input: String): String {
-        val result = StringBuilder(input.length) // 適切な初期容量を設定
-        var lineStart = 0
-        var lineEnd = 0
-//        var isFirstLine = true
+    fun removeBlankAndComment(input: String): String {
+        val result = StringBuilder(input.length)
+        var index = 0
+        var lastCharWasNewline = false
 
-        while (lineEnd <= input.length) {
-            if (
-                lineEnd != input.length
-                && input[lineEnd] != '\n'
-                ) {
-                lineEnd++
-                continue
-            }
-            val line = input.substring(lineStart, lineEnd)
-            var trimmedStart = 0
-            var trimmedEnd = line.length
+        while (index < input.length) {
+            val currentChar = input[index]
 
-            // trim()の自前実装で高速化
-            while (
-                trimmedStart < trimmedEnd
-                && line[trimmedStart].isWhitespace()
-            ) {
-                trimmedStart++
-            }
-            while (
-                trimmedEnd > trimmedStart
-                && line[trimmedEnd - 1].isWhitespace()
-            ) {
-                trimmedEnd--
-            }
+            when (currentChar) {
+                '\n' -> {
+                    if (!lastCharWasNewline) {
+                        result.append('\n')
+                        lastCharWasNewline = true
+                    }
+                    index++
 
-            let {
-                if (
-                    trimmedStart >= trimmedEnd
-                ) return@let
-                // 空行チェック
-                val trimmedLine = line.substring(
-                    trimmedStart,
-                    trimmedEnd
-                )
-                if (
-                    trimmedLine.startsWith("//")
-                ) return@let
-                // コメント行チェック
-//                if (isFirstLine) {
-//                    isFirstLine = false
-//                } else {
-//                    result.append('\n')
-//                }
-                result.append(trimmedLine)
+                    // 空白・タブ・コメント行のスキップ
+                    while (index < input.length) {
+                        when (input[index]) {
+                                ' ', '　', '\t' -> index++
+                            '/' -> {
+                                if (
+                                    index + 1 < input.length
+                                    && input[index + 1] == '/'
+                                    ) {
+                                    while (
+                                        index < input.length
+                                        && input[index] != '\n'
+                                    ) {
+                                        index++
+                                    }
+                                } else {
+                                    break
+                                }
+                            }
+                            else -> break
+                        }
+                    }
+                }
+                else -> {
+                    result.append(currentChar)
+                    index++
+                    lastCharWasNewline = false
+                }
             }
-            lineStart = lineEnd + 1
-            lineEnd++
         }
+
         return result.toString()
     }
 

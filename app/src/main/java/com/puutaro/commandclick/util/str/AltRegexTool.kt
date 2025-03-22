@@ -1,6 +1,29 @@
 package com.puutaro.commandclick.util.str
 
 object AltRegexTool {
+
+    fun trim(input: String): String {
+        var startIndex = 0
+        var endIndex = input.length
+
+        // 先頭の空白文字をスキップ
+        while (
+            startIndex < endIndex
+            && input[startIndex].isWhitespace()
+        ) {
+            startIndex++
+        }
+
+        // 末尾の空白文字をスキップ
+        while (
+            endIndex > startIndex
+            && input[endIndex - 1].isWhitespace()
+        ) {
+            endIndex--
+        }
+
+        return input.substring(startIndex, endIndex)
+    }
     fun replacePrefix(
         input: String,
         prefix: String,
@@ -27,7 +50,7 @@ object AltRegexTool {
         input: String,
         charSeq: String,
     ): String {
-        val result = StringBuilder()
+        val result = StringBuilder(input.length)
 
         for (char in input) {
             if (
@@ -38,28 +61,47 @@ object AltRegexTool {
         return result.toString()
     }
 
-    fun consecCharToOne(
-        input: String,
-        targetChar: Char,
-    ): String {
-        val result = StringBuilder()
-//        var lastCharWasNewline = false
+    fun consecCharToOne(input: String, targetChar: Char): String {
+        val result = StringBuilder(input.length)
+        val length = input.length
 
-        input.forEachIndexed {
-            index, char ->
+        for (index in 0 until length) {
+            val char = input[index]
             if (char != targetChar) {
                 result.append(char)
-//                lastCharWasNewline = false
-                return@forEachIndexed
+            } else {
+                if (
+                    index == 0
+                    || input[index - 1] != targetChar
+                    ) {
+                    result.append(char)
+                }
             }
-            if (
-                input.getOrNull(index - 1) ==
-                targetChar
-            ) return@forEachIndexed
-            result.append(char)
         }
         return result.toString()
     }
+//    fun consecCharToOne(
+//        input: String,
+//        targetChar: Char,
+//    ): String {
+//        val result = StringBuilder(input.length)
+////        var lastCharWasNewline = false
+//
+//        input.forEachIndexed {
+//            index, char ->
+//            if (char != targetChar) {
+//                result.append(char)
+////                lastCharWasNewline = false
+//                return@forEachIndexed
+//            }
+//            if (
+//                input.getOrNull(index - 1) ==
+//                targetChar
+//            ) return@forEachIndexed
+//            result.append(char)
+//        }
+//        return result.toString()
+//    }
 
     fun findPrefixChars(
         input: String,
@@ -87,54 +129,71 @@ object AltRegexTool {
     }
 
     fun removeSpaceTabCommentAndConsecNewLineAfterNewline(input: String): String {
-        val trimSet = setOf(' ', '　', '\t')
-        val result = StringBuilder(input.length) // 適切な初期容量を設定
-        var index = 0
+        val length = input.length
+        val result = CharArray(length)
+        var writeIndex = 0
+        var readIndex = 0
         var lastCharWasNewline = false
 
-        while (index < input.length) {
-            val currentChar = input[index]
-            if (currentChar != '\n'){
-                result.append(currentChar)
-                index++
-                lastCharWasNewline = false
-                continue
-            }
-//            if (currentChar == '\n') {
-            if (!lastCharWasNewline) {
-                result.append('\n')
-                lastCharWasNewline = true
-            }
-            index++
+        while (readIndex < length) {
+            val currentChar = input[readIndex++]
 
-            // 空白・タブ・コメント行のスキップ
-            while (index < input.length) {
-                if (trimSet.contains(input[index])) {
-                    index++
-                } else if (
-                    index + 1 < input.length
-                    && input[index] == '/'
-                    && input[index + 1] == '/'
-                ) {
-                    while (
-                        index < input.length
-                        && input[index] != '\n'
-                    ) {
-                        index++
+            if (currentChar != '\n') {
+                result[writeIndex++] = currentChar
+                lastCharWasNewline = false
+            } else if (!lastCharWasNewline) {
+                result[writeIndex++] = '\n'
+                lastCharWasNewline = true
+
+                // Skip spaces, tabs, and comment lines
+                while (readIndex < length) {
+                    val nextChar = input[readIndex]
+                    when(nextChar) {
+                        ' ', '　', '\t' -> {
+                            readIndex++
+                        }
+                        '/' -> {
+                            if (
+                                readIndex + 1 < length
+                                && input[readIndex + 1] == '/'
+                            ) {
+                                readIndex =
+                                    input.indexOf(
+                                        '\n',
+                                        readIndex
+                                    ).let {
+                                        if (it == -1) length
+                                        else it
+                                    }
+                            } else {
+                                break
+                            }
+                        }
+                        else -> break
                     }
-                } else {
-                    break
+//                    if (trimSet.contains(nextChar)) {
+//                        readIndex++
+//                    } else if (
+//                        readIndex + 1 < length
+//                        && nextChar == '/'
+//                        && input[readIndex + 1] == '/'
+//                        ) {
+//                        readIndex =
+//                            input.indexOf(
+//                                '\n',
+//                                readIndex
+//                            ).let {
+//                                if (it == -1) length
+//                                else it
+//                            }
+//                    } else {
+//                        break
+//                    }
                 }
             }
-//            }
-//            else {
-//                result.append(currentChar)
-//                index++
-//                lastCharWasNewline = false
-//            }
         }
 
-        return result.toString()
+        return String(result, 0, writeIndex)
     }
 
 //    fun removeSpaceTabCommentAndConsecNewLineAfterNewline(input: String): String {

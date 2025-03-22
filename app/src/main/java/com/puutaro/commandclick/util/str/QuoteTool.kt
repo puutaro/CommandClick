@@ -13,11 +13,9 @@ object QuoteTool {
     fun trimBothEdgeQuote(
         targetStr: String?,
     ): String {
-//        val targetStrWithCompOneSideQuote = compOneSideQuote(
-//            targetStr
-//        )
-        return targetStr?.trim()
-            .let {
+        return targetStr?.let {
+            AltRegexTool.trim(it)
+        }.let {
                 val trimCon = execTrim(
                     it,
                 '"'
@@ -243,82 +241,156 @@ object QuoteTool {
         targetString: String,
         targetSeparator: Char,
     ): String {
-
+        val result = StringBuilder(targetString.length)
         var quoteType: Char? = null
-        return targetString.toList().mapIndexed {
-                index, char ->
+        val length = targetString.length
 
-            val isHitSurroundQuote = char.equals('`')
-                    || char.equals('\"')
-            val beforeChar = targetString.getOrNull(index - 1)
-            if(
+        for (index in 0 until length) {
+            val char = targetString[index]
+            val isHitSurroundQuote = char == '`'
+                        || char == '"'
+            val beforeChar =
+                if (index > 0) targetString[index - 1]
+                else null
+
+            if (
                 quoteType == null
                 && beforeChar != '\\'
                 && isHitSurroundQuote
-            ) {
+                ) {
                 quoteType = char
-                return@mapIndexed char
-            }
-            if(
+                result.append(char)
+            } else if (
                 quoteType != null
                 && beforeChar != '\\'
                 && char == quoteType
-            ) {
+                ) {
                 quoteType = null
-                return@mapIndexed char
-            }
-            if(
+                result.append(char)
+            } else if (
                 quoteType != null
                 && char == targetSeparator
-            ){
-                return@mapIndexed repSeparatorString
+                ) {
+                result.append(repSeparatorString)
+            } else {
+                result.append(char)
             }
-            char
-        }.joinToString("")
+        }
+        return result.toString()
     }
-
-    private fun surroundLayoutSeparatorReplace(
-        targetString: String,
-    ): String {
-        val targetSeparator = '-'
-        var quoteType: Char? = null
-        return targetString.toList().mapIndexed {
-                index, char ->
-
-            val isHitSurroundQuote = char.equals('`')
-                    || char.equals('\"')
-            val beforeChar = targetString.getOrNull(index - 1)
-            if(
-                quoteType == null
-                && beforeChar != '\\'
-                && isHitSurroundQuote
-            ) {
-                quoteType = char
-                return@mapIndexed char
-            }
-            if(
-                quoteType != null
-                && beforeChar != '\\'
-                && char == quoteType
-            ) {
-                quoteType = null
-                return@mapIndexed char
-            }
+//    private fun surroundSeparatorReplace(
+//        targetString: String,
+//        targetSeparator: Char,
+//    ): String {
+//
+//        var quoteType: Char? = null
+//        return targetString.toList().mapIndexed {
+//                index, char ->
+//
+//            val isHitSurroundQuote = char.equals('`')
+//                    || char.equals('\"')
+//            val beforeChar = targetString.getOrNull(index - 1)
+//            if(
+//                quoteType == null
+//                && beforeChar != '\\'
+//                && isHitSurroundQuote
+//            ) {
+//                quoteType = char
+//                return@mapIndexed char
+//            }
+//            if(
+//                quoteType != null
+//                && beforeChar != '\\'
+//                && char == quoteType
+//            ) {
+//                quoteType = null
+//                return@mapIndexed char
+//            }
 //            if(
 //                quoteType != null
 //                && char == targetSeparator
 //            ){
-//                return@mapIndexed char
+//                return@mapIndexed repSeparatorString
 //            }
-            if(
+//            char
+//        }.joinToString("")
+//    }
+
+    private fun surroundLayoutSeparatorReplace(targetString: String): String {
+        val targetSeparator = '-'
+        val result = StringBuilder(targetString.length)
+        var quoteType: Char? = null
+        val length = targetString.length
+
+        for (index in 0 until length) {
+            val char = targetString[index]
+            val isHitSurroundQuote = char == '`'
+                    || char == '"'
+            val beforeChar =
+                if (index > 0) targetString[index - 1]
+                else null
+
+            if (
+                quoteType == null
+                && beforeChar != '\\'
+                && isHitSurroundQuote
+                ) {
+                quoteType = char
+                result.append(char)
+            } else if (
+                quoteType != null
+                && beforeChar != '\\'
+                && char == quoteType
+                ) {
+                quoteType = null
+                result.append(char)
+            } else if (
                 quoteType == null
                 && char == targetSeparator
-            ){
-                return@mapIndexed layoutSeparator
+                ) {
+                result.append(layoutSeparator)
+            } else {
+                result.append(char)
             }
-            char
-        }.joinToString("")
+        }
+        return result.toString()
     }
+//    private fun surroundLayoutSeparatorReplace(
+//        targetString: String,
+//    ): String {
+//        val targetSeparator = '-'
+//        var quoteType: Char? = null
+//        return targetString.toList().mapIndexed {
+//                index, char ->
+//
+//            val isHitSurroundQuote = char.equals('`')
+//                    || char.equals('\"')
+//            val beforeChar = targetString.getOrNull(index - 1)
+//            if(
+//                quoteType == null
+//                && beforeChar != '\\'
+//                && isHitSurroundQuote
+//            ) {
+//                quoteType = char
+//                return@mapIndexed char
+//            }
+//            if(
+//                quoteType != null
+//                && beforeChar != '\\'
+//                && char == quoteType
+//            ) {
+//                quoteType = null
+//                return@mapIndexed char
+//            }
+//            if(
+//                quoteType == null
+//                && char == targetSeparator
+//            ){
+//                return@mapIndexed layoutSeparator
+//            }
+//            char
+//        }.joinToString("")
+//    }
 
     private fun backReplace(
         replacedCon: String,
@@ -353,7 +425,31 @@ object QuoteTool {
         return targetStr
     }
 
-    private fun removeBothEdgeChar(
+    private fun removeBothEdgeChar(targetStr: String, edgeChar: Char): String {
+        var endIndex = targetStr.length
+        if(
+            endIndex == 0
+        ) return targetStr
+        // 先頭の edgeChar をスキップ
+        var startIndex = 0
+        if (
+           targetStr[0] == edgeChar
+        ) {
+            startIndex++
+        }
+
+        // 末尾の edgeChar をスキップ
+        if (
+            endIndex > startIndex
+            && targetStr[endIndex - 1] == edgeChar
+        ) {
+            endIndex--
+        }
+
+        return targetStr.substring(startIndex, endIndex)
+    }
+
+    private fun removeBothEdgeCharBk(
         targetStr: String,
         edgeChar: Char
     ): String {
@@ -471,39 +567,76 @@ object QuoteTool {
         return targetStr
     }
 
-    fun maskSurroundQuote(
-        targetString: String,
-    ): String {
-
+    fun maskSurroundQuote(targetString: String): String {
+        val result = StringBuilder(targetString.length)
         var quoteType: Char? = null
-        return targetString.toList().mapIndexed {
-                index, char ->
-            val isHitSurroundQuote = char.equals('`')
-                    || char.equals('\"')
-            val beforeChar = targetString.getOrNull(index - 1)
-            if(
+        val length = targetString.length
+
+        for (index in 0 until length) {
+            val char = targetString[index]
+            val isHitSurroundQuote = char == '`'
+                    || char == '"'
+            val beforeChar =
+                if (index > 0) targetString[index - 1]
+                else null
+
+            if (
                 quoteType == null
                 && isHitSurroundQuote
                 && beforeChar != '\\'
-            ) {
+                ) {
                 quoteType = char
-                return@mapIndexed char
-            }
-
-            if(
+                result.append(char)
+            } else if (
                 quoteType != null
                 && char == quoteType
                 && beforeChar != '\\'
-            ) {
+                ) {
                 quoteType = null
-                return@mapIndexed char
-            }
-            if(
+                result.append(char)
+            } else if (
                 quoteType != null
-            ){
-                return@mapIndexed 'a'
+                ) {
+                result.append('a')
+            } else {
+                result.append(char)
             }
-            char
-        }.joinToString("")
+        }
+        return result.toString()
     }
+//    fun maskSurroundQuote(
+//        targetString: String,
+//    ): String {
+//
+//        var quoteType: Char? = null
+//        return targetString.toList().mapIndexed {
+//                index, char ->
+//            val isHitSurroundQuote = char.equals('`')
+//                    || char.equals('\"')
+//            val beforeChar = targetString.getOrNull(index - 1)
+//            if(
+//                quoteType == null
+//                && isHitSurroundQuote
+//                && beforeChar != '\\'
+//            ) {
+//                quoteType = char
+//                return@mapIndexed char
+//            }
+//
+//            if(
+//                quoteType != null
+//                && char == quoteType
+//                && beforeChar != '\\'
+//            ) {
+//                quoteType = null
+//                return@mapIndexed char
+//            }
+//            if(
+//                quoteType != null
+//            ){
+//                return@mapIndexed 'a'
+//            }
+//            char
+//        }.joinToString("")
+//    }
 }
