@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util.map
 
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.util.CcScript
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.BackslashTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.SpeedReplacer
@@ -486,11 +487,12 @@ object CmdClickMap {
             hitHolderMark ->
 //            val hitHolderMark = it.value
             val holderNameAndDefaultValueList =
-                hitHolderMark
-                    .trim()
+                AltRegexTool.trim(hitHolderMark)
                     .removePrefix("{{")
                     .removeSuffix("}}")
-                    .trim()
+                    .let {
+                        AltRegexTool.trim(it)
+                    }
                     .split(":")
             val valName =
                 holderNameAndDefaultValueList.firstOrNull()

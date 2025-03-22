@@ -11,6 +11,7 @@ import com.puutaro.commandclick.proccess.import.JsImportManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,7 +74,9 @@ object JavaScriptLoadUrl {
             jsListBeforeRemoveTsv.isEmpty()
         ) return null
         if(
-            jsListBeforeRemoveTsv.joinToString().replace("\n", "").trim().isEmpty()
+            jsListBeforeRemoveTsv.joinToString().replace("\n", "").let{
+                AltRegexTool.trim(it)
+            }.isEmpty()
         ) return null
         val setReplaceVariableMapBeforeConcatTsvMap = createMakeReplaceVariableMapHandler(
             context,
@@ -189,7 +192,7 @@ object JavaScriptLoadUrl {
             ) "$afterJsImport;"
             else afterJsImport
         }.joinToString("\n").split("\n").map {
-            val trimJsRow = it.trim()
+            val trimJsRow = AltRegexTool.trim(it)
             if(
                 trimJsRow.startsWith(commentOutMark)
             ) return@map String()
@@ -327,8 +330,7 @@ object JavaScriptLoadUrl {
             ) "$it;"
             else it
         }.joinToString("\n").split("\n").map {
-            val trimJsRow = it
-                .trim()
+            val trimJsRow = AltRegexTool.trim(it)
             if(
                 trimJsRow.startsWith(commentOutMark)
             ) return@map String()

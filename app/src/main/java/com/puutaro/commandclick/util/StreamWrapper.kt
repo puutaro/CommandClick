@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.str.AltRegexTool
 import java.io.BufferedReader
 import java.io.File
 
@@ -13,7 +14,7 @@ object StreamWrapper {
         try {
             reader.forEachLine { line ->
                 if (
-                    line.trim().isEmpty()
+                    AltRegexTool.trim(line).isEmpty()
                 ) return@forEachLine
                 FileSystems.updateFile(
                     File(
@@ -41,7 +42,7 @@ object StreamWrapper {
         val output = StringBuilder()
         reader.forEachLine { line ->
             if (
-                line.trim().isEmpty()
+                AltRegexTool.trim(line).isEmpty()
             ) return@forEachLine
             output.append("\n${line}")
         }

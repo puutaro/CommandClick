@@ -8,6 +8,7 @@ import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.*
 import java.io.File
@@ -30,15 +31,18 @@ object JsImportManager {
         val recentAppDirPath = jsFileObj.parent
             ?: return String()
         val scriptFileName = jsFileObj.name
-        val trimRow = row
-            .trim()
+        val trimRow = AltRegexTool.trim(row)
+//            .trim()
             .trim(';')
         if(
             !trimRow.contains(jsImportPreWord)
         ) return row
         val trimImportPathSource = trimRow
             .replace(jsImportPreWord, "")
-            .trim()
+            .let {
+                AltRegexTool.trim(it)
+            }
+//            .trim()
             .let {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,

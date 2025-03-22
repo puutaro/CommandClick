@@ -13,6 +13,7 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.RegexTool
 import com.puutaro.commandclick.util.str.SpeedReplacer
 import java.io.File
@@ -196,8 +197,10 @@ object CheckTool {
         ): String {
             val colorStrPair = LogVisualManager.makeColorCode(order)
             val displayGenre =
-                keyName.replaceFirstChar { it.uppercase() }
-                    .trim()
+                keyName.replaceFirstChar { it.uppercase() }.let {
+                    AltRegexTool.trim(it)
+                }
+//                    .trim()
             val displayGenreCon = body.replace(
                 Regex("([ \t]*\n)+"),
                 "\n"
@@ -213,7 +216,7 @@ object CheckTool {
         ): String {
             val displayActionImportedAcCon =
                 displayActionImportedAcConSrc.split("\n").filter {
-                    it.trim().isNotEmpty()
+                    AltRegexTool.trim(it).isNotEmpty()
                 }.joinToString("\n")
             val colorStrPair = LogVisualManager.makeColorCode(DisplayGenre.AC_IMPORTED.order)
             val srcSpanTagCon = LogVisualManager.makeSpanTagHolder(
@@ -233,7 +236,7 @@ object CheckTool {
             )
             val displayJsAcSrcWithTrim =
                 displayJsAcSrc.split("\n").filter {
-                    it.trim().isNotEmpty()
+                    AltRegexTool.trim(it).isNotEmpty()
                 }.joinToString("\n")
             val colorStrPair = LogVisualManager.makeColorCode(DisplayGenre.SRC.order)
             val srcSpanTagCon = LogVisualManager.makeSpanTagHolder(
@@ -289,7 +292,10 @@ object CheckTool {
             val colorStrPair = LogVisualManager.makeColorCode(order)
             val displayGenre =
                 keyName.replaceFirstChar { it.uppercase() }
-                    .trim()
+                    .let {
+                        AltRegexTool.trim(it)
+                    }
+//                    .trim()
             return LogVisualManager.makeSpanTagHolder(
                 colorStrPair,
                 "${displayGenre}: ${body}",
@@ -729,7 +735,7 @@ object CheckTool {
             return QuoteTool.splitBySurroundedIgnore(
                 jsAcKeyToSubKeyConForJs,
                 '|'
-            ).asSequence().filter { it.trim().isNotEmpty() }.map {
+            ).asSequence().filter { AltRegexTool.trim(it).isNotEmpty() }.map {
                 ">|${it}"
             }.joinToString("\n")
         }
@@ -782,7 +788,7 @@ object CheckTool {
             subKeyMap: Map<String, String>
         ): String {
             return subKeyMap.filter {
-                it.key.trim().isNotEmpty()
+                AltRegexTool.trim(it.key).isNotEmpty()
             }.map {
                 val subKey = " ?${it.key}"
                 val subKeyValue = it.value
@@ -986,8 +992,9 @@ object CheckTool {
                 Regex("Cannot read properties of undefined \\(reading '([^\n]*)'\\)")
             )
             val errConFirstLine = errCon.split("\n")
-                .firstOrNull()?.trim()
-                ?: String()
+                .firstOrNull()?.let {
+                    AltRegexTool.trim(it)
+                } ?: String()
             errWordExtractRegexList.forEach {
                 regex ->
                 try {
@@ -1006,7 +1013,7 @@ object CheckTool {
 //                                    "errWord: ${it}",
 //                                ).joinToString("\n\n") + "\n----------\n"
 //                            )
-                            return it.trim()
+                            return AltRegexTool.trim(it)
                         }
                     }
                 } catch(e: Exception){
@@ -1024,9 +1031,11 @@ object CheckTool {
                 errRegexStr,
                 "$1"
             )
-            val errWordResult = errWordResultSrc.trim()
+            val errWordResult = AltRegexTool.trim(errWordResultSrc)
                 .replace(Regex("[\n ]"), "\t")
-                .trim().split("\t").lastOrNull()
+                .let{
+                    AltRegexTool.trim(it)
+                }.split("\t").lastOrNull()
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "err.txt").absolutePath,
 //                listOf(
@@ -1041,7 +1050,7 @@ object CheckTool {
 //            )
             if(
                 errWordResult.isNullOrEmpty()
-                || errWordResultSrc == errCon.trim()
+                || errWordResultSrc == AltRegexTool.trim(errCon)
             ) return null
             return errWordResult
         }
@@ -1342,7 +1351,7 @@ object CheckTool {
             jsCon: String,
         ): String? {
             val jsConNoCommentOut = jsCon.split("\n").filter {
-                val trimLine = it.trim()
+                val trimLine = AltRegexTool.trim(it)
                 val isNotCommentOut = !trimLine.startsWith("//")
                 val jsFileSystemClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
                     JsFileSystem::class.java.simpleName
@@ -1353,7 +1362,7 @@ object CheckTool {
             val varKeyName = JsActionKeyManager.JsActionsKey.JS_VAR.key
             val varDefinitionRegex = Regex("${varKeyName}[ \t]+[a-zA-Z0-9]+[ \t]*=[^\n]*")
             val oneTimesDefinition = varDefinitionRegex.findAll(jsConNoCommentOut).firstOrNull {
-                val varDefinition = it.value.trim()
+                val varDefinition = AltRegexTool.trim(it.value)
                 val varName = extractVarName(varDefinition)
                 if(
                     varName.startsWith(escapeRunPrefix)
@@ -1391,7 +1400,9 @@ object CheckTool {
                 .removePrefix(varKeyName)
                 .split("=")
                 .firstOrNull()
-                ?.trim()
+                ?.let{
+                    AltRegexTool.trim(it)
+                }
                 ?: String()
         }
     }
@@ -1494,9 +1505,13 @@ object CheckTool {
                 findRegex.find(evaluateAcCon)
                     ?.value
                     ?.removePrefix(errCodePrefix)
-                    ?.trim()
+                    ?.let{
+                        AltRegexTool.trim(it)
+                    }
                     ?.trim('!')
-                    ?.trim()
+                    ?.let {
+                        AltRegexTool.trim(it)
+                    }
             } catch (e: Exception){
                 null
             }
@@ -1729,9 +1744,13 @@ object CheckTool {
                 findRegex.find(evaluateAcCon)
                     ?.value
                     ?.removePrefix(errCodePrefix)
-                    ?.trim()
+                    ?.let{
+                        AltRegexTool.trim(it)
+                    }
                     ?.trim('!')
-                    ?.trim()
+                    ?.let {
+                        AltRegexTool.trim(it)
+                    }
             } catch (e: Exception){
                 null
             }
@@ -2756,7 +2775,7 @@ object CheckTool {
             val funcNameToDetail = extractFuncAndDetailPair(
                 errMessage
             )
-            val funcName = funcNameToDetail.first.trim()
+            val funcName = AltRegexTool.trim(funcNameToDetail.first)
             val loopMethod = funcName.split(".").lastOrNull()
                 ?: String()
             val tmpPronoun = JsActionKeyManager.JsVarManager.tmpPronoun
@@ -2823,11 +2842,11 @@ object CheckTool {
                 errMsg.removePrefix(loopMethodOrArgsNotExistMsgPrefix).split("\n")
             val funcSchema = ErrSchema.FUNC.schema
             val funcName = errConLines.firstOrNull {
-                it.trim().startsWith(funcSchema)
+                AltRegexTool.trim(it).startsWith(funcSchema)
             } ?: String()
             val detailSchema = ErrSchema.DETAIL.schema
             val detailName = errConLines.firstOrNull {
-                it.trim().startsWith(detailSchema)
+                AltRegexTool.trim(it).startsWith(detailSchema)
             } ?: String()
             return funcName to detailName
         }
@@ -3055,10 +3074,14 @@ object CheckTool {
                 jsCon.isNullOrEmpty()
             ) return false
             if (
-                jsCon.replace("\n", String()).trim().isEmpty()
+                jsCon.replace("\n", String()).let {
+                    AltRegexTool.trim(it)
+                }.isEmpty()
             ) return false
             val noLogJsCon = jsCon.split("\n").filter {
-                val isNotCommentOut = !it.trim().startsWith("//")
+                val isNotCommentOut = !it.let {
+                    AltRegexTool.trim(it)
+                }.startsWith("//")
                 isNotCommentOut
             }.joinToString("\n")
 //            FileSystems.writeFile(
@@ -3159,7 +3182,7 @@ object CheckTool {
                 importRegex.findAll(
                     "\n${it}"
                 ).map {
-                    val tsvImportSentence = it.value.trim()
+                    val tsvImportSentence = AltRegexTool.trim(it.value)
                     tsvImportSentence
                 }.joinToString("\n")
             }

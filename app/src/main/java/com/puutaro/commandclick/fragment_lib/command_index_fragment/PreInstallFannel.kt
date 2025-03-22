@@ -28,6 +28,7 @@ import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.gz.GzTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FannelSettingMap
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.Dispatchers
@@ -535,7 +536,7 @@ object PreInstallFannel {
 //            String(conByteArray)
 //        }.split("\n")
             return ReadText(escapeTsvPath).textToList().map { line ->
-                val trimLine = line.trim()
+                val trimLine = AltRegexTool.trim(line)
                 if (
                     trimLine.isEmpty()
                 ) return@map String()
@@ -544,7 +545,7 @@ object PreInstallFannel {
                 val relativePath =
                     relativePathAndVersion
                         .firstOrNull()
-                        ?.trim()
+                        ?.let { AltRegexTool.trim(it) }
                     ?: String()
                 val urlsVersion = relativePathAndVersion.getOrNull(1)
                 val curVersion = TsvTool.getKeyValueFromFile(

@@ -6,6 +6,7 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.AltRegexTool
 import java.io.File
 
 object TsvImportManager {
@@ -127,7 +128,7 @@ object TsvImportManager {
                 ) return@map String()
                 val tsvImportSentenceList =
                     matchResult.split("\n").filter {
-                        it.trim().isNotEmpty()
+                        AltRegexTool.trim(it).isNotEmpty()
                     }
                 val tsvImportLine =
                     tsvImportSentenceList.firstOrNull()
@@ -137,7 +138,7 @@ object TsvImportManager {
                         val asPhaseLineListCon =
                             tsvImportSentenceList.filterIndexed {
                                     index, line ->
-                                val trimLine = line.trim()
+                                val trimLine = AltRegexTool.trim(line)
                                 val isNotCommentOut = !trimLine.startsWith("//")
                                 val isNotOnlyComma = trimLine != ","
                                 index > 0
@@ -147,7 +148,9 @@ object TsvImportManager {
                                 .replace(
                                     Regex("^[ \t]*${tsvImportUsePhrase}[ \t]*\\("),
                                     String()
-                                ).trim()
+                                ).let {
+                                    AltRegexTool.trim(it)
+                                }
                                 .removeSuffix(")")
                                 .split(",")
                                 .joinToString("\n")
@@ -213,9 +216,11 @@ object TsvImportManager {
         tsvImportLine: String
     ): String {
         return QuoteTool.trimBothEdgeQuote(
-            tsvImportLine.trim().trim(';').removePrefix(
+            AltRegexTool.trim(tsvImportLine).trim(';').removePrefix(
                 tsvImportPreWord
-            ).trim()
+            ).let {
+                AltRegexTool.trim(it)
+            }
         )
     }
 
@@ -277,7 +282,7 @@ object TsvImportManager {
             mapEntryStr.isNullOrEmpty()
         ) return emptyList()
         val mapStr = mapEntryStr.split("\n").map {
-            val trimLine = it.trim()
+            val trimLine = AltRegexTool.trim(it)
             val isCommentOut = trimLine.startsWith("//")
             if(
                 isCommentOut
@@ -285,13 +290,17 @@ object TsvImportManager {
             val keyAndAlterKeyList = trimLine.split(equalStr)
             val key = keyAndAlterKeyList
                 .getOrNull(0)
-                ?.trim()
+                ?.let {
+                    AltRegexTool.trim(it)
+                }
             if(
                 key.isNullOrEmpty()
             ) return@map String()
             val alterKeySrc =
                 keyAndAlterKeyList.getOrNull(1)
-                    ?.trim()
+                    ?.let {
+                        AltRegexTool.trim(it)
+                    }
                     ?: key
             val alterKey = alterKeySrc.ifEmpty {
                 key

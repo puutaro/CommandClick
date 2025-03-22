@@ -288,7 +288,7 @@ object ListSettingVariableListMaker {
     ): String {
         val isFilePrefix =
             lineWithFilePrefix.startsWith(filePrefix)
-                    && lineWithFilePrefix.trim() != filePrefix
+                    && AltRegexTool.trim(lineWithFilePrefix) != filePrefix
         return when(true){
             isFilePrefix ->
                 lineWithFilePrefix.removePrefix(filePrefix)

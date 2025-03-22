@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.image_action
 
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.VarMarkTool
 
@@ -63,7 +64,7 @@ object ImageActionKeyManager {
 
         fun getAwaitVarNameList(awaitVarNameListCon: String): List<String> {
             return awaitVarNameListCon.split(awaitSeparator).asSequence().map {
-                it.trim()
+                AltRegexTool.trim(it)
             }.filter {
                 it.isNotEmpty()
             }.toList()

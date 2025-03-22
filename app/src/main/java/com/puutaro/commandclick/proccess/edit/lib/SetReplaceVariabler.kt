@@ -192,49 +192,6 @@ object SetReplaceVariabler {
 //        recentAppDirPath: String,
         fannelName: String
     ):String {
-//        val dateList = mutableListOf<Pair<String, LocalDateTime>>()
-//        dateList.add("read" to LocalDateTime.now())
-//        val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
-//        val loadJsUrlSource = buildString {
-//            append(replacingContents)
-//            setReplaceVariableCompleteMap?.forEach {
-//                val replaceVariable = Regex("[$][{]${it.key}[}]")
-//                val replaceString = it.value
-////                    .let {
-////                        ScriptPreWordReplacer.replace(
-////                            it,
-//////                        recentAppDirPath,
-////                            fannelName
-////                        )
-////                    }
-//                replace(
-//                    replaceVariable,
-//                    replaceString
-//                )
-//            }
-//        }
-//        val valNameSeq = VarMarkTool.extractValNameList(
-//            replacingContents
-//        )
-//        if(
-//            !valNameSeq.any()
-//        ){
-//            return ScriptPreWordReplacer.replace(
-//                replacingContents,
-////            recentAppDirPath,
-//                fannelName
-//            )
-//        }
-//        val setReplaceVariableCompleteMap = setReplaceVariableCompleteMapSrc?.filter {
-//            valNameSeq.contains(it.key)
-//        }
-//        if(
-//            setReplaceVariableCompleteMap.isNullOrEmpty()
-//        ) return ScriptPreWordReplacer.replace(
-//            replacingContents,
-////            recentAppDirPath,
-//            fannelName
-//        )
         if(
             replacingContents.isEmpty()
         ) return String()

@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.QuoteTool
-import java.io.File
 
 object CcScript {
 
@@ -17,7 +15,7 @@ object CcScript {
         if(
             keyValueListSize < 2
         ) return String() to String()
-        val parametarKey = keyValueList.first().trim()
+        val parametarKey = AltRegexTool.trim(keyValueList.first())
         val parameterValue = getValueFromSeparatedList(
             keyValueList,
             separator
@@ -33,8 +31,26 @@ object CcScript {
         return parametarKey to parameterValue
     }
 
-
     private fun getValueFromSeparatedList(
+        keyValueList: List<String>,
+        separator: String,
+    ): String {
+        if (keyValueList.size <= 1) return String()
+
+        val result = StringBuilder(
+            keyValueList.size * (keyValueList[0].length + separator.length)
+        )
+        for (i in 1 until keyValueList.size) {
+            if (i > 1) result.append(separator)
+            result.append(keyValueList[i])
+        }
+
+        return result.toString().let {
+            QuoteTool.trimBothEdgeQuote(it)
+        }
+    }
+    
+    private fun getValueFromSeparatedListBk(
         keyValueList: List<String>,
         separator: String,
     ): String {

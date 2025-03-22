@@ -18,6 +18,7 @@ import java.io.File
 import kotlin.enums.EnumEntries
 import androidx.core.graphics.scale
 import com.puutaro.commandclick.util.image_tools.SpecialArt
+import com.puutaro.commandclick.util.str.AltRegexTool
 
 object BitmapArtForImageAction {
     suspend fun handle(
@@ -348,7 +349,7 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
+                }.split(",").asSequence().filter { AltRegexTool.trim(it).isNotEmpty() }.map {
                     ColorTool.parseColorStr(
                         context,
                         it,
@@ -369,7 +370,7 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
+                }.split(",").asSequence().filter { AltRegexTool.trim(it).isNotEmpty() }.map {
                     ColorTool.parseColorStr(
                         context,
                         it,
@@ -623,7 +624,7 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
+                }.split(",").asSequence().filter { AltRegexTool.trim(it).isNotEmpty() }.map {
                     ColorTool.parseColorStr(
                         context,
                         it,
@@ -900,7 +901,7 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
+                }.split(",").asSequence().filter { AltRegexTool.trim(it).isNotEmpty() }.map {
                     ColorTool.parseColorStr(
                         context,
                         it,
@@ -1069,7 +1070,7 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
+                }.split(",").asSequence().filter { AltRegexTool.trim(it).isNotEmpty() }.map {
                     ColorTool.parseColorStr(
                         context,
                         it,
@@ -1215,7 +1216,7 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
+                }.split(",").asSequence().filter { AltRegexTool.trim(it).isNotEmpty() }.map {
                     ColorTool.parseColorStr(
                         context,
                         it,
@@ -1544,7 +1545,7 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
+                }.split(",").asSequence().filter { AltRegexTool.trim(it).isNotEmpty() }.map {
                     ColorTool.parseColorStr(
                         context,
                         it,

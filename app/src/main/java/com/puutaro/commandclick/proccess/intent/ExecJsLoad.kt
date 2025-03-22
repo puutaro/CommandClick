@@ -19,6 +19,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
@@ -191,7 +192,9 @@ object ExecJsLoad {
         val terminalOutputMode = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
             CommandClickScriptVariable.TERMINAL_OUTPUT_MODE,
-        )?.trim() ?: CommandClickScriptVariable.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
+        )?.let {
+            AltRegexTool.trim(it)
+        } ?: CommandClickScriptVariable.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
         terminalViewModel.onBottomScrollbyJs = !(
                 terminalOutputMode ==
                         SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name

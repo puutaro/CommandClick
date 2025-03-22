@@ -22,6 +22,7 @@ import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.QuoteTool
 
 object ConfigFromScriptFileSetter {
@@ -529,7 +530,9 @@ private object AlterToolForSetValType {
             val alterValue = QuoteTool.trimBothEdgeQuote(
                 alterTypeValue.removePrefix(
                     alterKeyEqualStr
-                ).trim()
+                ).let {
+                    AltRegexTool.trim(it)
+                }
             )
             val alterKeyValuePairList = makeAlterMap(
                 alterValue,

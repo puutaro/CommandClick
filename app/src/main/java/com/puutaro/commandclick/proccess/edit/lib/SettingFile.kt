@@ -547,9 +547,10 @@ object SettingFile {
                         async {
 //                            dateList.add("loop${index}" to LocalDateTime.now())
 //                            val importRawSrcCon = it.value
-                            val importSrcConWithPrefix = importRawSrcCon
-                                .trim('\n')
-                                .trim()
+                            val importSrcConWithPrefix = AltRegexTool.trim(importRawSrcCon)
+//                            importRawSrcCon
+//                                .trim('\n')
+//                                .trim()
                             val separatorPrefix =
                                 AltRegexTool.findPrefixChars(
                                     importSrcConWithPrefix,

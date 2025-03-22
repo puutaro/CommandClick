@@ -12,6 +12,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.sd.SdPath
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.AltRegexTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -450,7 +451,7 @@ class BusyboxExecutor(
         val inputStream = process.inputStream
         val reader = inputStream.bufferedReader(Charsets.UTF_8)
         reader.forEachLine { line ->
-            val trimLine = line.trim()
+            val trimLine = AltRegexTool.trim(line)
             if(
                 trimLine.isEmpty()
                 || forbiddenOutputPrefixList.any {
@@ -471,7 +472,7 @@ class BusyboxExecutor(
         val errStream = process.errorStream
         val errReader = errStream.bufferedReader(Charsets.UTF_8)
         errReader.forEachLine { line ->
-            val trimLine = line.trim()
+            val trimLine = AltRegexTool.trim(line)
             if(
                 trimLine.isEmpty()
                 || forbiddenOutputPrefixList.any {
@@ -500,7 +501,7 @@ class BusyboxExecutor(
         val output = StringBuilder()
         reader.forEachLine { line ->
             if(
-                line.trim().isEmpty()
+                AltRegexTool.trim(line).isEmpty()
             ) return@forEachLine
             output.append("\n${line}")
         }
@@ -511,7 +512,7 @@ class BusyboxExecutor(
         val errReader = errStream.bufferedReader(Charsets.UTF_8)
         errReader.forEachLine { line ->
             if(
-                line.trim().isEmpty()
+                AltRegexTool.trim(line).isEmpty()
             ) return@forEachLine
             FileSystems.updateFile(
                 File(
@@ -535,7 +536,7 @@ class BusyboxExecutor(
         val output = StringBuilder()
         reader.forEachLine { line ->
             if(
-                line.trim().isEmpty()
+                AltRegexTool.trim(line).isEmpty()
             ) return@forEachLine
             output.append("\n${line}")
         }
@@ -547,7 +548,7 @@ class BusyboxExecutor(
         val errOutput = StringBuilder()
         errReader.forEachLine { line ->
             if(
-                line.trim().isEmpty()
+                AltRegexTool.trim(line).isEmpty()
             ) return@forEachLine
             errOutput.append("\n${line}")
         }
@@ -648,8 +649,9 @@ class BusyboxExecutor(
             ) return@map line
             val curExportKey =
                 line.removePrefix(exportCmd)
-                    .trim()
-                    .split("=")
+                    .let{
+                        AltRegexTool.trim(it)
+                    }.split("=")
                     .firstOrNull()
                     ?: return@map line
             val isNotContainKey = !exportList.any {

@@ -5,6 +5,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DragSor
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.AltRegexTool
 
 object ListPathGetterForDragSort {
 
@@ -40,7 +41,7 @@ object ListPathGetterForDragSort {
             fannelInfoMap
         )
         val isMacroStrForGetFromVar =
-            listPathSrc.trim().startsWith(DragSortListViewProducer.macroStrForDragSortGetListPathFromVar)
+            AltRegexTool.trim(listPathSrc).startsWith(DragSortListViewProducer.macroStrForDragSortGetListPathFromVar)
         return when(isMacroStrForGetFromVar){
             true -> getListPathFromVar(
                 currentScriptContentsList,

@@ -9,6 +9,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.state.FannelInfoTool
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.QuoteTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import kotlinx.coroutines.runBlocking
@@ -48,15 +49,17 @@ object CommandClickVariables {
         ) ?: return null
         val filePrefix = EditSettings.filePrefix
         val isOnlyFilePrefix =
-            withFilePrefixSettingValue.trim() == filePrefix
+            AltRegexTool.trim(withFilePrefixSettingValue) == filePrefix
         val isFilePrefix =
             withFilePrefixSettingValue.startsWith(filePrefix)
-                    && withFilePrefixSettingValue.trim() != filePrefix
+                    && AltRegexTool.trim(withFilePrefixSettingValue) != filePrefix
         return when {
             isOnlyFilePrefix -> pathInOnlyFilePrefix
             isFilePrefix -> withFilePrefixSettingValue
                 .removePrefix(filePrefix)
-                .trim()
+                .let {
+                    AltRegexTool.trim(it)
+                }
             else -> String()
         }
     }

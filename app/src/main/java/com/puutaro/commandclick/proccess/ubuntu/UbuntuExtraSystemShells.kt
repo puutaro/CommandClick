@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.ubuntu
 
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.AltRegexTool
 
 object UbuntuExtraSystemShells {
 
@@ -117,9 +118,9 @@ object UbuntuExtraSystemShells {
         return ReadText(
             UbuntuFiles.ubuntuExtraStartupShellsTsvPath
         ).textToList().filter {
-            it.trim().isNotEmpty()
+            AltRegexTool.trim(it).isNotEmpty()
         }.map {
-            val shellPathAndExtra = it.trim().split("\t")
+            val shellPathAndExtra = AltRegexTool.trim(it).split("\t")
             val shellPathMap = mapOf(
                 ConfigKey.SHELL_PATH.key to
                         (shellPathAndExtra.firstOrNull() ?: String())

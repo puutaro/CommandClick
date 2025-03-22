@@ -15,6 +15,7 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.str.AltRegexTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import java.io.File
 
@@ -101,7 +102,7 @@ object PinFannelManager {
         }
         val pinFannelMapInfoList =
             ReadText(pinFannelTxtPath).textToList().map {
-                val mapCon = it.trim()
+                val mapCon = AltRegexTool.trim(it)
                 CmdClickMap.createMap(
                     mapCon,
                     pinInfoMapSeparator
