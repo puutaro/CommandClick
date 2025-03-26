@@ -763,7 +763,7 @@ object VarErrManager {
         val keyToSubKeyListCon = makeKeyToSubKeyListCon(
             keyToSubKeyConList,
         )
-        val stringKeyToValueSeq = stringKeyList.asSequence().map {
+        val stringKeyToValueSeq = stringKeyList.map {
             varName ->
             "${'$'}{${varName}}" to String()
         }
@@ -795,7 +795,8 @@ object VarErrManager {
 //                    )
 //                }
         if(
-            !leaveVarMarkList.any()
+            leaveVarMarkList.isEmpty()
+//            !leaveVarMarkList.any()
         ) return false
 //                        ?: return false
 //                    notDefinitionStringKeyInReturn

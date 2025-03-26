@@ -87,7 +87,7 @@ object CmdClickMap {
         srcMap: Map<String, String>,
     ): Map<String, String> {
 
-        val checkQuote = sequenceOf(
+        val checkQuote = arrayOf(
             "`",
             "\"",
             "'"
@@ -100,7 +100,7 @@ object CmdClickMap {
             }
         }
         return srcMap.map {
-            val cleanKey =  removeIrregularQuote(
+            val cleanKey = removeIrregularQuote(
                 irregularQuoteList,
                 it.key
             )
@@ -112,7 +112,7 @@ object CmdClickMap {
     }
 
     private fun removeIrregularQuote(
-        irregularQuoteList: Sequence<String>,
+        irregularQuoteList: List<String>,
         targetCon: String,
     ): String {
         return SpeedReplacer.replace(
@@ -359,7 +359,7 @@ object CmdClickMap {
             targetCon,
             repMap.map {
                 "@{${it.key}}" to it.value
-            }.asSequence()
+            }
         )
 //        var repCon = targetCon
 //        repMap.forEach {

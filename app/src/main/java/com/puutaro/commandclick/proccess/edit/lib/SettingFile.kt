@@ -489,7 +489,7 @@ object SettingFile {
                 settingConBeforeImport,
                 SettingArgsTool.makePlaneVarNameToValueStrMap(globalVarNameToValueMap)?.map {
                     "${'$'}{${it.key}}" to it.value
-                }?.asSequence()
+                }
             )
 //            if(settingCon.contains("LAYOUT_LOOP_INDEX")) {
 //                FileSystems.writeFile(
@@ -976,7 +976,7 @@ object SettingFile {
 
             val settingCon = SpeedReplacer.replace(
                 settingConBeforeImport,
-                rawToConList.asSequence(),
+                rawToConList,
             )
 //            var settingCon = settingConBeforeImport
 //            rawToConList.forEach {

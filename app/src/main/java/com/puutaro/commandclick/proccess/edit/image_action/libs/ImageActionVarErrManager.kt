@@ -782,7 +782,7 @@ object ImageActionVarErrManager {
         val keyToSubKeyListCon = makeKeyToSubKeyListCon(
             keyToSubKeyConList,
         )
-        val stringKeyToValueSeq = bitmapKeyList.asSequence().map {
+        val stringKeyToValueSeq = bitmapKeyList.map {
                 bitmapKey ->
             "#{${bitmapKey}}" to String()
         }
@@ -794,10 +794,11 @@ object ImageActionVarErrManager {
 //            settingKeyListConRegex,
 //            String()
 //        )
-        val leaveVarMark =
+        val leaveVarMarkList =
             ImageVarMarkTool.findAllVarMark(keyToSubKeyListConWithRemoveVar)
         if(
-            !leaveVarMark.any()
+            leaveVarMarkList.isEmpty()
+//            !leaveVarMark.any()
         ) return false
 //        val findVarMarkRegex = Regex("(?<!\\\\)#[{][a-zA-Z0-9_]+[}]")
 //        val leaveVarMark =
@@ -807,7 +808,7 @@ object ImageActionVarErrManager {
         val spanLeaveVarMark =
             CheckTool.LogVisualManager.execMakeSpanTagHolder(
                 CheckTool.errRedCode,
-                leaveVarMark.first()
+                leaveVarMarkList.first()
             )
         runBlocking {
             ImageActionErrLogger.sendErrLog(

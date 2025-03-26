@@ -3,18 +3,18 @@ package com.puutaro.commandclick.util.str
 object SpeedReplacer {
     fun replace(
         srcCon: String,
-        oldNewPair: Sequence<Pair<String, String>>?,
+        oldNewPair: List<Pair<String, String>>?,
     ): String {
         if(
-            oldNewPair == null
-            || !oldNewPair.any()
+            oldNewPair.isNullOrEmpty()
         ) return srcCon
         val builder = StringBuilder(
             srcCon
         )
         oldNewPair.forEach {
-            val oldString = it.first
-            val newString = it.second
+            (oldString, newString) ->
+//            val oldString = it.first
+//            val newString = it.second
             var index = builder.indexOf(oldString)
             while (index != -1) {
                 builder.replace(

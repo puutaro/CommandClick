@@ -42,10 +42,10 @@ class ReadText(
         return try{
             SpeedReplacer.replace(
                 targetFile.readText(),
-                sequenceOf(
-                    Pair("<", "&lt;"),
-                    Pair(">", "&gt;"),
-                    Pair("%", "&#37;"),
+                listOf(
+                    "<" to "&lt;",
+                    ">" to "&gt;",
+                    "%" to "&#37;",
                 )
             )
         } catch(e: Exception) {

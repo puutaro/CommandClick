@@ -628,7 +628,7 @@ object CheckTool {
         private fun toSepa(
             actionImportedKeyToSubKeyConList: List<Pair<String, String>>,
         ): String {
-            val separatorPairForLog = sequenceOf(
+            val separatorPairForLog = arrayOf(
                 '?' to "\n ?",
                 '&' to "\n  &",
             )
@@ -694,7 +694,7 @@ object CheckTool {
         private fun toSepa(
             jsAcKeyToSubKeyCon: String
         ): String {
-            val separatorPairForLog = sequenceOf(
+            val separatorPairForLog = arrayOf(
                 '?' to "\n ?",
                 '&' to "\n  &",
             )
@@ -964,7 +964,7 @@ object CheckTool {
                 repConWithErrWord,
                 tagStrToMarkList.map {
                    it.second to it.first
-                }.asSequence(),
+                },
             )
 //            var repCon = repConWithErrWord
 //            tagStrToMarkList.forEach {

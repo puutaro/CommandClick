@@ -504,7 +504,7 @@ object QuoteTool {
         return targetStr?.let {
             SpeedReplacer.replace(
                 it,
-                sequenceOf(
+                listOf(
                     Pair("\"", ""),
                     Pair(cmdClickBackspaceQuote, backSlachDoubleQuote),
                 )

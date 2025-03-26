@@ -81,21 +81,21 @@ object VarMarkTool {
         return varNameSec
     }
 
-    fun filterByUseVarMark2(
-        targetMap: Map<String, String?>?,
-        valNameSeq: Sequence<String>
-    ): Map<String, String?>? {
-        if(
-            targetMap.isNullOrEmpty()
-            || !valNameSeq.any()
-        ){
-            return targetMap
-        }
-        val filteredMap = targetMap.filter {
-            valNameSeq.contains(it.key)
-        }
-        return filteredMap
-    }
+//    fun filterByUseVarMark2(
+//        targetMap: Map<String, String?>?,
+//        valNameSeq: Sequence<String>
+//    ): Map<String, String?>? {
+//        if(
+//            targetMap.isNullOrEmpty()
+//            || !valNameSeq.any()
+//        ){
+//            return targetMap
+//        }
+//        val filteredMap = targetMap.filter {
+//            valNameSeq.contains(it.key)
+//        }
+//        return filteredMap
+//    }
 
     fun filterByUseVarMark(
         targetMap: Map<String, String?>?,
@@ -227,8 +227,8 @@ object VarMarkTool {
         return true
     }
 
-    fun findAllVarMark(input: String): Sequence<String> {
-        var result: Sequence<String> = emptySequence()
+    fun findAllVarMark(input: String): ArrayList<String> {
+        val resultList = arrayListOf<String>()
         var index = 0
 
         while (index < input.length) {
@@ -258,12 +258,14 @@ object VarMarkTool {
                 endIndex < input.length
                 && input[endIndex] == '}'
                 ) {
-                result += sequenceOf(input.substring(index, endIndex + 1))
+                resultList.add(
+                    input.substring(index, endIndex + 1)
+                )
                 index = endIndex + 1
                 continue
             }
             index++
         }
-        return result
+        return resultList
     }
 }

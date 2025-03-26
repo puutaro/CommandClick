@@ -45,7 +45,7 @@ object UrlTool {
             }.let {
                 SpeedReplacer.replace(
                     it,
-                    sequenceOf(
+                    listOf(
                         Pair(httpPrefix, httpPrefixMark),
                         Pair(filePrefix, filePrefixMark),
                     )
@@ -64,7 +64,7 @@ object UrlTool {
             ?.let {
                 SpeedReplacer.replace(
                     it,
-                    sequenceOf(
+                    listOf(
                         Pair(slashPrefixMark, slashPrefix),
                         Pair(httpsPrefixMark, httpsPrefix),
                         Pair(httpPrefixMark, httpPrefix),

@@ -63,7 +63,7 @@ object ScriptPreWordReplacer {
 //            replace(storagePathMark, storagePath)
 //        }
 
-        val replacePairList = sequenceOf(
+        val replacePairList = listOf(
             Pair(currentScriptPathMark, "$cmdclickDefaultAppDirPath/$currentScriptName"),
             Pair(cmdclickDirPathMark, UsePath.cmdclickDirPath),
             Pair(currentAppDirPathMark, cmdclickDefaultAppDirPath),
@@ -73,7 +73,7 @@ object ScriptPreWordReplacer {
         )
         return SpeedReplacer.replace(
             tergetContents,
-            replacePairList
+            replacePairList,
         )
 //        return tergetContents
 //            .replace(currentScriptPathMark, "$cmdclickDefaultAppDirPath/$currentScriptName")
@@ -90,7 +90,7 @@ object ScriptPreWordReplacer {
     ): String {
         return SpeedReplacer.replace(
             tergetString,
-                sequenceOf(
+                listOf(
                     Pair(cmdclickDirPathMark, UsePath.cmdclickDirPath),
                     Pair(currentAppDirPathMark, UsePath.cmdclickDefaultAppDirPath),
                 )
@@ -107,7 +107,7 @@ object ScriptPreWordReplacer {
     ): String {
         return SpeedReplacer.replace(
             tergetString,
-            sequenceOf(
+            listOf(
                 Pair(cmdclickDirPathMark, UsePath.cmdclickDirPath),
                 Pair(currentAppDirPathMark, currentAppDirPath),
             )

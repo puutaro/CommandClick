@@ -66,21 +66,21 @@ object ImageVarMarkTool {
     }
 
 
-    fun filterByUseVarMark2(
-        targetMap: Map<String, Bitmap?>?,
-        valNameSeq: Sequence<String>
-    ): Map<String, Bitmap?>? {
-        if(
-            targetMap.isNullOrEmpty()
-            || !valNameSeq.any()
-        ){
-            return targetMap
-        }
-        val filteredMap = targetMap.filter {
-            valNameSeq.contains(it.key)
-        }
-        return filteredMap
-    }
+//    fun filterByUseVarMark2(
+//        targetMap: Map<String, Bitmap?>?,
+//        valNameSeq: Sequence<String>
+//    ): Map<String, Bitmap?>? {
+//        if(
+//            targetMap.isNullOrEmpty()
+//            || !valNameSeq.any()
+//        ){
+//            return targetMap
+//        }
+//        val filteredMap = targetMap.filter {
+//            valNameSeq.contains(it.key)
+//        }
+//        return filteredMap
+//    }
 
     fun filterByUseVarMark(
         targetMap: Map<String, Bitmap?>?,
@@ -92,8 +92,8 @@ object ImageVarMarkTool {
         return filteredMap
     }
 
-    fun findAllVarMark(input: String): Sequence<String> {
-        var result: Sequence<String> = emptySequence()
+    fun findAllVarMark(input: String): ArrayList<String> {
+        val resultArrayList =  arrayListOf<String>()
         var index = 0
 
         while (index < input.length) {
@@ -114,13 +114,14 @@ object ImageVarMarkTool {
                 }
 
                 if (endIndex < input.length && input[endIndex] == '}') {
-                    result += sequenceOf(input.substring(index, endIndex + 1))
+                    resultArrayList.add(input.substring(index, endIndex + 1))
+//                    resultArrayList += sequenceOf()
                     index = endIndex + 1
                     continue
                 }
             }
             index++
         }
-        return result
+        return resultArrayList
     }
 }
