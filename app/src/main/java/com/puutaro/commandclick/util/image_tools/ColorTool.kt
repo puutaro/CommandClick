@@ -191,25 +191,42 @@ object ColorTool {
         return "#${opacityHex}${rawHexColorStr}"
     }
 
-    fun calculateAverageColor(bitmap: Bitmap): Int {
+    fun calculateAverageColor(
+        bitmap: Bitmap,
+//        isIgnoreTrans: Boolean
+    ): Int {
         val pixels = IntArray(bitmap.width * bitmap.height)
         bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-
+        var totalPixels = 1
         var redSum = 0
         var greenSum = 0
         var blueSum = 0
 
         for (pixel in pixels) {
+            if(
+                Color.alpha(pixel) == 0
+            ) continue
             redSum += Color.red(pixel)
             greenSum += Color.green(pixel)
             blueSum += Color.blue(pixel)
+            totalPixels++
         }
 
-        val pixelCount = pixels.size
-        val averageRed = redSum / pixelCount
-        val averageGreen = greenSum / pixelCount
-        val averageBlue = blueSum / pixelCount
+//        val pixelCount = pixels.size
+        val averageRed = redSum / totalPixels
+        val averageGreen = greenSum / totalPixels
+        val averageBlue = blueSum / totalPixels
 
         return Color.rgb(averageRed, averageGreen, averageBlue)
+    }
+
+
+    fun colorToHexString(color: Int): String {
+        val alpha = Color.alpha(color)
+        val red = Color.red(color)
+        val green = Color.green(color)
+        val blue = Color.blue(color)
+
+        return String.format("#%02X%02X%02X%02X", alpha, red, green, blue)
     }
 }

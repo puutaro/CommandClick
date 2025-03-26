@@ -18,6 +18,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingArgsToo
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingIfManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.SettingReturnExecutor
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.VarErrManager
+import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.BitmapForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.ColorForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.DebugForSetting
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.func.EditForSetting
@@ -1278,7 +1279,7 @@ class SettingActionManager {
             )
             val argsSubKey = SettingActionKeyManager.SettingSubKey.ARGS.key
             return withContext(Dispatchers.IO) {
-                val indexAndKeyToSubKeyJobList = subKeyToConList.asSequence().mapIndexed { index, subKeyToCon ->
+                val indexAndKeyToSubKeyJobList = subKeyToConList.mapIndexed { index, subKeyToCon ->
                     async {
                         val innerSubKeyName = subKeyToCon.first
                         val innerSubKeyClass =
@@ -1325,11 +1326,11 @@ class SettingActionManager {
                     }
                 }
                 val indexAndKeyToSubKeyConList =
-                    ArrayList<Pair<Int, Pair<String, Map<String, String>>>>(indexAndKeyToSubKeyJobList.count())
+                    ArrayList<Pair<Int, Pair<String, Map<String, String>>>>(indexAndKeyToSubKeyJobList.size)
                 indexAndKeyToSubKeyJobList.forEach {
                     indexAndKeyToSubKeyConList.add(it.await())
                 }
-                indexAndKeyToSubKeyConList.sortedBy { it.first }.map {
+                indexAndKeyToSubKeyConList.asSequence().sortedBy { it.first }.map {
                     it.second
                 }.filter {
                     it.first.isNotEmpty()
@@ -2103,6 +2104,13 @@ private object SettingFuncManager {
                     methodName,
                     baseArgsPairList,
                 )
+            FuncType.BITMAP ->
+                BitmapForSetting.handle(
+                    context,
+                    funcTypeStr,
+                    methodName,
+                    baseArgsPairList,
+                )
         }
 
     }
@@ -2129,6 +2137,7 @@ private object SettingFuncManager {
         INCLINE("incline"),
         SCREEN("screen"),
         IMPORT_DATA("importData"),
+        BITMAP("bitmap"),
     }
 
 }

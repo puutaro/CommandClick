@@ -164,7 +164,7 @@ object IfErrManager {
         val ifEndKeyEqual = "${ifEndKey}="
         val ifStartKeyEqualLen = ifStartKeyEqual.length
         val ifEndKeyEqualLen = ifEndKeyEqual.length
-        var results = sequenceOf<String>()
+        var results: Sequence<String> = emptySequence()
         val escapeSeq = sequenceOf(
             '\n', '?', '|'
         )
@@ -206,7 +206,7 @@ object IfErrManager {
         ifStartKey: String,
         ifEndKey: String
     ): Sequence<String> {
-        var result = sequenceOf<String>()
+        var result: Sequence<String> = emptySequence()
         var index = 0
         val ifStartKeyEqual = "${ifStartKey}="
         val ifEndKeyEqual = "${ifEndKey}="

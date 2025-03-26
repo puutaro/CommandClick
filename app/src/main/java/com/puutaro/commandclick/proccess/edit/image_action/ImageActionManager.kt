@@ -1254,7 +1254,7 @@ class ImageActionManager {
             val argsSubKey = ImageActionKeyManager.ImageSubKey.ARGS.key
 
             return withContext(Dispatchers.IO) {
-                val indexAndKeyToSubKeyJobList = subKeyToConList.asSequence().mapIndexed { index, subKeyToCon ->
+                val indexAndKeyToSubKeyJobList = subKeyToConList.mapIndexed { index, subKeyToCon ->
                     async {
                         val innerSubKeyName = subKeyToCon.first
                         val innerSubKeyClass =
@@ -1299,11 +1299,11 @@ class ImageActionManager {
                     }
                 }
                 val indexAndKeyToSubKeyConList =
-                    ArrayList<Pair<Int, Pair<String, Map<String, String>>>>(indexAndKeyToSubKeyJobList.count())
+                    ArrayList<Pair<Int, Pair<String, Map<String, String>>>>(indexAndKeyToSubKeyJobList.size)
                 indexAndKeyToSubKeyJobList.forEach {
                     indexAndKeyToSubKeyConList.add(it.await())
                 }
-                indexAndKeyToSubKeyConList.sortedBy { it.first }.map {
+                indexAndKeyToSubKeyConList.asSequence().sortedBy { it.first }.map {
                     it.second
                 }.filter {
                     it.first.isNotEmpty()

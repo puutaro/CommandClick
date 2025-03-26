@@ -27,6 +27,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditComponent.
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForEditListAdapter
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionAsyncCoroutine
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionBitmapData
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionManager
 import com.puutaro.commandclick.proccess.edit.image_action.libs.ImageActionData
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ImportDataForImageAction
@@ -130,6 +131,9 @@ object WithEditConstraintListView{
     ) {
         val dateList = mutableListOf<Pair<String, LocalDateTime>>()
         dateList.add("launch" to LocalDateTime.now())
+//        FileSystems.removeAndCreateDir(
+//            UsePath.cmdclickDefaultSDebugAppDirPath
+//        )
         val context = fragment.context
             ?: return
         CoroutineScope(Dispatchers.Main).launch{
@@ -206,9 +210,6 @@ object WithEditConstraintListView{
         dateList.add("imageAc" to LocalDateTime.now())
         withContext(Dispatchers.IO) {
             ImageActionManager.init()
-//            FileSystems.removeAndCreateDir(
-//                UsePath.cmdclickDefaultIDebugAppDirPath
-//            )
         }
         val globalVarNameToBitmapMapToSignal =
             ImageActionForConfigCon.getImageConfigCon(
@@ -243,7 +244,6 @@ object WithEditConstraintListView{
                 }
             }
         withContext(Dispatchers.IO) {
-            ImportDataForImageAction.clearImportData()
             ImageActionManager.init()
         }
         val globalVarNameToBitmapMap =
@@ -959,6 +959,18 @@ object WithEditConstraintListView{
 //                    "globalVarNameToBitmapMap: ${globalVarNameToBitmapMap}"
 //                ).joinToString("\n")
 //            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultSDebugAppDirPath, "ldata_put_edit_listconfig${sceneType}11.txt").absolutePath,
+//                listOf(
+//                    "frameTag: ${frameTag}",
+//                    "sceneType: ${sceneType}",
+//                    "frameKeyPairsCon: ${frameKeyPairsCon}",
+//                    "ImageActionBitmapData: ${
+//                        ImageActionBitmapData.gets(
+//                        )
+//                    }"
+//                ).joinToString("\n\n") + "\n\n======\n\n"
+//            )
             ImageActionManager().exec(
                 context,
                 fannelInfoMap,
@@ -975,6 +987,18 @@ object WithEditConstraintListView{
                 totalMapListElInfo,
             )
         }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultSDebugAppDirPath, "ldata_put_edit_listconfig${sceneType}22.txt").absolutePath,
+//            listOf(
+//                "frameTag: ${frameTag}",
+//                "sceneType: ${sceneType}",
+//                "frameKeyPairsCon: ${frameKeyPairsCon}",
+//                "ImageActionBitmapData: ${
+//                    ImageActionBitmapData.gets(
+//                    )
+//                }"
+//            ).joinToString("\n\n") + "\n\n======\n\n"
+//        )
         val varNameToBitmapMapInFrame = varNameToBitmapMapInFrameToSignal.first
         val imageAcSignal = varNameToBitmapMapInFrameToSignal.second
         if(

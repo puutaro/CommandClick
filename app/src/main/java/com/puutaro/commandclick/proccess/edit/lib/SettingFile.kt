@@ -28,6 +28,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import java.io.File
+import java.time.LocalDateTime
 
 object SettingFile {
 
@@ -46,6 +47,8 @@ object SettingFile {
 //        val firstSettingConList = ReadSettingFileBuf.read(
 //            settingFilePath
 //        ).split("\n")
+        val dateList = mutableListOf<Pair<String, LocalDateTime>>()
+        dateList.add("read" to LocalDateTime.now())
         val firstSettingCon = ReadSettingFileBuf.read(
             settingFilePath
         )
@@ -54,6 +57,7 @@ object SettingFile {
 //            settingFilePath
 //        ).textToList()
 //        val settingConList =
+        dateList.add("read" to LocalDateTime.now())
         val settingCon = ImportManager.import(
             context,
             fannelName,
@@ -77,6 +81,7 @@ object SettingFile {
 //                ).joinToString("\n\n\n") + "\n\n==============\n\n"
 //            )
 //        }
+        dateList.add("settingConFormatter" to LocalDateTime.now())
         return settingConFormatter(
             settingCon
         )
@@ -85,6 +90,13 @@ object SettingFile {
 //            formSettingContents(it)
 //        }
             .let {
+                dateList.add("execReplaceByReplaceVariables" to LocalDateTime.now())
+//                if(settingCon.contains("lightBlurHibiLineArtGradBk")) {
+//                    FileSystems.writeFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lsetting_import.txt").absolutePath,
+//                        dateList.joinToString("\n")
+//                    )
+//                }
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMapSrc,
@@ -275,7 +287,7 @@ object SettingFile {
 //        }.joinToString("")
     }
 
-    fun removeBlankAndComment(input: String): String {
+    private fun removeBlankAndComment(input: String): String {
         val result = StringBuilder(input.length)
         var index = 0
         var lastCharWasNewline = false
@@ -378,11 +390,11 @@ object SettingFile {
             }
         }
 
-        fun findAllImportStatements(input: String): Sequence<String> {
+        fun findAllImportStatements(input: String): ArrayList<String> {
             val blackSec = sequenceOf(
                 ' ', '\t',
             )
-            var result = sequenceOf<String>()
+            val resultArrayList = arrayListOf<String>()
             var index = 0
             while (index < input.length) {
                 // 改行のチェック
@@ -434,18 +446,19 @@ object SettingFile {
                             index + importEndSeparator.length
                         ) == importEndSeparator
                     ) {
-                        result +=
+                        resultArrayList.add(
                             input.substring(
                                 startIndex - importPreWord.length - 1,
                                 index + importEndSeparator.length
                             )
+                        )
                         index += importEndSeparator.length
                         break
                     }
                     index++
                 }
             }
-            return result
+            return resultArrayList
         }
 
 
@@ -490,14 +503,45 @@ object SettingFile {
 //            }
                 //settingConBeforeImport
             for(i in 1..5) {
-                val result =
+                val resultArrayList =
                     findAllImportStatements(settingCon)
 //                    importRegex.findAll(settingCon)
-                if(
-                    result.count() == 0
-                ){
+//                if(result.joinToString("").contains("wallArcBk.js")) {
+//                    runBlocking {
+//                        FileSystems.updateFile(
+//                            File(
+//                                UsePath.cmdclickDefaultSDebugAppDirPath,
+//                                "ldata_after_findAllImportStatements.txt"
+//                            ).absolutePath,
+//                            listOf(
+//                                "data: ${LocalDateTime.now()}",
+//                                "i: ${i}",
+//                                "result: ${result.count()}",
+//                                "resultCon: ${result.joinToString("==\n")}",
+////                        "loopIndex: ${loopIndex}",
+////                        "importPath: ${importPath}",
+////                        "innerImportCon: ${innerImportCon}",
+//                                "ImageActionBitmapData: ${ImageActionBitmapData.gets()}"
+//                            ).joinToString("\n\n") + "\n\n======\n\n"
+//                        )
+//                    }
+//                }
+                if (
+                    resultArrayList.isEmpty()
+                ) {
                     return settingCon
                 }
+//                FileSystems.updateFile(
+//                    File(
+//                        UsePath.cmdclickDefaultSDebugAppDirPath,
+//                        "ldata_result_import${i}.txt"
+//                    ).absolutePath,
+//                    listOf(
+//                        "i: ${i}",
+//                        "result: ${result.joinToString("\n")}",
+////                        "settingCon: ${settingCon}",
+//                    ).joinToString("\n")
+//                )
                 settingCon = execImport(
                     context,
                     fannelName,
@@ -508,7 +552,8 @@ object SettingFile {
                     settingActionAsyncCoroutine,
                     imageActionAsyncCoroutine,
                     settingCon,
-                    result,
+                    resultArrayList,
+                    i
                 ).let {
                     trimImportSrcCon(
                         it,
@@ -535,15 +580,58 @@ object SettingFile {
             settingActionAsyncCoroutine: SettingActionAsyncCoroutine?,
             imageActionAsyncCoroutine: ImageActionAsyncCoroutine?,
             settingConBeforeImport: String,
-            result: Sequence<String>,
+            resultArrayList: ArrayList<String>,
+            i: Int,
 //            result: Sequence<MatchResult>,
         ): String {
 //            val dateList = mutableListOf<Pair<String, LocalDateTime>>()
 //            dateList.add("init" to LocalDateTime.now())
 //            var settingCon = settingConBeforeImport
+//            if(result.joinToString("").contains("wallArcBk.js")) {
+//                runBlocking {
+//                    FileSystems.updateFile(
+//                        File(
+//                            UsePath.cmdclickDefaultSDebugAppDirPath,
+//                            "ldata_before_execImport.txt"
+//                        ).absolutePath,
+//                        listOf(
+//                            "data: ${LocalDateTime.now()}",
+//                            "i: ${i}",
+//                            "result: ${result.count()}",
+//                            "resultCon: ${result.joinToString("\n")}",
+////                        "loopIndex: ${loopIndex}",
+////                        "importPath: ${importPath}",
+////                        "innerImportCon: ${innerImportCon}",
+//                            "ImageActionBitmapData: ${ImageActionBitmapData.gets()}"
+//                        ).joinToString("\n\n") + "\n\n======\n\n"
+//                    )
+//                }
+//            }
             val rawToConList = runBlocking {
                 withContext(Dispatchers.IO) {
-                    val importRawToConJobList = result.mapIndexed { index, importRawSrcCon ->
+                    val importRawToConJobList = resultArrayList.mapIndexed { index, importRawSrcCon ->
+//                        if(result.joinToString("").contains("wallArcBk.js")) {
+//                            runBlocking {
+//                                FileSystems.updateFile(
+//                                    File(
+//                                        UsePath.cmdclickDefaultSDebugAppDirPath,
+//                                        "ldata_after_execImport${index}.txt"
+//                                    ).absolutePath,
+//                                    listOf(
+//                                        "data: ${LocalDateTime.now()}",
+//                                        "i: ${i}",
+//                                        "index: ${index}",
+//                                        "importRawSrcCon: ${importRawSrcCon}",
+//                                        "result: ${result.count()}",
+//                                        "resultCon: ${result.joinToString("\n")}",
+////                        "loopIndex: ${loopIndex}",
+////                        "importPath: ${importPath}",
+////                        "innerImportCon: ${innerImportCon}",
+//                                        "ImageActionBitmapData: ${ImageActionBitmapData.gets()}"
+//                                    ).joinToString("\n\n") + "\n\n======\n\n"
+//                                )
+//                            }
+//                        }
                         async {
 //                            dateList.add("loop${index}" to LocalDateTime.now())
 //                            val importRawSrcCon = it.value
@@ -638,6 +726,21 @@ object SettingFile {
                                 String(),
                                 String(),
                             )
+//                            if(importPath.contains("/wallArcBk.js")) {
+//                                FileSystems.updateFile(
+//                                    File(
+//                                        UsePath.cmdclickDefaultSDebugAppDirPath,
+//                                        "ldata_import_ImportExecutor.txt"
+//                                    ).absolutePath,
+//                                    listOf(
+//                                        "index: ${index}",
+//                                        "i: ${i}",
+//                                        "resultCout: ${result.count()}",
+//                                        "resultCon: ${result.joinToString("\n")}",
+//                                        "importRawSrcCon: ${importRawSrcCon}",
+//                                    ).joinToString("\n")
+//                                )
+//                            }
                             if (
                                 importPath.isEmpty()
                                 || !File(importPath).isFile
@@ -851,7 +954,9 @@ object SettingFile {
                         }
                     }
                     val importRawToConArray =
-                        ArrayList<Pair<String, String>>(importRawToConJobList.count())
+                        ArrayList<Pair<String, String>>(
+                            importRawToConJobList.size
+                        )
                     importRawToConJobList.forEach {
                         val (importRawCon, con) = it.await()
                         if(
@@ -930,6 +1035,29 @@ object SettingFile {
                 separator: String,
             ): String {
                 if(context == null) return String()
+//                if(importPath.contains("wallArcBk.js")) {
+//                    FileSystems.updateFile(
+//                        File(
+//                            UsePath.cmdclickDefaultSDebugAppDirPath,
+//                            "ldata_before_removeDefAcAndLaunchDefAction000.txt"
+//                        ).absolutePath,
+//                        listOf(
+//                            "data: ${LocalDateTime.now()}",
+//                            "importPath: ${importPath}",
+//                            "loopTimes: ${loopTimes}",
+//                            "startLoopIndex: ${startLoopIndex}",
+//                            "loopVarName: ${loopVarName}",
+//                            "isOne: ${
+//                                loopTimes == startLoopIndex
+//                                        || loopVarName.isNullOrEmpty()
+//                            }",
+//                            "ImageActionBitmapData: ${
+//                                ImageActionBitmapData.gets(
+//                                )
+//                            }"
+//                        ).joinToString("\n\n") + "\n\n======\n\n"
+//                    )
+//                }
                 val atRepValMap = rndVarNameToValueSeq?.map {
                         (varName, valueList) ->
                     varName to valueList.random()
@@ -962,6 +1090,29 @@ object SettingFile {
                 val indexToImportConList = withContext(Dispatchers.IO) {
                     val indexToImportConJobList = (startLoopIndex..loopTimes).map { loopIndex ->
                         async {
+//                            if(importPath.contains("wallArcBk.js")) {
+//                                FileSystems.updateFile(
+//                                    File(
+//                                        UsePath.cmdclickDefaultSDebugAppDirPath,
+//                                        "ldata_before_removeDefAcAndLaunchDefAction${loopIndex}.txt"
+//                                    ).absolutePath,
+//                                    listOf(
+//                                        "data: ${LocalDateTime.now()}",
+//                                        "loopIndex: ${loopIndex}",
+//                                        "importPath: ${importPath}",
+//                                        "loopTimes: ${loopTimes}",
+//                                        "startLoopIndex: ${startLoopIndex}",
+//                                        "loopVarName: ${loopVarName}",
+//                                        "isOne: ${loopTimes == startLoopIndex
+//                                                || loopVarName.isNullOrEmpty()}",
+//                                        "innerImportCon: ${innerImportCon}",
+//                                        "ImageActionBitmapData: ${
+//                                            ImageActionBitmapData.gets(
+//                                            )
+//                                        }"
+//                                    ).joinToString("\n\n") + "\n\n======\n\n"
+//                                )
+//                            }
                             if (
                                 loopTimes == startLoopIndex
                                 || loopVarName.isNullOrEmpty()
@@ -1185,6 +1336,21 @@ object SettingFile {
                     (varNameToValueStrMap ?: emptyMap()) +
                             (globalVarNameToValueMap ?: emptyMap()),
                 )
+//                if(imageActionCon.contains("ANIMAL_DIR/KOI1")) {
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "ldata_put11.txt").absolutePath,
+//                    listOf(
+//                        "data: ${LocalDateTime.now()}",
+//                        "where: ${where}",
+//                        "loopIndex: ${loopIndex}",
+//                        "imageActionCon: ${imageActionCon}",
+//                        "ImageActionBitmapData: ${
+//                            ImageActionBitmapData.gets(
+//                            )
+//                        }"
+//                    ).joinToString("\n\n") + "\n\n======\n\n"
+//                )
+//                }
                 ImageActionManager().exec(
                     context,
                     fannelInfoMap,
@@ -1205,6 +1371,19 @@ object SettingFile {
                     null,
                     null,
                 )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultSDebugAppDirPath, "ldata_put22.txt").absolutePath,
+//                    listOf(
+//                        "data: ${LocalDateTime.now()}",
+//                        "loopIndex: ${loopIndex}",
+//                        "where: ${where}",
+//                        "imageActionCon: ${imageActionCon}",
+//                        "ImageActionBitmapData: ${
+//                            ImageActionBitmapData.gets(
+//                            )
+//                        }"
+//                    ).joinToString("\n\n") + "\n\n======\n\n"
+//                )
             }
         }
 

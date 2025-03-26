@@ -323,7 +323,7 @@ object ViewForImageAction {
                     .animate(fadeInMilli)
                     .from(bitmap)
                     .into(imageView)
-                else ->  Blurry.with(imageViewContext)
+                else -> Blurry.with(imageViewContext)
                     .radius(blurRadius)
                     .sampling(blurSampling)
                     .async()

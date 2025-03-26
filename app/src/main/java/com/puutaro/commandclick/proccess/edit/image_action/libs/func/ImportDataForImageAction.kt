@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.edit.image_action.ImageActionBitmapData
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.file.FileSystems
@@ -110,7 +111,7 @@ object ImportDataForImageAction {
                 val waitLoopNum = waitMill / delayMill
                 var returnBitmap: Bitmap? = null
                 for(i in 0..waitLoopNum) {
-                    returnBitmap = Data.get(
+                    returnBitmap = ImageActionBitmapData.get(
                         importPath,
                         key,
                     )
@@ -206,7 +207,7 @@ object ImportDataForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                Data.put(
+                ImageActionBitmapData.put(
                     importPath,
                     key,
                     bitmap
@@ -282,51 +283,6 @@ object ImportDataForImageAction {
     }
 
     suspend fun clearImportData(){
-        Data.clear()
-    }
-
-    private object Data {
-
-        data class ImportData(
-            val importPath: String,
-            val key: String,
-            val bitmap: Bitmap?,
-        )
-        private val asyncImportKeyToBitmapMutex = ReentrantReadWriteLock()
-        private val importKeyToBitmap: HashSet<ImportData> = hashSetOf()
-        suspend fun get(
-            importPath: String,
-            key: String,
-        ): Bitmap? {
-            return asyncImportKeyToBitmapMutex.readLock().withLock {
-                importKeyToBitmap.firstOrNull {
-                    importData ->
-                    importData.importPath == importPath
-                            && importData.key == key
-                }?.bitmap
-            }
-        }
-
-        suspend fun put(
-            importPath: String,
-            key: String,
-            bitmap: Bitmap?,
-        ){
-            asyncImportKeyToBitmapMutex.writeLock().withLock {
-                importKeyToBitmap.add(
-                    ImportData(
-                        importPath,
-                        key,
-                        bitmap,
-                    )
-                )
-            }
-        }
-
-        suspend fun clear(){
-            asyncImportKeyToBitmapMutex.writeLock().withLock {
-                importKeyToBitmap.clear()
-            }
-        }
+        ImageActionBitmapData.clear()
     }
 }

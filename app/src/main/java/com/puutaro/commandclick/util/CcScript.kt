@@ -49,7 +49,7 @@ object CcScript {
             QuoteTool.trimBothEdgeQuote(it)
         }
     }
-    
+
     private fun getValueFromSeparatedListBk(
         keyValueList: List<String>,
         separator: String,

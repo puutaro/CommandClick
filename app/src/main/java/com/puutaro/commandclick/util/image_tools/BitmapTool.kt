@@ -2346,10 +2346,10 @@ object BitmapTool {
             return try {
                 Base64.encodeToString(byteArray, Base64.NO_WRAP)
             } catch (e: Exception){
-                FileSystems.writeFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "gitErr_encodeFromByteArray.txt").absolutePath,
-                    e.toString()
-                )
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "gitErr_encodeFromByteArray.txt").absolutePath,
+//                    e.toString()
+//                )
                 null
             }
         }
@@ -2407,10 +2407,10 @@ object BitmapTool {
                 base64Str
             )
         } catch (e: java.lang.Exception) {
-           FileSystems.writeFile(
-               File(UsePath.cmdclickDefaultAppDirPath, "gitErr.txt").absolutePath,
-               e.toString()
-           )
+//           FileSystems.writeFile(
+//               File(UsePath.cmdclickDefaultAppDirPath, "gitErr.txt").absolutePath,
+//               e.toString()
+//           )
         }
     }
 }

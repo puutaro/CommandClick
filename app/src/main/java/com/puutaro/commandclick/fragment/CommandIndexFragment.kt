@@ -123,26 +123,6 @@ class CommandIndexFragment: Fragment() {
         PreInstallFannel.install(this)
         ExtraMenuGifCreator.create(this)
         UrlImageDownloader.save(this)
-        val src = """
-            ${'$'}{aa} cc \\${'$'}{bb}
-             ${'$'}{cc} aa
-        """.trimIndent()
-
-//        context?.let {
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "lpath.txt").absolutePath,
-                listOf(
-                    "map: ${CmdClickMap.replace(
-                        src,
-                        mapOf(
-                            "aa" to "AA",
-                            "bb" to "BB",
-                            "cc" to "CC"
-                        )
-                    )}"
-                ).joinToString("\n")
-            )
-//        }
     }
 
 

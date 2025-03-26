@@ -228,7 +228,7 @@ object VarMarkTool {
     }
 
     fun findAllVarMark(input: String): Sequence<String> {
-        var result = sequenceOf<String>()
+        var result: Sequence<String> = emptySequence()
         var index = 0
 
         while (index < input.length) {

@@ -293,6 +293,14 @@ object ImportDataForSettingAction {
             str: String?,
         ){
             asyncImportKeyToValueStrMutex.writeLock().withLock {
+                val existData = importKeyToValueStr.filter {
+                        importData ->
+                    importData.importPath == importPath
+                            && importData.key == key
+                }
+                existData.forEach {
+                    importKeyToValueStr.remove(it)
+                }
                 importKeyToValueStr.add(
                     ImportData(
                         importPath,
