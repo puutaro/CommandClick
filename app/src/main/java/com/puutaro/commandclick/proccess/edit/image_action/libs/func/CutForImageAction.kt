@@ -42,7 +42,7 @@ object CutForImageAction {
         val args =
             methodNameClass.args
         return when(args) {
-            is CutMethodArgClass.ByFreeArgs -> {
+            is CutMethodArgClass.ByOffsetArgs -> {
                 val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
                         index, formalArgsNameToType ->
                     Triple(
@@ -220,6 +220,82 @@ object CutForImageAction {
                     null
                 ) to null
             }
+            is CutMethodArgClass.ByRndArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByName(
+                    mapArgMapList,
+                    args.bitmapKeyToDefaultValueStr,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.widthKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.heightKeyToDefaultValueStr,
+                    where
+                ).let { heightToErr ->
+                    val funcErr = heightToErr.second
+                        ?: return@let heightToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val returnBitmap = Cut.byRnd(
+                    bitmap,
+                    width,
+                    height,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    returnBitmap,
+                    null
+                ) to null
+            }
         }
     }
 
@@ -278,42 +354,91 @@ object CutForImageAction {
                 return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
             }
         }
+        fun byRnd(
+            bitmap: Bitmap,
+            limitWidthPx: Int,
+            limitHeightPx: Int,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val cutBitmap = BitmapTool.ImageTransformer.cutRnd(
+                    bitmap,
+                    limitWidthPx,
+                    limitHeightPx,
+                )
+                Pair(
+                    cutBitmap,
+                    null
+                )
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
     }
 
     private enum class MethodNameClass(
         val str: String,
         val args: CutMethodArgClass,
     ){
-        BY_OFFSET("byOffset", CutMethodArgClass.ByFreeArgs),
+        BY_OFFSET("byOffset", CutMethodArgClass.ByOffsetArgs),
         BY_CENTER("byCenter", CutMethodArgClass.ByCenterArgs),
+        BY_RND("byRnd", CutMethodArgClass.ByRndArgs),
     }
     private sealed interface ArgType {
         val entries: EnumEntries<*>
     }
     private sealed class CutMethodArgClass {
-        data object ByFreeArgs : CutMethodArgClass(), ArgType {
-            override val entries = ByFreeEnumArgs.entries
+        data object ByRndArgs: CutMethodArgClass(), ArgType {
+            override val entries = ByRndEnumArgs.entries
             val bitmapKeyToDefaultValueStr = Pair(
-                ByFreeEnumArgs.BITMAP.key,
-                ByFreeEnumArgs.BITMAP.defaultValueStr
+                ByRndEnumArgs.BITMAP.key,
+                ByRndEnumArgs.BITMAP.defaultValueStr
             )
             val widthKeyToDefaultValueStr = Pair(
-                ByFreeEnumArgs.WIDTH.key,
-                ByFreeEnumArgs.WIDTH.defaultValueStr
+                ByRndEnumArgs.WIDTH.key,
+                ByRndEnumArgs.WIDTH.defaultValueStr
             )
             val heightKeyToDefaultValueStr = Pair(
-                ByFreeEnumArgs.HEIGHT.key,
-                ByFreeEnumArgs.HEIGHT.defaultValueStr
+                ByRndEnumArgs.HEIGHT.key,
+                ByRndEnumArgs.HEIGHT.defaultValueStr
+            )
+            enum class ByRndEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
+                WIDTH("width", null, FuncCheckerForSetting.ArgType.INT),
+                HEIGHT("height", null, FuncCheckerForSetting.ArgType.INT),
+            }
+        }
+        data object ByOffsetArgs : CutMethodArgClass(), ArgType {
+            override val entries = ByOffsetEnumArgs.entries
+            val bitmapKeyToDefaultValueStr = Pair(
+                ByOffsetEnumArgs.BITMAP.key,
+                ByOffsetEnumArgs.BITMAP.defaultValueStr
+            )
+            val widthKeyToDefaultValueStr = Pair(
+                ByOffsetEnumArgs.WIDTH.key,
+                ByOffsetEnumArgs.WIDTH.defaultValueStr
+            )
+            val heightKeyToDefaultValueStr = Pair(
+                ByOffsetEnumArgs.HEIGHT.key,
+                ByOffsetEnumArgs.HEIGHT.defaultValueStr
             )
             val offsetXKeyToDefaultValueStr = Pair(
-                ByFreeEnumArgs.OFFSET_X.key,
-                ByFreeEnumArgs.OFFSET_X.defaultValueStr
+                ByOffsetEnumArgs.OFFSET_X.key,
+                ByOffsetEnumArgs.OFFSET_X.defaultValueStr
             )
             val offsetYKeyToDefaultValueStr = Pair(
-                ByFreeEnumArgs.OFFSET_Y.key,
-                ByFreeEnumArgs.OFFSET_Y.defaultValueStr
+                ByOffsetEnumArgs.OFFSET_Y.key,
+                ByOffsetEnumArgs.OFFSET_Y.defaultValueStr
             )
-            enum class ByFreeEnumArgs(
+            enum class ByOffsetEnumArgs(
                 val key: String,
                 val defaultValueStr: String?,
                 val type: FuncCheckerForSetting.ArgType,

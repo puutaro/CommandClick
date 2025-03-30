@@ -2,6 +2,8 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toBitmap
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.UrlImageDownloader
@@ -17,6 +19,8 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
 import kotlin.enums.EnumEntries
 import androidx.core.graphics.scale
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.util.image_tools.SpecialArt
 import com.puutaro.commandclick.util.str.AltRegexTool
 
@@ -180,6 +184,272 @@ object BitmapArtForImageAction {
                     yMulti,
                     xDup,
                     yDup,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    returnBitmap,
+                    null,
+                ) to null
+            }
+            is BitmapArtMethodArgClass.BitmapPuzzleArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByName(
+                    mapArgMapList,
+                    args.bitmapKeyToDefaultValueStr,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapStrToErr ->
+                    val funcErr = bitmapStrToErr.second
+                        ?: return@let bitmapStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.pieceKeyToDefaultValueStr,
+                    where
+                ).let { pieceToErr ->
+                    val funcErr = pieceToErr.second
+                        ?: return@let pieceToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val pieceMapList =
+                    argsPairList.filter {
+                            (argName, _) ->
+                        argName == args.pieceKeyToDefaultValueStr.first
+                    }.map {
+                            argNameToValueStr ->
+                        BitmapPieceManager.makePieceMap(
+                            listOf(argNameToValueStr)
+                        )
+                    }
+                val rate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.rateKeyToDefaultValueStr,
+                    where
+                ).let { rateToErr ->
+                    val funcErr = rateToErr.second
+                        ?: return@let rateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }.let {
+                    if(
+                        0 <= it
+                        && it <= 1f
+                    ) return@let it
+                    1f
+                }
+                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                    mapArgMapList,
+                    args.timesKeyToDefaultValueStr,
+                    where
+                ).let { timesToErr ->
+                    val funcErr = timesToErr.second
+                        ?: return@let timesToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }
+                val minOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.minOpacityRateKeyToDefaultValueStr,
+                    where
+                ).let { minOpacityRateToErr ->
+                    val funcErr = minOpacityRateToErr.second
+                        ?: return@let minOpacityRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }.let {
+                    if(
+                        0 <= it
+                        && it <= 1f
+                    ) return@let it
+                    1f
+                }
+                val maxOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.maxOpacityRateKeyToDefaultValueStr,
+                    where
+                ).let { maxOpacityRateToErr ->
+                    val funcErr = maxOpacityRateToErr.second
+                        ?: return@let maxOpacityRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }.let {
+                    if(
+                        0 <= it
+                        && it <= 1f
+                    ) return@let it
+                    1f
+                }
+                if(minOpacityRate > maxOpacityRate) {
+                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        minOpacityRate.toString()
+                    )
+                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errRedCode,
+                        maxOpacityRate.toString()
+                    )
+                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                        CheckTool.errBrown,
+                        where
+                    )
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to FuncCheckerForSetting.FuncCheckErr(
+                        "Must be minOpacityRate(${spanMinWidthRate}) <= maxOpacityRate(${spanMaxWidthRate}): ${spanWhere}"
+                    )
+                }
+                val opacityIncline = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.opacityInclineKeyToDefaultValueStr,
+                    where
+                ).let { maxOpacityRateToErr ->
+                    val funcErr = maxOpacityRateToErr.second
+                        ?: return@let maxOpacityRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }
+                val opacityOffset = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.opacityOffsetKeyToDefaultValueStr,
+                    where
+                ).let { opacityOffsetRateToErr ->
+                    val funcErr = opacityOffsetRateToErr.second
+                        ?: return@let opacityOffsetRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }
+                val colorList = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.colorListKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.split(",").asSequence().filter { AltRegexTool.trim(it).isNotEmpty() }.map {
+                    ColorTool.parseColorStr(
+                        context,
+                        it,
+                        args.colorListKeyToDefaultValueStr.first,
+                        where,
+                    ).let {
+                        ColorTool.removeAlpha(it)
+                    }
+                }.toList()
+                val passionColorList = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.passionColorListKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.split(",").asSequence().filter { AltRegexTool.trim(it).isNotEmpty() }.map {
+                    ColorTool.parseColorStr(
+                        context,
+                        it,
+                        args.colorListKeyToDefaultValueStr.first,
+                        where,
+                    ).let {
+                        ColorTool.removeAlpha(it)
+                    }
+                }.toList()
+                val passionInt = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.passionRateKeyToDefaultValueStr,
+                    where
+                ).let { maxOpacityRateToErr ->
+                    val funcErr = maxOpacityRateToErr.second
+                        ?: return@let maxOpacityRateToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }.let {
+                    if(
+                        0 <= it
+                        && it <= 1f
+                    ) return@let (it * 10).toInt()
+                    0
+                }
+                val isOverlay = FuncCheckerForSetting.Getter.getBoolFromArgMapByName(
+                    mapArgMapList,
+                    args.isOverlayKeyToDefaultValueStr,
+                    where
+                ).let { isOverlayToErr ->
+                    val funcErr = isOverlayToErr.second
+                        ?: return@let isOverlayToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to funcErr
+                }
+                val returnBitmap = InnerBitmapArt.bitmapPuzzle(
+                    context,
+                    bitmap,
+                    pieceMapList,
+                    rate,
+                    times,
+                    minOpacityRate,
+                    maxOpacityRate,
+                    opacityIncline,
+                    opacityOffset,
+                    colorList,
+                    passionColorList,
+                    passionInt,
+                    isOverlay,
                     where,
                 ).let {
                         (returnBitmapSrc, err) ->
@@ -1914,6 +2184,94 @@ object BitmapArtForImageAction {
                 return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
             }
         }
+        suspend fun bitmapPuzzle(
+            context: Context,
+            bitmap: Bitmap,
+            pieceMapList: List<Map<String, String>?>,
+            rate: Float,
+            times: Int,
+            minOpacityRate: Float,
+            maxOpacityRate: Float,
+            opacityIncline: Float,
+            opacityOffset: Float,
+            colorList: List<String>,
+            passionColorList: List<String>,
+            passionInt: Int,
+            isOverlay: Boolean,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val scaledBitmapList = let scaleBitmapList@{
+                    pieceMapList.asSequence().map { pieceMap ->
+                        val icon = BitmapPieceManager.getIcon(
+                            pieceMap ?: emptyMap(),
+                        )
+                        val width = BitmapPieceManager.getWidth(
+                            pieceMap ?: emptyMap(),
+                        )
+                        val height = BitmapPieceManager.getHeight(
+                            pieceMap ?: emptyMap(),
+                        )
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "lBitmapPuzzle.txt").absolutePath,
+//                            listOf(
+//                                "pieceMap: ${pieceMap}",
+//                                "icon: ${icon.str}",
+//                            ).joinToString("\n")
+//                        )
+                        val srcPieceBitmap = AppCompatResources.getDrawable(
+                            context,
+                            icon.id,
+                        )?.let {
+                            if (
+                                width != null
+                                && height != null
+                            ) {
+                                return@let it.toBitmap(
+                                    width,
+                                    height,
+                                )
+                            }
+                            it.toBitmap()
+                        } ?: return@map null
+                        val pieceRotate = BitmapPieceManager.getRotate(
+                            pieceMap ?: emptyMap(),
+                        )
+                        if (
+                            pieceRotate == 0f
+                        ) return@map srcPieceBitmap
+                        BitmapTool.rotate(
+                            srcPieceBitmap,
+                            pieceRotate,
+                        )
+                    }.filter {
+                        it != null
+                    }.map {
+                        it as Bitmap
+                    }
+                }.toList()
+                BitmapArt.bitmapPuzzle(
+                    bitmap,
+                    scaledBitmapList,
+                    rate,
+                    minOpacityRate,
+                    maxOpacityRate,
+                    opacityIncline,
+                    opacityOffset,
+                    colorList,
+                    passionColorList,
+                    passionInt,
+                    times,
+                    isOverlay,
+                ) to null
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
         suspend fun wave(
             bitmap: Bitmap,
             fanAngle: Float,
@@ -1982,6 +2340,7 @@ object BitmapArtForImageAction {
     ){
         MATRIX_STORM("matrixStorm", BitmapArtMethodArgClass.MatrixStormArgs),
         RECT_PUZZLE("rectPuzzle", BitmapArtMethodArgClass.RectPuzzleArgs),
+        BITMAP_PUZZLE("bitmapPuzzle", BitmapArtMethodArgClass.BitmapPuzzleArgs),
         WAVE("wave", BitmapArtMethodArgClass.WaveArgs),
         BY_ARC("byArc", BitmapArtMethodArgClass.ByArcArgs),
         BY_LINE("byLine", BitmapArtMethodArgClass.ByLineArgs),
@@ -2219,6 +2578,83 @@ object BitmapArtForImageAction {
                 val type: FuncCheckerForSetting.ArgType,
             ){
                 BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
+                RATE("rate", (0.9).toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                TIMES("times", 1000.toString(), FuncCheckerForSetting.ArgType.INT),
+                MIN_OPACITY_RATE(
+                    "minOpacityRate",
+                    (0.1).toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                MAX_OPACITY_RATE(
+                    "maxOpacityRate",
+                    (0.5).toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                OPACITY_INCLINE("opacityIncline", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                OPACITY_OFFSET("opacityOffset", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                COLOR_LIST("colorList", CmdClickColor.BLACK.str, FuncCheckerForSetting.ArgType.STRING),
+                PASSION_COLOR_LIST("passionColorList", String(), FuncCheckerForSetting.ArgType.STRING),
+                PASSION_RATE("passionRate", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                IS_OVERLAY("isOverlay", false.toString(), FuncCheckerForSetting.ArgType.BOOL),
+            }
+        }
+        data object BitmapPuzzleArgs : BitmapArtMethodArgClass(), ArgType {
+            override val entries = BitmapPuzzleEnumArgs.entries
+            val bitmapKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.BITMAP.key,
+                BitmapPuzzleEnumArgs.BITMAP.defaultValueStr,
+            )
+            val pieceKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.PIECE.key,
+                BitmapPuzzleEnumArgs.PIECE.defaultValueStr
+            )
+            val rateKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.RATE.key,
+                BitmapPuzzleEnumArgs.RATE.defaultValueStr
+            )
+            val timesKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.TIMES.key,
+                BitmapPuzzleEnumArgs.TIMES.defaultValueStr
+            )
+            val minOpacityRateKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.MIN_OPACITY_RATE.key,
+                BitmapPuzzleEnumArgs.MIN_OPACITY_RATE.defaultValueStr
+            )
+            val maxOpacityRateKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.MAX_OPACITY_RATE.key,
+                BitmapPuzzleEnumArgs.MAX_OPACITY_RATE.defaultValueStr
+            )
+            val opacityInclineKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.OPACITY_INCLINE.key,
+                BitmapPuzzleEnumArgs.OPACITY_INCLINE.defaultValueStr
+            )
+            val opacityOffsetKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.OPACITY_OFFSET.key,
+                BitmapPuzzleEnumArgs.OPACITY_OFFSET.defaultValueStr
+            )
+            val colorListKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.COLOR_LIST.key,
+                BitmapPuzzleEnumArgs.COLOR_LIST.defaultValueStr
+            )
+            val passionColorListKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.PASSION_COLOR_LIST.key,
+                BitmapPuzzleEnumArgs.PASSION_COLOR_LIST.defaultValueStr
+            )
+            val passionRateKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.PASSION_RATE.key,
+                BitmapPuzzleEnumArgs.PASSION_RATE.defaultValueStr
+            )
+            val isOverlayKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.IS_OVERLAY.key,
+                BitmapPuzzleEnumArgs.IS_OVERLAY.defaultValueStr
+            )
+            enum class BitmapPuzzleEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
+                PIECE("piece", null, FuncCheckerForSetting.ArgType.STRING),
                 RATE("rate", (0.9).toString(), FuncCheckerForSetting.ArgType.FLOAT),
                 TIMES("times", 1000.toString(), FuncCheckerForSetting.ArgType.INT),
                 MIN_OPACITY_RATE(
@@ -2481,17 +2917,14 @@ object BitmapArtForImageAction {
 
     private object BitmapPieceManager {
 
-        private const val pieceOneSide = 100
         private const val keySeparator = '|'
 
         enum class PieceKey(val key: String) {
-//            ONE_SIDE("oneSide"),
-//            WIDTH("width"),
-//            HEIGHT("height"),
-//            MACRO("macro"),
+            WIDTH("width"),
+            HEIGHT("height"),
+            ICON("icon"),
             ROTATE("rotate"),
         }
-
         fun makePieceMap(
             argsPairList: List<Pair<String, String>>,
         ): Map<String, String>? {
@@ -2515,6 +2948,34 @@ object BitmapArtForImageAction {
             } catch (e: Exception){
                 null
             } ?: 0f
+        }
+        fun getWidth(pieceMap: Map<String, String>): Int? {
+            return try {
+                pieceMap.get(
+                    PieceKey.WIDTH.key
+                )?.toInt()
+            } catch (e: Exception){
+                null
+            }
+        }
+        fun getHeight(pieceMap: Map<String, String>): Int? {
+            return try {
+                pieceMap.get(
+                    PieceKey.HEIGHT.key
+                )?.toInt()
+            } catch (e: Exception){
+                null
+            }
+        }
+        fun getIcon(pieceMap: Map<String, String>): CmdClickIcons {
+            return pieceMap.get(
+                PieceKey.ICON.key
+            )?.let {
+                shapeStr ->
+                CmdClickIcons.entries.firstOrNull {
+                    it.str == shapeStr
+                }
+            } ?: CmdClickIcons.RECT
         }
     }
 }

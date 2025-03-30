@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecSetToolbarButtonImage
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -898,7 +897,7 @@ object ArbForImageAction {
                     ).let {
                         val cutWidth = (pieceWidthFloat * 0.8).toInt()
                         val cutHeight = (pieceHeightFloat * 0.8).toInt()
-                        BitmapTool.ImageTransformer.cutCenter2(
+                        BitmapTool.ImageTransformer.cutCenter(
                             it,
                             cutWidth,
                             cutHeight
@@ -1279,7 +1278,7 @@ object ArbForImageAction {
                         pieceWidth,
                         pieceHeight
                     )?.let convertBlack@ {
-                        val bitmap = BitmapTool.ImageTransformer.convertBlackToColor(
+                        val bitmap = ColorTool.convertBlackToColor(
                             it,
                             iconColorStr
                         )

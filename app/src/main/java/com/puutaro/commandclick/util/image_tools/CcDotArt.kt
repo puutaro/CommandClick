@@ -90,7 +90,7 @@ object CcDotArt {
                         }
                         val firstOpacity = (fistLowerOpacity..maxOpacity).random()
                         val pieceBitmapSrc = pieceBitmapSrcArray.random()
-                        var horizontalRect = ImageTransformer.ajustOpacity(
+                        var horizontalRect = ColorTool.ajustOpacity(
                             pieceBitmapSrc,
                             firstOpacity
                         )
@@ -114,7 +114,7 @@ object CcDotArt {
                                 true -> (0..maxOpacity).random()
                                 else -> (lowerOpacity..supOpacity).random()
                             }
-                            val pieceRect = ImageTransformer.ajustOpacity(
+                            val pieceRect = ColorTool.ajustOpacity(
                                 pieceBitmapSrc,
                                 curOpacity
                             )
@@ -199,7 +199,7 @@ object CcDotArt {
                         (0..180).random().toFloat()
                     )
                 }.let {
-                    ImageTransformer.ajustOpacity(
+                    ColorTool.ajustOpacity(
                         it,
                         (150..255).random()
                     )
@@ -242,7 +242,7 @@ object CcDotArt {
                         (0..180).random().toFloat()
                     )
                 }.let {
-                    ImageTransformer.ajustOpacity(
+                    ColorTool.ajustOpacity(
                         it,
                         (150..255).random()
                     )
@@ -315,7 +315,7 @@ object CcDotArt {
                         (0..180).random().toFloat()
                     )
                 }.let {
-                    ImageTransformer.ajustOpacity(
+                    ColorTool.ajustOpacity(
                         it,
                         (150..255).random()
                     )
@@ -420,7 +420,7 @@ object CcDotArt {
                     curPieceRectSrcWidth,
                     pivotX,
                 )
-                val curPieceRect = ImageTransformer.ajustOpacity(
+                val curPieceRect = ColorTool.ajustOpacity(
                     curPieceRectSrc,
                     curOpacity
                 )
@@ -479,7 +479,7 @@ object CcDotArt {
                     curPieceRectSrcWidth,
                     pivotX,
                 )
-                val curPieceRect = ImageTransformer.ajustOpacity(
+                val curPieceRect = ColorTool.ajustOpacity(
                     curPieceRectSrc,
                     curOpacity
                 )
@@ -527,7 +527,7 @@ object CcDotArt {
                     pieceRectWidth,
                     curMarginLeft,
                 )
-                val curPieceRect = ImageTransformer.ajustOpacity(
+                val curPieceRect = ColorTool.ajustOpacity(
                     pieceRect,
                     curOpacity
                 )

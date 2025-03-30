@@ -2560,18 +2560,18 @@ class ImageActionManager {
 //                elVarName to el,
                     indexVarName to index.toString(),
                 ) + fieldVarMarkToValueStrMap
-                FileSystems.writeFile(
-                    File(UsePath.cmdclickDefaultAppDirPath, "lexecAc.txt").absolutePath,
-                    listOf(
-                        "fieldVarMarkToValueStrMap: ${fieldVarMarkToValueStrMap}",
-                        "imageActionCon: ${imageActionCon}",
-                        "loopVarNameToValueStrMap: ${loopVarNameToValueStrMap}",
-                        "rep imageActionCon: ${CmdClickMap.replace(
-                            BackslashTool.toNormal(imageActionCon),
-                            loopVarNameToValueStrMap,
-                        )}"
-                    ).joinToString("\n")
-                )
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lexecAc.txt").absolutePath,
+//                    listOf(
+//                        "fieldVarMarkToValueStrMap: ${fieldVarMarkToValueStrMap}",
+//                        "imageActionCon: ${imageActionCon}",
+//                        "loopVarNameToValueStrMap: ${loopVarNameToValueStrMap}",
+//                        "rep imageActionCon: ${CmdClickMap.replace(
+//                            BackslashTool.toNormal(imageActionCon),
+//                            loopVarNameToValueStrMap,
+//                        )}"
+//                    ).joinToString("\n")
+//                )
 //                val outputVarNameToBitmapMap =
                 ImageActionManager().exec(
                     context,

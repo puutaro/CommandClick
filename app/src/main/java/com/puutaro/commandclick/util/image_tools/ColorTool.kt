@@ -2,13 +2,30 @@ package com.puutaro.commandclick.util.image_tools
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Color.argb
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Paint
+import android.graphics.PorterDuff
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.alpha
+import androidx.core.graphics.blue
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.util.LogSystems
 import org.jsoup.Jsoup
+import androidx.core.graphics.toColorInt
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.get
+import androidx.core.graphics.green
+import androidx.core.graphics.red
+import androidx.core.graphics.set
 
 object ColorTool {
 
@@ -228,5 +245,537 @@ object ColorTool {
         val blue = Color.blue(color)
 
         return String.format("#%02X%02X%02X%02X", alpha, red, green, blue)
+    }
+
+    fun averageHexColors(hexColor1: String, hexColor2: String): String {
+        // 16進数カラーストリグをRGB値に変換
+        val color1 = hexColor1.toColorInt()
+        val color2 = hexColor2.toColorInt()
+
+        // 各RGB値を足し合わせる
+        val red = (Color.red(color1) + Color.red(color2)) / 2
+        val green = (Color.green(color1) + Color.green(color2)) / 2
+        val blue = (Color.blue(color1) + Color.blue(color2)) / 2
+
+        // 平均のRGB値を16進数カラーストリグに変換
+        return String.format("#%02X%02X%02X", red, green, blue)
+    }
+
+    fun weightAvHexColors(
+        hexColor1: String,
+        hexColor2: String,
+        color1Weight: Int,
+        color2Weight: Int,
+    ): String {
+        // 16進数カラーストリグをRGB値に変換
+        val color1 = hexColor1.toColorInt()
+        val color2 = hexColor2.toColorInt()
+
+        val colorTotalWeight = color1Weight + color2Weight
+        // 各RGB値を足し合わせる
+        val red = (
+                Color.red(color1) * color1Weight +
+                        Color.red(color2) * color2Weight
+                )/ colorTotalWeight
+        val green = (
+                Color.green(color1) * color1Weight +
+                        Color.green(color2) * color2Weight
+                ) / colorTotalWeight
+        val blue = (
+                Color.blue(color1) * color1Weight +
+                        Color.blue(color2) * color2Weight
+                ) / colorTotalWeight
+
+        // 平均のRGB値を16進数カラーストリグに変換
+        return String.format("#%02X%02X%02X", red, green, blue)
+    }
+
+    fun makeColorVibrant(hexColor: String, amount: Float): String {
+        val color = hexColor.toColorInt()
+        var red = Color.red(color)
+        var green = Color.green(color)
+        var blue = Color.blue(color)
+
+        val max = max(max(red, green), blue).toFloat()
+        val min = min(min(red, green), blue).toFloat()
+        val delta = (max - min) / 255f
+
+        if (delta == 0f) {
+            return hexColor
+        }
+
+        red = (red + (max - red) * amount).coerceIn(0f, 255f).toInt()
+        green = (green + (max - green) * amount).coerceIn(0f, 255f).toInt()
+        blue = (blue + (max - blue) * amount).coerceIn(0f, 255f).toInt()
+
+        return String.format("#%02X%02X%02X", red, green, blue)
+    }
+
+    fun convertColorToByTol (
+        bitmap: Bitmap,
+        targetColor: Int,
+        replacementColor: Int,
+        tolerance: Int
+    ): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        for (i in pixels.indices) {
+            val pixelColor = pixels[i]
+            // 各色の成分の差を計算
+            val alpha = abs(Color.red(pixelColor) - Color.alpha(targetColor))
+            if(alpha == 0) continue
+            val redDiff = abs(Color.red(pixelColor) - Color.red(targetColor))
+            val greenDiff = abs(Color.green(pixelColor) - Color.green(targetColor))
+            val blueDiff = abs(Color.blue(pixelColor) - Color.blue(targetColor))
+
+            // 許容範囲内であれば色を置き換える
+            if (
+                redDiff >= tolerance
+                || greenDiff >= tolerance
+                || blueDiff >= tolerance
+            ) continue
+            pixels[i] = replacementColor
+        }
+
+        val resultBitmap = createBitmap(width, height)
+        resultBitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+        return resultBitmap
+    }
+
+    fun maxAlpha (
+        bitmap: Bitmap,
+    ): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        for (i in pixels.indices) {
+            val pixelColor = pixels[i]
+            val alpha = Color.alpha(pixelColor)
+            if(alpha == 0) continue
+            pixels[i] = argb(
+                255,
+                Color.red(pixelColor),
+                Color.green(pixelColor),
+                Color.blue(pixelColor),
+            )
+        }
+
+        val resultBitmap = createBitmap(width, height)
+        resultBitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+        return resultBitmap
+    }
+
+    fun convertWhiteToTransparent(
+        originalBitmap: Bitmap,
+    ): Bitmap {
+        val width = originalBitmap.width
+        val height = originalBitmap.height
+
+        // Create a mutable copy of the bitmap
+        val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                val pixel = resultBitmap[x, y]
+                val red = Color.red(pixel)
+                val green = Color.green(pixel)
+                val blue = Color.blue(pixel)
+
+                // Check if the pixel is white or close to white
+                if (red > 240 && green > 240 && blue > 240) {
+                    // Set the pixel to fully transparent
+                    resultBitmap[x, y] = Color.TRANSPARENT
+                }
+            }
+        }
+
+        return resultBitmap
+    }
+
+    fun swapTransparentAndBlack(
+        originalBitmap: Bitmap,
+    ): Bitmap {
+        return swap(
+            originalBitmap,
+            "#000000",
+            "#00000000",
+        )
+    }
+
+    fun exchangeColorToBlack(
+        originalBitmap: Bitmap,
+    ): Bitmap {
+        val width = originalBitmap.width
+        val height = originalBitmap.height
+
+        // Create a mutable copy of the bitmap
+        val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                val pixel = resultBitmap[x, y]
+                if (
+                    Color.alpha(pixel) == 0
+                ) {
+                    resultBitmap[x, y] = Color.TRANSPARENT
+                    continue
+                }
+                resultBitmap[x, y] = Color.BLACK
+            }
+        }
+
+        return resultBitmap
+    }
+
+    fun exchangeWhiteToBlack(
+        originalBitmap: Bitmap,
+    ): Bitmap {
+        val width = originalBitmap.width
+        val height = originalBitmap.height
+
+        // Create a mutable copy of the bitmap
+        val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                val pixel = resultBitmap[x, y]
+                val red = Color.red(pixel)
+                val green = Color.green(pixel)
+                val blue = Color.blue(pixel)
+
+                // Check if the pixel is white or close to white
+                if (red > 240 && green > 240 && blue > 240) {
+                    // Set the pixel to fully transparent
+                    resultBitmap[x, y] = Color.BLACK
+                }
+            }
+        }
+
+        return resultBitmap
+    }
+
+
+    fun ajustOpacity(
+        bitmap: Bitmap,
+        opacity: Int, //0(trans)..255
+    ): Bitmap {
+        val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(mutableBitmap)
+        val colour = (opacity and 0xFF) shl 24
+        canvas.drawColor(colour, PorterDuff.Mode.DST_IN)
+        return mutableBitmap
+    }
+
+    fun addAlpha(
+        originalBitmap: Bitmap,
+        alpha: Float?,
+    ): Bitmap {
+        val width = originalBitmap.width
+        val height = originalBitmap.height
+
+        // Create a mutable copy of the bitmap
+        val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                val pixel = resultBitmap[x, y]
+                val red = Color.red(pixel)
+                val green = Color.green(pixel)
+                val blue = Color.blue(pixel)
+                Color.argb(0 ,red, green, blue)
+                if (
+                    Color.alpha(pixel) == 0
+                ) {
+                    resultBitmap[x, y] = Color.BLACK
+                    continue
+                }
+                resultBitmap[x, y] = Color.TRANSPARENT
+            }
+        }
+
+        return resultBitmap
+    }
+
+    fun convertAllToColorInTrans(
+        srcBitmap: Bitmap,
+        colorStr: String?
+    ): Bitmap {
+        val transColorStr =
+            "#00000000"
+        val toColor = when(
+            colorStr == transColorStr
+        ) {
+            true -> Color.TRANSPARENT
+            else -> colorStr?.toColorInt()
+                ?: transColorStr.toColorInt()
+        }
+        val width = srcBitmap.width
+        val height = srcBitmap.height
+        val capacity = width * height
+//            val arrayList: ArrayList<Int> = ArrayList(capacity)
+        val pixels = IntArray(capacity)
+        // get pixel array from source
+        srcBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        val bmOut = createBitmap(width, height, srcBitmap.config!!)
+        val trans = Color.TRANSPARENT
+        // iteration through pixels
+        val toColorRed = toColor.red
+        val toColorGreen = toColor.green
+        val toColorBlue = toColor.blue
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                // get current index in 2D-matrix
+                val index = y * width + x
+                val pixel = pixels[index]
+                val alpha = Color.alpha(pixel)
+                if(pixel == trans){
+                    continue
+                }
+                pixels[index] =  argb(
+                    alpha,
+                    toColorRed,
+                    toColorGreen,
+                    toColorBlue,
+                )
+
+                /*or change the whole color
+            pixels[index] = colorThatWillReplace;*/
+            }
+        }
+        bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+        return bmOut
+    }
+
+
+    fun convertBlackToColor(
+        originalBitmap: Bitmap,
+        colorStr: String,
+    ): Bitmap {
+        val parsedColor = when(
+            colorStr == "#00000000"
+        ) {
+            true -> Color.TRANSPARENT
+            else -> colorStr.toColorInt()
+        }
+        val blackInt = Color.BLACK
+        if(
+            parsedColor == blackInt
+        ) return originalBitmap
+        return changeColor(
+            originalBitmap,
+            Color.BLACK,
+            parsedColor
+        )
+    }
+
+    fun convertColorTo(
+        originalBitmap: Bitmap,
+        fromColorStr: String,
+        toColorStr: String,
+    ): Bitmap {
+        val fromParsedColor = when(
+            fromColorStr == "#00000000"
+        ) {
+            true -> Color.TRANSPARENT
+            else -> fromColorStr.toColorInt()
+        }
+        val toParsedColor = when(
+            toColorStr == "#00000000"
+        ) {
+            true -> Color.TRANSPARENT
+            else -> toColorStr.toColorInt()
+        }
+        return changeColor(
+            originalBitmap,
+            toParsedColor,
+            fromParsedColor
+        )
+    }
+
+    fun otherToColor(
+        src: Bitmap,
+        saveColor: Int,
+        toColor: Int,
+    ): Bitmap {
+        val width = src.width
+        val height = src.height
+        val pixels = IntArray(width * height)
+        // get pixel array from source
+        src.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        val bmOut = createBitmap(width, height, src.config!!)
+
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                // get current index in 2D-matrix
+                val index = y * width + x
+                val pixel = pixels[index]
+                val alpha = Color.alpha(pixel)
+                if (
+                    pixel != saveColor
+                    && alpha != 0
+                ) {
+                    pixels[index] = toColor
+
+                    /*or change the whole color
+                pixels[index] = colorThatWillReplace;*/
+                }
+            }
+        }
+        bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+        return bmOut
+    }
+
+    private fun changeColor(
+        src: Bitmap,
+        fromColor: Int,
+        toColor: Int,
+    ): Bitmap {
+        val width = src.width
+        val height = src.height
+        val pixels = IntArray(width * height)
+        // get pixel array from source
+        src.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        val bmOut = createBitmap(width, height, src.config!!)
+
+//            var pixel: Int
+        val toArgb = argb(
+            toColor.alpha,
+            toColor.red,
+            toColor.green,
+            toColor.blue,
+        )
+        // iteration through pixels
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                // get current index in 2D-matrix
+                val index = y * width + x
+                val pixel = pixels[index]
+                if (pixel == fromColor) {
+                    pixels[index] = toArgb
+
+                    /*or change the whole color
+                pixels[index] = colorThatWillReplace;*/
+                }
+            }
+        }
+        bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+        return bmOut
+    }
+
+    fun swap(
+        originalBitmap: Bitmap,
+        colorStr1: String,
+        colorStr2: String,
+    ): Bitmap {
+        val parsedColor1 = when(
+            colorStr1 == "#00000000"
+        ) {
+            true -> Color.TRANSPARENT
+            else -> colorStr1.toColorInt()
+        }
+        val parsedColor2 = when (
+            colorStr2 == "#00000000"
+        ) {
+            true -> Color.TRANSPARENT
+            else -> colorStr2.toColorInt()
+        }
+        val width = originalBitmap.width
+        val height = originalBitmap.height
+        val pixels = IntArray(width * height)
+        // get pixel array from source
+        originalBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        val bmOut = createBitmap(width, height, originalBitmap.config!!)
+
+//            var pixel: Int
+        val argb1 = argb(
+            parsedColor1.alpha,
+            parsedColor1.red,
+            parsedColor1.green,
+            parsedColor1.blue,
+        )
+        val argb2 = argb(
+            parsedColor2.alpha,
+            parsedColor2.red,
+            parsedColor2.green,
+            parsedColor2.blue,
+        )
+        // iteration through pixels
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                // get current index in 2D-matrix
+                val index = y * width + x
+                val pixel = pixels[index]
+                when(true) {
+                    (pixel == parsedColor1) -> {
+                        //change A-RGB individually
+                        pixels[index] = argb2
+                    }
+                    (pixel == parsedColor2) -> {
+                        //change A-RGB individually
+                        pixels[index] = argb1
+                    }
+                    else -> {}
+                }
+            }
+        }
+        bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+        return bmOut
+    }
+
+    fun changeAllToTrans(
+        src: Bitmap,
+        colorStr: String,
+    ): Bitmap {
+        val width = src.width
+        val height = src.height
+        val pixels = IntArray(width * height)
+        // get pixel array from source
+        src.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        val bmOut = createBitmap(width, height, src.config!!)
+
+//            var pixel: Int
+        val colorInt = colorStr.toColorInt()
+        val trans = Color.TRANSPARENT
+        // iteration through pixels
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                // get current index in 2D-matrix
+                val index = y * width + x
+                val pixel = pixels[index]
+                val alpha = Color.alpha(pixel)
+                if(alpha == 0){
+                    pixels[index] = colorInt
+                    continue
+                }
+                pixels[index] = trans
+            }
+        }
+        bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+        return bmOut
+    }
+
+    fun convertGrayScaleBitmap(original: Bitmap): Bitmap {
+        // You have to make the Bitmap mutable when changing the config because there will be a crash
+        // That only mutable Bitmap's should be allowed to change config.
+        val bmp = original.copy(Bitmap.Config.ARGB_8888, true)
+        val bmpGrayscale = createBitmap(bmp.width, bmp.height)
+        val canvas = Canvas(bmpGrayscale)
+        val paint = Paint()
+        val colorMatrix = ColorMatrix()
+        colorMatrix.setSaturation(0f)
+        val colorMatrixFilter = ColorMatrixColorFilter(colorMatrix)
+        paint.colorFilter = colorMatrixFilter
+        canvas.drawBitmap(bmp, 0F, 0F, paint)
+        return bmpGrayscale
     }
 }

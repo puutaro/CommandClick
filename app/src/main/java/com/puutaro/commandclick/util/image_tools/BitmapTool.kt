@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Color.argb
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.LinearGradient
@@ -33,13 +32,8 @@ import android.text.style.RelativeSizeSpan
 import android.util.Base64
 import android.util.TypedValue
 import android.view.View
-import androidx.core.graphics.alpha
-import androidx.core.graphics.blue
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.green
-import androidx.core.graphics.red
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.PAINT_FLAGS
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -1366,7 +1360,30 @@ object BitmapTool {
             canvas.drawBitmap(mascSrcBitmap, 0f, 0f, paint)
             return output
         }
+//        fun mustByBlack(baseBitmap: Bitmap, cutoutBitmap: Bitmap): Bitmap {
+//            // baseBitmapと同じサイズのARGB_8888形式のmutableなBitmapを作成
+//            val resultBitmap = createBitmap(baseBitmap.width, baseBitmap.height)
 
+//            // 新しいBitmapのCanvasを作成
+//            val canvas = Canvas(resultBitmap)
+
+//            // CanvasにbaseBitmapを描画
+//            canvas.drawBitmap(baseBitmap, 0f, 0f, null)
+
+//            // cutoutBitmapを描画するためのPaintを設定
+//            val paint = Paint()
+//            // PorterDuffのXfermodeを設定。ここでは、DST_OUTモードを使用する。
+//            // DST_OUTモードは、「描画先の画像 (この場合 resultBitmap) の、描画元の画像 (cutoutBitmap) と重ならない部分のみを残す」モード
+//            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
+
+//            // cutoutBitmapを描画。これにより、baseBitmapの黒い部分が切り抜かれる。
+//            canvas.drawBitmap(cutoutBitmap, 0f, 0f, paint)
+
+//            // Xfermodeをクリア
+//            paint.xfermode = null
+
+//            return resultBitmap
+//        }
 
         fun crop(
             bkBitmap: Bitmap?,
@@ -1400,600 +1417,6 @@ object BitmapTool {
 //            drawable.draw(canvas)
             canvas.drawBitmap(toTransform, null, destRect, paint)
             return bitmap
-        }
-
-
-        fun convertWhiteToTransparent(
-            originalBitmap: Bitmap,
-        ): Bitmap {
-            val width = originalBitmap.width
-            val height = originalBitmap.height
-
-            // Create a mutable copy of the bitmap
-            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
-
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    val pixel = resultBitmap[x, y]
-                    val red = Color.red(pixel)
-                    val green = Color.green(pixel)
-                    val blue = Color.blue(pixel)
-
-                    // Check if the pixel is white or close to white
-                    if (red > 240 && green > 240 && blue > 240) {
-                        // Set the pixel to fully transparent
-                        resultBitmap[x, y] = Color.TRANSPARENT
-                    }
-                }
-            }
-
-            return resultBitmap
-        }
-
-        fun swapTransparentAndBlack(
-            originalBitmap: Bitmap,
-        ): Bitmap {
-            return swap(
-                originalBitmap,
-                "#000000",
-               "#00000000",
-            )
-//            val width = originalBitmap.width
-//            val height = originalBitmap.height
-//
-//            // Create a mutable copy of the bitmap
-//            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
-//
-//            for (x in 0 until width) {
-//                for (y in 0 until height) {
-//                    val pixel = resultBitmap.getPixel(x, y)
-//                    if (
-//                        Color.alpha(pixel) == 0
-//                    ) {
-//                        resultBitmap.setPixel(x, y, Color.BLACK)
-//                        continue
-//                    }
-//                    resultBitmap.setPixel(x, y, Color.TRANSPARENT)
-//                }
-//            }
-//
-//            return resultBitmap
-        }
-
-        fun exchangeColorToBlack(
-            originalBitmap: Bitmap,
-        ): Bitmap {
-            val width = originalBitmap.width
-            val height = originalBitmap.height
-
-            // Create a mutable copy of the bitmap
-            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
-
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    val pixel = resultBitmap[x, y]
-                    if (
-                        Color.alpha(pixel) == 0
-                    ) {
-                        resultBitmap[x, y] = Color.TRANSPARENT
-                        continue
-                    }
-                    resultBitmap[x, y] = Color.BLACK
-                }
-            }
-
-            return resultBitmap
-        }
-
-        fun exchangeWhiteToBlack(
-            originalBitmap: Bitmap,
-        ): Bitmap {
-            val width = originalBitmap.width
-            val height = originalBitmap.height
-
-            // Create a mutable copy of the bitmap
-            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
-
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    val pixel = resultBitmap[x, y]
-                    val red = Color.red(pixel)
-                    val green = Color.green(pixel)
-                    val blue = Color.blue(pixel)
-
-                    // Check if the pixel is white or close to white
-                    if (red > 240 && green > 240 && blue > 240) {
-                        // Set the pixel to fully transparent
-                        resultBitmap[x, y] = Color.BLACK
-                    }
-                }
-            }
-
-            return resultBitmap
-        }
-
-
-        fun ajustOpacity(
-            bitmap: Bitmap,
-            opacity: Int, //0(trans)..255
-        ): Bitmap {
-            val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-            val canvas = Canvas(mutableBitmap)
-            val colour = (opacity and 0xFF) shl 24
-            canvas.drawColor(colour, PorterDuff.Mode.DST_IN)
-            return mutableBitmap
-        }
-
-        fun addAlpha(
-            originalBitmap: Bitmap,
-            alpha: Float?,
-        ): Bitmap {
-            val width = originalBitmap.width
-            val height = originalBitmap.height
-
-            // Create a mutable copy of the bitmap
-            val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
-
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    val pixel = resultBitmap[x, y]
-                    val red = Color.red(pixel)
-                    val green = Color.green(pixel)
-                    val blue = Color.blue(pixel)
-                    Color.argb(0 ,red, green, blue)
-                    if (
-                        Color.alpha(pixel) == 0
-                    ) {
-                        resultBitmap[x, y] = Color.BLACK
-                        continue
-                    }
-                    resultBitmap[x, y] = Color.TRANSPARENT
-                }
-            }
-
-            return resultBitmap
-        }
-
-        fun convertAllToColorInTrans(
-            srcBitmap: Bitmap,
-            colorStr: String?
-        ): Bitmap {
-            val transColorStr =
-                "#00000000"
-            val toColor = when(
-                colorStr == transColorStr
-            ) {
-                true -> Color.TRANSPARENT
-                else -> colorStr?.toColorInt()
-                    ?: transColorStr.toColorInt()
-            }
-            val width = srcBitmap.width
-            val height = srcBitmap.height
-            val capacity = width * height
-//            val arrayList: ArrayList<Int> = ArrayList(capacity)
-            val pixels = IntArray(capacity)
-            // get pixel array from source
-            srcBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-
-            val bmOut = createBitmap(width, height, srcBitmap.config!!)
-
-//            var pixel: Int
-            val trans = Color.TRANSPARENT
-//            val toArgb = argb(
-//                toColor.alpha,
-//                toColor.red,
-//                toColor.green,
-//                toColor.blue,
-//            )
-            // iteration through pixels
-            val toColorRed = toColor.red
-            val toColorGreen = toColor.green
-            val toColorBlue = toColor.blue
-            for (y in 0 until height) {
-                for (x in 0 until width) {
-                    // get current index in 2D-matrix
-                    val index = y * width + x
-                    val pixel = pixels[index]
-                    val alpha = Color.alpha(pixel)
-//                    val red = Color.red(pixel)
-//                    val green = Color.green(pixel)
-//                    val blue = Color.blue(pixel)
-                    if(pixel == trans){
-                        continue
-                    }
-                    pixels[index] =  argb(
-                        alpha,
-                        toColorRed,
-                        toColorGreen,
-                        toColorBlue,
-                    )
-
-                        /*or change the whole color
-                    pixels[index] = colorThatWillReplace;*/
-                }
-            }
-            bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
-            return bmOut
-        }
-
-
-        fun convertBlackToColor(
-            originalBitmap: Bitmap,
-            colorStr: String,
-        ): Bitmap {
-            val parsedColor = when(
-                colorStr == "#00000000"
-            ) {
-                true -> Color.TRANSPARENT
-                else -> colorStr.toColorInt()
-            }
-//            val overrideAlpha = when(parsedColor.alpha == 0){
-//                true -> Color.TRANSPARENT.alpha
-//                else -> null
-//            }
-            val blackInt = Color.BLACK
-            if(
-                parsedColor == blackInt
-            ) return originalBitmap
-            return changeColor(
-                originalBitmap,
-                Color.BLACK,
-                parsedColor
-            )
-//            convertColorTo(
-//                originalBitmap: Bitmap,
-//                fromColorStr: String,
-//                toColorStr: String,
-//            )
-//            val width = originalBitmap.width
-//            val height = originalBitmap.height
-
-//            val pixels = IntArray(width * height)
-//            originalBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-//
-//            val r = Color.red(parsedColor)
-//            val g = Color.green(parsedColor)
-//            val b = Color.blue(parsedColor)
-//            val a = Color.alpha(parsedColor)
-//            val numThreads = Runtime.getRuntime().availableProcessors()
-//            val threads = mutableListOf<Thread>()
-//
-//            for (i in 0 until numThreads) {
-//                val thread = thread {
-//                    val start = i * pixels.size / numThreads
-//                    val end = (i + 1) * pixels.size / numThreads
-//                    for (j in start until end) {
-//                        val pixel = pixels[j]
-//                        if (pixel == Color.BLACK) {
-//                            pixels[j] = Color.argb(a, r, g, b)
-//                        }
-//                    }
-//                }
-//                threads.add(thread)
-//            }
-//            val numThreads = Runtime.getRuntime().availableProcessors()
-//            val threads = mutableListOf<Thread>()
-//
-//            for (i in 0 until numThreads) {
-//                val thread = thread {
-//                    val start = i * pixels.size / numThreads
-//                    val end = (i + 1) * pixels.size / numThreads
-//                    for (j in start until end) {
-//                        val pixel = pixels[j]
-//                        if (pixel == Color.BLACK) {
-//                            pixels[j] = Color.argb(a, r, g, b)
-//                        }
-//                    }
-//                }
-//                threads.add(thread)
-//            }
-
-//            threads.forEach { it.join() }
-//
-//            val result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-//            result.setPixels(pixels, 0, width, 0, 0, width, height)
-//            return result
-//            return withContext(Dispatchers.IO) {
-//                val resultBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
-//                val semaphore = Semaphore(100)
-//                val jobList = ArrayList<Deferred<Unit>>()
-//                (0 until width).map { x ->
-//                    (0 until height).map { y ->
-//                        val job = async {
-//                            semaphore.withPermit {
-//                                val pixel = resultBitmap.getPixel(x, y)
-//                                val red = Color.red(pixel)
-//                                val green = Color.green(pixel)
-//                                val blue = Color.blue(pixel)
-//                                val alpha = Color.alpha(pixel)
-//                                if (
-//                                    alpha > 0
-//                                    && red == 0
-//                                    && green == 0
-//                                    && blue == 0
-//                                ) {
-//                                    // Set the pixel to fully transparent
-//                                    resultBitmap.setPixel(
-//                                        x,
-//                                        y,
-//                                        argb(
-//                                            parsedColor.alpha,
-//                                            //                                overrideAlpha ?: alpha,
-//                                            parsedColor.red,
-//                                            parsedColor.green,
-//                                            parsedColor.blue,
-//                                        ),
-//                                    )
-//                                    return@withPermit
-//                                }
-//                                resultBitmap.setPixel(x, y, argb(alpha, red, green, blue))
-//                            }
-//                        }
-//                        jobList.add(job)
-//                    }
-//                }
-//                jobList.awaitAll()
-//                FileSystems.writeFromByteArray(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "lpox.txt").absolutePath,
-//                    convertBitmapToByteArray(resultBitmap)
-//                )
-//                resultBitmap
-//            }
-//            val purposeArgb = argb(
-//                parsedColor.alpha,
-////                                overrideAlpha ?: alpha,
-//                parsedColor.red,
-//                parsedColor.green,
-//                parsedColor.blue,
-//            )
-//            val resultBitmap = originalBitmap.copy(originalBitmap.config!!, true)
-////            val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-//            for (x in 0 until width) {
-//                for (y in 0 until height) {
-//                    val pixel = originalBitmap.getPixel(x, y)
-//                    if (
-//                        pixel == blackInt
-////                        alpha > 0
-////                        && red == 0
-////                        && green == 0
-////                        && blue == 0
-//                        ) {
-//                        // Set the pixel to fully transparent
-//                        resultBitmap.setPixel(
-//                            x,
-//                            y,
-//                            purposeArgb,
-//                        )
-//                        continue
-//                    }
-////                    val red = Color.red(pixel)
-////                    val green = Color.green(pixel)
-////                    val blue = Color.blue(pixel)
-////                    val alpha = Color.alpha(pixel)
-////                    resultBitmap.setPixel(
-////                        x,
-////                        y,
-////                        pixel,
-//////                        argb(alpha, red, green, blue)
-////                    )
-//
-//                }
-//            }
-//
-//            return resultBitmap
-        }
-
-        fun convertColorTo(
-            originalBitmap: Bitmap,
-            fromColorStr: String,
-            toColorStr: String,
-        ): Bitmap {
-            val fromParsedColor = when(
-                fromColorStr == "#00000000"
-            ) {
-                true -> Color.TRANSPARENT
-                else -> fromColorStr.toColorInt()
-            }
-            val toParsedColor = when(
-                toColorStr == "#00000000"
-            ) {
-                true -> Color.TRANSPARENT
-                else -> toColorStr.toColorInt()
-            }
-            return changeColor(
-                originalBitmap,
-                toParsedColor,
-                fromParsedColor
-            )
-        }
-
-        fun otherToColor(
-            src: Bitmap,
-            saveColor: Int,
-            toColor: Int,
-        ): Bitmap {
-            val width = src.width
-            val height = src.height
-            val pixels = IntArray(width * height)
-            // get pixel array from source
-            src.getPixels(pixels, 0, width, 0, 0, width, height)
-
-            val bmOut = createBitmap(width, height, src.config!!)
-
-//            var pixel: Int
-//            val toArgb = argb(
-//                toColor.alpha,
-//                toColor.red,
-//                toColor.green,
-//                toColor.blue,
-//            )
-            // iteration through pixels
-            for (y in 0 until height) {
-                for (x in 0 until width) {
-                    // get current index in 2D-matrix
-                    val index = y * width + x
-                    val pixel = pixels[index]
-                    val alpha = Color.alpha(pixel)
-                    if (
-                        pixel != saveColor
-                        && alpha != 0
-                        ) {
-                        pixels[index] = toColor
-
-                        /*or change the whole color
-                    pixels[index] = colorThatWillReplace;*/
-                    }
-                }
-            }
-            bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
-            return bmOut
-        }
-
-        private fun changeColor(
-            src: Bitmap,
-            fromColor: Int,
-            toColor: Int,
-        ): Bitmap {
-            val width = src.width
-            val height = src.height
-            val pixels = IntArray(width * height)
-            // get pixel array from source
-            src.getPixels(pixels, 0, width, 0, 0, width, height)
-
-            val bmOut = createBitmap(width, height, src.config!!)
-
-//            var pixel: Int
-            val toArgb = argb(
-                toColor.alpha,
-                toColor.red,
-                toColor.green,
-                toColor.blue,
-            )
-            // iteration through pixels
-            for (y in 0 until height) {
-                for (x in 0 until width) {
-                    // get current index in 2D-matrix
-                    val index = y * width + x
-                    val pixel = pixels[index]
-                    if (pixel == fromColor) {
-                        pixels[index] = toArgb
-
-                        /*or change the whole color
-                    pixels[index] = colorThatWillReplace;*/
-                    }
-                }
-            }
-            bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
-            return bmOut
-        }
-
-        fun swap(
-            originalBitmap: Bitmap,
-            colorStr1: String,
-            colorStr2: String,
-        ): Bitmap {
-            val parsedColor1 = when(
-                colorStr1 == "#00000000"
-            ) {
-                true -> Color.TRANSPARENT
-                else -> colorStr1.toColorInt()
-            }
-            val parsedColor2 = when (
-                colorStr2 == "#00000000"
-            ) {
-                true -> Color.TRANSPARENT
-                else -> colorStr2.toColorInt()
-            }
-            val width = originalBitmap.width
-            val height = originalBitmap.height
-            val pixels = IntArray(width * height)
-            // get pixel array from source
-            originalBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-
-            val bmOut = createBitmap(width, height, originalBitmap.config!!)
-
-//            var pixel: Int
-            val argb1 = argb(
-                parsedColor1.alpha,
-                parsedColor1.red,
-                parsedColor1.green,
-                parsedColor1.blue,
-            )
-            val argb2 = argb(
-                parsedColor2.alpha,
-                parsedColor2.red,
-                parsedColor2.green,
-                parsedColor2.blue,
-            )
-            // iteration through pixels
-            for (y in 0 until height) {
-                for (x in 0 until width) {
-                    // get current index in 2D-matrix
-                    val index = y * width + x
-                    val pixel = pixels[index]
-                    when(true) {
-                        (pixel == parsedColor1) -> {
-                            //change A-RGB individually
-                            pixels[index] = argb2
-                        }
-                        (pixel == parsedColor2) -> {
-                            //change A-RGB individually
-                            pixels[index] = argb1
-                        }
-                        else -> {}
-                    }
-                }
-            }
-            bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
-            return bmOut
-        }
-
-        fun changeAllToTrans(
-            src: Bitmap,
-            colorStr: String,
-        ): Bitmap {
-            val width = src.width
-            val height = src.height
-            val pixels = IntArray(width * height)
-            // get pixel array from source
-            src.getPixels(pixels, 0, width, 0, 0, width, height)
-
-            val bmOut = createBitmap(width, height, src.config!!)
-
-//            var pixel: Int
-            val colorInt = colorStr.toColorInt()
-            val trans = Color.TRANSPARENT
-            // iteration through pixels
-            for (y in 0 until height) {
-                for (x in 0 until width) {
-                    // get current index in 2D-matrix
-                    val index = y * width + x
-                    val pixel = pixels[index]
-                    val alpha = Color.alpha(pixel)
-                    if(alpha == 0){
-                        pixels[index] = colorInt
-                        continue
-                    }
-                    pixels[index] = trans
-                }
-            }
-            bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
-            return bmOut
-        }
-
-        fun convertGrayScaleBitmap(original: Bitmap): Bitmap {
-            // You have to make the Bitmap mutable when changing the config because there will be a crash
-            // That only mutable Bitmap's should be allowed to change config.
-            val bmp = original.copy(Bitmap.Config.ARGB_8888, true)
-            val bmpGrayscale = createBitmap(bmp.width, bmp.height)
-            val canvas = Canvas(bmpGrayscale)
-            val paint = Paint()
-            val colorMatrix = ColorMatrix()
-            colorMatrix.setSaturation(0f)
-            val colorMatrixFilter = ColorMatrixColorFilter(colorMatrix)
-            paint.colorFilter = colorMatrixFilter
-            canvas.drawBitmap(bmp, 0F, 0F, paint)
-            return bmpGrayscale
         }
 
         fun invertMonoBitmap(bitmap: Bitmap): Bitmap {
@@ -2088,29 +1511,20 @@ object BitmapTool {
             offsetY: Int,
         ): Bitmap {
             // Set some constants
-            val srcWidth = bitmap.width
-            val srcHeight = bitmap.height
 
 // Crop bitmap
-            return Bitmap.createBitmap(bitmap, offsetX, offsetY, limitWidthPx, limitHeightPx, null, false)
+            return Bitmap.createBitmap(
+                bitmap,
+                offsetX,
+                offsetY,
+                limitWidthPx,
+                limitHeightPx,
+                null,
+                false,
+                )
         }
 
         fun cutCenter(
-            bitmap: Bitmap,
-            limitWidthPx: Int,
-            limitHeightPx: Int,
-        ): Bitmap {
-            // Set some constants
-            val srcWidth = bitmap.width
-            val srcHeight = bitmap.height
-            val startX = (0..(srcWidth - limitWidthPx)).random()
-            val startY = (0..(srcHeight - limitHeightPx)).random()
-
-// Crop bitmap
-            return Bitmap.createBitmap(bitmap, startX, startY, limitWidthPx, limitHeightPx, null, false)
-        }
-
-        fun cutCenter2(
             bitmap: Bitmap,
             limitWidthPx: Int,
             limitHeightPx: Int,
@@ -2123,6 +1537,29 @@ object BitmapTool {
 
 // Crop bitmap
             return Bitmap.createBitmap(bitmap, startX, startY, limitWidthPx, limitHeightPx, null, false)
+        }
+
+        fun cutRnd(
+            bitmap: Bitmap,
+            limitWidthPx: Int,
+            limitHeightPx: Int,
+        ): Bitmap {
+            // Set some constants
+            val srcWidth = bitmap.width
+            val srcHeight = bitmap.height
+            val startX = (0..(srcWidth - limitWidthPx)).random()
+            val startY = (0..(srcHeight - limitHeightPx)).random()
+
+// Crop bitmap
+            return Bitmap.createBitmap(
+                bitmap,
+                startX,
+                startY,
+                limitWidthPx,
+                limitHeightPx,
+                null,
+                false
+            )
         }
 
         fun overlayBitmap(bitmapBackground: Bitmap, bitmapImage: Bitmap): Bitmap {

@@ -29,6 +29,7 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ConfirmDialogAssets
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -391,7 +392,7 @@ class JsConfirmV2(
                             ConfirmDialogAssets.ImageMakingType.PLANE -> return@let bitmap //215 //200 kusumu
                             ConfirmDialogAssets.ImageMakingType.OPACITY -> 50
                         }
-                        BitmapTool.ImageTransformer.ajustOpacity(
+                        ColorTool.ajustOpacity(
                             bitmap,
                             opacity //130 //50
                         )

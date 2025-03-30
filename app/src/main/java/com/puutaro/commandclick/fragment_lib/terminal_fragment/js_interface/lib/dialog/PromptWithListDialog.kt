@@ -75,6 +75,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.BitmapTool.ImageTransformer
 import com.puutaro.commandclick.util.image_tools.CcDotArt
+import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -1921,7 +1922,7 @@ class PromptWithListDialog(
 //                                        (15..20).random().toFloat(),
                                         Color.BLACK
                                     ).let {
-                                        ImageTransformer.cutCenter2(
+                                        ImageTransformer.cutCenter(
                                             it,
                                             srcOneSide,
                                             srcOneSide
@@ -2016,7 +2017,7 @@ class PromptWithListDialog(
 //                    }
 //                }
                 val mainImageBitmap = let {
-                    val reversedSquareBitmap = ImageTransformer.swapTransparentAndBlack(
+                    val reversedSquareBitmap = ColorTool.swapTransparentAndBlack(
                         maskSquare,
                     )
                 val maskedMainImageBitmap = ImageTransformer.maskImageByTransparent(
@@ -2044,7 +2045,7 @@ class PromptWithListDialog(
                                             srcMainImageBitmap,
                                         ).let { drawableBitmap ->
                                             val shrinkOneSideLength = srcOneSide - shrinkNumb
-                                            ImageTransformer.cutCenter2(
+                                            ImageTransformer.cutCenter(
                                                 drawableBitmap,
                                                 shrinkOneSideLength,
                                                 shrinkOneSideLength,

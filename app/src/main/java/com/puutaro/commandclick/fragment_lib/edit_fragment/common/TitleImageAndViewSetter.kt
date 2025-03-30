@@ -38,8 +38,6 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.ScriptPreWordReplacer
 import jp.wasabeef.blurry.Blurry
-import jp.wasabeef.glide.transformations.BlurTransformation
-import jp.wasabeef.glide.transformations.GrayscaleTransformation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -47,6 +45,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import androidx.core.graphics.scale
 
 object TitleImageAndViewSetter {
 
@@ -593,7 +592,7 @@ object TitleImageAndViewSetter {
                                             ).let {
                                                 val shurinkOnesideLength =
                                                     (oneSideLength * 0.8).toInt()
-                                                BitmapTool.ImageTransformer.cutCenter2(
+                                                BitmapTool.ImageTransformer.cutCenter(
                                                     it,
                                                     shurinkOnesideLength,
                                                     shurinkOnesideLength
@@ -633,7 +632,7 @@ object TitleImageAndViewSetter {
                                 }
 
                                 val backstackCountBitmapForOverlay =
-                                    BitmapTool.ImageTransformer.ajustOpacity(
+                                    ColorTool.ajustOpacity(
                                         imageTypeToBackstackCountBitmap.second,
                                         hexOpacity
                                         //(10..60).random()
@@ -729,7 +728,7 @@ object TitleImageAndViewSetter {
                     }.let {
                         it * shrinkRate
                     }.toInt()
-                    BitmapTool.ImageTransformer.cutCenter2(
+                    BitmapTool.ImageTransformer.cutCenter(
                         bkRect,
                         bkRect.width - trimWidth,
                         bkRect.height - trimHeight
@@ -1335,8 +1334,7 @@ private object FannelLogoSetter {
                 val addTimes = (4..7).random()
                 for (i in 1..addTimes) {
                     val logoBitmapRate = (1..5).random() / 5f
-                    val rateLogoBitmap = Bitmap.createScaledBitmap(
-                        logoBitmap,
+                    val rateLogoBitmap = logoBitmap.scale(
                         (logoBitmap.width * logoBitmapRate).toInt(),
                         (logoBitmap.height * logoBitmapRate).toInt(),
                         false,
@@ -1346,7 +1344,7 @@ private object FannelLogoSetter {
                             (0..180).random().toFloat()
                         )
                     }.let {
-                        BitmapTool.ImageTransformer.ajustOpacity(
+                        ColorTool.ajustOpacity(
                             it,
                             (10..60).random()
                         )

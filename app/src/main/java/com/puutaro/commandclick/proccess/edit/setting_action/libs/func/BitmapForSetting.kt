@@ -145,15 +145,15 @@ object BitmapForSetting {
 //                            "avColorStr: ${avColorStr}",
 //                        ).joinToString("\n")
 //                    )
-                    iamgeAcDatas.forEachIndexed {
-                            index, tri ->
-                        val curBitmap = tri.third
-                        if(curBitmap == null) return@forEachIndexed
-                        FileSystems.writeFromByteArray(
-                            File(UsePath.cmdclickDefaultAppDirPath, "ldata_get_${index}.png").absolutePath,
-                            BitmapTool.convertBitmapToByteArray(curBitmap)
-                        )
-                    }
+//                    iamgeAcDatas.forEachIndexed {
+//                            index, tri ->
+//                        val curBitmap = tri.third
+//                        if(curBitmap == null) return@forEachIndexed
+//                        FileSystems.writeFromByteArray(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "ldata_get_${index}.png").absolutePath,
+//                            BitmapTool.convertBitmapToByteArray(curBitmap)
+//                        )
+//                    }
                     Pair(
                         avColorStr,
                         null

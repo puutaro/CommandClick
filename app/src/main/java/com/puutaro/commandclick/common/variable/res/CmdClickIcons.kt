@@ -12,10 +12,22 @@ enum class CmdClickIcons(
     BACK("back", R.drawable.back, ButtonAssetsImage.backPingPath),
     CANCEL("cancel", R.drawable.icons8_cancel, ButtonAssetsImage.cancelPingPath),
     CC("cc", R.drawable.cc, ButtonAssetsImage.cPingPath),
-    COPY("copy", androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha, ButtonAssetsImage.copyPingPath),
+    COPY(
+        "copy",
+        androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha,
+        ButtonAssetsImage.copyPingPath
+    ),
     DOWN("down", R.drawable.ic_down_allow, ButtonAssetsImage.downPingPath),
-    DOWNLOAD("download", android.R.drawable.stat_sys_download, ButtonAssetsImage.downloadDonePingPath),
-    DOWNLOAD_COMP("download_done", android.R.drawable.stat_sys_download_done, ButtonAssetsImage.downloadDonePingPath),
+    DOWNLOAD(
+        "download",
+        android.R.drawable.stat_sys_download,
+        ButtonAssetsImage.downloadDonePingPath
+    ),
+    DOWNLOAD_COMP(
+        "download_done",
+        android.R.drawable.stat_sys_download_done,
+        ButtonAssetsImage.downloadDonePingPath
+    ),
     DEBUG("debug", R.drawable.icon_debug, ButtonAssetsImage.debugPingPath),
     EDIT("edit", R.drawable.icons8_edit, ButtonAssetsImage.editPingPath),
     EDIT_FRAME("edit_frame", R.drawable.icons8_edit_frame, ButtonAssetsImage.editPingPath),
@@ -39,7 +51,11 @@ enum class CmdClickIcons(
     MUSIC("music", R.drawable.icon_music, ButtonAssetsImage.musicPingPath),
     OK("ok", R.drawable.icons8_check_ok, ButtonAssetsImage.okPingPath),
     OPEN_CLOSE("open_close", R.drawable.open_and_close, ButtonAssetsImage.openClosePingPath),
-    OVERFLOW("overflow", androidx.appcompat.R.drawable.abc_ic_menu_overflow_material, ButtonAssetsImage.overflowPingPath),
+    OVERFLOW(
+        "overflow",
+        androidx.appcompat.R.drawable.abc_ic_menu_overflow_material,
+        ButtonAssetsImage.overflowPingPath
+    ),
     PIN("pin", R.drawable.pin, ButtonAssetsImage.pinPingPath),
     PIN_LOCATION("pin_location", R.drawable.pin_location, ButtonAssetsImage.pinLocationPingPath),
     PLAY("play", R.drawable.icons_play, ButtonAssetsImage.playPingPath),
@@ -50,7 +66,11 @@ enum class CmdClickIcons(
     ROUND_RECT("round_rect", R.drawable.round_rect, ButtonAssetsImage.roundRectPath),
     RECT("rect", R.drawable.rect, ButtonAssetsImage.rectPingPath),
     REFLESH("reflesh", R.drawable.icons8_refresh, ButtonAssetsImage.refleshPingPath),
-    RIGHT_TRIANGLE("triangle_right", R.drawable.right_triangle, ButtonAssetsImage.triangleRightPingPath),
+    RIGHT_TRIANGLE(
+        "triangle_right",
+        R.drawable.right_triangle,
+        ButtonAssetsImage.triangleRightPingPath
+    ),
     RING("ring", R.drawable.icons8_wheel, ButtonAssetsImage.wheelPingPath),
     SET_UP("setup", R.drawable.icons8_setup, ButtonAssetsImage.setupPingPath),
     SEARCH("search", R.drawable.icons8_search, ButtonAssetsImage.searchPingPath),
@@ -62,7 +82,11 @@ enum class CmdClickIcons(
     SPIDER("spider", R.drawable.spider, ButtonAssetsImage.spiderPingPath),
     TERMINAL("terminal", R.drawable.ic_terminal, ButtonAssetsImage.terminalPingPath),
     TOP("top", R.drawable.ic_top_allow, ButtonAssetsImage.topPingPath),
-    BLACK_HISTORY("black_history", R.drawable.black_history_icons, ButtonAssetsImage.blackHistoryPath),
+    BLACK_HISTORY(
+        "black_history",
+        R.drawable.black_history_icons,
+        ButtonAssetsImage.blackHistoryPath
+    ),
     UPDATE("update", R.drawable.icons8_update, ButtonAssetsImage.updatePingPath),
-    WHEEL("wheel", com.skydoves.colorpickerview.R.drawable.wheel, ButtonAssetsImage.wheelFillPath),
+    WHEEL("wheel", R.drawable.wheel_fill, ButtonAssetsImage.wheelFillPath),
 }

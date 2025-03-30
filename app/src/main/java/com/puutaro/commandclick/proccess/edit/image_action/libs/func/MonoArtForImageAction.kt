@@ -5,19 +5,17 @@ import android.graphics.Bitmap
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
-import java.io.File
 import kotlin.enums.EnumEntries
+import androidx.core.graphics.scale
 
 object MonoArtForImageAction {
 
@@ -1107,13 +1105,11 @@ object MonoArtForImageAction {
                                 it.width,
                                 it.height
                             )
-                            val shrinkBitmap = Bitmap.createScaledBitmap(
-                                it,
-                                (it.width * borderRate).toInt().let { if(it <= 0) 1 else it },
-                                (it.height * borderRate).toInt().let { if(it <= 0) 1 else it },
-                                true,
+                            val shrinkBitmap = it.scale(
+                                (it.width * borderRate).toInt().let { if (it <= 0) 1 else it },
+                                (it.height * borderRate).toInt().let { if (it <= 0) 1 else it },
                             )
-                            val grayBitmap = BitmapTool.ImageTransformer.convertGrayScaleBitmap(
+                            val grayBitmap = ColorTool.convertGrayScaleBitmap(
                                 shrinkBitmap
                             )
                             val invertedBitmap = BitmapTool.ImageTransformer.invertMonoBitmap(
@@ -1466,7 +1462,7 @@ object MonoArtForImageAction {
                     baseWidth,
                     baseHeight,
                 )?.let {
-                    BitmapTool.ImageTransformer.convertBlackToColor(
+                    ColorTool.convertBlackToColor(
                         it,
                         "#ffffff",
                     )
@@ -1603,7 +1599,7 @@ object MonoArtForImageAction {
 //            val halfBaseWidth = baseWidth / 2
             val baseHeight = baseBitmap.height
 //            val halfBaseHeight = baseHeight / 2
-            val grayBaseBitmap = BitmapTool.ImageTransformer.convertGrayScaleBitmap(
+            val grayBaseBitmap = ColorTool.convertGrayScaleBitmap(
                 baseBitmap
             )
             return withContext(Dispatchers.IO) {
@@ -1634,7 +1630,7 @@ object MonoArtForImageAction {
                                 it.height
                             )
 
-                            val shrinkBitmap = BitmapTool.ImageTransformer.cutCenter2(
+                            val shrinkBitmap = BitmapTool.ImageTransformer.cutCenter(
                                 it,
                                 (it.width * borderRate).toInt().let { if(it <= 0) 1 else it },
                                 (it.height * borderRate).toInt().let { if(it <= 0) 1 else it },

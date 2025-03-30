@@ -33,6 +33,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.BitmapTool.ImageTransformer
+import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -212,7 +213,7 @@ class GridJsDialogV2(
                     gradientRect,
                     180f
                 ).let {
-                    BitmapTool.ImageTransformer.ajustOpacity(
+                    ColorTool.ajustOpacity(
                         it,
                         200
                     )
@@ -322,7 +323,7 @@ class GridJsDialogV2(
                     )
                 }
                 val bkShibukiBitmapOpacity = withContext(Dispatchers.IO){
-                    BitmapTool.ImageTransformer.ajustOpacity(
+                    ColorTool.ajustOpacity(
                         bkShibukiBitmap,
                         50
                     )

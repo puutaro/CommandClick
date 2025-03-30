@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.util.str.ImageVarMarkTool
 import java.io.File
 
@@ -21,6 +20,154 @@ object FuncCheckerForSetting {
         FLOAT,
         BOOL,
         BITMAP,
+    }
+
+
+    object NumChecker {
+        enum class MinMaxCompare(
+            val compareStr: String
+        ) {
+            EQUAL("<="),
+            NOT_EQUAL("<"),
+        }
+        fun <T> minMaxTwoFloatErr(
+            minFloat: T,
+            maxFloat: T,
+            minMaxCompare: MinMaxCompare = MinMaxCompare.EQUAL,
+            minKey: String,
+            maxKey: String,
+            where: String,
+        ):
+                FuncCheckErr?
+                where T : Number, T : Comparable<T>
+        {
+            val isOk = when(minMaxCompare){
+                MinMaxCompare.EQUAL -> minFloat <= maxFloat
+                MinMaxCompare.NOT_EQUAL -> minFloat < maxFloat
+            }
+            if(
+                isOk
+                ) return null
+            val spanMinKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                minKey
+            )
+            val spanMaxKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                maxKey
+            )
+            val spanMinFloat = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                minFloat.toString()
+            )
+            val spanMaxFloat = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                maxFloat.toString()
+            )
+            val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errBrown,
+                where
+            )
+            return FuncCheckErr(
+                "Must be ${spanMinKey}(${spanMinFloat}) ${minMaxCompare.compareStr} ${spanMaxKey}(${spanMaxFloat}): ${spanWhere}"
+            )
+        }
+        enum class CompareSignal(
+            val compareStr: String
+        ) {
+            EQUAL("=="),
+            LARGER(">"),
+            EQUAL_LARGER(">="),
+            SMALLER("<"),
+            EQUAL_SMALLER("<="),
+        }
+        fun <T> compare(
+            baseFloat: T,
+            compareSignal: CompareSignal,
+            compareFloat: T,
+            compareKey: String,
+            where: String,
+        ):
+                FuncCheckErr? where T : Number, T : Comparable<T>
+        {
+            val isOk = when(compareSignal){
+                CompareSignal.EQUAL -> compareFloat == baseFloat
+                CompareSignal.LARGER -> compareFloat > baseFloat
+                CompareSignal.EQUAL_LARGER -> compareFloat >= baseFloat
+                CompareSignal.SMALLER -> compareFloat < baseFloat
+                CompareSignal.EQUAL_SMALLER -> compareFloat <= baseFloat
+            }
+            if(
+                isOk
+            ) return null
+            val spanCompareKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                compareKey
+            )
+            val spanComareFloat = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                compareFloat.toString()
+            )
+            val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errBrown,
+                where
+            )
+            return FuncCheckErr(
+                "Must be ${spanCompareKey}(${spanComareFloat}) ${compareSignal.compareStr} ${baseFloat}): ${spanWhere}"
+            )
+        }
+        enum class RangeCompareSignal(
+            val minCompareStr: String,
+            val maxCompareStr: String,
+        ) {
+            EQUAL("<=", "<="),
+            MIN_EQUAL("<=", "<"),
+            MAX_EQUAL("<", "<="),
+            NOT_EQUAL("<", "<"),
+        }
+        fun <T> range (
+            minBaseFloat: T,
+            maxBaseFloat: T,
+            rangeCompareSignal: RangeCompareSignal,
+            compareFloat: T,
+            compareKey: String,
+            where: String,
+        ): FuncCheckErr?
+                where T : Number, T : Comparable<T>
+        {
+            val isOk = when(rangeCompareSignal){
+                RangeCompareSignal.EQUAL
+                    -> minBaseFloat <= compareFloat
+                        && compareFloat <= maxBaseFloat
+                RangeCompareSignal.MIN_EQUAL
+                    -> minBaseFloat <= compareFloat
+                        && compareFloat < maxBaseFloat
+                RangeCompareSignal.MAX_EQUAL
+                    -> minBaseFloat < compareFloat
+                        && compareFloat <= maxBaseFloat
+                RangeCompareSignal.NOT_EQUAL
+                    -> minBaseFloat < compareFloat
+                        && compareFloat < maxBaseFloat
+            }
+            if(
+                isOk
+            ) return null
+            val spanCompareKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                compareKey
+            )
+            val spanCompareFloat = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errRedCode,
+                compareFloat.toString()
+            )
+            val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                CheckTool.errBrown,
+                where
+            )
+            return FuncCheckErr(
+                "${spanCompareKey}(${spanCompareFloat}) must be ${minBaseFloat} ${rangeCompareSignal.minCompareStr} ~ ${rangeCompareSignal.maxCompareStr} ${maxBaseFloat}: ${spanWhere}"
+            )
+        }
     }
 
     object WhereManager {

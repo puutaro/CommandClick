@@ -49,68 +49,6 @@ object LineArt {
         }
         return pathDataList
     }
-//
-//    fun getPathFromVectorDrawable(context: Context, drawableId: Int): Path? {
-//        val drawable =
-//            VectorDrawableCompat.create(context.resources, drawableId, context.theme)
-//                ?: return null
-//
-//        val pathData = drawable.pathData ?: return null  // Use safe call operator
-//        return PathParser.createPathFromPathData(pathData)
-//    }
-//    fun getPathFromBitmap(bitmap: Bitmap): Path {
-//        val mat = Mat()
-//        Utils.bitmapToMat(bitmap, mat)
-//
-//        val grayMat = Mat()
-//        Imgproc.cvtColor(mat, grayMat, Imgproc.COLOR_RGBA2GRAY)
-//
-//        val edges = Mat()
-//        Imgproc.Canny(grayMat, edges, 100.0, 200.0) // 輪郭検出
-//
-//        val contours = mutableListOf<org.opencv.core.MatOfPoint>()
-//        Imgproc.findContours(edges, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
-//
-//        val path = Path()
-//        for (contour in contours) {
-//            val points = contour.toArray()
-//            path.moveTo(points[0].x.toFloat(), points[0].y.toFloat())
-//            for (i in 1 until points.size) {
-//                path.lineTo(points[i].x.toFloat(), points[i].y.toFloat())
-//            }
-//            path.close()
-//        }
-//
-//        return path
-//    }
-
-//    fun vectorResourceToPath(context: Context, resourceId: Int): Path {
-//        val vectorDrawable = VectorDrawableCompat.create(context.resources, R.drawable.your_vector_drawable, null)
-//
-//
-//        val path = Path()
-//        if (pathData != null) {
-//            path.set(pathData)
-//        }
-//
-//        return path
-//    }
-//    fun createPathFromSVGRes(
-//        context: Context,
-//        pathData: String
-//    ): Path {
-//        val drawable = context.resources.getDrawable(drawableId, context.theme) as? VectorDrawable
-//            ?: return null
-//        val pathData = drawable ?: return null
-//
-//        return PathParser.createPathFromPathData(pathData)
-////        val drawable = AnimatedVectorDrawableCompat.create(context, CmdClickIcons.GOOGLE.id)
-////        val drawable = context.resources.getDrawable(CmdClickIcons.GOOGLE.id, context.theme) as? VectorDrawable
-////        val vectorDrawable = drawable as? VectorDrawableCompat
-////        val pathData = vectorDrawable?.pathData
-////
-////        return drawable.path
-//    }
 
     fun convertStrToPath(pathDataStr: String): Path {
         val pathData = PathParser.createPathFromPathData(pathDataStr)
