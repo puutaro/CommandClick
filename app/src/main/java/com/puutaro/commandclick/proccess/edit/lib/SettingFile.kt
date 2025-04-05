@@ -325,33 +325,27 @@ object SettingFile {
                             else -> break
                         }
                     }
+                    continue
                 }
-                else -> {
+                ' ', '　', '\t' -> {
                     val plusIndexZero = 0
                     var plusIndex = plusIndexZero
-                    if(
-                        currentChar == ' '
-                        || currentChar == '　'
-                        || currentChar == '\t'
-                    ) {
-//                        var seed = 1
-                        while (true) {
-                            val nextChar = input[index + plusIndex + 1]
-                            when (nextChar) {
-                                ' ', '　', '\t' -> {
-                                    plusIndex++
-                                    continue
-                                }
+                    while (true) {
+                        val nextChar = input[index + plusIndex + 1]
+                        when (nextChar) {
+                            ' ', '　', '\t' -> {
+                                plusIndex++
+                                continue
+                            }
 
-                                '\n' -> {
-                                    plusIndex++
-                                    break
-                                }
+                            '\n' -> {
+                                plusIndex++
+                                break
+                            }
 
-                                else -> {
-                                    plusIndex = plusIndexZero
-                                    break
-                                }
+                            else -> {
+                                plusIndex = plusIndexZero
+                                break
                             }
                         }
                     }
@@ -360,11 +354,12 @@ object SettingFile {
                         lastCharWasNewline = false
                         continue
                     }
-                    result.append(currentChar)
-                    index++
-                    lastCharWasNewline = false
                 }
+                else -> {}
             }
+            result.append(currentChar)
+            index++
+            lastCharWasNewline = false
         }
 
         return result.toString()
