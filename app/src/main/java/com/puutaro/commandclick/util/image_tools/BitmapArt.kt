@@ -509,22 +509,22 @@ object BitmapArt {
                                scalePeaceBitmapList.random(),
 //                                peaceBitmapListSwap.random(),
                             )
-                            if(timeIndex == 0) {
-                                FileSystems.writeFromByteArray(
-                                    File(
-                                        UsePath.cmdclickDefaultAppDirPath,
-                                        "lcutbitmap.png"
-                                    ).absolutePath,
-                                    BitmapTool.convertBitmapToByteArray(it)
-                                )
-                                FileSystems.writeFromByteArray(
-                                    File(
-                                        UsePath.cmdclickDefaultAppDirPath,
-                                        "lmaskbitmap.png"
-                                    ).absolutePath,
-                                    BitmapTool.convertBitmapToByteArray(maskBitmap)
-                                )
-                            }
+//                            if(timeIndex == 0) {
+//                                FileSystems.writeFromByteArray(
+//                                    File(
+//                                        UsePath.cmdclickDefaultAppDirPath,
+//                                        "lcutbitmap.png"
+//                                    ).absolutePath,
+//                                    BitmapTool.convertBitmapToByteArray(it)
+//                                )
+//                                FileSystems.writeFromByteArray(
+//                                    File(
+//                                        UsePath.cmdclickDefaultAppDirPath,
+//                                        "lmaskbitmap.png"
+//                                    ).absolutePath,
+//                                    BitmapTool.convertBitmapToByteArray(maskBitmap)
+//                                )
+//                            }
                             maskBitmap
 //                                BitmapTool.ImageTransformer.overlayBitmap(
 //                                it,

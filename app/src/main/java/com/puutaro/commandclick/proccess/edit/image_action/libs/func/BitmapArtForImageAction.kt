@@ -654,12 +654,12 @@ object BitmapArtForImageAction {
                     args.colorListKeyToDefaultValueStr,
                     where
                 ).let { colorListConToErr ->
-                    FileSystems.updateFile(
-                        File(UsePath.cmdclickDefaultAppDirPath, "lrectPuzzle.txt").absolutePath,
-                        listOf(
-                            "colorListConToErr: ${colorListConToErr.first}"
-                        ).joinToString("\n")
-                    )
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lrectPuzzle.txt").absolutePath,
+//                        listOf(
+//                            "colorListConToErr: ${colorListConToErr.first}"
+//                        ).joinToString("\n")
+//                    )
                     val funcErr = colorListConToErr.second
                         ?: return@let colorListConToErr.first
                     return Pair(

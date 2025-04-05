@@ -327,6 +327,39 @@ object SettingFile {
                     }
                 }
                 else -> {
+                    val plusIndexZero = 0
+                    var plusIndex = plusIndexZero
+                    if(
+                        currentChar == ' '
+                        || currentChar == '　'
+                        || currentChar == '\t'
+                    ) {
+//                        var seed = 1
+                        while (true) {
+                            val nextChar = input[index + plusIndex + 1]
+                            when (nextChar) {
+                                ' ', '　', '\t' -> {
+                                    plusIndex++
+                                    continue
+                                }
+
+                                '\n' -> {
+                                    plusIndex++
+                                    break
+                                }
+
+                                else -> {
+                                    plusIndex = plusIndexZero
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    if(plusIndex > plusIndexZero){
+                        index += plusIndex
+                        lastCharWasNewline = false
+                        continue
+                    }
                     result.append(currentChar)
                     index++
                     lastCharWasNewline = false
