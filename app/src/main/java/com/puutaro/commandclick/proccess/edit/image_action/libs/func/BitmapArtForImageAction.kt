@@ -219,7 +219,20 @@ object BitmapArtForImageAction {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByName(
+                val bkBitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByName(
+                    mapArgMapList,
+                    args.bkBitmapKeyToDefaultValueStr,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapStrToErr ->
+                    val funcErr = bitmapStrToErr.second
+                        ?: return@let bitmapStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+               FuncCheckerForSetting.Getter.getBitmapFromArgMapByName(
                     mapArgMapList,
                     args.bitmapKeyToDefaultValueStr,
                     varNameToBitmapMap,
@@ -232,28 +245,56 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
-                    mapArgMapList,
-                    args.pieceKeyToDefaultValueStr,
-                    where
-                ).let { pieceToErr ->
-                    val funcErr = pieceToErr.second
-                        ?: return@let pieceToErr.first
-                    return Pair(
+                val bitmapKeyName = args.bitmapKeyToDefaultValueStr.first
+                val bitmapToErrList = argsPairList.filter {
+                    (argName, _) ->
+                    argName == bitmapKeyName
+                }.map {
+                    (argName, valueStr) ->
+                    FuncCheckerForSetting.Getter.getBitmapArg(
+                        argName,
+                        valueStr,
                         null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to funcErr
+                        null,
+                        varNameToBitmapMap,
+                        where
+                    )
                 }
-                val pieceMapList =
-                    argsPairList.filter {
-                            (argName, _) ->
-                        argName == args.pieceKeyToDefaultValueStr.first
-                    }.map {
-                            argNameToValueStr ->
-                        BitmapPieceManager.makePieceMap(
-                            listOf(argNameToValueStr)
-                        )
+                                bitmapToErrList.forEach { (_, err) ->
+                    if (err != null) {
+                        return Pair(
+                            null,
+                            ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                        ) to err
                     }
+                }
+                val bitmapList = bitmapToErrList.filter{
+                    it.first != null
+                }.map {
+                    it.first as Bitmap
+                }
+//                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+//                    mapArgMapList,
+//                    args.pieceKeyToDefaultValueStr,
+//                    where
+//                ).let { pieceToErr ->
+//                    val funcErr = pieceToErr.second
+//                        ?: return@let pieceToErr.first
+//                    return Pair(
+//                        null,
+//                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+//                    ) to funcErr
+//                }
+//                val pieceMapList =
+//                    argsPairList.filter {
+//                            (argName, _) ->
+//                        argName == args.pieceKeyToDefaultValueStr.first
+//                    }.map {
+//                            argNameToValueStr ->
+//                        BitmapPieceManager.makePieceMap(
+//                            listOf(argNameToValueStr)
+//                        )
+//                    }
                 val rate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
                     args.rateKeyToDefaultValueStr,
@@ -438,8 +479,8 @@ object BitmapArtForImageAction {
                 }
                 val returnBitmap = InnerBitmapArt.bitmapPuzzle(
                     context,
-                    bitmap,
-                    pieceMapList,
+                    bkBitmap,
+                    bitmapList,
                     rate,
                     times,
                     minOpacityRate,
@@ -612,9 +653,15 @@ object BitmapArtForImageAction {
                     mapArgMapList,
                     args.colorListKeyToDefaultValueStr,
                     where
-                ).let { widthToErr ->
-                    val funcErr = widthToErr.second
-                        ?: return@let widthToErr.first
+                ).let { colorListConToErr ->
+                    FileSystems.updateFile(
+                        File(UsePath.cmdclickDefaultAppDirPath, "lrectPuzzle.txt").absolutePath,
+                        listOf(
+                            "colorListConToErr: ${colorListConToErr.first}"
+                        ).joinToString("\n")
+                    )
+                    val funcErr = colorListConToErr.second
+                        ?: return@let colorListConToErr.first
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
@@ -2187,7 +2234,8 @@ object BitmapArtForImageAction {
         suspend fun bitmapPuzzle(
             context: Context,
             bitmap: Bitmap,
-            pieceMapList: List<Map<String, String>?>,
+            bitmapList: List<Bitmap>,
+//            pieceMapList: List<Map<String, String>?>,
             rate: Float,
             times: Int,
             minOpacityRate: Float,
@@ -2201,58 +2249,59 @@ object BitmapArtForImageAction {
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                val scaledBitmapList = let scaleBitmapList@{
-                    pieceMapList.asSequence().map { pieceMap ->
-                        val icon = BitmapPieceManager.getIcon(
-                            pieceMap ?: emptyMap(),
-                        )
-                        val width = BitmapPieceManager.getWidth(
-                            pieceMap ?: emptyMap(),
-                        )
-                        val height = BitmapPieceManager.getHeight(
-                            pieceMap ?: emptyMap(),
-                        )
-//                        FileSystems.updateFile(
-//                            File(UsePath.cmdclickDefaultAppDirPath, "lBitmapPuzzle.txt").absolutePath,
-//                            listOf(
-//                                "pieceMap: ${pieceMap}",
-//                                "icon: ${icon.str}",
-//                            ).joinToString("\n")
+//                val scaledBitmapList = let scaleBitmapList@{
+//                    pieceMapList.asSequence().map { pieceMap ->
+//                        val icon = BitmapPieceManager.getIcon(
+//                            pieceMap ?: emptyMap(),
 //                        )
-                        val srcPieceBitmap = AppCompatResources.getDrawable(
-                            context,
-                            icon.id,
-                        )?.let {
-                            if (
-                                width != null
-                                && height != null
-                            ) {
-                                return@let it.toBitmap(
-                                    width,
-                                    height,
-                                )
-                            }
-                            it.toBitmap()
-                        } ?: return@map null
-                        val pieceRotate = BitmapPieceManager.getRotate(
-                            pieceMap ?: emptyMap(),
-                        )
-                        if (
-                            pieceRotate == 0f
-                        ) return@map srcPieceBitmap
-                        BitmapTool.rotate(
-                            srcPieceBitmap,
-                            pieceRotate,
-                        )
-                    }.filter {
-                        it != null
-                    }.map {
-                        it as Bitmap
-                    }
-                }.toList()
+//                        val width = BitmapPieceManager.getWidth(
+//                            pieceMap ?: emptyMap(),
+//                        )
+//                        val height = BitmapPieceManager.getHeight(
+//                            pieceMap ?: emptyMap(),
+//                        )
+////                        FileSystems.updateFile(
+////                            File(UsePath.cmdclickDefaultAppDirPath, "lBitmapPuzzle.txt").absolutePath,
+////                            listOf(
+////                                "pieceMap: ${pieceMap}",
+////                                "icon: ${icon.str}",
+////                            ).joinToString("\n")
+////                        )
+//                        val srcPieceBitmap = AppCompatResources.getDrawable(
+//                            context,
+//                            icon.id,
+//                        )?.let {
+//                            if (
+//                                width != null
+//                                && height != null
+//                            ) {
+//                                return@let it.toBitmap(
+//                                    width,
+//                                    height,
+//                                )
+//                            }
+//                            it.toBitmap()
+//                        } ?: return@map null
+//                        val pieceRotate = BitmapPieceManager.getRotate(
+//                            pieceMap ?: emptyMap(),
+//                        )
+//                        if (
+//                            pieceRotate == 0f
+//                        ) return@map srcPieceBitmap
+//                        BitmapTool.rotate(
+//                            srcPieceBitmap,
+//                            pieceRotate,
+//                        )
+//                    }.filter {
+//                        it != null
+//                    }.map {
+//                        it as Bitmap
+//                    }
+//                }.toList()
                 BitmapArt.bitmapPuzzle(
                     bitmap,
-                    scaledBitmapList,
+                    bitmapList,
+//                    scaledBitmapList,
                     rate,
                     minOpacityRate,
                     maxOpacityRate,
@@ -2600,14 +2649,18 @@ object BitmapArtForImageAction {
         }
         data object BitmapPuzzleArgs : BitmapArtMethodArgClass(), ArgType {
             override val entries = BitmapPuzzleEnumArgs.entries
+            val bkBitmapKeyToDefaultValueStr = Pair(
+                BitmapPuzzleEnumArgs.BK_BITMAP.key,
+                BitmapPuzzleEnumArgs.BK_BITMAP.defaultValueStr,
+            )
             val bitmapKeyToDefaultValueStr = Pair(
                 BitmapPuzzleEnumArgs.BITMAP.key,
                 BitmapPuzzleEnumArgs.BITMAP.defaultValueStr,
             )
-            val pieceKeyToDefaultValueStr = Pair(
-                BitmapPuzzleEnumArgs.PIECE.key,
-                BitmapPuzzleEnumArgs.PIECE.defaultValueStr
-            )
+//            val pieceKeyToDefaultValueStr = Pair(
+//                BitmapPuzzleEnumArgs.PIECE.key,
+//                BitmapPuzzleEnumArgs.PIECE.defaultValueStr
+//            )
             val rateKeyToDefaultValueStr = Pair(
                 BitmapPuzzleEnumArgs.RATE.key,
                 BitmapPuzzleEnumArgs.RATE.defaultValueStr
@@ -2653,8 +2706,9 @@ object BitmapArtForImageAction {
                 val defaultValueStr: String?,
                 val type: FuncCheckerForSetting.ArgType,
             ){
+                BK_BITMAP("bkBitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
                 BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
-                PIECE("piece", null, FuncCheckerForSetting.ArgType.STRING),
+//                PIECE("piece", null, FuncCheckerForSetting.ArgType.STRING),
                 RATE("rate", (0.9).toString(), FuncCheckerForSetting.ArgType.FLOAT),
                 TIMES("times", 1000.toString(), FuncCheckerForSetting.ArgType.INT),
                 MIN_OPACITY_RATE(

@@ -442,9 +442,10 @@ object BitmapArt {
         val cutHeight = (baseHeight * shakeRate).toInt()
         val scalePeaceBitmapList = peaceBitmapListSrc.map {
             it.scale(cutWidth, cutHeight)
-        }.map {
-            ColorTool.maxAlpha(it)
         }
+//       .map {
+//            ColorTool.maxAlpha(it)
+//        }
 //        val blackRepColor = "#ff0989"
 //        val peaceBitmapListSwap = scalePeaceBitmapList.map {
 //            ColorTool.swapTransparentAndBlack(
@@ -470,6 +471,7 @@ object BitmapArt {
 //        )
         val xYPairToBitmapList = withContext(Dispatchers.IO) {
             val xYPairToBitmapListJob = (0..times).map {
+                timeIndex ->
                 async {
                     val offsetX = try {
                         (1..baseWidth - cutWidth).random()
@@ -502,11 +504,28 @@ object BitmapArt {
                             offsetX,
                             offsetY,
                         ).let {
-                            BitmapTool.ImageTransformer.maskImageByTransparent(
+                            val maskBitmap = BitmapTool.ImageTransformer.mask(
                                 it,
                                scalePeaceBitmapList.random(),
 //                                peaceBitmapListSwap.random(),
                             )
+                            if(timeIndex == 0) {
+                                FileSystems.writeFromByteArray(
+                                    File(
+                                        UsePath.cmdclickDefaultAppDirPath,
+                                        "lcutbitmap.png"
+                                    ).absolutePath,
+                                    BitmapTool.convertBitmapToByteArray(it)
+                                )
+                                FileSystems.writeFromByteArray(
+                                    File(
+                                        UsePath.cmdclickDefaultAppDirPath,
+                                        "lmaskbitmap.png"
+                                    ).absolutePath,
+                                    BitmapTool.convertBitmapToByteArray(maskBitmap)
+                                )
+                            }
+                            maskBitmap
 //                                BitmapTool.ImageTransformer.overlayBitmap(
 //                                it,
 //                                peaceBitmapListSwap.random(),

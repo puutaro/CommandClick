@@ -2,10 +2,13 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CheckTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.ColorTool
+import java.io.File
 import kotlin.enums.EnumEntries
 
 object ColorForSetting {
@@ -431,6 +434,104 @@ object ColorForSetting {
                     null
                 ) to null
             }
+            is ColorMethodArgClass.ClosestColorArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val colorKey = args.colorStrListKeyToIndex.first
+                val colorStrList = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
+                    mapArgMapList,
+                    args.colorStrListKeyToIndex,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                        colorStrListStr ->
+                    val colorListSrc = colorStrListStr.split(",").filter {
+                        it.trim().isNotEmpty()
+                    }
+//                    FileSystems.updateFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "lcolorClosest00.txt").absolutePath,
+//                        listOf(
+//                            "colorStrList: AA${colorListSrc.joinToString("--")}",
+//                        ).joinToString("\n")
+//                    )
+                    colorListSrc.forEach {
+                        colorStr ->
+//                        FileSystems.updateFile(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "lcolorClosestLoop.txt").absolutePath,
+//                            listOf(
+//                                "colorStr: AA${colorStr}--",
+//                            ).joinToString("\n")
+//                        )
+                        ColorTool.parseColorStr(
+                            context,
+                            colorStr,
+                            colorKey,
+                            where,
+                        )
+                    }
+                    colorListSrc
+                }
+                val targetColorStr = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
+                    mapArgMapList,
+                    args.targetColorStrKeyToIndex,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                        colorStr ->
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        args.targetColorStrKeyToIndex.first,
+                        where,
+                    )
+                }
+//               FileSystems.updateFile(
+//                   File(UsePath.cmdclickDefaultAppDirPath, "lcolorClosest.txt").absolutePath,
+//                   listOf(
+//                       "colorStrList: ${colorStrList}",
+//                       "closestColo: ${ColorTool.ClosestColor.findClosestColor(
+//                           colorStrList,
+//                           targetColorStr,
+//                       )}",
+//                       "targetColorStr: ${targetColorStr}"
+//                   ).joinToString("\n")
+//               )
+                Pair(
+                    ColorTool.ClosestColor.findClosestColor(
+                        colorStrList,
+                        targetColorStr,
+                    )?.trim(),
+                    null
+                ) to null
+            }
         }
     }
 
@@ -443,7 +544,7 @@ object ColorForSetting {
         AV_TWO("avTwo", ColorMethodArgClass.AvTwoArgs),
         WEIGHT_AV_TWO("weightAvTwo", ColorMethodArgClass.WeightAvTwoArgs),
         VIVID("vivid", ColorMethodArgClass.VividArgs),
-
+        CLOSEST("closest", ColorMethodArgClass.ClosestColorArgs)
     }
 
     private sealed interface ArgType {
@@ -552,6 +653,27 @@ object ColorForSetting {
             ){
                 COLOR_STR("colorStr", 0, FuncCheckerForSetting.ArgType.STRING),
                 RATE("rate", 1, FuncCheckerForSetting.ArgType.FLOAT),
+            }
+        }
+
+        data object ClosestColorArgs : ColorMethodArgClass(), ArgType {
+            override val entries = VividEnumArgs.entries
+
+            val colorStrListKeyToIndex = Pair(
+                VividEnumArgs.COLOR_STR.key,
+                VividEnumArgs.COLOR_STR.index,
+            )
+            val targetColorStrKeyToIndex = Pair(
+                VividEnumArgs.TARGET_COLOR_STR.key,
+                VividEnumArgs.TARGET_COLOR_STR.index,
+            )
+            enum class VividEnumArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                COLOR_STR("colorStr", 0, FuncCheckerForSetting.ArgType.STRING),
+                TARGET_COLOR_STR("targetColorStr", 1, FuncCheckerForSetting.ArgType.STRING),
             }
         }
     }

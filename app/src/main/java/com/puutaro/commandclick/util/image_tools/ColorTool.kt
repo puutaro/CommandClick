@@ -236,7 +236,93 @@ object ColorTool {
 
         return Color.rgb(averageRed, averageGreen, averageBlue)
     }
+    object ClosestColor {
+        /**
+         * 16進数文字列のリストから、指定された16進数文字列に最も近い色の16進数文字列を取得します。
+         *
+         * @param hexStringList 16進数文字列のリスト (例: ["#ffffff", "#000000", "#ff0000"])
+         * @param targetHexString 比較対象の16進数文字列 (例: "#808080")
+         * @return 最も近い色の16進数文字列。リストが空の場合はnullを返します。
+         */
+        fun findClosestColor(
+            hexStringList: List<String>,
+            targetHexString: String
+        ): String? {
+            if (hexStringList.isEmpty()) {
+                return null
+            }
 
+            // ターゲットの16進数文字列をRGBに変換
+            val targetRgb = hexStringToRgb(
+                removeAlpha(
+                    targetHexString
+                )
+            )
+            if (targetRgb == null) {
+                return null // 無効な16進数文字列
+            }
+
+            var closestColor = hexStringList[0]
+            var minDistance = calculateColorDistance(targetRgb, hexStringToRgb(closestColor)
+                ?: Triple(0, 0, 0))
+
+            // リスト内の各色との距離を計算し、最も近い色を更新
+            for (hexStringSrc in hexStringList) {
+                val hexString = removeAlpha(hexStringSrc)
+                val rgb = hexStringToRgb(hexString) ?: continue // 無効な16進数文字列はスキップ
+                val distance = calculateColorDistance(targetRgb, rgb)
+                if (distance < minDistance) {
+                    minDistance = distance
+                    closestColor = hexString
+                }
+            }
+
+            return closestColor
+        }
+
+        /**
+         * 16進数文字列をRGBのTripleに変換します。
+         *
+         * @param hexString 16進数文字列 (例: "#ffffff")
+         * @return RGBのTriple (例: (255, 255, 255))。無効な場合はnullを返します。
+         */
+        private fun hexStringToRgb(hexString: String): Triple<Int, Int, Int>? {
+            if (hexString.length != 7 || hexString[0] != '#') {
+                return null // 無効な16進数文字列
+            }
+
+            return try {
+                val r = hexString.substring(1, 3).toInt(16)
+                val g = hexString.substring(3, 5).toInt(16)
+                val b = hexString.substring(5, 7).toInt(16)
+                Triple(r, g, b)
+            } catch (e: NumberFormatException) {
+                null // パースエラー
+            }
+        }
+
+        /**
+         * 2つのRGB色間の距離を計算します (ユークリッド距離)。
+         *
+         * @param rgb1 RGBのTriple
+         * @param rgb2 RGBのTriple
+         * @return 2つの色間の距離
+         */
+        private fun calculateColorDistance(rgb1: Triple<Int, Int, Int>, rgb2: Triple<Int, Int, Int>): Double {
+            val rDiff = rgb1.first - rgb2.first
+            val gDiff = rgb1.second - rgb2.second
+            val bDiff = rgb1.third - rgb2.third
+            return Math.sqrt((rDiff * rDiff + gDiff * gDiff + bDiff * bDiff).toDouble())
+        }
+
+        fun main() {
+            val colors = listOf("#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff", "#808080")
+            val targetColor = "#7f7f7f"
+
+            val closestColor = findClosestColor(colors, targetColor)
+            println("Closest color to $targetColor is $closestColor") // 出力例: Closest color to #7f7f7f is #808080
+        }
+    }
 
     fun colorToHexString(color: Int): String {
         val alpha = Color.alpha(color)
