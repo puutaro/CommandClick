@@ -16,6 +16,8 @@ import androidx.core.graphics.createBitmap
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
+import kotlin.math.abs
+import kotlin.math.sqrt
 
 object BitmapArt {
 
@@ -251,6 +253,180 @@ object BitmapArt {
         return combinedBitmap
     }
 
+
+    suspend fun rectPuzzleAjustSize(
+        srcBitmap: Bitmap,
+        shakeRate: Float,
+        minOpacityRate: Float,
+        maxOpacityRate: Float,
+        opacityIncline: Float,
+        opacityOffset: Float,
+        sizeCenterX: Int,
+        sizeCenterY: Int,
+        sizeIncline: Float,
+        sizeOffset: Float,
+        colorList: List<String>,
+        passionColorList: List<String>,
+        passionInt: Int,
+        times: Int,
+        isOverlay: Boolean
+    ): Bitmap {
+        val baseWidth = srcBitmap.width
+        val baseHeight = srcBitmap.height
+        val baseCutWidth = (baseWidth * shakeRate).toInt()
+        val baseCutHeight = (baseHeight * shakeRate).toInt()
+        val sizeRatioTotal = (baseWidth + baseHeight).toFloat()
+        val widthRatio = baseWidth / sizeRatioTotal
+        val heightRatio = baseHeight / sizeRatioTotal
+        val xYPairToBitmapList = withContext(Dispatchers.IO) {
+            val xYPairToBitmapListJob = (0..times).map {
+                async {
+
+                    val offsetX = try {
+                        (1..baseWidth - baseCutWidth).random()
+                    } catch (e: Exception) {
+                        0
+                    }
+                    val offsetY = try {
+                        (1..baseHeight - baseCutHeight).random()
+                    } catch (e: Exception) {
+                        0
+                    }
+                    val distance = calculateDistance(
+                        sizeCenterX.toFloat(),
+                        sizeCenterY.toFloat(),
+                        offsetX.toFloat(),
+                        offsetY.toFloat(),
+                    )
+                    val cutWidth = let {
+                        sizeIncline * abs(distance) * widthRatio +
+                                (baseCutWidth + sizeOffset * widthRatio)
+                    }.toInt().let {
+                        when(true){
+                            (it + offsetX > baseWidth) -> baseWidth - offsetX
+                            (it <= 0) -> 1
+                            else -> it
+                        }
+                    }
+                    val cutHeight = let {
+                        sizeIncline * abs(distance) * heightRatio +
+                                (baseCutHeight + sizeOffset * heightRatio)
+                    }.toInt().let {
+                        when(true){
+                            (it + offsetY > baseHeight) -> baseHeight - offsetY
+                            (it <= 0) -> 1
+                            else -> it
+                        }
+                    }
+//                    FileSystems.writeFile(
+//                        File(UsePath.cmdclickDefaultSDebugAppDirPath, "lect${it}.txt").absolutePath,
+//                        listOf(
+//                            "offsetX: $offsetX",
+//                            "offsetY: $offsetY",
+//                            "distance: $distance",
+//                            "baseCutWidth: $baseCutWidth",
+//                            "baseCutHeight: ${baseCutHeight}",
+//                            "cutWidth: $cutWidth",
+//                            "cutHeight: ${cutHeight}",
+//                           "sizeIncline: ${sizeIncline}",
+//                            "sizeOffset: ${sizeOffset}",
+//                            "widthRatio: ${widthRatio}",
+//                            "${sizeIncline * abs(distance) * widthRatio +
+//                                (baseCutWidth + sizeOffset * widthRatio)
+//                        }"
+//                        ).joinToString("\n")
+//                    )
+                    val cutBitmap = when(
+                        (0..passionInt).random() == 1
+                                && passionColorList.isNotEmpty()
+                    ) {
+                        true -> BitmapTool.ImageTransformer.makeRect(
+                            "#000000",
+                            cutWidth,
+                            cutHeight,
+                        ).let {
+                            val colorStr = passionColorList.random()
+                            if(
+                                colorStr.toColorInt() == Color.BLACK
+                            ) return@let it
+                            ColorTool.convertBlackToColor(
+                                it,
+                                colorList.random(),
+                            )
+                        }
+                        else -> BitmapTool.ImageTransformer.cutByTarget(
+                            srcBitmap,
+                            cutWidth,
+                            cutHeight,
+                            offsetX,
+                            offsetY,
+                        ).let {
+                            val colorStr = colorList.random()
+                            if(
+                                colorStr.toColorInt() == Color.BLACK
+                            ) return@let it
+                            ColorTool.convertBlackToColor(
+                                it,
+                                colorList.random(),
+                            )
+                        }
+                    }.let remake@ {
+                        val opacity = RateTool.randomByRate(
+                            254f,
+                            minOpacityRate,
+                            maxOpacityRate,
+                        ).let {
+                                opacitySrc ->
+                            opacityIncline * offsetX + (opacitySrc + opacityOffset)
+                        }.toInt().let {
+                            if(it <= 0) return@let 5
+                            it
+                        }
+                        ColorTool.ajustOpacity(
+                            it,
+                            opacity
+                        )
+                    }
+                    Pair(
+                        offsetX.toFloat(),
+                        offsetY.toFloat()
+                    ) to cutBitmap
+                }
+            }
+            xYPairToBitmapListJob.awaitAll()
+        }
+        var resultBitmap: Bitmap = when(isOverlay) {
+            true -> srcBitmap.copy(
+                Bitmap.Config.ARGB_8888,
+                true
+            )
+            else -> BitmapTool.ImageTransformer.makeRect(
+                "#00000000",
+                baseWidth,
+                baseHeight,
+            )
+        }
+        xYPairToBitmapList.forEach {
+                (xyPair, cutBitmap) ->
+            resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                resultBitmap,
+                cutBitmap,
+                xyPair.first,
+                xyPair.second
+            )
+        }
+        return resultBitmap
+    }
+    private fun calculateDistance(
+        x1: Float,
+        y1: Float,
+        x2: Float,
+        y2: Float,
+    ): Float {
+        val dx = x2 - x1
+        val dy = y2 - y1
+        return sqrt(dx * dx + dy * dy)
+    }
     suspend fun rectPuzzle(
         srcBitmap: Bitmap,
         shakeRate: Float,
@@ -430,6 +606,10 @@ object BitmapArt {
         maxOpacityRate: Float,
         opacityIncline: Float,
         opacityOffset: Float,
+        sizeCenterX: Int,
+        sizeCenterY: Int,
+        sizeIncline: Float,
+        sizeOffset: Float,
         colorList: List<String>,
         passionColorList: List<String>,
         passionInt: Int,
@@ -438,50 +618,53 @@ object BitmapArt {
     ): Bitmap {
         val baseWidth = srcBitmap.width
         val baseHeight = srcBitmap.height
-        val cutWidth = (baseWidth * shakeRate).toInt()
-        val cutHeight = (baseHeight * shakeRate).toInt()
+        val baseCutWidth = (baseWidth * shakeRate).toInt()
+        val baseCutHeight = (baseHeight * shakeRate).toInt()
+        val sizeRatioTotal = (baseWidth + baseHeight).toFloat()
+        val widthRatio = baseWidth / sizeRatioTotal
+        val heightRatio = baseHeight / sizeRatioTotal
         val scalePeaceBitmapList = peaceBitmapListSrc.map {
-            it.scale(cutWidth, cutHeight)
+            it.scale(baseCutWidth, baseCutHeight)
         }
-//       .map {
-//            ColorTool.maxAlpha(it)
-//        }
-//        val blackRepColor = "#ff0989"
-//        val peaceBitmapListSwap = scalePeaceBitmapList.map {
-//            ColorTool.swapTransparentAndBlack(
-//                it
-//            ).let {
-//                ColorTool.maxAlpha(
-//                    it
-//                )
-////                ColorTool.convertBlackToColor(
-////                    it,
-////                    blackRepColor
-////                )
-//            }
-//        }
-//         FileSystems.writeFromByteArray(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lpeaceClipbitmap.png").absolutePath,
-//            BitmapTool.convertBitmapToByteArray(peaceBitmapListSrc.first())
-//        )
-
-//        FileSystems.writeFromByteArray(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lclipbitmap.png").absolutePath,
-//            BitmapTool.convertBitmapToByteArray(scalePeaceBitmapList.first())
-//        )
         val xYPairToBitmapList = withContext(Dispatchers.IO) {
             val xYPairToBitmapListJob = (0..times).map {
                 timeIndex ->
                 async {
                     val offsetX = try {
-                        (1..baseWidth - cutWidth).random()
+                        (1..baseWidth - baseCutWidth).random()
                     } catch (e: Exception) {
                         0
                     }
                     val offsetY = try {
-                        (1..baseHeight - cutHeight).random()
+                        (1..baseHeight - baseCutHeight).random()
                     } catch (e: Exception) {
                         0
+                    }
+                    val distance = calculateDistance(
+                        sizeCenterX.toFloat(),
+                        sizeCenterY.toFloat(),
+                        offsetX.toFloat(),
+                        offsetY.toFloat(),
+                    )
+                    val cutWidth = let {
+                        sizeIncline * abs(distance) * widthRatio +
+                                (baseCutWidth + sizeOffset * widthRatio)
+                    }.toInt().let {
+                        when(true){
+                            (it + offsetX > baseWidth) -> baseWidth - offsetX
+                            (it <= 0) -> 1
+                            else -> it
+                        }
+                    }
+                    val cutHeight = let {
+                        sizeIncline * abs(distance) * heightRatio +
+                                (baseCutHeight + sizeOffset * heightRatio)
+                    }.toInt().let {
+                        when(true){
+                            (it + offsetY > baseHeight) -> baseHeight - offsetY
+                            (it <= 0) -> 1
+                            else -> it
+                        }
                     }
                     val cutBitmap = when(
                         (0..passionInt).random() == 1
@@ -492,7 +675,7 @@ object BitmapArt {
                             if(
                                 colorStr.toColorInt() == Color.BLACK
                             ) return@let it
-                            ColorTool.convertBlackToColor(
+                            ColorTool.convertBlackToColorFixAlpha(
                                 it,
                                 colorList.random(),
                             )
@@ -507,44 +690,15 @@ object BitmapArt {
                             val maskBitmap = BitmapTool.ImageTransformer.mask(
                                 it,
                                scalePeaceBitmapList.random(),
-//                                peaceBitmapListSwap.random(),
                             )
-//                            if(timeIndex == 0) {
-//                                FileSystems.writeFromByteArray(
-//                                    File(
-//                                        UsePath.cmdclickDefaultAppDirPath,
-//                                        "lcutbitmap.png"
-//                                    ).absolutePath,
-//                                    BitmapTool.convertBitmapToByteArray(it)
-//                                )
-//                                FileSystems.writeFromByteArray(
-//                                    File(
-//                                        UsePath.cmdclickDefaultAppDirPath,
-//                                        "lmaskbitmap.png"
-//                                    ).absolutePath,
-//                                    BitmapTool.convertBitmapToByteArray(maskBitmap)
-//                                )
-//                            }
                             maskBitmap
-//                                BitmapTool.ImageTransformer.overlayBitmap(
-//                                it,
-//                                peaceBitmapListSwap.random(),
-//                            )
-//                        }
                         }
-//                            .let {
-//                            ColorTool.convertColorTo(
-//                                it,
-//                                blackRepColor,
-//                                "#00000000",
-//                            )
-//                        }
                             .let {
                             val colorStr = colorList.random()
                             if(
                                 colorStr.toColorInt() == Color.BLACK
                             ) return@let it
-                            ColorTool.convertBlackToColor(
+                            ColorTool.convertBlackToColorFixAlpha(
                                 it,
                                 colorList.random(),
                             )
@@ -556,41 +710,7 @@ object BitmapArt {
                             maxOpacityRate,
                         ).let {
                                 opacitySrc ->
-//                            val weight = ((opacitySrc * offsetX) / baseWidth) * opacityBandNum
                             opacityIncline * offsetX + (opacitySrc + opacityOffset)
-//                            val absCulcOpacity =
-//                                ((opacitySrc * offsetX) / baseWidth)
-//                            when(opacityBandNum > 0) {
-//                                false -> opacitySrc - absCulcOpacity
-//                                else -> absCulcOpacity
-//                            }
-//                            val opacityDiff = opacitySrc / opacityBandNum
-//                            val absOpacityBandNum = abs(opacityBandNum)
-//                            val bandWidth = (baseWidth / absOpacityBandNum)
-//                            val rank = let makeRank@ {
-//                                val randSrc = offsetX / bandWidth
-//                                if(randSrc > 1) return@makeRank randSrc
-//                                1
-//                            }
-//                            val curOpacityDiff = opacityDiff * (rank - 1)
-//                            val supOpacity = (opacitySrc - curOpacityDiff).let makeSupOpacity@ {
-//                                if (it <= 0) return@makeSupOpacity 10
-//                                it
-//                            }
-//                            val lowerOpacity = (supOpacity - curOpacityDiff).let makeLowerOpacity@ {
-//                                if (it <= 0) return@makeLowerOpacity 0
-//                                it
-//                            }
-//                            val culcOpacity =
-//                                (lowerOpacity..supOpacity).random()
-//                            when(opacityBandNum > 0) {
-//                                false -> opacitySrc - culcOpacity
-//                                else -> culcOpacity
-//                            }
-//                            val rankRate = when(opacityBandNum >= 1) {
-//                                false -> (absOpacityBandNum - rank) / absOpacityBandNum
-//                                else -> rank / absOpacityBandNum
-//                            }
                         }.toInt().let {
                             if(it <= 0) return@let 5
                             it
@@ -608,14 +728,6 @@ object BitmapArt {
             }
             xYPairToBitmapListJob.awaitAll()
         }
-//        FileSystems.writeFromByteArray(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap00.png").absolutePath,
-//            BitmapTool.convertBitmapToByteArray(srcBitmap)
-//        )
-//        FileSystems.writeFromByteArray(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap11.png").absolutePath,
-//            BitmapTool.convertBitmapToByteArray(xYPairToBitmapList[0].second)
-//        )
         var resultBitmap: Bitmap = when(isOverlay) {
             true -> srcBitmap.copy(
                 Bitmap.Config.ARGB_8888,
@@ -636,22 +748,6 @@ object BitmapArt {
                 xyPair.second
             )
         }
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap.txt").absolutePath,
-//            listOf(
-//                xYPairToBitmapList.map{it.first}.joinToString("--"),
-//                "shakeRate: ${shakeRate}",
-//                "minOpacityRate: ${minOpacityRate}",
-//                "maxOpacityRate: ${maxOpacityRate}",
-//                "colorList: ${colorList}",
-//                "opacityBandNum: ${opacityIncline}",
-//                "times: ${times}"
-//            ).joinToString("\n\n")
-//        )
-//        FileSystems.writeFromByteArray(
-//            File(UsePath.cmdclickDefaultAppDirPath, "lbitmap22.png").absolutePath,
-//            BitmapTool.convertBitmapToByteArray(resultBitmap)
-//        )
         return resultBitmap
     }
 

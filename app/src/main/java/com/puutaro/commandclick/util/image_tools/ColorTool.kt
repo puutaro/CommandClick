@@ -638,6 +638,50 @@ object ColorTool {
         return bmOut
     }
 
+    fun convertBlackToColorFixAlpha(
+        originalBitmap: Bitmap,
+        colorStr: String,
+    ): Bitmap {
+        val parsedColor = when(
+            colorStr == "#00000000"
+        ) {
+            true -> Color.TRANSPARENT
+            else -> colorStr.toColorInt()
+        }
+        val blackInt = Color.BLACK
+        if(
+            parsedColor == blackInt
+        ) return originalBitmap
+        return changeColorFixAlpha(
+            originalBitmap,
+            Color.BLACK,
+            parsedColor
+        )
+    }
+
+    fun convertColorToFixAlpha(
+        originalBitmap: Bitmap,
+        fromColorStr: String,
+        toColorStr: String,
+    ): Bitmap {
+        val fromParsedColor = when(
+            fromColorStr == "#00000000"
+        ) {
+            true -> Color.TRANSPARENT
+            else -> fromColorStr.toColorInt()
+        }
+        val toParsedColor = when(
+            toColorStr == "#00000000"
+        ) {
+            true -> Color.TRANSPARENT
+            else -> toColorStr.toColorInt()
+        }
+        return changeColorFixAlpha(
+            originalBitmap,
+            toParsedColor,
+            fromParsedColor
+        )
+    }
 
     fun convertBlackToColor(
         originalBitmap: Bitmap,
@@ -756,6 +800,51 @@ object ColorTool {
         return bmOut
     }
 
+    private fun changeColorFixAlpha(
+        src: Bitmap,
+        fromColor: Int,
+        toColor: Int,
+    ): Bitmap {
+        val width = src.width
+        val height = src.height
+        val pixels = IntArray(width * height)
+        // get pixel array from source
+        src.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        val bmOut = createBitmap(width, height, src.config!!)
+
+//            var pixel: Int
+        // iteration through pixels
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                // get current index in 2D-matrix
+                val index = y * width + x
+                val pixel = pixels[index]
+                val curAlpha = Color.alpha(pixel)
+                val curRed = Color.red(pixel)
+                val curGreen = Color.green(pixel)
+                val curBlue = Color.blue(pixel)
+                if (
+                    curAlpha != 0
+                    && curRed == fromColor.red
+                    && curGreen == fromColor.green
+                    && curBlue == fromColor.blue
+                    ) {
+                    pixels[index] = argb(
+                        fromColor.alpha,
+                        toColor.red,
+                        toColor.green,
+                        toColor.blue,
+                    )
+
+                    /*or change the whole color
+                pixels[index] = colorThatWillReplace;*/
+                }
+            }
+        }
+        bmOut.setPixels(pixels, 0, width, 0, 0, width, height)
+        return bmOut
+    }
     fun swap(
         originalBitmap: Bitmap,
         colorStr1: String,
