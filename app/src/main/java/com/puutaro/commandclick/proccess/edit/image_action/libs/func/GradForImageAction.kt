@@ -3,13 +3,13 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlin.enums.EnumEntries
+import androidx.core.graphics.toColorInt
 
 object GradForImageAction {
     fun handle(
@@ -159,13 +159,11 @@ object GradForImageAction {
                 }.mapIndexed {
                     index, (_, colorStr) ->
                     ColorTool.parseColorStr(
-                        context,
-                        colorStr,
-                        "${colorKey}${index}",
-                        where,
-                    ).let {
-                        Color.parseColor(it)
-                    }
+                    context,
+                    colorStr,
+                    "${colorKey}${index}",
+                    where,
+                ).toColorInt()
                 }.toIntArray()
                 val gradBitmap = BitmapTool.GradientBitmap.makeGradientBitmap2(
                     width,
@@ -191,7 +189,7 @@ object GradForImageAction {
         val str: String,
         val args: GradMethodArgClass,
     ){
-        SIZE("make", GradMethodArgClass.MakeArgs),
+        MAKE("make", GradMethodArgClass.MakeArgs),
     }
     private sealed interface ArgType {
         val entries: EnumEntries<*>
