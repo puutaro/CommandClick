@@ -2360,11 +2360,132 @@ object BitmapArtForImageAction {
                     null,
                 ) to null
             }
+            is BitmapArtMethodArgClass.JaggedArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByName(
+                    mapArgMapList,
+                    args.bitmapKeyToDefaultValueStr,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapStrToErr ->
+                    val funcErr = bitmapStrToErr.second
+                        ?: return@let bitmapStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                val direction = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.directionKeyToDefaultValueStr,
+                    where
+                ).let { directionToErr ->
+                    val funcErr = directionToErr.second
+                        ?: return@let directionToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                val jaggedDirection = BitmapArt.JaggedDirection.entries.firstOrNull {
+                    it.name == direction
+                }
+                if(jaggedDirection == null){
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to FuncCheckerForSetting.FuncCheckErr(
+                        "Invalid direction: ${direction}"
+                    )
+                }
+                val jaggedness = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.jaggednessKeyToDefaultValueStr,
+                    where
+                ).let { directionToErr ->
+                    val funcErr = directionToErr.second
+                        ?: return@let directionToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                FuncCheckerForSetting.NumChecker.compare(
+                    0f,
+                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
+                    jaggedness,
+                    args.jaggednessKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to err
+                }
+                val returnBitmap = InnerBitmapArt.createJagged(
+                    bitmap,
+                    jaggedDirection,
+                    jaggedness,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    returnBitmap,
+                    null,
+                ) to null
+            }
         }
     }
 
     private object InnerBitmapArt {
 
+        fun createJagged(
+            srcBitmap: Bitmap,
+            direction: BitmapArt.JaggedDirection,
+            jaggedness: Float,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                BitmapArt.createJaggedBitmap(
+                    srcBitmap,
+                    direction,
+                    jaggedness,
+                ) to null
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
         fun drawInkSplashOnColor(
             srcBitmap: Bitmap,
             targetColorStr: String,
@@ -2852,6 +2973,7 @@ object BitmapArtForImageAction {
         BY_LINE("byLine", BitmapArtMethodArgClass.ByLineArgs),
         SHAKE("shake", BitmapArtMethodArgClass.ShakeArgs),
         INC_SPLASH("incSplash", BitmapArtMethodArgClass.IncSplashArgs),
+        JAGGED("jagged", BitmapArtMethodArgClass.JaggedArgs)
     }
 
     private sealed interface ArgType {
@@ -3534,6 +3656,39 @@ object BitmapArtForImageAction {
                 MIN_POINT_NUM("minPointNum", (3).toString(), FuncCheckerForSetting.ArgType.INT),
                 MAX_POINT_NUM("maxPointNum", (5).toString(), FuncCheckerForSetting.ArgType.INT),
                 COLOR_LIST("colorList", CmdClickColor.BLACK.str, FuncCheckerForSetting.ArgType.STRING),
+            }
+        }
+        data object JaggedArgs : BitmapArtMethodArgClass(), ArgType {
+            override val entries =JaggedEnumArgs.entries
+            val bitmapKeyToDefaultValueStr = Pair(
+                JaggedEnumArgs.BITMAP.key,
+                JaggedEnumArgs.BITMAP.defaultValueStr,
+            )
+            val directionKeyToDefaultValueStr = Pair(
+                JaggedEnumArgsIncSplashEnumArgs.DIRECTION.key,
+                JaggedEnumArgs.DIRECTION.defaultValueStr,
+            )
+            val jaggednessKeyToDefaultValueStr = Pair(
+                JaggedEnumArgsIncSplashEnumArgs.JAGGEDNESS.key,
+                JaggedEnumArgs.JAGGEDNESS.defaultValueStr,
+            )
+            enum class JaggedEnumArgsIncSplashEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
+                DIRECTION("direction", null, FuncCheckerForSetting.ArgType.INT),
+                JAGGEDNESS("jaggedness", 20.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+            }
+            enum class JaggedEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
+                DIRECTION("direction", null, FuncCheckerForSetting.ArgType.INT),
+                JAGGEDNESS("jaggedness", 20.toString(), FuncCheckerForSetting.ArgType.FLOAT),
             }
         }
     }

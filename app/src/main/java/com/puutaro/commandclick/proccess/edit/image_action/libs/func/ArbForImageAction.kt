@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
@@ -18,6 +17,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
+import com.puutaro.commandclick.util.image_tools.TextDraw
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.str.PairListTool
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +26,9 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.enums.EnumEntries
+import androidx.core.graphics.toColorInt
+import androidx.core.graphics.scale
+import com.puutaro.commandclick.util.image_tools.ImageCut
 
 object ArbForImageAction {
 
@@ -78,7 +81,7 @@ object ArbForImageAction {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -90,7 +93,7 @@ object ArbForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -102,7 +105,7 @@ object ArbForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val xMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val xMulti = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
                     mapArgMapList,
                     args.xMultiKeyToDefaultValueStr,
                     where
@@ -114,7 +117,7 @@ object ArbForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val yMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val yMulti = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
                     mapArgMapList,
                     args.yMultiKeyToDefaultValueStr,
                     where
@@ -191,7 +194,7 @@ object ArbForImageAction {
 //                        where,
 //                    )
 //                }
-                val xDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val xDup = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
                     mapArgMapList,
                     args.xDupKeyToDefaultValueStr,
                     where
@@ -203,7 +206,7 @@ object ArbForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val yDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val yDup = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
                     mapArgMapList,
                     args.yDupKeyToDefaultValueStr,
                     where
@@ -275,7 +278,7 @@ object ArbForImageAction {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -287,25 +290,13 @@ object ArbForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
                 ).let { heightToErr ->
                     val funcErr = heightToErr.second
                         ?: return@let heightToErr.first
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to funcErr
-                }
-                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
-                    mapArgMapList,
-                    args.pieceKeyToDefaultValueStr,
-                    where
-                ).let { pieceToErr ->
-                    val funcErr = pieceToErr.second
-                        ?: return@let pieceToErr.first
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
@@ -861,24 +852,20 @@ object ArbForImageAction {
                     val pieceHeightFloat = PieceStringManager.getHeight(pieceMap)
                     val fontSizeFloat = PieceStringManager.getFontSize(pieceMap)
                     val fontColor = PieceStringManager.getFontColor(
-                        context,
-                        pieceMap,
-                        where
-                    ).let {
-                        Color.parseColor(it)
-                    }
+                    context,
+                    pieceMap,
+                    where
+                ).toColorInt()
                     val strokeColor = PieceStringManager.getStrokeColor(
-                        context,
-                        pieceMap,
-                        where
-                    ).let {
-                        Color.parseColor(it)
-                    }
+                    context,
+                    pieceMap,
+                    where
+                ).toColorInt()
                     val strokeWidthFloat = PieceStringManager.getStrokeWidth(pieceMap)
                     val letterSpacingFloat = PieceStringManager.getLetterSpacingWidth(pieceMap)
                     val fontType = PieceStringManager.getFontType(pieceMap)
                     val fontStyle = PieceStringManager.getFontStyle(pieceMap)
-                    BitmapTool.DrawText.drawTextToBitmap(
+                    TextDraw.drawTextToBitmap(
                         string,
                         pieceWidthFloat,
                         pieceHeightFloat,
@@ -897,7 +884,7 @@ object ArbForImageAction {
                     ).let {
                         val cutWidth = (pieceWidthFloat * 0.8).toInt()
                         val cutHeight = (pieceHeightFloat * 0.8).toInt()
-                        BitmapTool.ImageTransformer.cutCenter(
+                        ImageCut.cutCenter(
                             it,
                             cutWidth,
                             cutHeight
@@ -922,7 +909,7 @@ object ArbForImageAction {
                         ).let {
                             val cutWidth = (baseWidth * 0.8).toInt()
                             val cutHeight = (baseHeight * 0.8).toInt()
-                            BitmapTool.ImageTransformer.cutByTarget(
+                            ImageCut.cutByTarget(
                                 it,
                                 cutWidth,
                                 cutHeight,
@@ -1041,7 +1028,7 @@ object ArbForImageAction {
                         ).let {
                             val cutWidth = (width * 0.8).toInt()
                             val cutHeight = (height * 0.8).toInt()
-                            BitmapTool.ImageTransformer.cutByTarget(
+                            ImageCut.cutByTarget(
                                 it,
                                 cutWidth,
                                 cutHeight,
@@ -1245,14 +1232,7 @@ object ArbForImageAction {
         return let {
             if(
                 File(shapeStr).isFile
-            ) return@let BitmapTool.convertFileToBitmap(shapeStr)?.let {
-                Bitmap.createScaledBitmap(
-                    it,
-                    pieceWidth,
-                    pieceHeight,
-                    true,
-                )
-            }
+            ) return@let BitmapTool.convertFileToBitmap(shapeStr)?.scale(pieceWidth, pieceHeight)
             val shape = CmdClickIcons.entries.firstOrNull {
                 it.str == shapeStr
             } ?: CmdClickIcons.RECT
@@ -1261,14 +1241,8 @@ object ArbForImageAction {
                     val iconFile = ExecSetToolbarButtonImage.getImageFile(
                         shape.assetsPath
                     )
-                    BitmapTool.convertFileToBitmap(iconFile.absolutePath)?.let {
-                        Bitmap.createScaledBitmap(
-                            it,
-                            pieceWidth,
-                            pieceHeight,
-                            true,
-                        )
-                    }
+                    BitmapTool.convertFileToBitmap(iconFile.absolutePath)
+                        ?.scale(pieceWidth, pieceHeight)
                 }
                 EditComponent.IconType.SVG -> {
                     AppCompatResources.getDrawable(

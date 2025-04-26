@@ -11,8 +11,6 @@ import android.graphics.Paint.FontMetricsInt
 import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.AnimationDrawable
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.Spannable
@@ -76,6 +74,7 @@ import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.BitmapTool.ImageTransformer
 import com.puutaro.commandclick.util.image_tools.CcDotArt
 import com.puutaro.commandclick.util.image_tools.ColorTool
+import com.puutaro.commandclick.util.image_tools.TextDraw
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.FannelInfoTool
 import com.puutaro.commandclick.util.str.QuoteTool
@@ -96,6 +95,9 @@ import java.io.File
 import java.lang.ref.WeakReference
 import java.time.LocalDateTime
 import java.util.Locale
+import androidx.core.graphics.toColorInt
+import androidx.core.graphics.drawable.toDrawable
+import com.puutaro.commandclick.util.image_tools.ImageCut
 
 
 class PromptWithListDialog(
@@ -612,7 +614,7 @@ class PromptWithListDialog(
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             setBackgroundDrawable(
-                ColorDrawable(Color.TRANSPARENT)
+                Color.TRANSPARENT.toDrawable()
             )
             setGravity(
                 Gravity.BOTTOM
@@ -1095,7 +1097,7 @@ class PromptWithListDialog(
                 0
             )
             val colors = firstTitleGradColorsStrList.map {
-                Color.parseColor(it)
+                it.toColorInt()
             }.toIntArray()
             val angle = (220..320).random() //45 // Set the gradient angle
 //            FileSystems.updateFile(
@@ -1782,7 +1784,7 @@ class PromptWithListDialog(
                         imageViewId
                     )?.apply {
                         setColorFilter(
-                            Color.parseColor(frontBkImageColorStr)
+                            frontBkImageColorStr.toColorInt()
                         )
                         setImageBitmap(bitmap)
                         isVisible = true
@@ -1802,7 +1804,7 @@ class PromptWithListDialog(
                 )?.apply {
                     imageTintList = null
                     setColorFilter(
-                        Color.parseColor(backBkImageColorStr)
+                        backBkImageColorStr.toColorInt()
                     )
                     scaleType = ImageView.ScaleType.FIT_XY
                     isVisible = true
@@ -1815,14 +1817,15 @@ class PromptWithListDialog(
                 )?.apply {
                     imageTintList = null
                     setColorFilter(
-                        Color.parseColor(frontBkImageColorStr)
+                        frontBkImageColorStr.toColorInt()
                     )
                     scaleType = ImageView.ScaleType.FIT_XY
                     isVisible = true
                     val animationDrawable = AnimationDrawable()
                     strImageBitmapList.forEach {
+                        if(it == null) return@forEach
                         animationDrawable.addFrame(
-                            BitmapDrawable(context.resources, it),
+                            it.toDrawable(context.resources),
                             600
                         )
                     }
@@ -1914,7 +1917,7 @@ class PromptWithListDialog(
                         val jobList = (1..concurrencyLimitForMakeTextBitmap).map { index ->
                             async {
                                 semaphoreForMakeTextBitmap.withPermit {
-                                    val textBitmap = BitmapTool.DrawText.drawTextToBitmapByRandom(
+                                    val textBitmap = TextDraw.drawTextToBitmapByRandom(
                                         titlesText,
                                         srcTextBitmapSideLength,
                                         srcTextBitmapSideLength,
@@ -1922,7 +1925,7 @@ class PromptWithListDialog(
 //                                        (15..20).random().toFloat(),
                                         Color.BLACK
                                     ).let {
-                                        ImageTransformer.cutCenter(
+                                        ImageCut.cutCenter(
                                             it,
                                             srcOneSide,
                                             srcOneSide
@@ -1960,7 +1963,6 @@ class PromptWithListDialog(
                     FannelIcons.CORSAIR,
                     FannelIcons.SKULL,
                     FannelIcons.SKULL_HORIZON,
-
                 )
                 val noUseFannelIconList = listOf(
                     FannelIcons.JANOMITI2
@@ -2045,7 +2047,7 @@ class PromptWithListDialog(
                                             srcMainImageBitmap,
                                         ).let { drawableBitmap ->
                                             val shrinkOneSideLength = srcOneSide - shrinkNumb
-                                            ImageTransformer.cutCenter(
+                                            ImageCut.cutCenter(
                                                 drawableBitmap,
                                                 shrinkOneSideLength,
                                                 shrinkOneSideLength,
@@ -2263,7 +2265,7 @@ class PromptWithListDialog(
                     CmdClickColorStr.DARK_GREEN.str,
                     CmdClickColorStr.DARK_GREEN.str
                 ).map {
-                    Color.parseColor(it)
+                    it.toColorInt()
                 }.toIntArray()
                 val bitmap = BitmapTool.GradientBitmap.makeGradientBitmap2(
                     100,
@@ -2530,7 +2532,7 @@ class PromptWithListDialog(
                     colorStr,
                     colorStr,
                 ).map {
-                    Color.parseColor(it)
+                    it.toColorInt()
                 }.toIntArray()
                 val defaultBkBitmap = BitmapTool.GradientBitmap.makeGradientBitmap2(
                     300,
@@ -2565,7 +2567,7 @@ class PromptWithListDialog(
                     val text = it.key
                     val srcBitmap = it.value
 
-                    val cutBitmap = BitmapTool.ImageTransformer.cut(
+                    val cutBitmap = ImageCut.cut(
                         srcBitmap,
                         bitmapCutWidth,
                         (bitmapCutWidth * 1.73).toInt()
@@ -2688,7 +2690,7 @@ class PromptWithListDialog(
                                     val animationDrawable = AnimationDrawable()
                                     val cutHeight = (bitmapCutWidth * 1.73).toInt()
                                     val bitmapList = (1..3).map {
-                                        BitmapTool.ImageTransformer.cut(
+                                        ImageCut.cut(
                                             srcBkBitmap,
                                             bitmapCutWidth,
                                             cutHeight
@@ -2697,7 +2699,7 @@ class PromptWithListDialog(
                                     val delay = (800..900).random()
                                     bitmapList.forEach {
                                         animationDrawable.addFrame(
-                                            BitmapDrawable(context.resources, it),
+                                            it.toDrawable(context.resources),
                                             delay
                                         )
                                     }
@@ -2812,7 +2814,7 @@ class PromptWithListDialog(
                 frequencyMapList.forEach {
                     val colorStr = colorStrList.shuffled().first()
                     colorList.add(colorStr)
-                    color.add(Color.parseColor(colorStr))
+                    color.add(colorStr.toColorInt())
                 }
                 val oneSideLengthRndList = (300..(7 * screenWidthInt) / 4)
                 val holeRadiasHolePercentRndList = (0..75)

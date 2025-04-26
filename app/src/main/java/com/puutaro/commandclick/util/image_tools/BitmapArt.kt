@@ -3,6 +3,8 @@ package com.puutaro.commandclick.util.image_tools
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
 import androidx.core.graphics.toColorInt
 import com.puutaro.commandclick.util.num.RateTool
 import kotlinx.coroutines.Dispatchers
@@ -13,11 +15,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 import androidx.core.graphics.scale
 import androidx.core.graphics.createBitmap
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
+import java.util.Random
 import kotlin.math.abs
 import kotlin.math.sqrt
+import androidx.core.graphics.withClip
 
 object BitmapArt {
 
@@ -354,7 +355,7 @@ object BitmapArt {
                                 colorList.random(),
                             )
                         }
-                        else -> BitmapTool.ImageTransformer.cutByTarget(
+                        else -> ImageCut.cutByTarget(
                             srcBitmap,
                             cutWidth,
                             cutHeight,
@@ -408,7 +409,7 @@ object BitmapArt {
         }
         xYPairToBitmapList.forEach {
                 (xyPair, cutBitmap) ->
-            resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+            resultBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                 resultBitmap,
                 cutBitmap,
                 xyPair.first,
@@ -476,7 +477,7 @@ object BitmapArt {
                                 colorList.random(),
                             )
                         }
-                        else -> BitmapTool.ImageTransformer.cutByTarget(
+                        else -> ImageCut.cutByTarget(
                             srcBitmap,
                             cutWidth,
                             cutHeight,
@@ -572,7 +573,7 @@ object BitmapArt {
         }
         xYPairToBitmapList.forEach {
             (xyPair, cutBitmap) ->
-            resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+            resultBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                 resultBitmap,
                 cutBitmap,
                 xyPair.first,
@@ -680,7 +681,7 @@ object BitmapArt {
                                 colorList.random(),
                             )
                         }
-                        else -> BitmapTool.ImageTransformer.cutByTarget(
+                        else -> ImageCut.cutByTarget(
                             srcBitmap,
                             cutWidth,
                             cutHeight,
@@ -741,7 +742,7 @@ object BitmapArt {
         }
         xYPairToBitmapList.forEach {
                 (xyPair, cutBitmap) ->
-            resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+            resultBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                 resultBitmap,
                 cutBitmap,
                 xyPair.first,
@@ -845,7 +846,7 @@ object BitmapArt {
         )
         xYPairToBitmapList.forEach {
                 (xyPair, cutBitmap) ->
-            resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+            resultBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                 resultBitmap,
                 cutBitmap,
                 xyPair.first,
@@ -948,7 +949,7 @@ object BitmapArt {
         )
         xYPairToBitmapList.forEach {
                 (xyPair, cutBitmap) ->
-            resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+            resultBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                 resultBitmap,
                 cutBitmap,
                 xyPair.first,
@@ -1065,5 +1066,117 @@ object BitmapArt {
         return combinedBitmap
     }
 
+    enum class JaggedDirection(){
+        LEFT,
+        RIGHT,
+        TOP,
+        BOTTOM,
+    }
+    fun createJaggedBitmap(
+        bitmap: Bitmap,
+        jaggedDirection: JaggedDirection,
+        jaggedness: Float,
+    ): Bitmap {
+        // パラメータチェック
+        if (jaggedness <= 0) {
+            throw IllegalArgumentException("jaggednessは0より大きい値を指定してください。")
+        }
 
+        // 元のBitmapの情報を取得
+        val width = bitmap.width
+        val height = bitmap.height
+
+        // ARGB_8888で新しいBitmapを作成（アルファチャネルが必要なため）
+        val resultBitmap = createBitmap(width, height)
+        val canvas = Canvas(resultBitmap)
+        val paint = Paint()
+        paint.isAntiAlias = true // アンチエイリアスを有効にする
+
+        // 乱数ジェネレータを初期化
+        val random =  Random()
+
+        // ぎざぎざのPathを作成する関数
+        fun createJaggedPath(
+            length: Float,
+            isHorizontal: Boolean,
+            startOffset: Float = 0f,
+        ): Path {
+            val path = Path()
+            var currentX = if (isHorizontal) startOffset else 0f
+            var currentY = if (isHorizontal) 0f else startOffset
+            val segmentLength = length / 20f // セグメント数を調整
+            val segmentCount = (length / segmentLength).toInt() + 1 // +1 for the last point
+            path.moveTo(currentX, currentY)
+
+            for (i in 0 until segmentCount) {
+                // XまたはY座標をランダムに変動させる
+                val delta = (random.nextFloat() * 2 - 1) * jaggedness
+                if (isHorizontal) {
+                    currentX += segmentLength
+                    currentY += delta
+                } else {
+                    currentX += delta
+                    currentY += segmentLength
+                }
+                path.lineTo(currentX, currentY)
+            }
+            // 終点を確実に指定
+            if (isHorizontal) {
+                path.lineTo(length, currentY)
+            } else {
+                path.lineTo(currentX, length)
+            }
+            return path
+        }
+
+//        when(jaggedDirection) {
+//           JaggedDirection.TOP -> {
+            // 上の辺のPathを作成
+                val topPath = createJaggedPath(width.toFloat(), true)
+            // 元のBitmapをPathでクリップして描画
+            canvas.withClip(topPath) {
+
+                // 上の辺をクリップ
+                drawBitmap(bitmap, 0f, 0f, paint)
+            }
+//           }
+//            JaggedDirection.RIGHT -> {
+                // 右の辺のPathを作成
+                val rightPath = createJaggedPath(height.toFloat(), false, width.toFloat())
+
+                canvas.withClip(rightPath) {
+                    // 右の辺をクリップ
+                    drawBitmap(bitmap, 0f, 0f, paint)
+                }
+//            }
+//            JaggedDirection.BOTTOM -> {
+                // 下の辺のPathを作成
+                val bottomPath = createJaggedPath(width.toFloat(), true, width.toFloat()).apply {
+                    lineTo(
+                        width.toFloat(),
+                        height.toFloat()
+                    ) // Ensure the path goes to the bottom right corner
+                    lineTo(0f, height.toFloat()) // and bottom left
+                }
+
+                canvas.withClip(bottomPath) {
+                    // 下の辺をクリップ
+                    drawBitmap(bitmap, 0f, 0f, paint)
+                }
+//            }
+//            JaggedDirection.LEFT -> {
+                // 左の辺のPathを作成
+                val leftPath = createJaggedPath(height.toFloat(), false, 0f).apply {
+                    lineTo(0f, height.toFloat())
+                }
+
+                canvas.withClip(leftPath) {
+                    // 左の辺をクリップ
+                    drawBitmap(bitmap, 0f, 0f, paint)
+                }
+//            }
+//        }
+
+        return resultBitmap
+    }
 }

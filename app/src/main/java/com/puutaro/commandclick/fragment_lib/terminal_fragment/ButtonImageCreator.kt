@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
@@ -23,6 +22,7 @@ import com.puutaro.commandclick.proccess.history.url_history.UrlHistoryPath
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.ImageOverlay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -31,6 +31,8 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.File
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.toColorInt
 
 
 object ButtonImageCreator {
@@ -342,11 +344,7 @@ object ButtonImageCreator {
                 0,
                 maskByteArray.size
             )
-        val output = Bitmap.createBitmap(
-                src.width,
-                src.height,
-                Bitmap.Config.ARGB_8888
-            )
+        val output = createBitmap(src.width, src.height)
         val outBitmap = let {
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
@@ -362,7 +360,7 @@ object ButtonImageCreator {
             centerColorStr ?: colorList.random(),
             colorList.random()
         ).map {
-            Color.parseColor(it)
+            it.toColorInt()
         }.toIntArray()
         val bkBitmapSrc = BitmapTool.GradientBitmap.makeGradientBitmap2(
             original.width,
@@ -370,7 +368,7 @@ object ButtonImageCreator {
             colorIntArray,
             gradOrient,
         )
-         val overBitmap = BitmapTool.ImageTransformer.overlayBitmap(
+         val overBitmap = ImageOverlay.overlayBitmap(
              bkBitmapSrc,
              outBitmap,
         )
@@ -423,10 +421,7 @@ object ButtonImageCreator {
         bitmap: Bitmap,
         cornerDips: Int,
     ): Bitmap? {
-        val output = Bitmap.createBitmap(
-            bitmap.width, bitmap.height,
-            Bitmap.Config.ARGB_8888
-        )
+        val output = createBitmap(bitmap.width, bitmap.height)
         val canvas = Canvas(output)
         val cornerSizePx = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, cornerDips.toFloat(),
@@ -486,8 +481,8 @@ object ButtonImageCreator {
 
     private fun makeGradientBitmap2(width: Int, height: Int): Bitmap {
         val color = intArrayOf(
-            Color.parseColor(colorList.random()),
-            Color.parseColor(colorList.random()),
+            colorList.random().toColorInt(),
+            colorList.random().toColorInt(),
         )
 
         val gradient = GradientDrawable(gradientOrientationList.random(), color)

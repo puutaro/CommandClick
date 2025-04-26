@@ -2,14 +2,10 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.image_tools.BitmapTool
-import java.io.File
+import com.puutaro.commandclick.util.image_tools.ImageOverlay
 import kotlin.enums.EnumEntries
 
 object OverlayForImageAction {
@@ -274,7 +270,7 @@ object OverlayForImageAction {
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                val overlayBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapCenter(
+                val overlayBitmap = ImageOverlay.overlayOnBkBitmapCenter(
                     bkBitmap,
                     bitmap,
                 )
@@ -306,7 +302,7 @@ object OverlayForImageAction {
 //                        "offsetY: ${offsetY}",
 //                    ).joinToString("\n\n") + "\n\n============\n\n"
 //                )
-                val overlayBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                val overlayBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                     bkBitmap,
                     bitmap,
                     offsetX,
@@ -331,7 +327,7 @@ object OverlayForImageAction {
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                val overlayBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmap(
+                val overlayBitmap = ImageOverlay.overlayOnBkBitmap(
                     bkBitmap,
                     bitmap,
                 )

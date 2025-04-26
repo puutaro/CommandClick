@@ -8,8 +8,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.AnimationDrawable
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.ViewGroup
@@ -31,6 +29,7 @@ import com.puutaro.commandclick.util.file.ConfirmDialogAssets
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
+import com.puutaro.commandclick.util.image_tools.TextDraw
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -40,6 +39,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
+import androidx.core.graphics.toColorInt
+import androidx.core.graphics.drawable.toDrawable
+import com.puutaro.commandclick.util.image_tools.ImageCut
 
 
 class JsConfirmV2(
@@ -172,7 +174,7 @@ class JsConfirmV2(
                     ConfirmDialogAssets.ImageMakingType.PLANE -> Typeface.create(Typeface.MONOSPACE, Typeface.BOLD_ITALIC)
                     ConfirmDialogAssets.ImageMakingType.OPACITY -> Typeface.create(Typeface.MONOSPACE, Typeface.ITALIC)
                 }
-                BitmapTool.DrawText.drawTextToBitmapWithMessage(
+                TextDraw.drawTextToBitmapWithMessage(
                     title,
                     message,
                     constraintWidth.toFloat(),
@@ -213,7 +215,7 @@ class JsConfirmV2(
                 order ->
                 async {
                     val bitmap = when(order) {
-                        1 -> BitmapTool.ImageTransformer.cutByTarget(
+                        1 -> ImageCut.cutByTarget(
                             srcTitleWhiteBitmap,
                             centerConstraintX,
                             constraintHeight,
@@ -221,7 +223,7 @@ class JsConfirmV2(
                             0
                         )
 
-                        else -> BitmapTool.ImageTransformer.cutByTarget(
+                        else -> ImageCut.cutByTarget(
                             srcTitleWhiteBitmap,
                             centerConstraintX,
                             constraintHeight,
@@ -500,7 +502,7 @@ class JsConfirmV2(
                             1 -> Pair(absTitleSlideX * firstMultiple, absTitleSlideY * firstMultiple) // -5
                             else -> Pair(absTitleSlideX * secondMultiple, absTitleSlideY * secondMultiple) // 5
                         }
-                        imageView1.setColorFilter(Color.parseColor(colorStr))
+                        imageView1.setColorFilter(colorStr.toColorInt())
                         Glide
                             .with(context)
                             .load(byteArray)
@@ -559,7 +561,7 @@ class JsConfirmV2(
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             setBackgroundDrawable(
-                ColorDrawable(Color.TRANSPARENT)
+                Color.TRANSPARENT.toDrawable()
             )
             setGravity(
                 Gravity.BOTTOM
@@ -578,7 +580,7 @@ class JsConfirmV2(
         bitmapList1.forEach {
             if(it == null) return@forEach
             animationDrawable.addFrame(
-                BitmapDrawable(context.resources, it),
+                it.toDrawable(context.resources),
                 duration
             )
         }

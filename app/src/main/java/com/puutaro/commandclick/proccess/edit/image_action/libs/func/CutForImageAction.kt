@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.ImageCut
 import kotlin.enums.EnumEntries
 
 object CutForImageAction {
@@ -309,7 +310,7 @@ object CutForImageAction {
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                val cutBitmap = BitmapTool.ImageTransformer.cutByTarget(
+                val cutBitmap = ImageCut.cutByTarget(
                     bitmap,
                     limitWidthPx,
                     limitHeightPx,
@@ -335,7 +336,7 @@ object CutForImageAction {
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                val cutBitmap = BitmapTool.ImageTransformer.cutByTarget(
+                val cutBitmap = ImageCut.cutByTarget(
                     bitmap,
                     limitWidthPx,
                     limitHeightPx,
@@ -361,7 +362,7 @@ object CutForImageAction {
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                val cutBitmap = BitmapTool.ImageTransformer.cutRnd(
+                val cutBitmap = ImageCut.cutRnd(
                     bitmap,
                     limitWidthPx,
                     limitHeightPx,

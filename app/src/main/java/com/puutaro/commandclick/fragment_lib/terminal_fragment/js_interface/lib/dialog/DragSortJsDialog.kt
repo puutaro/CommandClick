@@ -5,8 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -29,6 +27,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.TextDraw
 import com.puutaro.commandclick.util.list.ListTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +38,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.ref.WeakReference
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.scale
 
 
 class DragSortJsDialog(
@@ -113,7 +114,7 @@ class DragSortJsDialog(
         dragSortDialogObj?.window?.apply {
             setGravity(Gravity.BOTTOM)
             setBackgroundDrawable(
-                ColorDrawable(Color.TRANSPARENT),
+                Color.TRANSPARENT.toDrawable(),
             )
         }
         dragSortDialogObj?.show()
@@ -150,18 +151,16 @@ class DragSortJsDialog(
 
                 (1..3).map {
 
-                    BitmapTool.DrawText.drawTextToBitmapByRandom(
+                    TextDraw.drawTextToBitmapByRandom(
                         bkTitleText.repeat(repeatNum),
                         170.toFloat(),
                         340.toFloat(),
                         (10..15).random().toFloat(),
                         Color.BLACK,
                     ).let { textBitmapSrc ->
-                        val scaledTextBitmapSrc = Bitmap.createScaledBitmap(
-                            textBitmapSrc,
+                        val scaledTextBitmapSrc = textBitmapSrc.scale(
                             imageSizePair.first.toInt(),
-                            imageSizePair.second.toInt(),
-                            true
+                            imageSizePair.second.toInt()
                         )
                         scaledTextBitmapSrc
                     }
@@ -386,7 +385,7 @@ class DragSortJsDialog(
                         context,
                         strokeColorId
                     )
-                    val titleBitmap = BitmapTool.DrawText.drawTextToBitmap(
+                    val titleBitmap = TextDraw.drawTextToBitmap(
                         titleText,
                         imageSizePair.first,
                         imageSizePair.second,
@@ -418,7 +417,7 @@ class DragSortJsDialog(
                         val animationDrawable = AnimationDrawable()
                         textBitmapListSrc.forEach {
                             animationDrawable.addFrame(
-                                BitmapDrawable(context.resources, it),
+                                it.toDrawable(context.resources),
                                 500
                             )
                         }
@@ -555,10 +554,7 @@ class DragSortJsDialog(
                     else -> 100
                 }
                 addFrame(
-                    BitmapDrawable(
-                        context.resources,
-                        allow
-                    ),
+                    allow.toDrawable(context.resources),
                     duration
                 )
             }

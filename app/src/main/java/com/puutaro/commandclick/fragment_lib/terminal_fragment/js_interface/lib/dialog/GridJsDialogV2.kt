@@ -6,8 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.ViewGroup
@@ -34,6 +32,7 @@ import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.BitmapTool.ImageTransformer
 import com.puutaro.commandclick.util.image_tools.ColorTool
+import com.puutaro.commandclick.util.image_tools.ImageCut
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -42,6 +41,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.graphics.toColorInt
+import androidx.core.graphics.scale
+import com.puutaro.commandclick.util.image_tools.ImageOverlay
 
 
 class GridJsDialogV2(
@@ -173,7 +176,7 @@ class GridJsDialogV2(
         )
         gridDialogObj?.window?.apply {
             setBackgroundDrawable(
-                ColorDrawable(Color.TRANSPARENT)
+                Color.TRANSPARENT.toDrawable()
             )
             setGravity(Gravity.BOTTOM)
         }
@@ -205,7 +208,7 @@ class GridJsDialogV2(
                         waterColor,
 //                        gradTopColorStr,
                     ).map {
-                        Color.parseColor(it)
+                        it.toColorInt()
                     }.toIntArray(),
                     BitmapTool.GradientBitmap.GradOrient.VERTICAL_BOTTOM_TO_TOP,
                 )
@@ -231,7 +234,7 @@ class GridJsDialogV2(
                             val srcWidth = it.width
                             val srcHeight = it.height
                             val cutHeight = srcHeight / 3
-                            val cutSrcBitmap = BitmapTool.ImageTransformer.cutByTarget(
+                            val cutSrcBitmap = ImageCut.cutByTarget(
                                 it,
                                 srcWidth,
                                 cutHeight,
@@ -243,12 +246,7 @@ class GridJsDialogV2(
                     } ?: return@apply
                 val cutWidth = cutSrcBitmap.width / 3
                 val cutHeight = cutSrcBitmap.height
-                val gradientRectCutForShibuki =  Bitmap.createScaledBitmap(
-                    gradientRect,
-                    cutWidth,
-                    cutHeight,
-                    true
-                )
+                val gradientRectCutForShibuki = gradientRect.scale(cutWidth, cutHeight)
                 val shibukiBitmapList = (1..2).map {
                     val normalOrFlipBitmap = when(
                         (1..2).random()
@@ -256,7 +254,7 @@ class GridJsDialogV2(
                         1 -> BitmapTool.ImageTransformer.flipHorizontally(cutSrcBitmap)
                         else -> cutSrcBitmap
                     }
-                    val cutBitmap = BitmapTool.ImageTransformer.cut(
+                    val cutBitmap = ImageCut.cut(
                         cutSrcBitmap,
                         (normalOrFlipBitmap.width / 3),
                         normalOrFlipBitmap.height,
@@ -266,7 +264,7 @@ class GridJsDialogV2(
                         cutBitmap,
                     )
                 }
-                val shibukiBitmap = BitmapTool.ImageTransformer.overlayBitmap(
+                val shibukiBitmap = ImageOverlay.overlayBitmap(
                         shibukiBitmapList.last() as Bitmap,
                         shibukiBitmapList.first() as Bitmap,
                     )
@@ -300,7 +298,7 @@ class GridJsDialogV2(
                         else -> 70
                     }
                     animationDrawable.addFrame(
-                        BitmapDrawable(imageViewContext.resources, bitmap),
+                        bitmap.toDrawable(imageViewContext.resources),
                         duration
                     )
                 }
@@ -313,7 +311,7 @@ class GridJsDialogV2(
                     .playOn(this)
                 val bkShibukiBitmap = withContext(Dispatchers.IO){
                     val bkShibukiBitmapSrc = shibukiBitmapList.random()
-                    BitmapTool.ImageTransformer.cutByTarget(
+                    ImageCut.cutByTarget(
                         bkShibukiBitmapSrc,
                         bkShibukiBitmapSrc.width,
                         (bkShibukiBitmapSrc.height / 3),
@@ -333,7 +331,7 @@ class GridJsDialogV2(
                         R.id.grid_dialog_v2_splash_image_view
                     )?.apply setBkGridImage@{
                         imageTintList = ColorStateList.valueOf(
-                            Color.parseColor(waterColor)
+                            waterColor.toColorInt()
                         )
                         alpha = 1f
                         setImageBitmap(bkShibukiBitmapOpacity)
@@ -351,7 +349,7 @@ class GridJsDialogV2(
                         R.id.grid_dialog_v2_splash_bk_image_view
                     )?.apply setBkGridImage@ {
                         imageTintList = ColorStateList.valueOf(
-                            Color.parseColor(waterColor)
+                            waterColor.toColorInt()
                         )
                         setImageBitmap(bkShibukiBitmap)
                         delay(300) //300
@@ -388,7 +386,7 @@ class GridJsDialogV2(
                                 .thumbnail(requestBuilder)
                                 .into(this@setEffectImage)
                             imageTintList =  ColorStateList.valueOf(
-                                Color.parseColor(waterColor)
+                                waterColor.toColorInt()
                             )
                             CoroutineScope(Dispatchers.Main).launch {
                                 YoYo.with(Techniques.FadeOut)
@@ -474,7 +472,7 @@ class GridJsDialogV2(
             dimAlphaJob?.cancel()
             dimAlphaJob = CoroutineScope(Dispatchers.IO).launch{
                 withContext(Dispatchers.Main) {
-                    setBackgroundColor(Color.parseColor(titleAndDimColor))
+                    setBackgroundColor(titleAndDimColor.toColorInt())
                     alpha = 1f
                     isVisible = true
                 }

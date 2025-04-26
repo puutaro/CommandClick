@@ -46,6 +46,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import androidx.core.graphics.scale
+import com.puutaro.commandclick.util.image_tools.TextDraw
+import androidx.core.graphics.toColorInt
+import com.puutaro.commandclick.util.image_tools.ImageCut
+import com.puutaro.commandclick.util.image_tools.ImageOverlay
 
 object TitleImageAndViewSetter {
 
@@ -573,7 +577,7 @@ object TitleImageAndViewSetter {
                                 val imageTypeToBackstackCountBitmap = when (isLogoMaking) {
                                     false -> {
                                         val backstackCountBitmapSrc =
-                                            BitmapTool.DrawText.drawTextToBitmap(
+                                            TextDraw.drawTextToBitmap(
                                                 bkCount,
                                                 oneSideLength,
                                                 oneSideLength,
@@ -592,7 +596,7 @@ object TitleImageAndViewSetter {
                                             ).let {
                                                 val shurinkOnesideLength =
                                                     (oneSideLength * 0.8).toInt()
-                                                BitmapTool.ImageTransformer.cutCenter(
+                                                ImageCut.cutCenter(
                                                     it,
                                                     shurinkOnesideLength,
                                                     shurinkOnesideLength
@@ -662,7 +666,7 @@ object TitleImageAndViewSetter {
                             val imageType = imageTypeTobackstackCountBitmap.first
                             val backstackCountBitmap = imageTypeTobackstackCountBitmap.second
                             bkRect = when(imageType) {
-                                PutImageType.LOGO -> BitmapTool.ImageTransformer.overlayOnBkBitmap(
+                                PutImageType.LOGO -> ImageOverlay.overlayOnBkBitmap(
                                     bkRect,
                                     backstackCountBitmap,
                                 )
@@ -692,7 +696,7 @@ object TitleImageAndViewSetter {
                                                 .toFloat()
                                         }
                                     }
-                                    BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                                    ImageOverlay.overlayOnBkBitmapByPivot(
                                         bkRect,
                                         backstackCountBitmap,
                                         pivotX,
@@ -728,7 +732,7 @@ object TitleImageAndViewSetter {
                     }.let {
                         it * shrinkRate
                     }.toInt()
-                    BitmapTool.ImageTransformer.cutCenter(
+                    ImageCut.cutCenter(
                         bkRect,
                         bkRect.width - trimWidth,
                         bkRect.height - trimHeight
@@ -1154,14 +1158,14 @@ object TitleImageAndViewSetter {
                         ) return@let minSize
                         culcSize
                     }
-                    val backstackCountBitmap = BitmapTool.DrawText.drawTextToBitmap(
+                    val backstackCountBitmap = TextDraw.drawTextToBitmap(
                         bkCount,
                         oneSideLength,
                         oneSideLength,
                         null,
                         fontSize,
-                        Color.parseColor(backstackColorStr),
-                        Color.parseColor(backstackColorStr),
+                        backstackColorStr.toColorInt(),
+                        backstackColorStr.toColorInt(),
                         null,
                         null,
                         null,
@@ -1171,7 +1175,7 @@ object TitleImageAndViewSetter {
                     backstackCountBitmap
                 }
                 withContext(Dispatchers.Main) {
-                    setBackgroundColor(Color.parseColor(fillColorStr))
+                    setBackgroundColor(fillColorStr.toColorInt())
                     val requestBuilder: RequestBuilder<Drawable> =
                         requestBuilderSrc ?: Glide.with(context)
                             .asDrawable()
@@ -1349,7 +1353,7 @@ private object FannelLogoSetter {
                             (10..60).random()
                         )
                     }
-                    updatedRectBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmap(
+                    updatedRectBitmap = ImageOverlay.overlayOnBkBitmap(
                         updatedRectBitmap,
                         rateLogoBitmap
                     )

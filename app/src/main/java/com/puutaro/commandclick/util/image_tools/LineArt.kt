@@ -12,14 +12,83 @@ import androidx.core.graphics.PathParser
 import androidx.core.graphics.createBitmap
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.puutaro.commandclick.util.num.RateTool
-import java.util.Random
 import kotlin.math.atan2
 import androidx.core.graphics.toColorInt
 import androidx.core.graphics.get
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
 
 object LineArt {
+
+    /**
+     * Bitmapに直線状のダメージラインを特定の角度で描画する関数。
+     *
+     * @param bitmap 描画対象のBitmap
+     * @param startX ラインの始点のX座標
+     * @param startY ラインの始点のY座標
+     * @param minLength ラインの長さ
+     * @param minAngle ラインの角度（度数法）
+     * @param colorList ラインの色
+     * @param lineWidth ラインの太さ
+     * @return ダメージラインが描画された新しいBitmap。元のBitmapは変更されない。
+     */
+    fun drawAngleyLine(
+        bitmap: Bitmap,
+        baseLength: Float,
+        minLength: Float,
+        maxLength: Float,
+        minStrokeWidth: Float,
+        maxStrokeWidth: Float,
+        minOpacity: Float,
+        maxOpacity: Float,
+        minAngle: Int,
+        maxAngle: Int,
+        colorList: List<String>,
+        times: Int,
+    ): Bitmap {
+        // 新しいBitmapを作成（元のBitmapを直接変更しない）
+        val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true) // 可変のコピーを作成
+        val bitmapWidth = mutableBitmap.width
+        val bitmapHeight = mutableBitmap.height
+        val canvas = Canvas(mutableBitmap)
+        val paint = Paint()
+        val random = Random.Default
+        for(i in 0..times) {
+            paint.color = colorList.random().toColorInt()
+            paint.strokeWidth = random.nextDouble(
+                minStrokeWidth.toDouble(),
+                maxStrokeWidth.toDouble()
+            ).toFloat()
+            paint.style = Paint.Style.STROKE // 線を描画
+            paint.alpha = RateTool.randomByRate(
+                255f,
+                minOpacity,
+                maxOpacity
+            )
+            // paint.isAntiAlias = true // アンチエイリアスを有効にする
+
+            // 角度をラジアンに変換
+            val angleRad = (minAngle..maxAngle).random() * PI / 180f
+
+            // Pathを使って線を描画
+            val path = Path()
+            val startX = (0..bitmapWidth).random().toFloat()
+            val startY = (0..bitmapHeight).random().toFloat()
+            val length = RateTool.randomByRate(baseLength,minLength,maxLength)
+            // 終点の座標を計算
+            val endX = (startX + length * cos(angleRad)).toFloat()
+            val endY = (startY + length * sin(angleRad)).toFloat()
+
+            path.moveTo(startX, startY)
+            path.lineTo(endX, endY)
+
+            canvas.drawPath(path, paint)
+      }
+
+        return mutableBitmap
+    }
 
     fun getPathsFromVectorDrawable(context: Context, drawableId: Int): List<String>? {
         val vectorDrawable =
@@ -89,7 +158,7 @@ object LineArt {
         val pathMeasure = PathMeasure(path, false) // パスの長さを計測
         val pathLength = pathMeasure.length
 
-        val random = Random()
+        val random = java.util.Random()
         for (i in 0 until times) {
             paint.alpha = RateTool.randomByRate(
                 opacity,

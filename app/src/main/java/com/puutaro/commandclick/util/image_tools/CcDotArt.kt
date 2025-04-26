@@ -9,6 +9,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
+import androidx.core.graphics.scale
 
 object CcDotArt {
 
@@ -188,8 +189,7 @@ object CcDotArt {
             for (i in 1..addTimes) {
                 val logoBitmapRate = (5..10).random() / 10f
                 val peaceBitmap = peaceBitmapArray.random()
-                val rateLogoBitmap = Bitmap.createScaledBitmap(
-                    peaceBitmap,
+                val rateLogoBitmap = peaceBitmap.scale(
                     (peaceBitmap.width * logoBitmapRate).toInt(),
                     (peaceBitmap.height * logoBitmapRate).toInt(),
                     false,
@@ -204,7 +204,7 @@ object CcDotArt {
                         (150..255).random()
                     )
                 }
-                updatedRectBitmap = ImageTransformer.overlayOnBkBitmap(
+                updatedRectBitmap = ImageOverlay.overlayOnBkBitmap(
                     updatedRectBitmap,
                     rateLogoBitmap
                 )
@@ -231,8 +231,7 @@ object CcDotArt {
             for (i in 1..addTimes) {
                 val logoBitmapRate = (5..10).random() / 10f
                 val peaceBitmap = peaceBitmapArray.random()
-                val rateLogoBitmap = Bitmap.createScaledBitmap(
-                    peaceBitmap,
+                val rateLogoBitmap = peaceBitmap.scale(
                     (peaceBitmap.width * logoBitmapRate).toInt(),
                     (peaceBitmap.height * logoBitmapRate).toInt(),
                     false,
@@ -271,7 +270,7 @@ object CcDotArt {
                     val rndBandY = marginY / 10
                    (basePivotY + (-rndBandY..rndBandY).random())
                 }
-                updatedRectBitmap = ImageTransformer.overlayOnBkBitmapByPivot(
+                updatedRectBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                     updatedRectBitmap,
                     rateLogoBitmap,
                     pivotX.toFloat(),
@@ -304,8 +303,7 @@ object CcDotArt {
             for (i in 1..addTimes) {
                 val logoBitmapRate = (5..10).random() / 10f
                 val peaceBitmap = peaceBitmapList.random()
-                val rateLogoBitmap = Bitmap.createScaledBitmap(
-                    peaceBitmap,
+                val rateLogoBitmap = peaceBitmap.scale(
                     (peaceBitmap.width * logoBitmapRate).toInt(),
                     (peaceBitmap.height * logoBitmapRate).toInt(),
                     false,
@@ -366,7 +364,7 @@ object CcDotArt {
                     val rndBandY = basePivotYToRndBandY.second
                     (basePivotY + (-rndBandY..rndBandY).random())
                 }
-                updatedRectBitmap = ImageTransformer.overlayOnBkBitmapByPivot(
+                updatedRectBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                     updatedRectBitmap,
                     rateLogoBitmap,
                     pivotX.toFloat(),
@@ -401,12 +399,7 @@ object CcDotArt {
                     (startAngle..endAngle).random().toFloat()
                 ).let {
                     val rate = (5..10).random() / 10f
-                    Bitmap.createScaledBitmap(
-                        it,
-                        (it.width * rate).toInt(),
-                        (it.height * rate).toInt(),
-                        true,
-                    )
+                    it.scale((it.width * rate).toInt(), (it.height * rate).toInt())
                 }
                 val curPieceRectSrcWidth = curPieceRectSrc.width
                 val pivotX = culcPivotXByLeftPrior(
@@ -424,7 +417,7 @@ object CcDotArt {
                     curPieceRectSrc,
                     curOpacity
                 )
-                baseRect = ImageTransformer.overlayOnBkBitmapByPivot(
+                baseRect = ImageOverlay.overlayOnBkBitmapByPivot(
                     baseRect,
                     curPieceRect,
                     pivotX.toFloat(),
@@ -456,12 +449,7 @@ object CcDotArt {
                     (0..180).random().toFloat()
                 ).let {
                     val rate = (5..10).random() / 10f
-                    Bitmap.createScaledBitmap(
-                        it,
-                        (it.width * rate).toInt(),
-                        (it.height * rate).toInt(),
-                        true,
-                    )
+                    it.scale((it.width * rate).toInt(), (it.height * rate).toInt())
                 }
                 val curPieceRectSrcWidth = curPieceRectSrc.width
                 val pivotX = try {
@@ -483,7 +471,7 @@ object CcDotArt {
                     curPieceRectSrc,
                     curOpacity
                 )
-                baseRect = ImageTransformer.overlayOnBkBitmapByPivot(
+                baseRect = ImageOverlay.overlayOnBkBitmapByPivot(
                     baseRect,
                     curPieceRect,
                     pivotX.toFloat(),
@@ -531,7 +519,7 @@ object CcDotArt {
                     pieceRect,
                     curOpacity
                 )
-                baseRect = ImageTransformer.overlayOnBkBitmapByPivot(
+                baseRect = ImageOverlay.overlayOnBkBitmapByPivot(
                     baseRect,
                     curPieceRect,
                     curMarginLeft.toFloat(),
@@ -630,18 +618,8 @@ object CcDotArt {
     fun dotArtMaker(
         srcBitmap: Bitmap
     ): Bitmap {
-        val bitmap = Bitmap.createScaledBitmap(
-            srcBitmap,
-            32,
-            32,
-            false,
-        )
-        val dotBitmap = Bitmap.createScaledBitmap(
-            bitmap,
-            192,
-            192,
-            false,
-        )
+        val bitmap = srcBitmap.scale(32, 32, false)
+        val dotBitmap = bitmap.scale(192, 192, false)
         return bitmap
     }
 }

@@ -16,6 +16,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import kotlin.enums.EnumEntries
 import androidx.core.graphics.scale
+import com.puutaro.commandclick.util.image_tools.ImageCut
+import com.puutaro.commandclick.util.image_tools.ImageOverlay
 
 object MonoArtForImageAction {
 
@@ -1093,7 +1095,7 @@ object MonoArtForImageAction {
                                     ).random()
                         val offsetX = (0..(baseWidth - cutWidth)).random()
                         val offsetY = (0..(baseHeight - cutHeight)).random()
-                        BitmapTool.ImageTransformer.cutByTarget(
+                        ImageCut.cutByTarget(
                             baseBitmap,
                             cutWidth,
                             cutHeight,
@@ -1115,7 +1117,7 @@ object MonoArtForImageAction {
                             val invertedBitmap = BitmapTool.ImageTransformer.invertMonoBitmap(
                                 grayBitmap
                             )
-                            val concatInvertedBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapCenter(
+                            val concatInvertedBitmap = ImageOverlay.overlayOnBkBitmapCenter(
                                 bkRect,
                                 invertedBitmap,
                             )
@@ -1130,7 +1132,7 @@ object MonoArtForImageAction {
                 var resultBitmap = baseBitmap
                 bitmapToOffsetPairList.forEach {
                         (cutBitmap, offsetPair) ->
-                    resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                    resultBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                         resultBitmap,
                         cutBitmap,
                         offsetPair.first.toFloat(),
@@ -1221,7 +1223,7 @@ object MonoArtForImageAction {
                                     ).random()
                         val offsetX = (0..(baseWidth - cutWidth)).random()
                         val offsetY = (0..(baseHeight - cutHeight)).random()
-                        BitmapTool.ImageTransformer.cutByTarget(
+                        ImageCut.cutByTarget(
                             baseBitmap,
                             cutWidth,
                             cutHeight,
@@ -1234,11 +1236,11 @@ object MonoArtForImageAction {
                                 baseRect.width,
                                 baseRect.height
                             )
-                            val shrinkBitmap = Bitmap.createScaledBitmap(
-                                baseRect,
-                                (baseRect.width * borderRate).toInt().let { if(it <= 0) 1 else it },
-                                (baseRect.height * borderRate).toInt().let { if(it <= 0) 1 else it },
-                                true,
+                            val shrinkBitmap = baseRect.scale(
+                                (baseRect.width * borderRate).toInt()
+                                    .let { if (it <= 0) 1 else it },
+                                (baseRect.height * borderRate).toInt()
+                                    .let { if (it <= 0) 1 else it },
                             )
 //                            val grayBitmap = BitmapTool.ImageTransformer.convertGrayScaleBitmap(
 //                                shrinkBitmap
@@ -1246,7 +1248,7 @@ object MonoArtForImageAction {
 //                            val invertedBitmap = BitmapTool.ImageTransformer.invertMonoBitmap(
 //                                grayBitmap
 //                            )
-                            val concatInvertedBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapCenter(
+                            val concatInvertedBitmap = ImageOverlay.overlayOnBkBitmapCenter(
                                 bkRect,
                                 shrinkBitmap,
                             )
@@ -1261,7 +1263,7 @@ object MonoArtForImageAction {
                 var resultBitmap = baseBitmap
                 bitmapToOffsetPairList.forEach {
                     (cutBitmap, offsetPair) ->
-                    resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                    resultBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                         resultBitmap,
                         cutBitmap,
                         offsetPair.first.toFloat(),
@@ -1338,11 +1340,11 @@ object MonoArtForImageAction {
             return withContext(Dispatchers.IO) {
                 val bitmapToOffsetPairListJob = (0..times).map {
                     async {
-                        val x = baseWidth - (0..< (baseWidth).toInt()).random()
+                        val x = baseWidth - (0..< baseWidth).random()
                         val y = when(
                             (0..1).random() == 1
                         ) {
-                            true -> baseHeight - (0..< (baseHeight).toInt()).random()
+                            true -> baseHeight - (0..< baseHeight).random()
                             else -> 0
                         }
                         val widthSrc = baseWidth - x
@@ -1393,7 +1395,7 @@ object MonoArtForImageAction {
                 var resultBitmap = baseBitmap
                 bitmapToOffsetPairList.forEach {
                         (cutBitmap, offsetPair) ->
-                    resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                    resultBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                         resultBitmap,
                         cutBitmap,
                         offsetPair.first.toFloat(),
@@ -1499,7 +1501,7 @@ object MonoArtForImageAction {
                                     ).random()
                         val offsetX = (0..(baseWidth - cutWidth)).random()
                         val offsetY = (0..(baseHeight - cutHeight)).random()
-                        BitmapTool.ImageTransformer.cutByTarget(
+                        ImageCut.cutByTarget(
                             baseBitmap,
                             cutWidth,
                             cutHeight,
@@ -1520,11 +1522,11 @@ object MonoArtForImageAction {
 //                                baseRect.width,
 //                                baseRect.height
 //                            )
-                            val shrinkBitmap = Bitmap.createScaledBitmap(
-                                baseRect,
-                                (baseRect.width * borderRate).toInt().let { if(it <= 0) 1 else it },
-                                (baseRect.height * borderRate).toInt().let { if(it <= 0) 1 else it },
-                                true,
+                            val shrinkBitmap = baseRect.scale(
+                                (baseRect.width * borderRate).toInt()
+                                    .let { if (it <= 0) 1 else it },
+                                (baseRect.height * borderRate).toInt()
+                                    .let { if (it <= 0) 1 else it },
                             )
 //                            val grayBitmap = BitmapTool.ImageTransformer.convertGrayScaleBitmap(
 //                                shrinkBitmap
@@ -1532,7 +1534,7 @@ object MonoArtForImageAction {
 //                            val invertedBitmap = BitmapTool.ImageTransformer.invertMonoBitmap(
 //                                grayBitmap
 //                            )
-                            val concatInvertedBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapCenter(
+                            val concatInvertedBitmap = ImageOverlay.overlayOnBkBitmapCenter(
                                 bkRect,
                                 shrinkBitmap,
                             )
@@ -1547,7 +1549,7 @@ object MonoArtForImageAction {
                 var resultBitmap = baseBitmap
                 bitmapToOffsetPairList.forEach {
                         (cutBitmap, offsetPair) ->
-                    resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                    resultBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                         resultBitmap,
                         cutBitmap,
                         offsetPair.first.toFloat(),
@@ -1617,7 +1619,7 @@ object MonoArtForImageAction {
                                     ).random()
                         val offsetX = (0..(baseWidth - cutWidth)).random()
                         val offsetY = (0..(baseHeight - cutHeight)).random()
-                        BitmapTool.ImageTransformer.cutByTarget(
+                        ImageCut.cutByTarget(
                             baseBitmap,
                             cutWidth,
                             cutHeight,
@@ -1630,7 +1632,7 @@ object MonoArtForImageAction {
                                 it.height
                             )
 
-                            val shrinkBitmap = BitmapTool.ImageTransformer.cutCenter(
+                            val shrinkBitmap = ImageCut.cutCenter(
                                 it,
                                 (it.width * borderRate).toInt().let { if(it <= 0) 1 else it },
                                 (it.height * borderRate).toInt().let { if(it <= 0) 1 else it },
@@ -1647,7 +1649,7 @@ object MonoArtForImageAction {
 //                            val invertedBitmap = BitmapTool.ImageTransformer.invertMonoBitmap(
 //                                grayBitmap
 //                            )
-                            val concatInvertedBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapCenter(
+                            val concatInvertedBitmap = ImageOverlay.overlayOnBkBitmapCenter(
                                 bkRect,
                                 shrinkBitmap,
                             )
@@ -1662,7 +1664,7 @@ object MonoArtForImageAction {
                 var resultBitmap = grayBaseBitmap
                 bitmapToOffsetPairList.forEach {
                         (cutBitmap, offsetPair) ->
-                    resultBitmap = BitmapTool.ImageTransformer.overlayOnBkBitmapByPivot(
+                    resultBitmap = ImageOverlay.overlayOnBkBitmapByPivot(
                         resultBitmap,
                         cutBitmap,
                         offsetPair.first.toFloat(),
