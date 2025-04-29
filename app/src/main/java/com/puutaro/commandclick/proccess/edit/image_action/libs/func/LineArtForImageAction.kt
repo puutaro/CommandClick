@@ -20,9 +20,6 @@ import kotlin.enums.EnumEntries
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.get
 import androidx.core.graphics.set
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
 
 object LineArtForImageAction {
 
@@ -92,7 +89,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val width = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -108,7 +105,7 @@ object LineArtForImageAction {
                     if(widthSrc <= 0) return@let bitmap.width
                     widthSrc
                 }
-                val height = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -124,7 +121,7 @@ object LineArtForImageAction {
                     if(heightSrc <= 0) return@let bitmap.height
                     heightSrc
                 }
-                val times = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -196,7 +193,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to err
                 }
-                val strokeWidth = FuncCheckerForSetting.Getter.getPosiFloatFromArgMapByName(
+                val strokeWidth = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.strokeWidthKeyToDefaultValueStr,
                     where
@@ -283,7 +280,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to err
                 }
-                val length = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
+                val length = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.lengthKeyToDefaultValueStr,
                     where
@@ -387,7 +384,7 @@ object LineArtForImageAction {
                     formalArgIndexToNameToTypeList
                 )
 
-                val width = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -399,7 +396,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -423,7 +420,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val times = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -456,7 +453,7 @@ object LineArtForImageAction {
                         ColorTool.removeAlpha(it)
                     }
                 }.toList()
-                val opacity = FuncCheckerForSetting.Getter.getPosiFloatFromArgMapByName(
+                val opacity = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.opacityKeyToDefaultValueStr,
                     where
@@ -471,7 +468,7 @@ object LineArtForImageAction {
                     if(it <= 1f) return@let it
                     1f
                 }
-                val minOpacityRate = FuncCheckerForSetting.Getter.getPosiFloatFromArgMapByName(
+                val minOpacityRate = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.minOpacityRateKeyToDefaultValueStr,
                     where
@@ -483,7 +480,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxOpacityRate = FuncCheckerForSetting.Getter.getPosiFloatFromArgMapByName(
+                val maxOpacityRate = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxOpacityRateKeyToDefaultValueStr,
                     where
@@ -510,7 +507,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to err
                 }
-                val angle = FuncCheckerForSetting.Getter.getPosiFloatFromArgMapByName(
+                val angle = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.angleKeyToDefaultValueStr,
                     where
@@ -573,7 +570,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to err
                 }
-                val length = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
+                val length = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.lengthKeyToDefaultValueStr,
                     where
@@ -597,7 +594,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxLengthShrinkRate = FuncCheckerForSetting.Getter.getPosiFloatFromArgMapByName(
+                val maxLengthShrinkRate = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxLengthShrinkRateKeyToDefaultValueStr,
                     where
@@ -688,7 +685,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val times = FuncCheckerForSetting.Getter.getPosiIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -721,7 +718,7 @@ object LineArtForImageAction {
                         ColorTool.removeAlpha(it)
                     }
                 }.toList()
-                val minStrokeWidth = FuncCheckerForSetting.Getter.getPosiFloatFromArgMapByName(
+                val minStrokeWidth = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.minStrokeWidthKeyToDefaultValueStr,
                     where
@@ -733,7 +730,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxStrokeWidth = FuncCheckerForSetting.Getter.getPosiFloatFromArgMapByName(
+                val maxStrokeWidth = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxStrokeWidthKeyToDefaultValueStr,
                     where
@@ -838,7 +835,7 @@ object LineArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to err
                 }
-                val length = FuncCheckerForSetting.Getter.getPosiFloatFromArgMapByName(
+                val length = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.lengthKeyToDefaultValueStr,
                     where
@@ -1481,7 +1478,7 @@ object LineArtForImageAction {
             ) {
                 BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
                 COLOR_LIST("colorList", CmdClickColor.BLACK.str, FuncCheckerForSetting.ArgType.STRING),
-                TIMES("times", (-1).toString(), FuncCheckerForSetting.ArgType.INT),
+                TIMES("times", 1.toString(), FuncCheckerForSetting.ArgType.INT),
                 MIN_OPACITY_RATE(
                     "minOpacityRate",
                     (0.9).toString(),

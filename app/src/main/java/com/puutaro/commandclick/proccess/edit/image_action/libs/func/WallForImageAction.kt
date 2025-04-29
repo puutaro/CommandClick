@@ -18,6 +18,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.enums.EnumEntries
+import androidx.core.graphics.scale
 
 object WallForImageAction {
     suspend fun handle(
@@ -121,7 +122,7 @@ object WallForImageAction {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -133,7 +134,7 @@ object WallForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -145,7 +146,7 @@ object WallForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val xMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val xMulti = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.xMultiKeyToDefaultValueStr,
                     where
@@ -157,7 +158,7 @@ object WallForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val yMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val yMulti = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.yMultiKeyToDefaultValueStr,
                     where
@@ -183,7 +184,7 @@ object WallForImageAction {
                 }
                 val pieceMapArray =
                     WallPieceManager.makePieceMapArray(argsPairList)
-                val xDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val xDup = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.xDupKeyToDefaultValueStr,
                     where
@@ -195,7 +196,7 @@ object WallForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val yDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val yDup = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.yDupKeyToDefaultValueStr,
                     where
@@ -245,12 +246,7 @@ object WallForImageAction {
                 macroStr
             ) ?: return null
             val returnBitmap = BitmapTool.convertFileToBitmap(cmdClickBkImageFilePath)?.let {
-                Bitmap.createScaledBitmap(
-                    it,
-                    width,
-                    height,
-                    true,
-                )
+                it.scale(width, height)
 //                BitmapTool.ImageTransformer.cutCenter(
 //                    it,
 //                    width,

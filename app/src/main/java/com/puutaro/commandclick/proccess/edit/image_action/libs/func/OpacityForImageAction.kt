@@ -76,7 +76,7 @@ object OpacityForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val opacityInt = FuncCheckerForSetting.Getter.getFloatFromArgMapByIndex(
+                val opacityInt = FuncCheckerForSetting.Getter.getZeroELargerFloatFromArgMapByIndex(
                     mapArgMapList,
                     args.opacityKeyToIndex,
                     where

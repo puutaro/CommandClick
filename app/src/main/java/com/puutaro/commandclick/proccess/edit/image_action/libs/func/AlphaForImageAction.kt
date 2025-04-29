@@ -553,7 +553,7 @@ object AlphaForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val waveAmp = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val waveAmp = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.waveAmpKeyToDefaultValueStr,
                     where
@@ -565,21 +565,7 @@ object AlphaForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                FuncCheckerForSetting.NumChecker.compare(
-                    0,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
-                    waveAmp,
-                    args.waveAmpKeyToDefaultValueStr.first,
-                    where,
-                ).let {
-                        err ->
-                    if(err == null) return@let
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to err
-                }
-                val waveLength = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val waveLength = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.waveLengthKeyToDefaultValueStr,
                     where
@@ -591,22 +577,7 @@ object AlphaForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                FuncCheckerForSetting.NumChecker.compare(
-                    0f,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
-                    waveLength,
-                    args.waveLengthKeyToDefaultValueStr.first,
-                    where,
-                ).let {
-                        err ->
-                    if(err == null) return@let
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to err
-                }
-
-                val lengthDivider = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val lengthDivider = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.lengthDividerKeyToDefaultValueStr,
                     where
@@ -618,25 +589,12 @@ object AlphaForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                FuncCheckerForSetting.NumChecker.compare(
-                    0f,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
-                    lengthDivider,
-                    args.waveLengthKeyToDefaultValueStr.first,
-                    where,
-                ).let {
-                        err ->
-                    if(err == null) return@let
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to err
-                }
-                FuncCheckerForSetting.NumChecker.compare(
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
                     waveLength,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.SMALLER,
                     lengthDivider,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
                     args.waveLengthKeyToDefaultValueStr.first,
+                    args.lengthDividerKeyToDefaultValueStr.first,
                     where,
                 ).let {
                         err ->

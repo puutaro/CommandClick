@@ -167,7 +167,7 @@ object ColorForImageAction {
                         where,
                     )
                 }
-                val tol = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                val tol = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByIndex(
                     mapArgMapList,
                     args.tolKeyToIndex,
                     where
@@ -178,20 +178,6 @@ object ColorForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }
-                FuncCheckerForSetting.NumChecker.compare(
-                    0,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
-                    tol,
-                    args.tolKeyToIndex.first,
-                    where,
-                ).let {
-                        err ->
-                    if(err == null) return@let
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to err
                 }
                 val returnBitmap = ColorManager.blackToByTol(
                     bitmap,
@@ -469,7 +455,7 @@ object ColorForImageAction {
                         where,
                     )
                 }
-                val tol = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                val tol = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByIndex(
                     mapArgMapList,
                     args.tolKeyToIndex,
                     where
@@ -480,20 +466,6 @@ object ColorForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }
-                FuncCheckerForSetting.NumChecker.compare(
-                    0,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
-                    tol,
-                    args.tolKeyToIndex.first,
-                    where,
-                ).let {
-                        err ->
-                    if(err == null) return@let
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to err
                 }
                 val returnBitmap = ColorManager.colorToByTol(
                     bitmap,
@@ -1424,7 +1396,7 @@ object ColorForImageAction {
                 BITMAP("bitmap", 0, FuncCheckerForSetting.ArgType.BITMAP),
                 FROM("from", 1, FuncCheckerForSetting.ArgType.STRING),
                 TO("to", 2, FuncCheckerForSetting.ArgType.STRING),
-                TOLERANCE("tol", 3, FuncCheckerForSetting.ArgType.STRING),
+                TOLERANCE("tol", 3, FuncCheckerForSetting.ArgType.INT),
             }
         }
         data object AllToInTarns : ColorMethodArgClass(), ArgType {

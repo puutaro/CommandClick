@@ -85,7 +85,7 @@ object BlurForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val radiusInt = FuncCheckerForSetting.Getter.getFloatFromArgMapByIndex(
+                val radiusInt = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByIndex(
                     mapArgMapList,
                     args.radiusKeyToIndex,
                     where
@@ -96,12 +96,8 @@ object BlurForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.let {
-                    opacityFloat ->
-                    val hexMax = 255
-                    return@let (opacityFloat * hexMax).toInt()
                 }
-                val samplingFloat = FuncCheckerForSetting.Getter.getFloatFromArgMapByIndex(
+                val samplingFloat = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByIndex(
                     mapArgMapList,
                     args.samplingKeyToIndex,
                     where

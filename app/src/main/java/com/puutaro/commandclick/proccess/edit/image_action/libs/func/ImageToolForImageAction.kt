@@ -73,7 +73,7 @@ object ImageToolForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val trimSize = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                val trimSize = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByIndex(
                     mapArgMapList,
                     args.trimSizeKeyToIndex,
                     where

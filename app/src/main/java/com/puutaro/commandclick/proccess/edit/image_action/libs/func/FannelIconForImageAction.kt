@@ -82,7 +82,7 @@ object FannelIconForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -94,7 +94,7 @@ object FannelIconForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where,

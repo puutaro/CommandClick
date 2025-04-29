@@ -98,6 +98,7 @@ import java.util.Locale
 import androidx.core.graphics.toColorInt
 import androidx.core.graphics.drawable.toDrawable
 import com.puutaro.commandclick.util.image_tools.ImageCut
+import com.puutaro.commandclick.util.image_tools.MaskTool
 
 
 class PromptWithListDialog(
@@ -2022,7 +2023,7 @@ class PromptWithListDialog(
                     val reversedSquareBitmap = ColorTool.swapTransparentAndBlack(
                         maskSquare,
                     )
-                val maskedMainImageBitmap = ImageTransformer.maskImageByTransparent(
+                val maskedMainImageBitmap = MaskTool.maskImageByTransparent(
                     srcMainImageBitmap,
                     reversedSquareBitmap,
                 )
@@ -2042,7 +2043,7 @@ class PromptWithListDialog(
                                         textBitmap == null
                                     ) return@withPermit null
                                     val textBkBitmap =
-                                        ImageTransformer.maskImageByTransparent(
+                                        MaskTool.maskImageByTransparent(
                                             textBitmap,
                                             srcMainImageBitmap,
                                         ).let { drawableBitmap ->
@@ -2150,7 +2151,7 @@ class PromptWithListDialog(
                             semaphoreForMask.withPermit {
                                 val curTextBitmap = textBitmapList.getOrNull(index)
                                     ?: return@withPermit
-                                val maskedBitmap1 = ImageTransformer.maskImageByTransparent(
+                                val maskedBitmap1 = MaskTool.maskImageByTransparent(
                                     curTextBitmap,
                                     maskSquareSrc,
                                 )

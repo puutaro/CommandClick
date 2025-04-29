@@ -306,7 +306,7 @@ object LineArt {
         width: Int,
         height: Int,
         minStrokeWidthFloat: Float,
-        maxStrokeWidthRate: Float,
+        maxStrokeWidthFloat: Float,
         minSeg: Int,
         maxSeg: Int,
         minDurationRate: Float,
@@ -329,7 +329,7 @@ object LineArt {
         val minHeightDuration= (height * minDurationRate).toInt()
         val maxHeightDuration= (height * maxDurationRate).toInt()
         val minStrokeWidthDouble = minStrokeWidthFloat.toDouble()
-        val maxStrokeWidthDouble = maxStrokeWidthRate.toDouble()
+        val maxStrokeWidthDouble = maxStrokeWidthFloat.toDouble()
         for(i in 0..times) {
             // 亀裂の始点をランダムに設定
             val startX = (0 until width).random().toFloat()
@@ -365,7 +365,7 @@ object LineArt {
                     ).random()
             paint.strokeWidth =
                 when(minStrokeWidthDouble == maxStrokeWidthDouble) {
-                    true -> maxStrokeWidthRate
+                    true -> maxStrokeWidthFloat
                     else -> random.nextDouble(
                         minStrokeWidthDouble,
                         maxStrokeWidthDouble,

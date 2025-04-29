@@ -45,6 +45,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.core.graphics.scale
 import com.puutaro.commandclick.util.image_tools.ImageOverlay
+import com.puutaro.commandclick.util.image_tools.MaskTool
 
 
 class GridJsDialogV2(
@@ -259,7 +260,7 @@ class GridJsDialogV2(
                         (normalOrFlipBitmap.width / 3),
                         normalOrFlipBitmap.height,
                     )
-                    ImageTransformer.mask(
+                    MaskTool.mask(
                         gradientRectCutForShibuki,
                         cutBitmap,
                     )
@@ -282,7 +283,7 @@ class GridJsDialogV2(
                         pngSizePair.second,
                     )?.let {
                         maskBitmap ->
-                        val maskedBitmap = BitmapTool.ImageTransformer.mask(
+                        val maskedBitmap = MaskTool.mask(
                             gradientRect,
                             maskBitmap,
                         )

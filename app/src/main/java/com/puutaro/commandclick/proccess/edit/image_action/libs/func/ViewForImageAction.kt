@@ -89,7 +89,7 @@ object ViewForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val fadeInMill = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val fadeInMill = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.fadeInMillKeyToDefaultValueStr,
                     where
@@ -148,7 +148,7 @@ object ViewForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val fadeInMill = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val fadeInMill = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.fadeInMillKeyToDefaultValueStr,
                     where
@@ -160,7 +160,7 @@ object ViewForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val radius = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val radius = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.radiusKeyToDefaultValueStr,
                     where
@@ -172,7 +172,7 @@ object ViewForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val sampling = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val sampling = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.samplingKeyToDefaultValueStr,
                     where
@@ -232,7 +232,7 @@ object ViewForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val delay = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val delay = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.delayKeyToDefaultValueStr,
                     where

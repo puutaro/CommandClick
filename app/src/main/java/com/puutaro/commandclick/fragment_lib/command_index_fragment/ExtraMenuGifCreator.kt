@@ -12,6 +12,7 @@ import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.MaskTool
 import com.puutaro.commandclick.util.image_tools.ScreenSizeCalculator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -150,7 +151,7 @@ object ExtraMenuGifCreator {
             val bkBitmap = createBk(
                 imageWidth
             )
-            val fg = BitmapTool.ImageTransformer.mask(
+            val fg = MaskTool.mask(
                 bkBitmap,
                 maskBitmap,
             )

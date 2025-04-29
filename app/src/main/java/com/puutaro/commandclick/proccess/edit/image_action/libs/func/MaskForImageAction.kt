@@ -2,11 +2,10 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.image_tools.BitmapTool
+import com.puutaro.commandclick.util.image_tools.MaskTool
 import kotlin.enums.EnumEntries
 
 object MaskForImageAction {
@@ -180,7 +179,7 @@ object MaskForImageAction {
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                val maskBitmap = BitmapTool.ImageTransformer.maskImageByTransparent(
+                val maskBitmap = MaskTool.maskImageByTransparent(
                     bkBitmap,
                     bitmap,
                 )
@@ -202,7 +201,7 @@ object MaskForImageAction {
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                val maskBitmap = BitmapTool.ImageTransformer.mask(
+                val maskBitmap = MaskTool.mask(
                     bkBitmap,
                     bitmap,
                 )

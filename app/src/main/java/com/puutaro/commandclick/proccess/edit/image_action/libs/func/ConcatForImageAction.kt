@@ -87,7 +87,7 @@ object ConcatForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val dupInt = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                val dupInt = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByIndex(
                     mapArgMapList,
                     args.dupKeyToIndex,
                     where
@@ -98,10 +98,6 @@ object ConcatForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.let {
-                    dupInt ->
-                    if(dupInt <= 0) return@let 0
-                    dupInt
                 }
                 val returnBitmap = Concat.horizon(
                     leftBitmap,

@@ -10,6 +10,7 @@ import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerFor
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ShapeOverlayAssetsImages
 import kotlin.enums.EnumEntries
+import androidx.core.graphics.scale
 
 object ShapeOverlayForImageAction {
 
@@ -80,7 +81,7 @@ object ShapeOverlayForImageAction {
                         it.name == shapeStr
                     } ?: StrBkMethodArgClass.MakeArgs.Shape.HORIZON
                 }.path
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -92,7 +93,7 @@ object ShapeOverlayForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -125,12 +126,7 @@ object ShapeOverlayForImageAction {
                     val resizeBitmapHeight = if (isDefaultHeight) {
                         innerBitmapHeight
                     } else height
-                    Bitmap.createScaledBitmap(
-                        innerBitmap,
-                        resizeBitmapWidth,
-                        resizeBitmapHeight,
-                        true,
-                    )
+                    innerBitmap.scale(resizeBitmapWidth, resizeBitmapHeight)
                 }
                 Pair(
                     returnBitmap,

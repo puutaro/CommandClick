@@ -688,7 +688,7 @@ object BitmapArt {
                             offsetX,
                             offsetY,
                         ).let {
-                            val maskBitmap = BitmapTool.ImageTransformer.mask(
+                            val maskBitmap = MaskTool.mask(
                                 it,
                                scalePeaceBitmapList.random(),
                             )

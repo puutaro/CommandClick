@@ -16,6 +16,7 @@ import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlin.enums.EnumEntries
+import androidx.core.graphics.scale
 
 object IconForImageAction {
 
@@ -83,7 +84,7 @@ object IconForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -95,7 +96,7 @@ object IconForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where,
@@ -122,12 +123,7 @@ object IconForImageAction {
                                    || height == intDefaultNullMacroStr.toInt()
                        ){
                            true -> bitmapBeforeResize
-                           false -> Bitmap.createScaledBitmap(
-                               bitmapBeforeResize,
-                               width,
-                               height,
-                               true
-                           )
+                           false -> bitmapBeforeResize.scale(width, height)
                        }
 //                   AppCompatResources.getDrawable(
 //                       context,

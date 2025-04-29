@@ -36,6 +36,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import com.puutaro.commandclick.util.image_tools.MaskTool
 import java.io.File
 import java.lang.ref.WeakReference
 import androidx.core.graphics.drawable.toDrawable
@@ -407,7 +408,7 @@ class DragSortJsDialog(
 //                                File(UsePath.cmdclickDefaultAppDirPath, "ltextBitmap${index}.png").absolutePath,
 //                                BitmapTool.convertBitmapToByteArray(textBitmap),
 //                            )
-                            return@mapIndexed BitmapTool.ImageTransformer.mask(
+                            return@mapIndexed MaskTool.mask(
                                 titleBitmap,
                                 textBitmap,
                             )

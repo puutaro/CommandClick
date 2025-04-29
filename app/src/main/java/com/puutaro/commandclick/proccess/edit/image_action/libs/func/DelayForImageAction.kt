@@ -62,7 +62,7 @@ object DelayForImageAction {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val millSec = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                val millSec = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByIndex(
                     mapArgMapList,
                     args.millSecKeyToIndex,
                     where

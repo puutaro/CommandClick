@@ -84,7 +84,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -96,7 +96,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -108,7 +108,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -132,7 +132,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val minWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minWidthRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minWidthRateKeyToDefaultValueStr,
                     where
@@ -144,7 +144,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxWidthRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxWidthRateKeyToDefaultValueStr,
                     where
@@ -156,27 +156,23 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                if(minWidthRate > maxWidthRate) {
-                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minWidthRate.toString()
-                    )
-                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxWidthRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minWidthRate,
+                    maxWidthRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minWidthRateKeyToDefaultValueStr.first,
+                    args.maxWidthRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minWidthRate(${spanMinWidthRate}) <= maxWidthRate(${spanMaxWidthRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
-                val minHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minHeightRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minHeightRateKeyToDefaultValueStr,
                     where
@@ -188,7 +184,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxHeightRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxHeightRateKeyToDefaultValueStr,
                     where
@@ -200,25 +196,20 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                if(minHeightRate > maxHeightRate) {
-                    val spanMinHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minHeightRate.toString()
-                    )
-                    val spanMaxHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxHeightRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minHeightRate,
+                    maxHeightRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minHeightRateKeyToDefaultValueStr.first,
+                    args.maxHeightRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minWidthRate(${spanMinHeightRate}) <= maxWidthRate(${spanMaxHeightRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val bitmapArt = MonoArt.rndIcon(
                     context,
@@ -278,7 +269,7 @@ object MonoArtForImageAction {
 //                        ImageActionKeyManager.BreakSignal.EXIT_SIGNAL
 //                    ) to funcErr
 //                }
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -290,7 +281,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -302,7 +293,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -314,7 +305,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val borderRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val borderRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.borderRateKeyToDefaultValueStr,
                     where
@@ -326,7 +317,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val minWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minWidthRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minWidthRateKeyToDefaultValueStr,
                     where
@@ -338,7 +329,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxWidthRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxWidthRateKeyToDefaultValueStr,
                     where
@@ -350,27 +341,22 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                if(minWidthRate > maxWidthRate) {
-                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minWidthRate.toString()
-                    )
-                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxWidthRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minWidthRate,
+                    maxWidthRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minWidthRateKeyToDefaultValueStr.first,
+                    args.maxWidthRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minWidthRate(${spanMinWidthRate}) <= maxWidthRate(${spanMaxWidthRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
-                val minHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minHeightRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minHeightRateKeyToDefaultValueStr,
                     where
@@ -382,7 +368,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxHeightRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxHeightRateKeyToDefaultValueStr,
                     where
@@ -394,25 +380,20 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                if(minHeightRate > maxHeightRate) {
-                    val spanMinHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minHeightRate.toString()
-                    )
-                    val spanMaxHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxHeightRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minHeightRate,
+                    maxHeightRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minHeightRateKeyToDefaultValueStr.first,
+                    args.maxHeightRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minWidthRate(${spanMinHeightRate}) <= maxWidthRate(${spanMaxHeightRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val bitmapArt = MonoArt.rndRect(
 //                    shape,
@@ -459,7 +440,7 @@ object MonoArtForImageAction {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -471,7 +452,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -483,7 +464,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -533,7 +514,7 @@ object MonoArtForImageAction {
                         ColorTool.removeAlpha(it)
                     }
                 }.toList()
-               val minOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+               val minOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                    mapArgMapList,
                    args.minOpacityRateKeyToDefaultValueStr,
                    where
@@ -544,12 +525,8 @@ object MonoArtForImageAction {
                        null,
                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                    ) to funcErr
-               }.let {
-                   minOpacityRateSrc ->
-                   if(minOpacityRateSrc > 1f) return@let 1f
-                   minOpacityRateSrc
                }
-                val maxOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxOpacityRateKeyToDefaultValueStr,
                     where
@@ -560,12 +537,23 @@ object MonoArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.let {
-                        maxOpacityRateSrc ->
-                    if(maxOpacityRateSrc > 1f) return@let 1f
-                    maxOpacityRateSrc
                 }
-                val minWidthShrinkRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minOpacityRate,
+                    maxOpacityRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minOpacityRateKeyToDefaultValueStr.first,
+                    args.maxOpacityRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to err
+                }
+                val minWidthShrinkRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minWidthShrinkRateKeyToDefaultValueStr,
                     where
@@ -576,12 +564,8 @@ object MonoArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.let {
-                        rate ->
-                    if(rate > 1f) return@let 1f
-                    rate
                 }
-                val maxWidthShrinkRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxWidthShrinkRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxWidthShrinkRateKeyToDefaultValueStr,
                     where
@@ -592,32 +576,23 @@ object MonoArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.let {
-                        rate ->
-                    if(rate > 1f) return@let 1f
-                    rate
                 }
-                if(minWidthShrinkRate > maxWidthShrinkRate) {
-                    val spanMinHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minWidthShrinkRate.toString()
-                    )
-                    val spanMaxHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxWidthShrinkRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minWidthShrinkRate,
+                    maxWidthShrinkRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minWidthShrinkRateKeyToDefaultValueStr.first,
+                    args.maxWidthShrinkRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minWidthShrinkRate(${spanMinHeightRate}) <= maxWidthShrinkRate(${spanMaxHeightRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
-                val minHeightShrinkRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minHeightShrinkRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minHeightShrinkRateKeyToDefaultValueStr,
                     where
@@ -628,12 +603,8 @@ object MonoArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.let {
-                        rate ->
-                    if(rate > 1f) return@let 1f
-                    rate
                 }
-                val maxHeightShrinkRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxHeightShrinkRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxHeightShrinkRateKeyToDefaultValueStr,
                     where
@@ -644,30 +615,21 @@ object MonoArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.let {
-                        rate ->
-                    if(rate > 1f) return@let 1f
-                    rate
                 }
-                if(minHeightShrinkRate > maxHeightShrinkRate) {
-                    val spanMinHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minHeightShrinkRate.toString()
-                    )
-                    val spanMaxHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxHeightShrinkRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minHeightShrinkRate,
+                    maxHeightShrinkRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minHeightShrinkRateKeyToDefaultValueStr.first,
+                    args.maxHeightShrinkRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minHeightShrinkRate(${spanMinHeightRate}) <= maxHeightShrinkRate(${spanMaxHeightRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val bitmapArt = MonoArt.rndOrthogonalRect(
 //                    shape,
@@ -730,7 +692,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -742,7 +704,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val borderRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val borderRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.borderRateKeyToDefaultValueStr,
                     where
@@ -754,7 +716,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val minWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minWidthRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minWidthRateKeyToDefaultValueStr,
                     where
@@ -766,7 +728,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxWidthRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxWidthRateKeyToDefaultValueStr,
                     where
@@ -778,27 +740,22 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                if(minWidthRate > maxWidthRate) {
-                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minWidthRate.toString()
-                    )
-                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxWidthRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minWidthRate,
+                    maxWidthRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minWidthRateKeyToDefaultValueStr.first,
+                    args.maxWidthRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minWidthRate(${spanMinWidthRate}) <= maxWidthRate(${spanMaxWidthRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
-                val minHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minHeightRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minHeightRateKeyToDefaultValueStr,
                     where
@@ -810,7 +767,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxHeightRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxHeightRateKeyToDefaultValueStr,
                     where
@@ -822,25 +779,20 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                if(minHeightRate > maxHeightRate) {
-                    val spanMinHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minHeightRate.toString()
-                    )
-                    val spanMaxHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxHeightRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minHeightRate,
+                    maxHeightRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minHeightRateKeyToDefaultValueStr.first,
+                    args.maxHeightRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minWidthRate(${spanMinHeightRate}) <= maxWidthRate(${spanMaxHeightRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val bitmapArt = MonoArt.rndRectByGray(
                     bitmap,
@@ -898,7 +850,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -910,7 +862,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val borderRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val borderRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.borderRateKeyToDefaultValueStr,
                     where
@@ -922,7 +874,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val minWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minWidthRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minWidthRateKeyToDefaultValueStr,
                     where
@@ -934,7 +886,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxWidthRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxWidthRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxWidthRateKeyToDefaultValueStr,
                     where
@@ -946,27 +898,22 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                if(minWidthRate > maxWidthRate) {
-                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minWidthRate.toString()
-                    )
-                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxWidthRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minWidthRate,
+                    maxWidthRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minWidthRateKeyToDefaultValueStr.first,
+                    args.maxWidthRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minWidthRate(${spanMinWidthRate}) <= maxWidthRate(${spanMaxWidthRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
-                val minHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minHeightRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minHeightRateKeyToDefaultValueStr,
                     where
@@ -978,7 +925,7 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val maxHeightRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxHeightRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxHeightRateKeyToDefaultValueStr,
                     where
@@ -990,25 +937,20 @@ object MonoArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                if(minHeightRate > maxHeightRate) {
-                    val spanMinHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minHeightRate.toString()
-                    )
-                    val spanMaxHeightRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxHeightRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minHeightRate,
+                    maxHeightRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minHeightRateKeyToDefaultValueStr.first,
+                    args.maxHeightRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minWidthRate(${spanMinHeightRate}) <= maxWidthRate(${spanMaxHeightRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val bitmapArt = MonoArt.rndColorRect(
                     bitmap,

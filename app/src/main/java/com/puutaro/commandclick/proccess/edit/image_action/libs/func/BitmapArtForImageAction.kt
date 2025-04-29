@@ -86,7 +86,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -98,7 +98,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -110,7 +110,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val xMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val xMulti = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.xMultiKeyToDefaultValueStr,
                     where
@@ -122,7 +122,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val yMulti = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val yMulti = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.yMultiKeyToDefaultValueStr,
                     where
@@ -148,7 +148,7 @@ object BitmapArtForImageAction {
                 }
                 val pieceMap =
                     BitmapPieceManager.makePieceMap(argsPairList)
-                val xDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val xDup = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.xDupKeyToDefaultValueStr,
                     where
@@ -160,7 +160,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val yDup = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val yDup = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.yDupKeyToDefaultValueStr,
                     where
@@ -257,7 +257,7 @@ object BitmapArtForImageAction {
                         where
                     )
                 }
-                                bitmapToErrList.forEach { (_, err) ->
+                bitmapToErrList.forEach { (_, err) ->
                     if (err != null) {
                         return Pair(
                             null,
@@ -292,7 +292,7 @@ object BitmapArtForImageAction {
 //                            listOf(argNameToValueStr)
 //                        )
 //                    }
-                val rate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val rate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.rateKeyToDefaultValueStr,
                     where
@@ -303,14 +303,8 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -322,7 +316,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
-                val minOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minOpacityRateKeyToDefaultValueStr,
                     where
@@ -333,14 +327,8 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                val maxOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxOpacityRateKeyToDefaultValueStr,
                     where
@@ -351,32 +339,21 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                if(minOpacityRate > maxOpacityRate) {
-                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minOpacityRate.toString()
-                    )
-                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxOpacityRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minOpacityRate,
+                    maxOpacityRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.EQUAL,
+                    args.minOpacityRateKeyToDefaultValueStr.first,
+                    args.maxOpacityRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minOpacityRate(${spanMinWidthRate}) <= maxOpacityRate(${spanMaxWidthRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val opacityIncline = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
@@ -402,7 +379,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
-                val sizeCenterX = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val sizeCenterX = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.sizeCenterXKeyToDefaultValueStr,
                     where
@@ -413,20 +390,6 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }
-                FuncCheckerForSetting.NumChecker.compare(
-                    0,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.EQUAL_LARGER,
-                    sizeCenterX,
-                    args.sizeCenterXKeyToDefaultValueStr.first,
-                    where,
-                ).let {
-                        err ->
-                    if(err == null) return@let
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to err
                 }
                 val sizeCenterY = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
                     mapArgMapList,
@@ -439,20 +402,6 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }
-                FuncCheckerForSetting.NumChecker.compare(
-                    0,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.EQUAL_LARGER,
-                    sizeCenterY,
-                    args.sizeCenterYKeyToDefaultValueStr.first,
-                    where,
-                ).let {
-                        err ->
-                    if(err == null) return@let
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to err
                 }
                 val sizeIncline = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
@@ -615,7 +564,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val rate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val rate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.rateKeyToDefaultValueStr,
                     where
@@ -626,14 +575,8 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -645,7 +588,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
-                val minOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minOpacityRateKeyToDefaultValueStr,
                     where
@@ -656,14 +599,8 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                val maxOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxOpacityRateKeyToDefaultValueStr,
                     where
@@ -674,32 +611,21 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                if(minOpacityRate > maxOpacityRate) {
-                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minOpacityRate.toString()
-                    )
-                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxOpacityRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minOpacityRate,
+                    maxOpacityRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.EQUAL,
+                    args.minOpacityRateKeyToDefaultValueStr.first,
+                    args.maxOpacityRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minOpacityRate(${spanMinWidthRate}) <= maxOpacityRate(${spanMaxWidthRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val opacityIncline = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
@@ -725,7 +651,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
-                val sizeCenterX = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val sizeCenterX = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.sizeCenterXKeyToDefaultValueStr,
                     where
@@ -737,21 +663,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
-                FuncCheckerForSetting.NumChecker.compare(
-                    0,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.EQUAL_LARGER,
-                    sizeCenterX,
-                    args.sizeCenterXKeyToDefaultValueStr.first,
-                    where,
-                ).let {
-                        err ->
-                    if(err == null) return@let
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to err
-                }
-                val sizeCenterY = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val sizeCenterY = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.sizeCenterYKeyToDefaultValueStr,
                     where
@@ -762,20 +674,6 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }
-                FuncCheckerForSetting.NumChecker.compare(
-                    0,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.EQUAL_LARGER,
-                    sizeCenterY,
-                    args.sizeCenterYKeyToDefaultValueStr.first,
-                    where,
-                ).let {
-                        err ->
-                    if(err == null) return@let
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to err
                 }
                 val sizeIncline = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
@@ -849,7 +747,7 @@ object BitmapArtForImageAction {
                         ColorTool.removeAlpha(it)
                     }
                 }.toList()
-                val passionInt = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val passionInt = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.passionRateKeyToDefaultValueStr,
                     where
@@ -861,11 +759,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let (it * 10).toInt()
-                    0
+                     (it * 10).toInt()
                 }
                 val isOverlay = FuncCheckerForSetting.Getter.getBoolFromArgMapByName(
                     mapArgMapList,
@@ -943,7 +837,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val rate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val rate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.rateKeyToDefaultValueStr,
                     where
@@ -954,14 +848,8 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -973,7 +861,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
-                val minOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minOpacityRateKeyToDefaultValueStr,
                     where
@@ -984,14 +872,8 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                val maxOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxOpacityRateKeyToDefaultValueStr,
                     where
@@ -1002,32 +884,21 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                if(minOpacityRate > maxOpacityRate) {
-                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minOpacityRate.toString()
-                    )
-                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxOpacityRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minOpacityRate,
+                    maxOpacityRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.EQUAL,
+                    args.minOpacityRateKeyToDefaultValueStr.first,
+                    args.maxOpacityRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minOpacityRate(${spanMinWidthRate}) <= maxOpacityRate(${spanMaxWidthRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val opacityIncline = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
@@ -1101,7 +972,7 @@ object BitmapArtForImageAction {
                         ColorTool.removeAlpha(it)
                     }
                 }.toList()
-                val passionInt = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val passionInt = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.passionRateKeyToDefaultValueStr,
                     where
@@ -1113,11 +984,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let (it * 10).toInt()
-                    0
+                    (it * 10).toInt()
                 }
                 val isOverlay = FuncCheckerForSetting.Getter.getBoolFromArgMapByName(
                     mapArgMapList,
@@ -1178,7 +1045,7 @@ object BitmapArtForImageAction {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -1190,7 +1057,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -1298,7 +1165,7 @@ object BitmapArtForImageAction {
                 }.map {
                     it.first as Bitmap
                 }
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -1455,7 +1322,7 @@ object BitmapArtForImageAction {
                     argsPairList,
                     formalArgIndexToNameToTypeList
                 )
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.widthKeyToDefaultValueStr,
                     where
@@ -1467,7 +1334,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.heightKeyToDefaultValueStr,
                     where
@@ -1575,7 +1442,7 @@ object BitmapArtForImageAction {
                 }.map {
                     it.first as Bitmap
                 }
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -1744,7 +1611,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -1857,9 +1724,11 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val zoomRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val zoomRate = FuncCheckerForSetting.Getter.getCompareFloatFromArgMapByName(
                     mapArgMapList,
                     args.zoomRateKeyToDefaultValueStr,
+                    1f,
+                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
                     where
                 ).let { rateToErr ->
                     val funcErr = rateToErr.second
@@ -1868,29 +1737,8 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    rate ->
-                    if(rate > 1f) return@let rate
-                    val spanZoomRateKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        args.zoomRateKeyToDefaultValueStr.first.toString()
-                    )
-                    val spanZoomRateValue = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        rate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "${spanZoomRateKey}(${spanZoomRateValue}) must be > 1: ${spanWhere}"
-                    )
                 }
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -1947,7 +1795,7 @@ object BitmapArtForImageAction {
                         ColorTool.removeAlpha(it)
                     }
                 }.toList()
-                val minOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minOpacityRateKeyToDefaultValueStr,
                     where
@@ -1958,14 +1806,8 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                val maxOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxOpacityRateKeyToDefaultValueStr,
                     where
@@ -1976,32 +1818,21 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                if(minOpacityRate > maxOpacityRate) {
-                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minOpacityRate.toString()
-                    )
-                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxOpacityRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minOpacityRate,
+                    maxOpacityRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.EQUAL,
+                    args.minOpacityRateKeyToDefaultValueStr.first,
+                    args.maxOpacityRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minOpacityRate(${spanMinWidthRate}) <= maxOpacityRate(${spanMaxWidthRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val direction = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
                     mapArgMapList,
@@ -2097,7 +1928,7 @@ object BitmapArtForImageAction {
                         where,
                     )
                 } ?: return null
-                val radiusRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val radiusRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.radiusRateKeyToDefaultValueStr,
                     where
@@ -2108,16 +1939,10 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    0f
                 }
-                val minPointNum = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val minPointNum = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
-                    args.minPpintNumKeyToDefaultValueStr,
+                    args.minPointNumKeyToDefaultValueStr,
                     where
                 ).let { numToErr ->
                     val funcErr = numToErr.second
@@ -2127,7 +1952,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
-                val maxPointNum = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val maxPointNum = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.maxPointNumKeyToDefaultValueStr,
                     where
@@ -2139,33 +1964,20 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
-                if(minPointNum > maxPointNum) {
-                    val spanMinPointNumKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        args.minPpintNumKeyToDefaultValueStr.first
-                    )
-                    val spanMaxPointNumKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        args.maxPointNumKeyToDefaultValueStr.first
-                    )
-                    val spanMinAngle = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minPointNum.toString()
-                    )
-                    val spanMaxAngle = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxPointNum.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minPointNum,
+                    maxPointNum,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minPointNumKeyToDefaultValueStr.first,
+                    args.maxPointNumKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be ${spanMinPointNumKey}(${spanMinAngle}) <= ${spanMaxPointNumKey}(${spanMaxAngle}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val minAngle = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
@@ -2191,33 +2003,20 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
-                if(minAngle > maxAngle) {
-                    val spanMinAngleKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        args.minAngleKeyToDefaultValueStr.first
-                    )
-                    val spanMaxAngleKey = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        args.maxAngleKeyToDefaultValueStr.first
-                    )
-                    val spanMinAngle = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minAngle.toString()
-                    )
-                    val spanMaxAngle = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxAngle.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minAngle,
+                    maxAngle,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minAngleKeyToDefaultValueStr.first,
+                    args.maxAngleKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be ${spanMinAngleKey}(${spanMinAngle}) <= ${spanMaxAngleKey}(${spanMaxAngle}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val opacityIncline = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
                     mapArgMapList,
@@ -2243,7 +2042,7 @@ object BitmapArtForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
                 }
-                val times = FuncCheckerForSetting.Getter.getIntFromArgMapByName(
+                val times = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
                     mapArgMapList,
                     args.timesKeyToDefaultValueStr,
                     where
@@ -2276,7 +2075,7 @@ object BitmapArtForImageAction {
                         ColorTool.removeAlpha(it)
                     }
                 }.toList()
-                val minOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val minOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.minOpacityRateKeyToDefaultValueStr,
                     where
@@ -2287,14 +2086,8 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                val maxOpacityRate = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val maxOpacityRate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
                     mapArgMapList,
                     args.maxOpacityRateKeyToDefaultValueStr,
                     where
@@ -2305,32 +2098,21 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
                     ) to funcErr
-                }.let {
-                    if(
-                        0 <= it
-                        && it <= 1f
-                    ) return@let it
-                    1f
                 }
-                if(minOpacityRate > maxOpacityRate) {
-                    val spanMinWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        minOpacityRate.toString()
-                    )
-                    val spanMaxWidthRate = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errRedCode,
-                        maxOpacityRate.toString()
-                    )
-                    val spanWhere = CheckTool.LogVisualManager.execMakeSpanTagHolder(
-                        CheckTool.errBrown,
-                        where
-                    )
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minOpacityRate,
+                    maxOpacityRate,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.NOT_EQUAL,
+                    args.minOpacityRateKeyToDefaultValueStr.first,
+                    args.maxOpacityRateKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
                     return Pair(
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to FuncCheckerForSetting.FuncCheckErr(
-                        "Must be minOpacityRate(${spanMinWidthRate}) <= maxOpacityRate(${spanMaxWidthRate}): ${spanWhere}"
-                    )
+                    ) to err
                 }
                 val returnBitmap = InnerBitmapArt.drawInkSplashOnColor(
                     bitmap,
@@ -2415,7 +2197,7 @@ object BitmapArtForImageAction {
                         "Invalid direction: ${direction}"
                     )
                 }
-                val jaggedness = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                val jaggedness = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
                     mapArgMapList,
                     args.jaggednessKeyToDefaultValueStr,
                     where
@@ -2426,20 +2208,6 @@ object BitmapArtForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }
-                FuncCheckerForSetting.NumChecker.compare(
-                    0f,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
-                    jaggedness,
-                    args.jaggednessKeyToDefaultValueStr.first,
-                    where,
-                ).let {
-                        err ->
-                    if(err == null) return@let
-                    return Pair(
-                        null,
-                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
-                    ) to err
                 }
                 val returnBitmap = InnerBitmapArt.createJagged(
                     bitmap,
@@ -3610,7 +3378,7 @@ object BitmapArtForImageAction {
                 IncSplashEnumArgs.MAX_ANGLE.key,
                 IncSplashEnumArgs.MAX_ANGLE.defaultValueStr
             )
-            val minPpintNumKeyToDefaultValueStr = Pair(
+            val minPointNumKeyToDefaultValueStr = Pair(
                 IncSplashEnumArgs.MIN_POINT_NUM.key,
                 IncSplashEnumArgs.MIN_POINT_NUM.defaultValueStr
             )

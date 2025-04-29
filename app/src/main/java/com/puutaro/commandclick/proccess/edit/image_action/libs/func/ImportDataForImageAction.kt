@@ -92,7 +92,7 @@ object ImportDataForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val waitMill = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                val waitMill = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByIndex(
                     mapArgMapList,
                     args.waitMillToIndex,
                     where
@@ -103,10 +103,11 @@ object ImportDataForImageAction {
                         null,
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
-                }.let {
-                    if(it <= 0) return@let args.defaultWaitMill
-                    it
                 }
+//                    .let {
+//                    if(it <= 0) return@let args.defaultWaitMill
+//                    it
+//                }
                 val delayMill = 50L
                 val waitLoopNum = waitMill / delayMill
                 var returnBitmap: Bitmap? = null
@@ -212,7 +213,6 @@ object ImportDataForImageAction {
                     key,
                     bitmap
                 )
-
                 Pair(
                     bitmap,
                     null

@@ -410,9 +410,10 @@ object ColorTool {
 
         for (i in pixels.indices) {
             val pixelColor = pixels[i]
+            val curAlpha = Color.alpha(pixelColor)
+            if(curAlpha == 0) continue
             // 各色の成分の差を計算
-            val alpha = abs(Color.red(pixelColor) - Color.alpha(targetColor))
-            if(alpha == 0) continue
+//            val alphaDiff = abs(curAlpha - Color.alpha(targetColor))
             val redDiff = abs(Color.red(pixelColor) - Color.red(targetColor))
             val greenDiff = abs(Color.green(pixelColor) - Color.green(targetColor))
             val blueDiff = abs(Color.blue(pixelColor) - Color.blue(targetColor))

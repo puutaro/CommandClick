@@ -2,8 +2,6 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs
 
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.str.ImageVarMarkTool
 import java.io.File
 
@@ -344,9 +342,49 @@ object FuncCheckerForSetting {
             }
         }
 
-        fun getPosiFloatFromArgMapByName(
+        fun getZeroELargerFloatFromArgMapByName(
             mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
             argNameToDefaultValueStr: Pair<String, String?>,
+            where: String,
+        ): Pair<Float, FuncCheckErr?> {
+            return getZeroCompareFloatFromArgMapByName(
+                mapArgMapList,
+                argNameToDefaultValueStr,
+                NumChecker.CompareSignal.EQUAL_LARGER,
+                where,
+            )
+        }
+        fun getZeroLargerFloatFromArgMapByName(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToDefaultValueStr: Pair<String, String?>,
+            where: String,
+        ): Pair<Float, FuncCheckErr?> {
+            return getZeroCompareFloatFromArgMapByName(
+                mapArgMapList,
+                argNameToDefaultValueStr,
+                FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
+                where,
+            )
+        }
+        fun getZeroCompareFloatFromArgMapByName(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToDefaultValueStr: Pair<String, String?>,
+            compareSignal: NumChecker.CompareSignal,
+            where: String,
+        ): Pair<Float, FuncCheckErr?> {
+           return getCompareFloatFromArgMapByName(
+                mapArgMapList,
+                argNameToDefaultValueStr,
+                0f,
+                compareSignal,
+                where,
+            )
+        }
+        fun getCompareFloatFromArgMapByName(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToDefaultValueStr: Pair<String, String?>,
+            compareFloat: Float,
+            compareSignal: NumChecker.CompareSignal,
             where: String,
         ): Pair<Float, FuncCheckErr?> {
             val argKey = argNameToDefaultValueStr.first
@@ -367,8 +405,8 @@ object FuncCheckerForSetting {
                     err != null
                 ) return float to err
                 val minusErr = NumChecker.compare(
-                    0f,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
+                    compareFloat,
+                    compareSignal,
                     float,
                     argNameToDefaultValueStr.first,
                     where,
@@ -485,12 +523,50 @@ object FuncCheckerForSetting {
             }
         }
 
-        fun getPosiFloatFromArgMapByIndex(
+        fun getZeroELargerFloatFromArgMapByIndex(
             mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
             argNameToIndex: Pair<String, Int>,
-            minFloat: Float,
-            maxFloat: Float,
-            rangeCompareSignal: NumChecker.RangeCompareSignal,
+            where: String,
+        ): Pair<Float, FuncCheckErr?> {
+            return getZeroCompareFloatFromArgMapByIndex(
+                mapArgMapList,
+                argNameToIndex,
+                NumChecker.CompareSignal.EQUAL_LARGER,
+                where,
+            )
+        }
+        fun getZeroLargerFloatFromArgMapByIndex(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToIndex: Pair<String, Int>,
+            where: String,
+        ): Pair<Float, FuncCheckErr?> {
+            return getZeroCompareFloatFromArgMapByIndex(
+                mapArgMapList,
+                argNameToIndex,
+                NumChecker.CompareSignal.LARGER,
+                where,
+            )
+        }
+
+        fun getZeroCompareFloatFromArgMapByIndex(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToIndex: Pair<String, Int>,
+            compareSignal: NumChecker.CompareSignal,
+            where: String,
+        ): Pair<Float, FuncCheckErr?> {
+            return getCompareFloatFromArgMapByIndex(
+                mapArgMapList,
+                argNameToIndex,
+                    0f,
+                compareSignal,
+                where,
+            )
+        }
+        fun getCompareFloatFromArgMapByIndex(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToIndex: Pair<String, Int>,
+            compareFloat: Float,
+            compareSignal: NumChecker.CompareSignal,
             where: String,
         ): Pair<Float, FuncCheckErr?> {
             val argName = argNameToIndex.first
@@ -509,21 +585,19 @@ object FuncCheckerForSetting {
                 if(
                     err != null
                 ) return float to err
-                val rangeErr = NumChecker.range(
-                    minFloat,
-                    maxFloat,
-                    rangeCompareSignal,
+                val minusErr = NumChecker.compare(
+                    compareFloat,
+                    compareSignal,
                     float,
                     argNameToIndex.first,
                     where,
                 )
-                if(rangeErr != null) {
-                    return float to rangeErr
+                if(minusErr != null){
+                    return float to minusErr
                 }
                 float to null
             }
         }
-
         fun getRateFloatFromArgMapByIndex (
             mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
             argNameToIndex: Pair<String, Int>,
@@ -741,9 +815,49 @@ object FuncCheckerForSetting {
             }
         }
 
-        fun getPosiIntFromArgMapByName(
+        fun getZeroELargerIntFromArgMapByName(
             mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
             argNameToDefaultValueStr: Pair<String, String?>,
+            where: String,
+        ): Pair<Int, FuncCheckErr?> {
+            return getZeroCompareIntFromArgMapByName(
+                mapArgMapList,
+                argNameToDefaultValueStr,
+                NumChecker.CompareSignal.EQUAL_LARGER,
+                where,
+            )
+        }
+        fun getZeroLargerIntFromArgMapByName(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToDefaultValueStr: Pair<String, String?>,
+            where: String,
+        ): Pair<Int, FuncCheckErr?> {
+            return getZeroCompareIntFromArgMapByName(
+                mapArgMapList,
+                argNameToDefaultValueStr,
+                NumChecker.CompareSignal.LARGER,
+                where,
+            )
+        }
+        fun getZeroCompareIntFromArgMapByName(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToDefaultValueStr: Pair<String, String?>,
+            compareSignal: NumChecker.CompareSignal,
+            where: String,
+        ): Pair<Int, FuncCheckErr?> {
+            return getCompareIntFromArgMapByName(
+                mapArgMapList,
+                argNameToDefaultValueStr,
+                0,
+                compareSignal,
+                where,
+            )
+        }
+        fun getCompareIntFromArgMapByName(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToDefaultValueStr: Pair<String, String?>,
+            compareInt: Int,
+            compareSignal: NumChecker.CompareSignal,
             where: String,
         ): Pair<Int, FuncCheckErr?> {
             val argKey = argNameToDefaultValueStr.first
@@ -764,8 +878,8 @@ object FuncCheckerForSetting {
                     err != null
                 ) return int to err
                 val minusErr = NumChecker.compare(
-                    0,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
+                    compareInt,
+                    compareSignal,
                     int,
                     argNameToDefaultValueStr.first,
                     where,
@@ -818,10 +932,50 @@ object FuncCheckerForSetting {
                 )
             }
         }
-
-        fun getPosiIntFromArgMapByIndex(
+        fun getZeroELargerIntFromArgMapByIndex(
             mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
             argNameToIndex: Pair<String, Int>,
+            where: String,
+        ): Pair<Int, FuncCheckErr?> {
+            return getZeroCompareIntFromArgMapByIndex(
+                mapArgMapList,
+                argNameToIndex,
+                NumChecker.CompareSignal.EQUAL_LARGER,
+                where,
+            )
+        }
+
+        fun getZeroLargerIntFromArgMapByIndex(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToIndex: Pair<String, Int>,
+            where: String,
+        ): Pair<Int, FuncCheckErr?> {
+            return getZeroCompareIntFromArgMapByIndex(
+                mapArgMapList,
+                argNameToIndex,
+                NumChecker.CompareSignal.LARGER,
+                where,
+            )
+        }
+        fun getZeroCompareIntFromArgMapByIndex(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToIndex: Pair<String, Int>,
+            compareSignal: NumChecker.CompareSignal,
+            where: String,
+        ): Pair<Int, FuncCheckErr?> {
+            return getCompareIntFromArgMapByIndex(
+                mapArgMapList,
+                argNameToIndex,
+                0,
+                compareSignal,
+                where,
+            )
+        }
+        private fun getCompareIntFromArgMapByIndex(
+            mapArgMapList: List<Map<MapArg.MapArgKey, String?>>,
+            argNameToIndex: Pair<String, Int>,
+            compareInt: Int,
+            compareSignal: NumChecker.CompareSignal,
             where: String,
         ): Pair<Int, FuncCheckErr?> {
             val argName = argNameToIndex.first
@@ -841,8 +995,8 @@ object FuncCheckerForSetting {
                     err != null
                 ) return int to err
                 val minusErr = NumChecker.compare(
-                    0,
-                    FuncCheckerForSetting.NumChecker.CompareSignal.LARGER,
+                    compareInt,
+                    compareSignal,
                     int,
                     argNameToIndex.first,
                     where,

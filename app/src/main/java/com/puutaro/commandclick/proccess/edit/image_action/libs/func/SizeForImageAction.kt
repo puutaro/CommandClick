@@ -8,6 +8,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import kotlin.enums.EnumEntries
+import androidx.core.graphics.scale
 
 object SizeForImageAction {
     fun handle(
@@ -75,7 +76,7 @@ object SizeForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 } ?: return null
-                val width = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByIndex(
                     mapArgMapList,
                     args.widthKeyToIndex,
                     where
@@ -87,7 +88,7 @@ object SizeForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val height = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByIndex(
                     mapArgMapList,
                     args.heightKeyToIndex,
                     where
@@ -130,12 +131,8 @@ object SizeForImageAction {
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                val overlayBitmap = Bitmap.createScaledBitmap(
-                    bkBitmap,
-                    width,
-                    height,
-                    true,
-                )
+                val copyBitmap = bkBitmap.copy(bkBitmap.config!!, true)
+                val overlayBitmap = copyBitmap.scale(width, height)
                 Pair(
                     overlayBitmap,
                     null
