@@ -3,17 +3,13 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 import android.content.Context
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionBitmapData
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import java.io.File
 import kotlin.enums.EnumEntries
 
 object BitmapForSetting {
@@ -90,7 +86,7 @@ object BitmapForSetting {
                             SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
                     }
-                    val waitMill = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                    val waitMill = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByIndex(
                         mapArgMapList,
                         args.waitMillToIndex,
                         where
@@ -101,9 +97,6 @@ object BitmapForSetting {
                             null,
                             SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                         ) to funcErr
-                    }.let {
-                        if(it <= 0) return@let args.defaultWaitMill
-                        it
                     }
                     val delayMill = 50L
                     val waitLoopNum = waitMill / delayMill
@@ -134,7 +127,6 @@ object BitmapForSetting {
                         ColorTool.calculateAverageColor(recieveBitmap).let {
                             ColorTool.colorToHexString(it)
                         }
-                    val iamgeAcDatas = ImageActionBitmapData.gets()
 //                    FileSystems.writeFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "ldata_get.txt").absolutePath,
 //                        listOf(
@@ -159,6 +151,150 @@ object BitmapForSetting {
                         null
                     ) to null
                 }
+                is BitmapMethodArgClass.PickColorArgs -> {
+                    val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                            index, formalArgsNameToType ->
+                        Triple(
+                            index,
+                            formalArgsNameToType.key,
+                            formalArgsNameToType.type,
+                        )
+                    }
+                    val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                        formalArgIndexToNameToTypeList,
+                        argsPairList
+                    )
+                    val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                        funcName,
+                        methodNameStr,
+                        argsPairList,
+                        formalArgIndexToNameToTypeList
+                    )
+                    val importPath = FuncCheckerForSetting.Getter.getFileFromArgMapByIndex(
+                        mapArgMapList,
+                        args.importPathToKey,
+                        where
+                    ).let { importPathToErr ->
+                        val funcErr = importPathToErr.second
+                            ?: return@let importPathToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val key = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
+                        mapArgMapList,
+                        args.keyToIndex,
+                        where
+                    ).let { keyToErr ->
+                        val funcErr = keyToErr.second
+                            ?: return@let keyToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val waitMill = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByIndex(
+                        mapArgMapList,
+                        args.waitMillToIndex,
+                        where
+                    ).let { keyToErr ->
+                        val funcErr = keyToErr.second
+                            ?: return@let keyToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val x = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByIndex(
+                        mapArgMapList,
+                        args.xToIndex,
+                        where
+                    ).let { xToErr ->
+                        val funcErr = xToErr.second
+                            ?: return@let xToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val y = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByIndex(
+                        mapArgMapList,
+                        args.yToIndex,
+                        where
+                    ).let { yToErr ->
+                        val funcErr = yToErr.second
+                            ?: return@let yToErr.first
+                        return@withContext Pair(
+                            null,
+                            SettingActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                        ) to funcErr
+                    }
+                    val delayMill = 50L
+                    val waitLoopNum = waitMill / delayMill
+                    var recieveBitmap: Bitmap? = null
+                    for(i in 0..waitLoopNum) {
+                        recieveBitmap = ImageActionBitmapData.get(
+                            importPath,
+                            key,
+                        )
+                        if(recieveBitmap != null) break
+                        delay(delayMill)
+                    }
+                    if(recieveBitmap == null) {
+                        val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errBrown,
+                            funcName
+                        )
+                        val spanMethodNameStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                            CheckTool.errRedCode,
+                            methodNameStr
+                        )
+                        return@withContext null to
+                                FuncCheckerForSetting.FuncCheckErr(
+                                    "Color average cannot culc: func.method: ${spanFuncTypeStr}.${spanMethodNameStr}"
+                                )
+                    }
+                    val pickColorInt =
+                        try {
+                            ColorTool.pick(
+                                recieveBitmap,
+                                x,
+                                y,
+                            )
+                        } catch (e: Exception){
+                            val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                                CheckTool.errRedCode,
+                                e.toString()
+                            )
+                            return@withContext null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+                        }
+                    val pickColorStr =
+                            ColorTool.colorToHexString(pickColorInt)
+//                    FileSystems.writeFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "ldata_get.txt").absolutePath,
+//                        listOf(
+//                            "importPath: ${importPath}",
+//                            "key: ${key}",
+//                            "recieveBitmap: ${recieveBitmap}",
+//                            "ImageActionBitmapData.gets(): ${iamgeAcDatas}",
+//                            "avColorStr: ${avColorStr}",
+//                        ).joinToString("\n")
+//                    )
+//                    iamgeAcDatas.forEachIndexed {
+//                            index, tri ->
+//                        val curBitmap = tri.third
+//                        if(curBitmap == null) return@forEachIndexed
+//                        FileSystems.writeFromByteArray(
+//                            File(UsePath.cmdclickDefaultAppDirPath, "ldata_get_${index}.png").absolutePath,
+//                            BitmapTool.convertBitmapToByteArray(curBitmap)
+//                        )
+//                    }
+                    Pair(
+                        pickColorStr,
+                        null
+                    ) to null
+                }
             }
         }
     }
@@ -168,6 +304,7 @@ object BitmapForSetting {
         val args: BitmapMethodArgClass,
     ){
         COLOR_AV("colorAv", BitmapMethodArgClass.ColorAvArgs),
+        PICK_COLOR("pickColor", BitmapMethodArgClass.PickColorArgs),
     }
 
 
@@ -176,7 +313,7 @@ object BitmapForSetting {
     }
 
     private sealed class BitmapMethodArgClass {
-            data object ColorAvArgs : BitmapMethodArgClass(), ArgType {
+        data object ColorAvArgs : BitmapMethodArgClass(), ArgType {
             override val entries = ColorAvArgsEnum.entries
             val defaultWaitMill = 1000
             val importPathToKey = Pair(
@@ -199,6 +336,41 @@ object BitmapForSetting {
                 IMPORT_PATH("importPath", 0, FuncCheckerForSetting.ArgType.FILE),
                 KEY("key", 1, FuncCheckerForSetting.ArgType.STRING),
                 WAIT_TIME("waitMill", 2, FuncCheckerForSetting.ArgType.INT),
+            }
+        }
+        data object PickColorArgs : BitmapMethodArgClass(), ArgType {
+            override val entries = PickColorArgsEnum.entries
+            val defaultWaitMill = 1000
+            val importPathToKey = Pair(
+                PickColorArgsEnum.IMPORT_PATH.key,
+                PickColorArgsEnum.IMPORT_PATH.index
+            )
+            val keyToIndex = Pair(
+                PickColorArgsEnum.KEY.key,
+                PickColorArgsEnum.KEY.index
+            )
+            val xToIndex = Pair(
+                PickColorArgsEnum.X.key,
+                PickColorArgsEnum.X.index
+            )
+            val yToIndex = Pair(
+                PickColorArgsEnum.Y.key,
+                PickColorArgsEnum.Y.index
+            )
+            val waitMillToIndex = Pair(
+                PickColorArgsEnum.WAIT_TIME.key,
+                PickColorArgsEnum.WAIT_TIME.index
+            )
+            enum class PickColorArgsEnum(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                IMPORT_PATH("importPath", 0, FuncCheckerForSetting.ArgType.FILE),
+                KEY("key", 1, FuncCheckerForSetting.ArgType.STRING),
+                WAIT_TIME("waitMill", 2, FuncCheckerForSetting.ArgType.INT),
+                X("x", 3, FuncCheckerForSetting.ArgType.INT),
+                Y("y", 4, FuncCheckerForSetting.ArgType.INT),
             }
         }
     }

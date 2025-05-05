@@ -71,12 +71,6 @@ object ColorTool {
         blackRed,
     )
 
-    fun convertColorToHex(
-        colorInt: Int,
-    ): String {
-        return String.format("#%06X", (0xFFFFFF and colorInt))
-    }
-
     fun parseColorStr(
         context: Context?,
         colorStr: String,
@@ -953,5 +947,12 @@ object ColorTool {
         paint.colorFilter = colorMatrixFilter
         canvas.drawBitmap(bmp, 0F, 0F, paint)
         return bmpGrayscale
+    }
+    fun pick(
+        src: Bitmap,
+        x: Int,
+        y: Int,
+    ): Int {
+        return src[x, y]
     }
 }

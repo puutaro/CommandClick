@@ -45,6 +45,7 @@ import com.puutaro.commandclick.proccess.edit.image_action.libs.func.OverlayForI
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.RotateForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ShapeOverlayForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.SizeForImageAction
+import com.puutaro.commandclick.proccess.edit.image_action.libs.func.SplashForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.StrPngForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.ViewForImageAction
 import com.puutaro.commandclick.proccess.edit.image_action.libs.func.WallForImageAction
@@ -2103,6 +2104,13 @@ class ImageActionManager {
                         baseArgsPairList,
                         varNameToBitmapMap,
                     )
+                FuncType.SPLASH ->
+                    SplashForImageAction.handle(
+                        context,
+                        funcTypeStr,
+                        methodName,
+                        baseArgsPairList,
+                    )
             }
 
         }
@@ -2142,6 +2150,7 @@ class ImageActionManager {
             SPECIAL_ART("specialArt"),
             CRACK("crack"),
             ALPHA("alpha"),
+            SPLASH("splash"),
         }
     }
 

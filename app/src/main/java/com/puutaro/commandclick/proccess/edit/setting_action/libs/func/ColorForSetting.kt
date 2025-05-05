@@ -2,13 +2,10 @@ package com.puutaro.commandclick.proccess.edit.setting_action.libs.func
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CheckTool
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColorStr
 import com.puutaro.commandclick.proccess.edit.setting_action.SettingActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.image_tools.ColorTool
-import java.io.File
 import kotlin.enums.EnumEntries
 
 object ColorForSetting {
@@ -657,22 +654,22 @@ object ColorForSetting {
         }
 
         data object ClosestColorArgs : ColorMethodArgClass(), ArgType {
-            override val entries = VividEnumArgs.entries
+            override val entries = ClosestColorEnumArgs.entries
 
             val colorStrListKeyToIndex = Pair(
-                VividEnumArgs.COLOR_STR.key,
-                VividEnumArgs.COLOR_STR.index,
+                ClosestColorEnumArgs.COLOR_STR_LIST.key,
+                ClosestColorEnumArgs.COLOR_STR_LIST.index,
             )
             val targetColorStrKeyToIndex = Pair(
-                VividEnumArgs.TARGET_COLOR_STR.key,
-                VividEnumArgs.TARGET_COLOR_STR.index,
+                ClosestColorEnumArgs.TARGET_COLOR_STR.key,
+                ClosestColorEnumArgs.TARGET_COLOR_STR.index,
             )
-            enum class VividEnumArgs(
+            enum class ClosestColorEnumArgs(
                 val key: String,
                 val index: Int,
                 val type: FuncCheckerForSetting.ArgType,
             ){
-                COLOR_STR("colorStr", 0, FuncCheckerForSetting.ArgType.STRING),
+                COLOR_STR_LIST("colorStrList", 0, FuncCheckerForSetting.ArgType.STRING),
                 TARGET_COLOR_STR("targetColorStr", 1, FuncCheckerForSetting.ArgType.STRING),
             }
         }
