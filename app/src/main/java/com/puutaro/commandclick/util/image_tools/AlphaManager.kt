@@ -10,11 +10,16 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 object AlphaManager {
+    enum class AlphaDirection{
+        HORIZON,
+        VERTICAL,
+    }
 
-    fun fadeBitmapLeftToRightToLow(
+    fun linearAjustBitmapToLow(
         bitmap: Bitmap,
         alphaIncline: Float,
         alphaOffset: Float,
+        alphaDirection: AlphaDirection,
     ): Bitmap {
         val width = bitmap.width
         val height = bitmap.height
@@ -27,10 +32,14 @@ object AlphaManager {
                 val color = pixels[index]
                 val curAlpha = Color.alpha(color)
 //                    val alphaSrc = ((x.toFloat() / width) * 254).toInt()
+                val alphaCoodination = when(alphaDirection){
+                    AlphaDirection.HORIZON -> x
+                    AlphaDirection.VERTICAL -> y
+                }
                 val alpha =
                     when(color == transColor) {
                         true -> 0
-                        else -> (alphaIncline * x.toFloat() + (curAlpha + alphaOffset)).let {
+                        else -> (alphaIncline * alphaCoodination.toFloat() + (curAlpha + alphaOffset)).let {
                             if (it < 0f) return@let 0f
                             if (it > 254f) return@let 255f
                             it

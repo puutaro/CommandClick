@@ -18,6 +18,10 @@ enum class FannelIcons(
         "at_mark",
         R.drawable.fannel_at_mark
     ),
+    AO(
+        "ao",
+        R.drawable.fannel_ao
+    ),
 //    AWARD(
 //        "award",
 //        R.drawable.fannel_award
@@ -126,6 +130,10 @@ enum class FannelIcons(
         "hakushoku_suisei",
         R.drawable.fannel_hakushoku_suisei
     ),
+    HIKARI(
+        "hikari",
+        R.drawable.fannel_hikari
+    ),
     HIME(
         "hime",
         R.drawable.fannel_hime1
@@ -141,6 +149,10 @@ enum class FannelIcons(
     JANOMITI2(
         "janomiti2",
         R.drawable.fannel_janomiti2
+    ),
+    JIN(
+        "jin",
+        R.drawable.fannel_jin
     ),
     JINJA(
         "jinja",
@@ -186,6 +198,10 @@ enum class FannelIcons(
         "knight",
         R.drawable.fannel_knight
     ),
+    KOU(
+        "kou",
+        R.drawable.fannel_kou
+    ),
     KUJIRA(
         "kujira",
         R.drawable.fannel_kujira
@@ -205,6 +221,10 @@ enum class FannelIcons(
     MOON(
         "moon",
         R.drawable.fannel_moon
+    ),
+    MU(
+        "mu",
+        R.drawable.fannel_mu
     ),
     OCTOPASS(
         "octopass",
@@ -253,6 +273,10 @@ enum class FannelIcons(
     SAMURAI2(
         "samurai2",
         R.drawable.fannel_samurai2
+    ),
+    SEKI(
+        "seki",
+        R.drawable.fannel_seki
     ),
     SENSE(
         "sense",
@@ -306,6 +330,14 @@ enum class FannelIcons(
         "sushi",
         R.drawable.fannel_sushi
     ),
+    SUMI(
+        "sumi",
+        R.drawable.fannel_sumi
+    ),
+    TEI(
+        "tei",
+        R.drawable.fannel_tei
+    ),
     TEN(
         "ten",
         R.drawable.fannel_ten
@@ -317,6 +349,10 @@ enum class FannelIcons(
     TIGER_YOKO(
         "tiger_yoko",
         R.drawable.fannel_tiger_yoko
+    ),
+    TOTU(
+        "totu",
+        R.drawable.fannel_totu
     ),
     TRAIN(
         "train",

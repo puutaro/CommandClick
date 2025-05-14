@@ -173,10 +173,88 @@ object AlphaForImageAction {
                         ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
                     ) to funcErr
                 }
-                val returnBitmap = InnerAlpha.horizonToLow(
+                val returnBitmap = InnerAlpha.linearAjustToLow(
                     bitmap,
                     inclineFloat,
                     offsetFloat,
+                    AlphaManager.AlphaDirection.HORIZON,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    returnBitmap,
+                    null
+                ) to null
+            }
+            is AlphaMethodArgClass.VerticalToLowArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
+                    mapArgMapList,
+                    args.bitmapKeyToIndex,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                val inclineFloat = FuncCheckerForSetting.Getter.getFloatFromArgMapByIndex(
+                    mapArgMapList,
+                    args.inclineKeyToIndex,
+                    where
+                ).let { inclineToErr ->
+                    val funcErr = inclineToErr.second
+                        ?: return@let inclineToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val offsetFloat = FuncCheckerForSetting.Getter.getFloatFromArgMapByIndex(
+                    mapArgMapList,
+                    args.offsetKeyToIndex,
+                    where
+                ).let { offsetToErr ->
+                    val funcErr = offsetToErr.second
+                        ?: return@let offsetToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val returnBitmap = InnerAlpha.linearAjustToLow(
+                    bitmap,
+                    inclineFloat,
+                    offsetFloat,
+                    AlphaManager.AlphaDirection.VERTICAL,
                     where,
                 ).let {
                         (returnBitmapSrc, err) ->
@@ -657,17 +735,19 @@ object AlphaForImageAction {
                 return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
             }
         }
-        suspend fun horizonToLow(
+        suspend fun linearAjustToLow(
             bitmap: Bitmap,
             inclineFloat: Float,
             offset: Float,
+            alphaDirection: AlphaManager.AlphaDirection,
             where: String,
         ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
             return try {
-                val alphaBitmap = AlphaManager.fadeBitmapLeftToRightToLow(
+                val alphaBitmap = AlphaManager.linearAjustBitmapToLow(
                     bitmap,
                     inclineFloat,
                     offset,
+                    alphaDirection,
                 )
                 Pair(
                     alphaBitmap,
@@ -808,6 +888,7 @@ object AlphaForImageAction {
         OVERRIDE_RAD("overRad", AlphaMethodArgClass.OverrideRadianToArgs),
         HORIZON_BY_WAVE("horizonByWave", AlphaMethodArgClass.HorizonByWaveToArgs),
         HORIZON_TO_LOW("horizonToLow", AlphaMethodArgClass.HorizonToLowArgs),
+        VERTICAL_TO_LOW("verticalToLow", AlphaMethodArgClass.VerticalToLowArgs),
     }
     private sealed interface ArgType {
         val entries: EnumEntries<*>
@@ -852,6 +933,30 @@ object AlphaForImageAction {
                 HorizonToLowArgs.OFFSET.index
             )
             enum class HorizonToLowArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", 0, FuncCheckerForSetting.ArgType.BITMAP),
+                INCLINE("incline", 1, FuncCheckerForSetting.ArgType.FLOAT),
+                OFFSET("offset", 2, FuncCheckerForSetting.ArgType.FLOAT),
+            }
+        }
+        data object VerticalToLowArgs : AlphaMethodArgClass(), ArgType {
+            override val entries = VerticalToLowArgs.entries
+            val bitmapKeyToIndex = Pair(
+                VerticalToLowArgs.BITMAP.key,
+                VerticalToLowArgs.BITMAP.index
+            )
+            val inclineKeyToIndex = Pair(
+                VerticalToLowArgs.INCLINE.key,
+                VerticalToLowArgs.INCLINE.index
+            )
+            val offsetKeyToIndex = Pair(
+                VerticalToLowArgs.OFFSET.key,
+                VerticalToLowArgs.OFFSET.index
+            )
+            enum class VerticalToLowArgs(
                 val key: String,
                 val index: Int,
                 val type: FuncCheckerForSetting.ArgType,
