@@ -551,6 +551,108 @@ object AlphaForImageAction {
                     null
                 ) to null
             }
+            is AlphaMethodArgClass.RadianToLowToArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
+                    mapArgMapList,
+                    args.bitmapKeyToIndex,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                val centerX = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                    mapArgMapList,
+                    args.centerXKeyToIndex,
+                    where
+                ).let { centerXToErr ->
+                    val funcErr = centerXToErr.second
+                        ?: return@let centerXToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val centerY = FuncCheckerForSetting.Getter.getIntFromArgMapByIndex(
+                    mapArgMapList,
+                    args.centerYKeyToIndex,
+                    where
+                ).let { centerYToErr ->
+                    val funcErr = centerYToErr.second
+                        ?: return@let centerYToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val inclineFloat = FuncCheckerForSetting.Getter.getFloatFromArgMapByIndex(
+                    mapArgMapList,
+                    args.inclineKeyToIndex,
+                    where
+                ).let { inclineToErr ->
+                    val funcErr = inclineToErr.second
+                        ?: return@let inclineToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val offsetFloat = FuncCheckerForSetting.Getter.getFloatFromArgMapByIndex(
+                    mapArgMapList,
+                    args.offsetKeyToIndex,
+                    where
+                ).let { offsetToErr ->
+                    val funcErr = offsetToErr.second
+                        ?: return@let offsetToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val returnBitmap = InnerAlpha.radianToLow(
+                    bitmap,
+                    centerX,
+                    centerY,
+                    inclineFloat,
+                    offsetFloat,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    returnBitmap,
+                    null
+                ) to null
+            }
             is AlphaMethodArgClass.HorizonByWaveToArgs -> {
                 val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
                         index, formalArgsNameToType ->
@@ -789,6 +891,34 @@ object AlphaForImageAction {
                 return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
             }
         }
+        suspend fun radianToLow(
+            bitmap: Bitmap,
+            centerX: Int,
+            centerY: Int,
+            inclineFloat: Float,
+            offset: Float,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val alphaBitmap = AlphaManager.radFromCenterToLow(
+                    bitmap,
+                    centerX,
+                    centerY,
+                    inclineFloat,
+                    offset,
+                )
+                Pair(
+                    alphaBitmap,
+                    null
+                )
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
         suspend fun overrideHorizon(
             bitmap: Bitmap,
             inclineFloat: Float,
@@ -884,6 +1014,7 @@ object AlphaForImageAction {
     ){
         HORIZON("horizon", AlphaMethodArgClass.HorizonToLowArgs),
         RAD("rad", AlphaMethodArgClass.RadianToArgs),
+        RAD_TO_LOW("radToLow", AlphaMethodArgClass.RadianToLowToArgs),
         OVERRIDE_HORIZON("overHorizon", AlphaMethodArgClass.OverrideHorizonToArgs),
         OVERRIDE_RAD("overRad", AlphaMethodArgClass.OverrideRadianToArgs),
         HORIZON_BY_WAVE("horizonByWave", AlphaMethodArgClass.HorizonByWaveToArgs),
@@ -1047,6 +1178,40 @@ object AlphaForImageAction {
                 OverrideRadianToArgs.OFFSET.index
             )
             enum class OverrideRadianToArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", 0, FuncCheckerForSetting.ArgType.BITMAP),
+                CENTER_X("centerX", 1, FuncCheckerForSetting.ArgType.INT),
+                CENTER_Y("centerY", 2, FuncCheckerForSetting.ArgType.INT),
+                INCLINE("incline", 3, FuncCheckerForSetting.ArgType.FLOAT),
+                OFFSET("offset", 4, FuncCheckerForSetting.ArgType.FLOAT),
+            }
+        }
+        data object RadianToLowToArgs : AlphaMethodArgClass(), ArgType {
+            override val entries = RadToLowToArgs.entries
+            val bitmapKeyToIndex = Pair(
+                RadToLowToArgs.BITMAP.key,
+                RadToLowToArgs.BITMAP.index
+            )
+            val centerXKeyToIndex = Pair(
+                RadToLowToArgs.CENTER_X.key,
+                RadToLowToArgs.CENTER_X.index
+            )
+            val centerYKeyToIndex = Pair(
+                RadToLowToArgs.CENTER_Y.key,
+                RadToLowToArgs.CENTER_Y.index
+            )
+            val inclineKeyToIndex = Pair(
+                RadToLowToArgs.INCLINE.key,
+                RadToLowToArgs.INCLINE.index
+            )
+            val offsetKeyToIndex = Pair(
+                RadToLowToArgs.OFFSET.key,
+                RadToLowToArgs.OFFSET.index
+            )
+            enum class RadToLowToArgs(
                 val key: String,
                 val index: Int,
                 val type: FuncCheckerForSetting.ArgType,

@@ -483,6 +483,323 @@ object LineArtForImageAction {
                     null
                 ) to null
             }
+            is MonoArtMethodArgClass.RadToCenterArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByName(
+                    mapArgMapList,
+                    args.bitmapKeyToDefaultValueStr,
+                    varNameToBitmapMap,
+                    where,
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+                val centerX = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.centerXKeyToDefaultValueStr,
+                    where
+                ).let { centerXToErr ->
+                    val funcErr = centerXToErr.second
+                        ?: return@let centerXToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val centerY = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.centerYKeyToDefaultValueStr,
+                    where
+                ).let { centerYToErr ->
+                    val funcErr = centerYToErr.second
+                        ?: return@let centerYToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val minWidth = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.minWidthKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val maxWidth = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.maxWidthKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minWidth,
+                    maxWidth,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.EQUAL,
+                    args.minWidthKeyToDefaultValueStr.first,
+                    args.maxWidthKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to err
+                }
+                val colorList = FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.colorListKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.split(",").asSequence().filter { it.trim().isNotEmpty() }.map {
+                    ColorTool.parseColorStr(
+                        context,
+                        it,
+                        args.colorListKeyToDefaultValueStr.first,
+                        where,
+                    ).let {
+                        ColorTool.removeAlpha(it)
+                    }
+                }.toList()
+                val minAngle = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.minAngleKeyToDefaultValueStr,
+                    where
+                ).let { angleToErr ->
+                    val funcErr = angleToErr.second
+                        ?: return@let angleToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val maxAngle = FuncCheckerForSetting.Getter.getFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.maxAngleKeyToDefaultValueStr,
+                    where
+                ).let { angleToErr ->
+                    val funcErr = angleToErr.second
+                        ?: return@let angleToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minAngle,
+                    maxAngle,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.EQUAL,
+                    args.minAngleKeyToDefaultValueStr.first,
+                    args.maxAngleKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to err
+                }
+                val minRangeRadius = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.minRangeRadiusKeyToDefaultValueStr,
+                    where
+                ).let { rangeRadiusToErr ->
+                    val funcErr = rangeRadiusToErr.second
+                        ?: return@let rangeRadiusToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val maxRangeRadius = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.maxRangeRadiusKeyToDefaultValueStr,
+                    where
+                ).let { rangeRadiusToErr ->
+                    val funcErr = rangeRadiusToErr.second
+                        ?: return@let rangeRadiusToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minRangeRadius,
+                    maxRangeRadius,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.EQUAL,
+                    args.minRangeRadiusKeyToDefaultValueStr.first,
+                    args.maxRangeRadiusKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to err
+                }
+                val minLength = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.minLengthKeyToDefaultValueStr,
+                    where
+                ).let { lengthToErr ->
+                    val funcErr = lengthToErr.second
+                        ?: return@let lengthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val maxLength = FuncCheckerForSetting.Getter.getZeroLargerFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.maxLengthKeyToDefaultValueStr,
+                    where
+                ).let { lengthToErr ->
+                    val funcErr = lengthToErr.second
+                        ?: return@let lengthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minLength,
+                    maxLength,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.EQUAL,
+                    args.minLengthKeyToDefaultValueStr.first,
+                    args.maxLengthKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to err
+                }
+                val minOpacityFloat = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.minOpacityKeyToDefaultValueStr,
+                    where
+                ).let { opacityToErr ->
+                    val funcErr = opacityToErr.second
+                        ?: return@let opacityToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val maxOpacityFloat = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.maxOpacityKeyToDefaultValueStr,
+                    where
+                ).let { opacityToErr ->
+                    val funcErr = opacityToErr.second
+                        ?: return@let opacityToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                FuncCheckerForSetting.NumChecker.minMaxTwoFloatErr(
+                    minOpacityFloat,
+                    maxOpacityFloat,
+                    FuncCheckerForSetting.NumChecker.MinMaxCompare.EQUAL,
+                    args.minOpacityKeyToDefaultValueStr.first,
+                    args.maxOpacityKeyToDefaultValueStr.first,
+                    where,
+                ).let {
+                        err ->
+                    if(err == null) return@let
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to err
+                }
+
+                val times = FuncCheckerForSetting.Getter.getZeroELargerIntFromArgMapByName(
+                    mapArgMapList,
+                    args.timesKeyToDefaultValueStr,
+                    where
+                ).let { timesToErr ->
+                    val funcErr = timesToErr.second
+                        ?: return@let timesToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val bitmapArt = InnerLineArt.multiToCenter(
+                    bitmap,
+                    centerX,
+                    centerY,
+                    minRangeRadius,
+                    maxRangeRadius,
+                    minLength,
+                    maxLength,
+                    minAngle,
+                    maxAngle,
+                    minWidth,
+                    maxWidth,
+                    minOpacityFloat,
+                    maxOpacityFloat,
+                    colorList,
+                    times,
+                    where,
+                ).let {
+                        (bitmapArtSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let bitmapArtSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    bitmapArt,
+                    null
+                ) to null
+            }
             is MonoArtMethodArgClass.TangentArgs -> {
                 val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
                         index, formalArgsNameToType ->
@@ -1347,6 +1664,50 @@ object LineArtForImageAction {
 
 
     private object InnerLineArt {
+        fun multiToCenter(
+            bitmap: Bitmap,
+            centerX: Float,
+            centerY: Float,
+            minRangeRadius: Float,
+            maxRangeRadius: Float,
+            minLength: Float,
+            maxLength: Float,
+            minAngle: Float,
+            maxAngle: Float,
+            minWidth: Float,
+            maxWidth: Float,
+            minOpacity: Float,
+            maxOpacity: Float,
+            colorStrList: List<String>,
+            times: Int,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                LineArt.drawLinesToCenter(
+                    bitmap,
+                    centerX,
+                    centerY,
+                    minRangeRadius,
+                    maxRangeRadius,
+                    minLength,
+                    maxLength,
+                    minAngle,
+                    maxAngle,
+                    minWidth,
+                    maxWidth,
+                    minOpacity,
+                    maxOpacity,
+                    colorStrList,
+                    times,
+                ) to null
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
         fun multi(
             bitmap: Bitmap,
             centerX: Float,
@@ -1642,6 +2003,7 @@ object LineArtForImageAction {
         BY_ANGLE("byAngle", MonoArtMethodArgClass.ByAngleArgs),
         ONE("one", MonoArtMethodArgClass.OneArgs),
         RAD("rad", MonoArtMethodArgClass.RadArgs),
+        RAD_TO_CENTER("radToCenter", MonoArtMethodArgClass.RadToCenterArgs),
     }
     private sealed interface ArgType {
         val entries: EnumEntries<*>
@@ -1731,6 +2093,122 @@ object LineArtForImageAction {
                 MAX_ANGLE(
                     "maxAngle",
                     90.toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                MIN_LENGTH(
+                    "minLength",
+                    (100).toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                MAX_LENGTH(
+                    "maxLength",
+                    (100).toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                TIMES("times", 5.toString(), FuncCheckerForSetting.ArgType.INT),
+            }
+        }
+        data object RadToCenterArgs : MonoArtMethodArgClass(), ArgType {
+            override val entries = RadEnumArgs.entries
+            val bitmapKeyToDefaultValueStr = Pair(
+                RadEnumArgs.BITMAP.key,
+                RadEnumArgs.BITMAP.defaultValueStr
+            )
+            val centerXKeyToDefaultValueStr = Pair(
+                RadEnumArgs.CENTER_X.key,
+                RadEnumArgs.CENTER_X.defaultValueStr
+            )
+            val centerYKeyToDefaultValueStr = Pair(
+                RadEnumArgs.CENTER_Y.key,
+                RadEnumArgs.CENTER_Y.defaultValueStr
+            )
+            val minWidthKeyToDefaultValueStr = Pair(
+                RadEnumArgs.MIN_WIDTH.key,
+                RadEnumArgs.MIN_WIDTH.defaultValueStr
+            )
+            val maxWidthKeyToDefaultValueStr = Pair(
+                RadEnumArgs.MAX_WIDTH.key,
+                RadEnumArgs.MAX_WIDTH.defaultValueStr
+            )
+            val colorListKeyToDefaultValueStr = Pair(
+                RadEnumArgs.COLOR_LIST.key,
+                RadEnumArgs.COLOR_LIST.defaultValueStr
+            )
+            val minOpacityKeyToDefaultValueStr = Pair(
+                RadEnumArgs.MIN_OPACITY.key,
+                RadEnumArgs.MIN_OPACITY.defaultValueStr
+            )
+            val maxOpacityKeyToDefaultValueStr = Pair(
+                RadEnumArgs.MAX_OPACITY.key,
+                RadEnumArgs.MAX_OPACITY.defaultValueStr
+            )
+            val minRangeRadiusKeyToDefaultValueStr = Pair(
+                RadEnumArgs.MIN_RANGE_RADIUS.key,
+                RadEnumArgs.MIN_RANGE_RADIUS.defaultValueStr
+            )
+            val maxRangeRadiusKeyToDefaultValueStr = Pair(
+                RadEnumArgs.MAX_RANGE_RADIUS.key,
+                RadEnumArgs.MAX_RANGE_RADIUS.defaultValueStr
+            )
+            val minAngleKeyToDefaultValueStr = Pair(
+                RadEnumArgs.MIN_ANGLE.key,
+                RadEnumArgs.MIN_ANGLE.defaultValueStr
+            )
+            val maxAngleKeyToDefaultValueStr = Pair(
+                RadEnumArgs.MAX_ANGLE.key,
+                RadEnumArgs.MAX_ANGLE.defaultValueStr
+            )
+            val minLengthKeyToDefaultValueStr = Pair(
+                RadEnumArgs.MIN_LENGTH.key,
+                RadEnumArgs.MIN_LENGTH.defaultValueStr
+            )
+            val maxLengthKeyToDefaultValueStr = Pair(
+                RadEnumArgs.MAX_LENGTH.key,
+                RadEnumArgs.MAX_LENGTH.defaultValueStr
+            )
+            val timesKeyToDefaultValueStr = Pair(
+                RadEnumArgs.TIMES.key,
+                RadEnumArgs.TIMES.defaultValueStr
+            )
+            enum class RadEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ) {
+                BITMAP("bitmap", null, FuncCheckerForSetting.ArgType.BITMAP),
+                CENTER_X("centerX", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                CENTER_Y("centerY", 0.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                MIN_WIDTH("minWidth", 1.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                MAX_WIDTH("maxWidth", 1.toString(), FuncCheckerForSetting.ArgType.FLOAT),
+                COLOR_LIST("colorList", CmdClickColor.BLACK.str, FuncCheckerForSetting.ArgType.STRING),
+                MIN_OPACITY(
+                    "minOpacity",
+                    0.toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                MAX_OPACITY(
+                    "maxOpacity",
+                    1.toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                MIN_ANGLE(
+                    "minAngle",
+                    0.toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                MAX_ANGLE(
+                    "maxAngle",
+                    90.toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                MIN_RANGE_RADIUS(
+                    "minRangeRadius",
+                    (100).toString(),
+                    FuncCheckerForSetting.ArgType.FLOAT
+                ),
+                MAX_RANGE_RADIUS(
+                    "maxRangeRadius",
+                    (100).toString(),
                     FuncCheckerForSetting.ArgType.FLOAT
                 ),
                 MIN_LENGTH(

@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PathMeasure
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.VectorDrawable
 import androidx.core.graphics.PathParser
 import androidx.core.graphics.createBitmap
@@ -658,5 +660,134 @@ object LineArt {
         path.moveTo(startX, startY) // 始点に移動
         path.lineTo(endX.toFloat(), endY.toFloat())     // 終点まで線を引く
         canvas.drawPath(path, paint)    // Pathを描画
+    }
+
+    fun drawLinesToCenter(
+        bitmap: Bitmap,
+        centerX: Float,
+        centerY: Float,
+        minRangeRadius: Float,
+        maxRangeRadius: Float,
+        minLength: Float,
+        maxLength: Float,
+        minAngle: Float,
+        maxAngle: Float,
+        minWidth: Float,
+        maxWidth: Float,
+        minOpacity: Float,
+        maxOpacity: Float,
+        colorStrList: List<String>,
+        times: Int,
+    ): Bitmap {
+        val mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true) // 可変コピー
+        val canvas = Canvas(mutableBitmap)
+        // 2. Paintオブジェクトを作成して、線のスタイルを設定
+        val paint = Paint()
+        val random = Random.Default
+        for(i in 0..times) {
+            val colorStr = colorStrList.random()
+            paint.strokeWidth = random.nextDouble(
+                minWidth.toDouble(),
+                maxWidth.toDouble()
+            ).toFloat()
+            paint.style = Paint.Style.STROKE // 線を描画することを指定
+            paint.isAntiAlias = true // アンチエイリアスを有効にする (滑らかな線のため)
+            val opacity = random.nextDouble(
+                minOpacity.toDouble(),
+                maxOpacity.toDouble()
+            ).toFloat()
+            val angle =
+                random.nextDouble(minAngle.toDouble(), maxAngle.toDouble()).toFloat()
+            val rangeRadius =
+                random.nextDouble(minRangeRadius.toDouble(), maxRangeRadius.toDouble()).toFloat()
+            val length =
+                random.nextDouble(minLength.toDouble(), maxLength.toDouble()).toFloat()
+            val width =
+                random.nextDouble(minWidth.toDouble(), maxWidth.toDouble()).toFloat()
+            execDrawLineToCenter(
+                canvas,
+                paint,
+                centerX,
+                centerY,
+                rangeRadius,
+                length,
+                angle,
+                colorStr,
+                width,
+                opacity,
+            )
+        }
+        return mutableBitmap
+    }
+
+    fun execDrawLineToCenter(
+        canvas: Canvas,
+        paint: Paint,
+        centerX: Float,
+        centerY: Float,
+        rangeRadius: Float,
+        length: Float,
+        angle: Float,
+        colorStr: String,
+        width: Float,
+        opacity: Float,
+    ) {
+        if(
+            length > rangeRadius
+        ) return
+        // 2. Paintオブジェクトを作成して、線のスタイルを設定
+        paint.color = colorStr.toColorInt()
+        paint.strokeWidth = width
+        paint.style = Paint.Style.STROKE // 線を描画することを指定
+        paint.isAntiAlias = true // アンチエイリアスを有効にする (滑らかな線のため)
+        paint.alpha = (opacity * 255).toInt()
+
+        // 3. 角度をラジアンに変換
+        val angleRad = angle * PI / 180f
+
+        val startX = centerX + length * cos(angleRad)
+        val startY = centerY + length * sin(angleRad)
+        // 4. 線の終点の座標を計算
+        val endX = centerX + rangeRadius * cos(angleRad)
+        val endY = centerY + rangeRadius * sin(angleRad)
+
+        // 5. Pathオブジェクトを使用して線を描画
+        val path = Path()
+        path.moveTo(startX.toFloat(), startY.toFloat()) // 始点に移動
+
+        path.lineTo(endX.toFloat(), endY.toFloat())     // 終点まで線を引く
+        canvas.drawPath(path, paint)    // Pathを描画
+    }
+    fun drawClearingLineOnBitmap(
+        originalBitmap: Bitmap,
+        startX: Float,
+        startY: Float,
+        endX: Float,
+        endY: Float,
+        strokeWidthFloat: Float = 5f // 線の太さ
+    ): Bitmap {
+        // 描画可能な新しいBitmapを作成 (mutableである必要がある)
+        // ARGB_8888 を使用してアルファチャネルをサポートする
+        val newBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(newBitmap)
+
+        // Paintオブジェクトを設定
+        val paint = Paint().apply {
+            // PorterDuff.Mode.CLEAR を設定すると、描画先のピクセルを完全に透明にします。
+            // このモードでは、paint.color は効果を持ちません。
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+            strokeWidth = strokeWidthFloat // 線の太さ
+            style = Paint.Style.STROKE // 線を描く
+            isAntiAlias = true // アンチエイリアスを有効にして線を滑らかにする
+            // color や alpha を設定してもこのモードでは効果はありませんが、
+            // 他の描画モードで使う場合のために残しておくこともできます。
+            // color = Color.RED
+            // alpha = 255
+        }
+
+        // 線を描画
+        canvas.drawLine(startX, startY, endX, endY, paint)
+
+        return newBitmap
     }
 }

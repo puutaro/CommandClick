@@ -2996,7 +2996,8 @@ object BitmapArtForImageAction {
         }
         data object RectPuzzleAjustSizeArgs : BitmapArtMethodArgClass(), ArgType {
             override val entries = RectPuzzleAjustSizeEnumArgs.entries
-            val bitmapKeyToDefaultValueStr = Pair(
+            val bitmapKeyToDefaultValueStr =
+                Pair(
                 RectPuzzleAjustSizeEnumArgs.BITMAP.key,
                 RectPuzzleAjustSizeEnumArgs.BITMAP.defaultValueStr,
             )

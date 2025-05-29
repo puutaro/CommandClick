@@ -166,6 +166,48 @@ object AlphaManager {
         return fadedBitmap
     }
 
+    fun radFromCenterToLow(
+        bitmap: Bitmap,
+        centerX: Int,
+        centerY: Int,
+        alphaIncline: Float,
+        alphaOffset: Float,
+    ): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+        val transColor = Color.TRANSPARENT
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                val index = y * width + x
+                val color = pixels[index]
+                val curAlpha = Color.alpha(color)
+                val distance = sqrt(
+                    ((x - centerX) * (x - centerX) +
+                            (y - centerY) * (y - centerY)).toDouble()
+                ).toFloat()
+                val alpha =
+                    when(color == transColor) {
+                        true -> 0
+                        else -> (alphaIncline * distance + (curAlpha + alphaOffset)).let {
+                            if (it < 0f) return@let 0f
+                            if (it > 254) return@let 255
+                            it
+                        }.toInt()
+                    }
+                if(alpha > curAlpha) continue
+                val red = Color.red(color)
+                val green = Color.green(color)
+                val blue = Color.blue(color)
+                pixels[index] = Color.argb(alpha, red, green, blue)
+            }
+        }
+
+        val fadedBitmap = createBitmap(width, height)
+        fadedBitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+        return fadedBitmap
+    }
     fun fadeBitmapFromCenter(
         bitmap: Bitmap,
         centerX: Int,
