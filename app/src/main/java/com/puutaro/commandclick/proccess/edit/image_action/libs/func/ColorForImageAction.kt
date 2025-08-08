@@ -772,6 +772,91 @@ object ColorForImageAction {
                     null
                 ) to null
             }
+            is ColorMethodArgClass.ToColorArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByIndex(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val bitmap = FuncCheckerForSetting.Getter.getBitmapFromArgMapByIndex(
+                    mapArgMapList,
+                    args.bitmapKeyToIndex,
+                    varNameToBitmapMap,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                } ?: return null
+
+                val targetColor = FuncCheckerForSetting.Getter.getStringFromArgMapByIndex(
+                    mapArgMapList,
+                    args.targetColorKeyToIndex,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }.let {
+                        colorStr ->
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        args.targetColorKeyToIndex.first,
+                        where,
+                    )
+                }
+                val rate = FuncCheckerForSetting.Getter.getRateFloatFromArgMapByIndex(
+                    mapArgMapList,
+                    args.rateKeyToIndex,
+                    where
+                ).let { bitmapToErr ->
+                    val funcErr = bitmapToErr.second
+                        ?: return@let bitmapToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val grayBitmap = ColorManager.toColor(
+                    bitmap,
+                    targetColor,
+                    rate,
+                    where,
+                ).let {
+                        (grayBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let grayBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    grayBitmap,
+                    null
+                ) to null
+            }
             is ColorMethodArgClass.ToGrayArgs -> {
                 val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
                         index, formalArgsNameToType ->
@@ -1067,6 +1152,37 @@ object ColorForImageAction {
             }
         }
 
+        suspend fun toColor(
+            bitmap: Bitmap,
+            targetColor: String,
+            rate: Float,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val toColorBitmap = ColorTool.adjustBitmapColor(
+                    bitmap,
+                    targetColor,
+                    rate
+                )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "lcolor.txt").absolutePath,
+//                    listOf(
+//                        "toColorStr: ${toColorStr}",
+//                        "fromColorStr: ${fromColorStr}",
+//                    ).joinToString("\n")
+//                )
+                Pair(
+                    toColorBitmap,
+                    null
+                )
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
         suspend fun toGray(
             bitmap: Bitmap,
             where: String,
@@ -1272,6 +1388,7 @@ object ColorForImageAction {
         SWAP("swap", ColorMethodArgClass.SwapArgs),
         SWAP_TRANS_AND_ALL("swapTransAndAll", ColorMethodArgClass.SwapTransAndAllArgs),
         TO_GRAY("toGray", ColorMethodArgClass.ToGrayArgs),
+        TO_COLOR("toColor", ColorMethodArgClass.ToColorArgs),
         INVERT_MONO("invertMono", ColorMethodArgClass.InvertMonoArgs),
         REDUCE_CONTRAST("reduceContrast", ColorMethodArgClass.ReduceContrastArgs),
     }
@@ -1430,6 +1547,30 @@ object ColorForImageAction {
                 val type: FuncCheckerForSetting.ArgType,
             ){
                 BITMAP("bitmap", 0, FuncCheckerForSetting.ArgType.BITMAP),
+            }
+        }
+        data object ToColorArgs : ColorMethodArgClass(), ArgType {
+            override val entries = ToColorArgs.entries
+            val bitmapKeyToIndex = Pair(
+                ToColorArgs.BITMAP.key,
+                ToColorArgs.BITMAP.index
+            )
+            val targetColorKeyToIndex = Pair(
+                ToColorArgs.TARGET_COLOR.key,
+                ToColorArgs.TARGET_COLOR.index
+            )
+            val rateKeyToIndex = Pair(
+                ToColorArgs.RATE.key,
+                ToColorArgs.RATE.index
+            )
+            enum class ToColorArgs(
+                val key: String,
+                val index: Int,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                BITMAP("bitmap", 0, FuncCheckerForSetting.ArgType.BITMAP),
+                TARGET_COLOR("targetColor", 1, FuncCheckerForSetting.ArgType.STRING),
+                RATE("rate", 2, FuncCheckerForSetting.ArgType.FLOAT),
             }
         }
         data object SwapArgs : ColorMethodArgClass(), ArgType {

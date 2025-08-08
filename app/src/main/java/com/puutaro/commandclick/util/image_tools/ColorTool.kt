@@ -955,4 +955,71 @@ object ColorTool {
     ): Int {
         return src[x, y]
     }
+    /**
+     * Bitmapのピクセルカラーを指定されたターゲットカラーに近づけます。
+     * 調整の度合いはrateで制御されます。
+     *
+     * @param originalBitmap 調整する元のBitmap。
+     * @param targetColor 最終的に近づけたいターゲットカラー（ARGB整数値）。
+     * @param rate 調整の度合い (0.0f から 1.0f の範囲)。
+     * 0.0f の場合、元のBitmapがそのまま返されます。
+     * 1.0f の場合、全てのピクセルがターゲットカラーになります。
+     * @return 調整された新しいBitmap。元のBitmapは変更されません。
+     */
+    fun adjustBitmapColor(
+        originalBitmap: Bitmap,
+        targetColor: String,
+        rate: Float
+    ): Bitmap {
+        val bitmapConfig = originalBitmap.config
+            ?: return originalBitmap
+        val targetColorInt = targetColor.toColorInt()
+        // レートが0の場合、元のBitmapをそのまま返す
+        if (rate <= 0f) {
+            return originalBitmap
+        }
+        // レートが1以上の場合、ターゲットカラーで塗りつぶされたBitmapを返す
+        if (rate >= 1f) {
+            val newBitmap =
+                createBitmap(originalBitmap.width, originalBitmap.height, bitmapConfig)
+            newBitmap.eraseColor(targetColorInt)
+            return newBitmap
+        }
+
+        val width = originalBitmap.width
+        val height = originalBitmap.height
+        val pixels = IntArray(width * height)
+
+        // 元のBitmapから全てのピクセルを取得
+        originalBitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+        // 各ピクセルを処理
+        for (i in pixels.indices) {
+            val originalColor = pixels[i]
+
+            val alpha = Color.alpha(originalColor)
+            val originalRed = Color.red(originalColor)
+            val originalGreen = Color.green(originalColor)
+            val originalBlue = Color.blue(originalColor)
+
+            val targetRed = Color.red(targetColorInt)
+            val targetGreen = Color.green(targetColorInt)
+            val targetBlue = Color.blue(targetColorInt)
+
+            // 新しい色のR, G, B成分を計算
+            // newColor = originalColor * (1 - rate) + targetColor * rate
+            val newRed = (originalRed * (1 - rate) + targetRed * rate).toInt().coerceIn(0, 255)
+            val newGreen = (originalGreen * (1 - rate) + targetGreen * rate).toInt().coerceIn(0, 255)
+            val newBlue = (originalBlue * (1 - rate) + targetBlue * rate).toInt().coerceIn(0, 255)
+
+            // 新しいピクセルカラーを設定（アルファ値は元のまま）
+            pixels[i] = Color.argb(alpha, newRed, newGreen, newBlue)
+        }
+
+        // 新しいBitmapを作成し、変更されたピクセルを設定
+        val resultBitmap = createBitmap(width, height, bitmapConfig)
+        resultBitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+
+        return resultBitmap
+    }
 }

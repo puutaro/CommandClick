@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
@@ -139,10 +138,300 @@ object GradForImageAction {
                     null
                 ) to null
             }
+            is GradMethodArgClass.RadArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val centerX = FuncCheckerForSetting.Getter.getZeroELargerFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.centerXKeyToDefaultValueStr,
+                    where
+                ).let { centerXToErr ->
+                    val funcErr = centerXToErr.second
+                        ?: return@let centerXToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val centerY = FuncCheckerForSetting.Getter.getZeroELargerFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.centerYKeyToDefaultValueStr,
+                    where
+                ).let { centerYToErr ->
+                    val funcErr = centerYToErr.second
+                        ?: return@let centerYToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
+                    mapArgMapList,
+                    args.widthKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
+                    mapArgMapList,
+                    args.heightKeyToDefaultValueStr,
+                    where
+                ).let { heightToErr ->
+                    val funcErr = heightToErr.second
+                        ?: return@let heightToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.colorKeyToDefaultValueStr,
+                    where
+                ).let { colorStrToErr ->
+                    val funcErr = colorStrToErr.second
+                        ?: return@let colorStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val returnBitmap = Grad.rad(
+                    context,
+                    args,
+                    argsPairList,
+                    centerX,
+                    centerY,
+                    width,
+                    height,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    returnBitmap,
+                    null
+                ) to null
+            }
+            is GradMethodArgClass.SweepArgs -> {
+                val formalArgIndexToNameToTypeList = args.entries.mapIndexed {
+                        index, formalArgsNameToType ->
+                    Triple(
+                        index,
+                        formalArgsNameToType.key,
+                        formalArgsNameToType.type,
+                    )
+                }
+                val mapArgMapList = FuncCheckerForSetting.MapArg.makeMapArgMapListByName(
+                    formalArgIndexToNameToTypeList,
+                    argsPairList
+                )
+                val where = FuncCheckerForSetting.WhereManager.makeWhereFromList(
+                    funcName,
+                    methodNameStr,
+                    argsPairList,
+                    formalArgIndexToNameToTypeList
+                )
+                val centerX = FuncCheckerForSetting.Getter.getZeroELargerFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.centerXKeyToDefaultValueStr,
+                    where
+                ).let { centerXToErr ->
+                    val funcErr = centerXToErr.second
+                        ?: return@let centerXToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val centerY = FuncCheckerForSetting.Getter.getZeroELargerFloatFromArgMapByName(
+                    mapArgMapList,
+                    args.centerYKeyToDefaultValueStr,
+                    where
+                ).let { centerYToErr ->
+                    val funcErr = centerYToErr.second
+                        ?: return@let centerYToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val width = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
+                    mapArgMapList,
+                    args.widthKeyToDefaultValueStr,
+                    where
+                ).let { widthToErr ->
+                    val funcErr = widthToErr.second
+                        ?: return@let widthToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val height = FuncCheckerForSetting.Getter.getZeroLargerIntFromArgMapByName(
+                    mapArgMapList,
+                    args.heightKeyToDefaultValueStr,
+                    where
+                ).let { heightToErr ->
+                    val funcErr = heightToErr.second
+                        ?: return@let heightToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                FuncCheckerForSetting.Getter.getStringFromArgMapByName(
+                    mapArgMapList,
+                    args.colorKeyToDefaultValueStr,
+                    where
+                ).let { colorStrToErr ->
+                    val funcErr = colorStrToErr.second
+                        ?: return@let colorStrToErr.first
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL
+                    ) to funcErr
+                }
+                val returnBitmap = Grad.sweep(
+                    context,
+                    args,
+                    argsPairList,
+                    centerX,
+                    centerY,
+                    width,
+                    height,
+                    where,
+                ).let {
+                        (returnBitmapSrc, err) ->
+                    if(
+                        err == null
+                    ) return@let returnBitmapSrc
+                    return Pair(
+                        null,
+                        ImageActionKeyManager.BreakSignal.ERR_EXIT_SIGNAL,
+                    ) to err
+                }
+                Pair(
+                    returnBitmap,
+                    null
+                ) to null
+            }
         }
     }
 
     private object Grad {
+        fun sweep(
+            context: Context,
+            args: GradMethodArgClass.SweepArgs,
+            argsPairList: List<Pair<String, String>>,
+            centerX: Float,
+            centerY: Float,
+            width: Int,
+            height: Int,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val colorKey = args.colorKeyToDefaultValueStr.first
+                val colorIntArray = argsPairList.filter {
+                    it.first == colorKey
+                }.mapIndexed {
+                        index, (_, colorStr) ->
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        "${colorKey}${index}",
+                        where,
+                    ).toColorInt()
+                }.toIntArray()
+                val radGradBitmap = BitmapTool.GradientBitmap.createSweepGradientBitmap(
+                    centerX,
+                    centerY,
+                    width,
+                    height,
+                    colorIntArray,
+                )
+                Pair(
+                    radGradBitmap,
+                    null
+                )
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
+        fun rad(
+            context: Context,
+            args: GradMethodArgClass.RadArgs,
+            argsPairList: List<Pair<String, String>>,
+            centerX: Float,
+            centerY: Float,
+            width: Int,
+            height: Int,
+            where: String,
+        ): Pair<Bitmap?, FuncCheckerForSetting.FuncCheckErr?> {
+            return try {
+                val colorKey = args.colorKeyToDefaultValueStr.first
+                val colorIntArray = argsPairList.filter {
+                    it.first == colorKey
+                }.mapIndexed {
+                        index, (_, colorStr) ->
+                    ColorTool.parseColorStr(
+                        context,
+                        colorStr,
+                        "${colorKey}${index}",
+                        where,
+                    ).toColorInt()
+                }.toIntArray()
+                val radGradBitmap = BitmapTool.GradientBitmap.createRadialGradientBitmap(
+                    centerX,
+                    centerY,
+                    width,
+                    height,
+                    colorIntArray,
+                )
+                Pair(
+                    radGradBitmap,
+                    null
+                )
+            } catch (e: Exception) {
+                val spanFuncTypeStr = CheckTool.LogVisualManager.execMakeSpanTagHolder(
+                    CheckTool.errRedCode,
+                    e.toString()
+                )
+                return null to FuncCheckerForSetting.FuncCheckErr("${e}: ${spanFuncTypeStr}, ${where}")
+            }
+        }
         fun make(
             context: Context,
             args: GradMethodArgClass.MakeArgs,
@@ -190,6 +479,8 @@ object GradForImageAction {
         val args: GradMethodArgClass,
     ){
         MAKE("make", GradMethodArgClass.MakeArgs),
+        RAD("rad", GradMethodArgClass.RadArgs),
+        SWEEP("sweep", GradMethodArgClass.SweepArgs),
     }
     private sealed interface ArgType {
         val entries: EnumEntries<*>
@@ -225,5 +516,75 @@ object GradForImageAction {
             }
 
         }
+        data object RadArgs : GradMethodArgClass(), ArgType {
+            override val entries = RadArgs.entries
+            val centerXKeyToDefaultValueStr = Pair(
+                RadArgs.CENTER_X.key,
+                RadArgs.CENTER_X.defaultValueStr
+            )
+            val centerYKeyToDefaultValueStr = Pair(
+                RadArgs.CENTER_Y.key,
+                RadArgs.CENTER_Y.defaultValueStr
+            )
+            val widthKeyToDefaultValueStr = Pair(
+                RadArgs.WIDTH.key,
+                RadArgs.WIDTH.defaultValueStr
+            )
+            val heightKeyToDefaultValueStr = Pair(
+                RadArgs.HEIGHT.key,
+                RadArgs.HEIGHT.defaultValueStr
+            )
+            val colorKeyToDefaultValueStr = Pair(
+                RadArgs.COLOR.key,
+                RadArgs.COLOR.defaultValueStr
+            )
+            enum class RadArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                CENTER_X("centerX", null, FuncCheckerForSetting.ArgType.FLOAT),
+                CENTER_Y("centerY", null, FuncCheckerForSetting.ArgType.FLOAT),
+                WIDTH("width", null, FuncCheckerForSetting.ArgType.INT),
+                HEIGHT("height", null, FuncCheckerForSetting.ArgType.INT),
+                COLOR("color", null, FuncCheckerForSetting.ArgType.STRING),
+            }
+        }
+        data object SweepArgs : GradMethodArgClass(), ArgType {
+            override val entries = SweepEnumArgs.entries
+            val centerXKeyToDefaultValueStr = Pair(
+                SweepEnumArgs.CENTER_X.key,
+                SweepEnumArgs.CENTER_X.defaultValueStr
+            )
+            val centerYKeyToDefaultValueStr = Pair(
+                SweepEnumArgs.CENTER_Y.key,
+                SweepEnumArgs.CENTER_Y.defaultValueStr
+            )
+            val widthKeyToDefaultValueStr = Pair(
+                SweepEnumArgs.WIDTH.key,
+                SweepEnumArgs.WIDTH.defaultValueStr
+            )
+            val heightKeyToDefaultValueStr = Pair(
+                SweepEnumArgs.HEIGHT.key,
+                SweepEnumArgs.HEIGHT.defaultValueStr
+            )
+            val colorKeyToDefaultValueStr = Pair(
+                SweepEnumArgs.COLOR.key,
+                SweepEnumArgs.COLOR.defaultValueStr
+            )
+            enum class SweepEnumArgs(
+                val key: String,
+                val defaultValueStr: String?,
+                val type: FuncCheckerForSetting.ArgType,
+            ){
+                CENTER_X("centerX", null, FuncCheckerForSetting.ArgType.FLOAT),
+                CENTER_Y("centerY", null, FuncCheckerForSetting.ArgType.FLOAT),
+                WIDTH("width", null, FuncCheckerForSetting.ArgType.INT),
+                HEIGHT("height", null, FuncCheckerForSetting.ArgType.INT),
+                COLOR("color", null, FuncCheckerForSetting.ArgType.STRING),
+            }
+
+        }
+
     }
 }

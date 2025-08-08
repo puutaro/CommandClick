@@ -212,6 +212,86 @@ object BitmapTool {
             gradient.cornerRadius = 0f
             return gradient.toBitmap(width, height)
         }
+        /**
+         * 放射状グラデーション（中心から外側へ）のBitmapを生成します。
+         * @param width 生成するBitmapの幅
+         * @param height 生成するBitmapの高さ
+         * @return 放射状グラデーションが描画されたBitmap
+         */
+        fun createRadialGradientBitmap(
+            centerX: Float,
+            centerY: Float,
+            width: Int,
+            height: Int,
+            colorIntArray: IntArray,
+            ): Bitmap {
+            // ミュータブルなBitmapを作成
+            val bitmap = createBitmap(width, height)
+            val canvas = Canvas(bitmap)
+
+            // 各色の相対的な位置 (0.0から1.0)。nullの場合は均等に配置される。
+            val positions: FloatArray? = null // floatArrayOf(0.0f, 0.3f, 0.7f, 1.0f) のように指定可能
+
+
+            val dst = calculateDistance(centerX.toDouble(), centerY.toDouble(), width.toDouble(), height.toDouble())
+            val dstFromZero = calculateDistance(centerX.toDouble(), centerY.toDouble(), 0.0, 0.0)
+
+            // グラデーションの半径 (Bitmapの短い辺の半分)
+            val radius = when(dst < dstFromZero){
+                true -> dstFromZero
+                else -> dst
+            }.toFloat()
+            // RadialGradientシェーダーを作成
+            val radialGradient = android.graphics.RadialGradient(
+                centerX, centerY, radius, colorIntArray, positions, Shader.TileMode.CLAMP
+            )
+
+            // Paintオブジェクトを作成し、シェーダーを設定
+            val paint = Paint().apply {
+                shader = radialGradient
+                isAntiAlias = true // アンチエイリアスを有効にして滑らかにする
+            }
+
+            // キャンバス全体をグラデーションで塗りつぶす
+            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+
+            return bitmap
+        }
+        fun createSweepGradientBitmap(
+            centerX: Float,
+            centerY: Float,
+            width: Int,
+            height: Int,
+            colorIntArray: IntArray,
+        ): Bitmap {
+            val bitmap = createBitmap(width, height)
+            val canvas = Canvas(bitmap)
+
+            // グラデーションの色を定義
+            // 各色の相対的な位置 (0.0から1.0)。nullの場合は均等に配置される。
+            val positions: FloatArray? = null
+
+            // SweepGradientシェーダーを作成
+            val sweepGradient = android.graphics.SweepGradient(
+                centerX, centerY, colorIntArray, positions
+            )
+
+            // Paintオブジェクトを作成し、シェーダーを設定
+            val paint = Paint().apply {
+                shader = sweepGradient
+                isAntiAlias = true // アンチエイリアスを有効にして滑らかにする
+            }
+
+            // キャンバス全体をグラデーションで塗りつぶす
+            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+
+            return bitmap
+        }
+        private fun calculateDistance(x1: Double, y1: Double, x2: Double, y2: Double): Double {
+            val dx = x2 - x1
+            val dy = y2 - y1
+            return Math.sqrt(dx * dx + dy * dy)
+        }
     }
 
     fun convertFileToByteArray(
