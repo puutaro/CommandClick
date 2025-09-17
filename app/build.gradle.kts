@@ -22,6 +22,9 @@ android {
                 useLegacyPackaging = false
             }
         }
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
 
 
