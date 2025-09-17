@@ -414,7 +414,16 @@ put_launch_comp_file(){
 	touch "${UBUNTU_LAUNCH_COMP_FILE}"
 }
 
+update_and_upgrade(){
+	rm -rf /var/lib/apt/lists/*
+	apt-get update -y \
+		&& apt-get -o Dpkg::Options::="--force-confnew" upgrade -y
+}
 
+
+if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] ;then
+	update_and_upgrade
+fi
 if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
 		&& [ "${CREATE_IMAGE_SWITCH}" = "ON" ];then
 	install_base_pkg
