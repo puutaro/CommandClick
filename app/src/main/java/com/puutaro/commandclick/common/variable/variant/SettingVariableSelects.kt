@@ -89,7 +89,6 @@ object SettingVariableSelects {
     }
     enum class ShellExecEnvSelects {
         UBUNTU,
-        TERMUX
     }
     enum class UbuntuExecModeSelects {
         foreground,

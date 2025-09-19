@@ -91,7 +91,7 @@ private fun execReflectForCmdIndex(
     cmdindexSearchTotal.setText(displayActivePerTotal)
     if (numberOfMatches == 0) {
         cmdindexSearchTotal.setTextColor(
-            activity.getColor(com.termux.shared.R.color.dark_red)
+            activity.getColor(R.color.red)
         )
     } else {
         cmdindexSearchTotal.setTextColor(
@@ -113,7 +113,7 @@ private fun execReflectForCmdEdit(
     cmdEditSearchTotal.setText(displayActivePerTotal)
     if (numberOfMatches == 0) {
         cmdEditSearchTotal.setTextColor(
-            activity.getColor(com.termux.shared.R.color.dark_red)
+            activity.getColor(R.color.red)
         )
     } else {
         cmdEditSearchTotal.setTextColor(

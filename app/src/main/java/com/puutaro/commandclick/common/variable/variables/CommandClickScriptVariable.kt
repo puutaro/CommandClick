@@ -197,7 +197,6 @@ object CommandClickScriptVariable {
     private val onLaunchUrlHistoryByBackstackOn = SettingVariableSelects.OnLaunchUrlHistoryByBackstack.ON
     private val onLaunchUrlHistoryByBackstackOff = SettingVariableSelects.OnLaunchUrlHistoryByBackstack.OFF
     private val shellExecEnvUbuntu = SettingVariableSelects.ShellExecEnvSelects.UBUNTU.name
-    private val shellExecEnvTermux = SettingVariableSelects.ShellExecEnvSelects.TERMUX.name
     private val ubuntuExecModeSelectsBackground = SettingVariableSelects.UbuntuExecModeSelects.background.name
     private val ubuntuExecModeSelectsForeground = SettingVariableSelects.UbuntuExecModeSelects.foreground.name
     private val onTermVisibleWhenKeyboardSelectsInherit = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name
@@ -336,7 +335,6 @@ object CommandClickScriptVariable {
     private val setVariableValueForNoScrollSaveUrlsFilePath =
         "$listPathForListConSlSpi=$noScrollSaveUrlsFilePath"
     val setVariableForSettingHolder: List<String> = listOf(
-        "$SHELL_EXEC_ENV:CB=$shellExecEnvUbuntu?$shellExecEnvTermux",
         "$UBUNTU_EXEC_MODE:CB=$ubuntuExecModeSelectsBackground?$ubuntuExecModeSelectsForeground",
         "$UBUNTU_OUTPUT_FILE:CB=${UsePath.cmdClickMonitorFileName_1}?${UsePath.cmdClickMonitorFileName_2}?${UsePath.cmdClickMonitorFileName_3}?${UsePath.cmdClickMonitorFileName_4}",
         "$TERMINAL_DO:CB=$terminalOn?$terminalTermux?$terminalOff",
@@ -440,7 +438,6 @@ object CommandClickScriptVariable {
             |# | option | description |
             |# | $mdDash | $mdDash |
             |# | `$shellExecEnvUbuntu` | ubuntu |
-            |# | `$shellExecEnvTermux` | termux |
             |
             |# ### $UBUNTU_EXEC_MODE
             |# Set shell exec mode

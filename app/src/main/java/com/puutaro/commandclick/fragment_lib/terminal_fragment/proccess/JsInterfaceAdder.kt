@@ -2,7 +2,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import android.webkit.WebView
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCmdIntent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsArgs
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsBroadcast
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCsv
@@ -114,10 +113,6 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsArgs(terminalFragmentRef),
-        )
-        ExecJsInterfaceAdder.add(
-            webView,
-            JsCmdIntent(terminalFragmentRef),
         )
         ExecJsInterfaceAdder.add(
             webView,

@@ -366,8 +366,16 @@ object ButtonImageCreator {
         val srcHeight = bitmap.height
         val widthPx = 150
         val heightPx = 150
-        val startX = (0..(srcWidth - widthPx)).random()
-        val startY = (0..(srcHeight - heightPx)).random()
+        val startX = try {
+            (0..(srcWidth - widthPx)).random()
+        } catch(e: Exception){
+            0
+        }
+        val startY = try {
+            (0..(srcHeight - heightPx)).random()
+        } catch (e: Exception){
+            0
+        }
 
 // Crop bitmap
        return Bitmap.createBitmap(bitmap, startX, startY, widthPx, heightPx, null, false)

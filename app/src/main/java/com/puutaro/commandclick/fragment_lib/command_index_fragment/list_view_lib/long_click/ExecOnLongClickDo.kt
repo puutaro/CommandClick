@@ -493,7 +493,7 @@ private enum class UtilitySubMenuEnums(
 ){
     RENAME("Rename", R.drawable.icons8_update),
     WRITE("Write", R.drawable.icons8_support),
-    COPY_PATH("Copy path", com.termux.shared.R.drawable.ic_copy),
+    COPY_PATH("Copy path", R.drawable.copy),
     COPY_FILE("Copy file", R.drawable.icons8_file)
 }
 
