@@ -286,12 +286,16 @@ object ButtonImageCreator {
                     originalImagePath
                 )
             }?.let  {
-                cutOriginal(
-                    BitmapTool.resizeByMaxHeight(
-                        it,
-                        300.0
+                try {
+                    cutOriginal(
+                        BitmapTool.resizeByMaxHeight(
+                            it,
+                            300.0
+                        )
                     )
-                )
+                } catch (e: Exception){
+                    null
+                }
             }
         } ?: return null
         val maskByteArray = withContext(Dispatchers.IO) {
