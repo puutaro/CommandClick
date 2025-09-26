@@ -33,6 +33,7 @@ object PinFannelManager {
     private const val pinInfoMapSeparator = ','
 
     private val firstPinFannelList = listOf(
+        SystemFannel.webSearcher,
         SystemFannel.textToSpeech,
         SystemFannel.cmdBookmaker,
         SystemFannel.ggleTranslator,
