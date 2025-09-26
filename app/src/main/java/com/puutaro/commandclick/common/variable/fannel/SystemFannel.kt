@@ -26,7 +26,7 @@ object SystemFannel {
     }
 
     val maskListForFannelManageList = arrayOf(
-        webSearcher,
+//        webSearcher,
         copyLink,
         preference,
         qrLReader,
