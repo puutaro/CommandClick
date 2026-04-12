@@ -12,7 +12,7 @@ val versionPatch = 3
 
 android {
     namespace = "com.puutaro.commandclick"
-    compileSdk = 35
+    compileSdk = 36
 
     packaging {
         resources {
