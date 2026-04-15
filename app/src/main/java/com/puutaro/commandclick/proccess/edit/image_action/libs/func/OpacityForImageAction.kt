@@ -2,11 +2,9 @@ package com.puutaro.commandclick.proccess.edit.image_action.libs.func
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CheckTool
 import com.puutaro.commandclick.proccess.edit.image_action.ImageActionKeyManager
 import com.puutaro.commandclick.proccess.edit.setting_action.libs.FuncCheckerForSetting
-import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.image_tools.ColorTool
 import kotlin.enums.EnumEntries
 
@@ -92,7 +90,7 @@ object OpacityForImageAction {
                     val hexMax = 255
                     return@let (opacityFloat * hexMax).toInt()
                 }
-                val returnBitmap = Overlay.ajust(
+                val returnBitmap = Opacity.ajust(
                     bitmap,
                     opacityInt,
                     where,
@@ -114,7 +112,7 @@ object OpacityForImageAction {
         }
     }
 
-    private object Overlay {
+    private object Opacity {
         fun ajust(
             bkBitmap: Bitmap,
             opacityInt: Int,
